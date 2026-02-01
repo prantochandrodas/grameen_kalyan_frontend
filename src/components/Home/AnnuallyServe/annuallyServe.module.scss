@@ -1,0 +1,22 @@
+@import '../../../style/utils/base';
+
+.annuallyServe {
+  padding: 10rem;
+  text-align: center;
+
+  @include response(phone) {
+    padding: 10rem 5rem;
+  }
+
+  .firstText,
+  .secondText {
+    font-size: clamp(1.2rem, calc(0.35rem + 4.27vw), 5.47rem);
+    line-height: 1.2;
+    color: $color-primary;
+  }
+  .number {
+    font-size: clamp(2.07rem, calc(0.35rem + 8.61vw), 10.68rem);
+    line-height: 1.2;
+    color: $color-primary;
+  }
+}

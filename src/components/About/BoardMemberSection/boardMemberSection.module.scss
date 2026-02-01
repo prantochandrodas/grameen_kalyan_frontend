@@ -1,0 +1,82 @@
+@import '../../../style/utils/base';
+
+.boardMemberSection {
+  padding: 10rem 20rem;
+
+  @include response(lg-desktop) {
+    padding: 10rem 15rem;
+  }
+  @include response(desktop) {
+    padding: 10rem;
+  }
+  @include response(phone) {
+    padding: 10rem 5rem;
+  }
+  @include response(s-phone) {
+    padding: 5rem 3rem;
+  }
+
+  .heading {
+    font-size: clamp(
+      2.49rem + 18px,
+      calc(0.32rem + 10.86vw + 18px),
+      13.35rem + 18px
+    );
+    text-align: center;
+    font-weight: 900;
+    color: rgba($color: $color-background-green, $alpha: 0.3);
+
+    @include response(desktop) {
+      font-size: clamp(
+        2.49rem + 10px,
+        calc(0.32rem + 10.86vw + 10px),
+        13.35rem + 10px
+      );
+    }
+    @include response(s-desktop) {
+      font-size: clamp(
+        2.49rem - 10px,
+        calc(0.32rem + 10.86vw - 10px),
+        13.35rem - 10px
+      );
+    }
+    @include response(phone) {
+      font-size: clamp(
+        2.49rem - 6px,
+        calc(0.32rem + 10.86vw - 6px),
+        13.35rem - 6px
+      );
+    }
+  }
+
+  .cardContainer {
+    margin-top: 5rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .gridContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+
+    @include response(s-desktop) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @include response(phone) {
+      grid-template-columns: 1fr;
+    }
+
+    .cardContainer {
+      justify-self: center;
+    }
+
+    .layout {
+      grid-column: 1 / -1;
+    }
+  }
+  .link {
+    text-decoration: none;
+    color: $color-text-darkGrey;
+  }
+}

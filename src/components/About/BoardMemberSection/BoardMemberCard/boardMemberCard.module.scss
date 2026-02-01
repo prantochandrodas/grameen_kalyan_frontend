@@ -1,0 +1,55 @@
+@import '../../../../style/utils/base';
+
+.boardMemberCard {
+  width: max-content;
+  overflow: hidden;
+
+  .imageContainer {
+    max-width: 35rem;
+    border-radius: 0 10rem 0 0;
+    height: 30rem;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    background-color: $color-text-grey;
+
+    .img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .memberName,
+  .designation {
+    color: $color-text-darkGrey;
+    text-align: center;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .memberName {
+    font-size: 1.8rem;
+  }
+
+  .designation {
+    font-size: 1.6rem;
+  }
+}
+
+.cardStyleOne {
+  border-radius: 10rem 0 0 0 !important;
+
+  @include response(phone) {
+    border-radius: 1rem !important;
+  }
+}
+.cardStyleTwo {
+  border-radius: 1rem !important;
+}
+.cardStyleThree {
+  border-radius: 0 0 10rem 0 !important;
+
+  @include response(phone) {
+    border-radius: 1rem !important;
+  }
+}

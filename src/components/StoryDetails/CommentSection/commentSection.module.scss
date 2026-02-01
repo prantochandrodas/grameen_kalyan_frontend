@@ -1,0 +1,230 @@
+@import '../../../style/utils/base';
+
+.commentSection {
+  padding: 0 20rem 20rem 20rem;
+
+  @include response(M-desktop) {
+    padding: 0 15rem 5rem 15rem;
+  }
+  @include response(tab-port) {
+    padding: 0 10rem 5rem 10rem;
+  }
+  @include response(phone) {
+    padding: 0 5rem 5rem 5rem;
+  }
+  @include response(s-phone) {
+    padding: 0 3rem 3rem 3rem;
+  }
+
+  .heading {
+    font-size: 7rem;
+    font-weight: 900;
+    color: $color-primary;
+
+    @include response(s-phone) {
+      font-size: 5rem;
+    }
+  }
+
+  .divider {
+    display: grid;
+    grid-template-columns: 2fr min-content 1fr;
+    gap: 5rem;
+
+    margin: 4rem 0;
+
+    .lineLeft,
+    .lineRight {
+      height: 2px;
+      width: 100%;
+      background-color: $color-primary;
+      align-self: center;
+    }
+    .box {
+      height: 2rem;
+      width: 2rem;
+      background-color: $color-primary;
+    }
+  }
+
+  .formContainer {
+    padding: 5rem 0 10rem 0;
+
+    .form {
+      font-size: 2rem;
+
+      display: grid;
+      grid-template-columns: 1fr 3fr 1.5fr;
+      gap: 2rem;
+
+      .box {
+        grid-column: 1 / -1;
+
+        display: grid;
+        grid-template-columns: 1fr 3fr 1.5fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+
+        @include response(phone) {
+          grid-template-columns: 1fr;
+        }
+
+        label {
+          justify-self: end;
+
+          @include response(phone) {
+            justify-self: start;
+          }
+        }
+        .fullNameInput,
+        .commentInput,
+        .emailInput {
+          display: flex;
+          flex-direction: column;
+
+          input,
+          textarea {
+            font-size: 1.8rem;
+            padding: 1rem;
+            width: 100%;
+          }
+        }
+        .required {
+          color: rgb(253, 47, 47);
+        }
+      }
+
+      .submitBtn {
+        grid-column: 2 / 2;
+        width: min-content;
+        padding: 1rem 2rem;
+        font-size: 2.2rem;
+        border-radius: 5px;
+        border: 2px solid $color-primary;
+        background-color: transparent;
+        color: $color-secondary;
+        font-weight: 400;
+        cursor: pointer;
+        transition: all 500ms;
+
+        &:hover {
+          background-color: $color-primary;
+        }
+
+        @include response(phone) {
+          grid-column: 1 / 1;
+        }
+      }
+    }
+
+    .successMessage {
+      position: fixed;
+      z-index: 99999;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba($color: $color-primary, $alpha: 0.5);
+
+      .messageContainer {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+
+        width: 65rem;
+        height: 50rem;
+        padding: 10rem 5rem;
+        overflow: hidden;
+
+        background-color: white;
+        box-shadow: 0px 0px 8px rgb(41, 41, 41);
+
+        &:after {
+          content: '';
+          position: absolute;
+          z-index: 3;
+          top: 25%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+
+          width: 5rem;
+          height: 5rem;
+
+          border-radius: 50%;
+          animation: greenTint 1s ease-in-out 0.5s;
+        }
+
+        .message {
+          position: relative;
+          z-index: 5;
+
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          gap: 2.5rem;
+
+          .iconContainer {
+            height: 10rem;
+            width: 10rem;
+            border-radius: 50%;
+            margin-top: -2rem;
+
+            .img {
+              height: 100%;
+              width: 100%;
+              object-fit: contain;
+            }
+          }
+
+          .text {
+            font-size: 2rem;
+            font-weight: 600;
+            text-align: center;
+          }
+        }
+        .btnContainer {
+          position: relative;
+          z-index: 5;
+        }
+      }
+    }
+
+    @keyframes greenTint {
+      0% {
+        background-color: #4bd37b;
+      }
+      60% {
+        width: 200rem;
+        height: 200rem;
+      }
+      100% {
+        width: 0rem;
+        height: 0rem;
+        background-color: transparent;
+      }
+    }
+
+    .hidePopup {
+      display: none;
+    }
+  }
+
+  .commentContainer {
+    padding: 0 10rem;
+
+    @include response(phone) {
+      padding: 0;
+    }
+
+    .cardContainer {
+      margin-bottom: 3rem;
+    }
+  }
+}

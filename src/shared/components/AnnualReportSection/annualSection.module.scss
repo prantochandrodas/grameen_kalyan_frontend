@@ -1,0 +1,183 @@
+@import '../../../style/utils/base';
+
+.annualSection {
+  height: 100svh;
+  position: relative;
+  margin-top: 20rem;
+
+  @include response(phone) {
+    margin-top: 15rem;
+  }
+  @include response(M-phone) {
+    margin-top: 10rem;
+  }
+
+  .heading {
+    font-size: 45rem;
+    line-height: 1.2;
+    text-align: center;
+    color: $color-primary;
+    opacity: 0.3;
+
+    position: relative;
+    top: -30rem;
+    z-index: 1;
+
+    @include response(s-desktop) {
+      font-size: 35rem;
+      top: -25rem;
+    }
+    @media screen and (max-width: 810px) {
+      font-size: 25rem;
+      top: -18rem;
+    }
+    @include response(phone) {
+      font-size: 20rem;
+      top: -15rem;
+    }
+    @include response(M-phone) {
+      font-size: 15rem;
+      top: -10rem;
+    }
+    @include response(s-phone) {
+      font-size: 12rem;
+      top: -8rem;
+    }
+  }
+  .headingT {
+    top: -52rem;
+    font-size: 25rem;
+    font-weight: 900;
+    line-height: 1;
+
+    @include response(s-desktop) {
+      font-size: 19.444rem;
+      top: -40.5rem;
+    }
+    @include response(vp-800) {
+      font-size: 15rem;
+      top: -31rem;
+    }
+    @include response(phone) {
+      font-size: 10rem;
+      top: -21rem;
+    }
+    @include response(s-phone) {
+      font-size: 8rem;
+      top: -17rem;
+    }
+  }
+
+  .container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    .bgContainer {
+      height: 100%;
+      width: 100%;
+
+      .img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        object-position: top;
+      }
+    }
+    .contentContainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      display: flex;
+      align-items: flex-end;
+
+      background-image: linear-gradient(
+        transparent 50%,
+        rgb($color-primary, 0.9)
+      );
+
+      .gridContainer {
+        width: 100%;
+        padding: 10rem 20rem;
+
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(2, max-content);
+        row-gap: 3rem;
+
+        @include response(s-desktop) {
+          padding: 10rem;
+        }
+        @include response(phone) {
+          padding: 5rem;
+
+          grid-template-columns: repeat(2, 1fr);
+          grid-template-rows: repeat(4, max-content);
+        }
+
+        .content {
+          .text {
+            color: $color-text-light;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            @include response(phone) {
+              align-items: center;
+            }
+
+            .number {
+              font-size: 7rem;
+              line-height: 1.2;
+              font-weight: 500;
+
+              @include response(M-desktop) {
+                font-size: 5rem;
+              }
+              @media screen and (max-width: 810px) {
+                font-size: 4rem;
+              }
+            }
+            .title {
+              font-size: 2rem;
+              font-weight: 600;
+
+              @include response(M-desktop) {
+                font-size: 1.8rem;
+              }
+              @media screen and (max-width: 810px) {
+                font-size: 1.6rem;
+              }
+            }
+          }
+        }
+      }
+    }
+    .contentContainerT {
+      background-image: linear-gradient(transparent 50%, rgb(black, 0.5));
+    }
+  }
+}
+
+.annualSectionT {
+  margin-top: 50rem;
+
+  @include response(s-desktop) {
+    margin-top: 40rem;
+  }
+  @include response(vp-800) {
+    margin-top: 30rem;
+  }
+  @include response(phone) {
+    margin-top: 25rem;
+  }
+  @include response(s-phone) {
+    margin-top: 20rem;
+  }
+}

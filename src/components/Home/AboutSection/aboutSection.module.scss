@@ -1,0 +1,60 @@
+@import '../../../style/utils/base';
+
+.aboutSection {
+  position: relative;
+
+  .content {
+    padding: 15rem 15rem;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+
+    @include response(tab-port) {
+      padding: 10rem;
+    }
+    @include response(phone) {
+      padding: 10rem 5rem;
+    }
+    @include response(s-phone) {
+      padding: 5rem 3rem;
+    }
+
+    .heading {
+      position: relative;
+      font-size: clamp(1.73rem, calc(0.36rem + 6.82vw), 8.55rem);
+      font-weight: 900;
+      color: $color-primary;
+    }
+    .subHeading {
+      font-size: clamp(1rem, calc(0.33rem + 3.38vw), 4.38rem);
+      line-height: 1.2;
+      max-width: 70%;
+      color: $color-secondary-goldenrod;
+
+      span {
+        position: relative;
+        display: block;
+      }
+
+      @include response(phone) {
+        max-width: 90%;
+      }
+    }
+  }
+  .layout {
+    height: 90%;
+
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    .img {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+    }
+  }
+}

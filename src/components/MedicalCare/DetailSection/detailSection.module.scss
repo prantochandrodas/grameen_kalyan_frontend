@@ -1,0 +1,55 @@
+@import '../../../style/utils/base';
+
+.detailSection {
+  .contentContainer {
+    padding: 10rem 20rem;
+
+    @include response(M-desktop) {
+      padding: 10rem 15rem;
+    }
+    @include response(tab-port) {
+      padding: 10rem 10rem;
+    }
+    @include response(phone) {
+      padding: 8rem 5rem;
+    }
+    @include response(s-phone) {
+      padding: 5rem 3rem;
+    }
+
+    h1 {
+      font-size: 5rem;
+    }
+    p,
+    div {
+      font-size: 2rem !important;
+      margin-bottom: 2rem;
+    }
+  }
+  .imgContainer {
+    height: 100vh;
+    margin-top: 3rem;
+
+    .img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+  .btnContainer {
+    padding: 20rem 20rem;
+
+    @include response(M-desktop) {
+      padding: 10rem 15rem;
+    }
+    @include response(tab-port) {
+      padding: 10rem 10rem;
+    }
+    @include response(phone) {
+      padding: 8rem 5rem;
+    }
+    @include response(s-phone) {
+      padding: 5rem 3rem;
+    }
+  }
+}

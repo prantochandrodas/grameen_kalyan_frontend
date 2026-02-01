@@ -1,0 +1,22 @@
+@import '../../../style/utils/base';
+
+.aboutGrameenKalyan {
+  padding: 10rem 20rem;
+
+  @include response(M-desktop) {
+    padding: 10rem;
+  }
+  @include response(phone) {
+    padding: 5rem;
+  }
+  @include response(s-phone) {
+    padding: 5rem 3rem;
+  }
+
+  p {
+    font-size: 2rem;
+    color: $color-text-darkGrey;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+}

@@ -1,0 +1,90 @@
+// MEDIA QUERY MANAGER
+/*
+0 - 430px;       small-phone
+430 - 568px:     medium-phone
+568 - 600px:     phone
+600 - 1000px:    tablet portrait
+900 - 1300px:    tablet landscape
+[1300 - 1800px] is where normal style apply
+1800px + :       Big desktop
+*/
+
+/*
+$breakpoint arguments choice:
+- s-phone
+- M-phone
+- phone
+- tab-port
+- tab-land
+- desktop
+- M-desktop
+- big-desktop
+*/
+@mixin response($breakpoint) {
+  @if $breakpoint == xs-phone {
+    // media size 260 [This is selected for iphone device]
+    @media (max-width: 16.25em) {
+      @content;
+    }
+  }
+  @if $breakpoint == s-phone {
+    // media size 430
+    @media (max-width: 26.88em) {
+      @content;
+    }
+  }
+  @if $breakpoint == M-phone {
+    // media size 568px
+    @media (max-width: 35.5em) {
+      @content;
+    }
+  }
+  @if $breakpoint == phone {
+    // media size 640px
+    @media (max-width: 40em) {
+      @content;
+    }
+  }
+  @if $breakpoint == vp-800 {
+    // media size 810px
+    @media (max-width: 50.625em) {
+      @content;
+    }
+  }
+  @if $breakpoint == tab-port {
+    // media size 962px
+    @media (max-width: 60.125em) {
+      @content;
+    }
+  }
+  @if $breakpoint == s-desktop {
+    // media size 1024px
+    @media (max-width: 64em) {
+      @content;
+    }
+  }
+  @if $breakpoint == desktop {
+    // media size 1366px
+    @media (max-width: 85.375em) {
+      @content;
+    }
+  }
+  @if $breakpoint == M-desktop {
+    // media size 1440px
+    @media (max-width: 90em) {
+      @content;
+    }
+  }
+  @if $breakpoint == lg-desktop {
+    // media size 1600px
+    @media (max-width: 100em) {
+      @content;
+    }
+  }
+  @if $breakpoint == big-desktop {
+    // media size 1800px
+    @media (min-width: 112.5em) {
+      @content;
+    }
+  }
+}

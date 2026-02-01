@@ -1,0 +1,164 @@
+@import '../../../style/utils/base';
+
+.heroSection {
+  position: relative;
+  height: calc(100svh - 16rem);
+
+  @include response(phone) {
+    display: flex;
+    flex-direction: column-reverse;
+    height: auto;
+  }
+
+  iframe {
+    width: 100%;
+    height: calc(100svh - 16rem);
+    border: none;
+
+    @include response(phone) {
+      height: 35rem;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+
+    background-color: $color-secondary;
+    border-radius: 35rem 0 0 0;
+    overflow: hidden;
+    padding: 10rem 21rem 5rem 21rem;
+
+    @include response(M-desktop) {
+      padding: 10rem 19rem 5rem 19rem;
+    }
+    @include response(phone) {
+      width: 100%;
+      border-radius: 25rem 0 0 0;
+      padding: 10rem 5rem 5rem 5rem;
+      position: relative;
+      border-radius: 15rem 0 0 0;
+    }
+    @include response(s-phone) {
+      padding: 10rem 3rem 5rem 3rem;
+    }
+
+    .contentContainer {
+      width: 100%;
+      margin-bottom: 5rem;
+
+      display: flex;
+      align-items: start;
+      gap: 6rem;
+
+      position: relative;
+      z-index: 9999;
+
+      @include response(phone) {
+        padding: 0 5%;
+        gap: 2rem;
+        align-items: stretch;
+        flex-direction: column;
+
+        .contentLeft {
+          flex: 1;
+        }
+
+        .contentRight {
+          flex: 1;
+        }
+      }
+    }
+
+    h4 {
+      font-size: calc(max(1.1vw, 18px));
+      color: #fff;
+    }
+
+    h5 {
+      font-size: calc(max(1.1vw, 15px));
+      color: #fff;
+    }
+
+    span {
+      background: #0b612d;
+      padding: 1rem 2rem;
+      font-size: calc(max(0.8vw, 12px));
+      color: #fff;
+      border-radius: 1rem;
+      margin-top: 1rem;
+      display: inline-block;
+    }
+
+    .heading {
+      position: relative;
+      z-index: 2;
+      font-size: clamp(1.2rem, calc(0.35rem + 4.27vw), 5.47rem);
+      font-weight: 900;
+      line-height: 1.2;
+      color: white;
+      margin-bottom: 3%;
+
+      @include response(phone) {
+        font-size: 4.5rem;
+        padding: 0 5%;
+        margin-bottom: 5%;
+      }
+
+      span {
+        display: block;
+        white-space: nowrap;
+      }
+    }
+
+    .layoutContainer {
+      height: 45rem;
+      width: 45rem;
+
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      @include response(M-desktop) {
+        height: 40rem;
+        width: 40rem;
+      }
+      @include response(phone) {
+        height: 25rem;
+        width: 25rem;
+      }
+
+      .layoutImage {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+}
+
+.taglineFooter {
+  a {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: calc(max(1.1vw, 15px));
+    color: #0b612d;
+    text-decoration: none;
+    font-weight: 900;
+
+    img {
+      width: 5rem;
+      height: auto;
+      object-fit: contain;
+    }
+  }
+}

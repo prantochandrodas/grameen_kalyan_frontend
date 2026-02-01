@@ -1,0 +1,325 @@
+@import '../../../style/utils/base';
+
+.topInfoBar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 65%;
+  background: #ffffff;
+  border-top-left-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 15px;
+  font-size: 12px;
+  color: #0b612d;
+  font-weight: 600;
+  z-index: 1;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.topInfoItem {
+  line-height: 1.4;
+}
+
+.locationRow {
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.topInfoSocial {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  a {
+    color: #0b612d;
+    font-size: 18px;
+  }
+}
+
+/* Tablet */
+@media (max-width: 991px) {
+  .topInfoBar {
+    display: none;
+    position: relative;
+    width: 100%;
+    border-radius: 0;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  .topInfoBar {
+    display: none;
+    font-size: 11px;
+  }
+}
+
+.navbar {
+  position: relative;
+  z-index: 999999;
+  padding: 4rem 10rem;
+  background-color: white;
+
+  display: flex;
+  justify-content: space-between;
+  gap: 5rem;
+
+  @include response(s-desktop) {
+    padding: 5rem;
+  }
+
+  @include response(phone) {
+    padding: 3rem;
+  }
+
+  .logoContainer {
+    align-self: center;
+    height: 10rem;
+    width: max-content;
+
+    @include response(M-desktop) {
+      height: 7rem;
+    }
+
+    @include response(phone) {
+      height: 6rem;
+    }
+
+    .logo {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+      object-position: left;
+    }
+  }
+
+  .list {
+    background-color: $color-primary;
+    height: max-content;
+    padding: 0 5rem 0 3rem;
+    border-radius: 1rem 0 0 1rem;
+    transition: all 500ms ease-in-out;
+
+    display: flex;
+    align-items: center;
+
+    position: absolute;
+    bottom: -2.5rem;
+    right: 0;
+
+    @include response(tab-port) {
+      top: 12rem;
+      left: -100%;
+      width: 100%;
+      padding: 5rem;
+      border-radius: 0;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .item {
+      cursor: pointer;
+      transition: all 500ms;
+
+      &:hover {
+        color: $color-secondary-goldenrod;
+      }
+    }
+
+    .item,
+    .dropdownItem {
+      padding: 1.5rem 2rem;
+      font-size: 2rem;
+      font-weight: 400;
+      list-style: none;
+      color: $color-text-light;
+      text-transform: capitalize;
+    }
+
+    .dropdownItem {
+      position: relative;
+
+      &:hover .dropdownList {
+        display: inline-block;
+      }
+
+      .itemText {
+        color: $color-text-light;
+        cursor: pointer;
+
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        @include response(tab-port) {
+          justify-content: center;
+        }
+      }
+
+      &:hover .itemText {
+        color: $color-secondary-goldenrod;
+      }
+
+      .dropdownList {
+        display: none;
+        background-color: $color-primary;
+        position: absolute;
+        top: 5.2rem;
+        left: 0;
+        width: max-content;
+        border-radius: 0 0 5px 5px;
+
+        @include response(tab-port) {
+          position: relative;
+          top: 0;
+          background-color: $color-secondary;
+        }
+
+        .subItem {
+          list-style: none;
+          padding: 1rem 2rem;
+          cursor: pointer;
+          text-align: center;
+          color: $color-text-light;
+          transition: color 500ms;
+          border-bottom: 1px solid $color-secondary-goldenrod;
+
+          &:hover {
+            color: $color-secondary-goldenrod;
+          }
+        }
+
+        .activeSubItem {
+          color: $color-secondary-goldenrod;
+        }
+
+        .subItemNoBorder {
+          border: none;
+        }
+      }
+    }
+
+    .activeItem {
+      color: $color-secondary-goldenrod !important;
+    }
+
+    .badgeContainer {
+      position: absolute;
+      top: 50%;
+      right: 5rem;
+      transform: translateY(-50%);
+
+      height: 10rem;
+      list-style: none;
+
+      @include response(phone) {
+        top: 2rem;
+        right: 2rem;
+        transform: none;
+      }
+
+      .img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .link {
+      text-decoration: none;
+    }
+  }
+
+  .spaceBox {
+    display: block;
+    width: 15rem;
+    height: 100%;
+  }
+
+  .openList {
+    left: 0;
+  }
+
+  .menuBtn {
+    display: none;
+    background-color: transparent;
+    border: none;
+    margin: 0px;
+    min-height: 2.5rem;
+    min-width: 3rem;
+    transition: all 0.3s;
+    cursor: pointer;
+
+    @include response(tab-port) {
+      display: block;
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      outline: none;
+    }
+
+    .bar {
+      background-color: $color-text-darkGrey;
+      width: 3rem;
+      height: 3px;
+      margin: 4px auto;
+      border-radius: 3px;
+      display: block;
+      position: relative;
+      transition: all 0.3s;
+      backface-visibility: hidden;
+    }
+
+    .bar:before,
+    .bar:after {
+      content: '';
+      background-color: $color-text-darkGrey;
+      border-radius: 3px;
+      width: 3rem;
+      height: 3px;
+      margin: 4px auto;
+      position: absolute;
+      transition: all 0.3s;
+      backface-visibility: hidden;
+    }
+
+    .bar:before {
+      top: -12px;
+      left: 0px;
+    }
+
+    .bar:after {
+      bottom: -12px;
+      left: 0px;
+    }
+  }
+
+  .menuBtn.active {
+    > .bar {
+      background-color: transparent;
+      transition: 0.2s;
+    }
+
+    > .bar:before {
+      transform: rotate(45deg) translate(4px, 9px);
+      transition: 0.3s;
+      width: 28px;
+      left: 1px;
+    }
+
+    > .bar:after {
+      transform: rotate(-45deg) translate(3px, -7px);
+      transition: 0.3s;
+      width: 28px;
+      left: 1px;
+    }
+  }
+}

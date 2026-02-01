@@ -1,0 +1,36 @@
+// ===========================================
+// COLORS
+// ===========================================
+
+$color-primary: #0b612d;
+$color-secondary: #95c11f;
+$color-secondary-goldenrod: #cc9b2b;
+
+$color-background-green: #13a438;
+$color-background-beige: #f5ebd5;
+$color-background-paleAqua: #cedfd5;
+$color-background-paleYellow: #efe0bf;
+$color-background-white: #fff;
+
+$color-primary-gradient: linear-gradient(45deg, #95c11f, #0b612d);
+$color-goldenrod-gradient: linear-gradient(45deg, #dad565, #cd9c2b);
+
+$color-text-primary: #0b612d;
+$color-text-light: #ffffff;
+$color-text-dark: #0000;
+$color-text-darkGrey: #4a4a4a;
+$color-text-grey: #848484;
+$color-text-midGrey: #ddd;
+
+$color-error: rgb(151, 61, 61);
+$color-success: rgb(61, 151, 109);
+
+// ============================
+// Functions
+// ============================
+
+@mixin alignItem() {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

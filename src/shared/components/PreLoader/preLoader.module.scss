@@ -1,0 +1,39 @@
+@import '../../../style/utils/base';
+
+.container {
+  position: relative;
+  margin: 20rem auto;
+  width: fit-content;
+  height: calc(100svh - 16rem);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @include response(phone) {
+    height: calc(100svh - 12rem);
+  }
+
+  .preLoader {
+    position: relative;
+    width: 75px;
+    height: 75px;
+    margin: 0;
+    background: transparent;
+    border-top: 4px solid $color-primary;
+    border-right: 4px solid transparent;
+    border-radius: 50%;
+    -webkit-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

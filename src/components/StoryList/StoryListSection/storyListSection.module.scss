@@ -1,0 +1,28 @@
+@import '../../../style/utils/base';
+
+.storyList {
+  padding: 10rem 20rem;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+
+  @include response(M-desktop) {
+    padding: 10rem 15rem;
+  }
+  @include response(s-desktop) {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 10rem;
+  }
+  @include response(phone) {
+    grid-template-columns: 1fr;
+    padding: 5rem;
+  }
+  @include response(s-phone) {
+    padding: 5rem 3rem;
+  }
+
+  .link {
+    text-decoration: none;
+  }
+}

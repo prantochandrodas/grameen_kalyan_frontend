@@ -1,0 +1,108 @@
+@import '../../../style/utils/base';
+
+.storyDetail {
+  padding: 20rem;
+
+  display: grid;
+  grid-template-columns: 1fr min-content 1fr;
+  grid-template-rows: min-content;
+  gap: 4rem;
+
+  @include response(M-desktop) {
+    padding: 20rem 15rem;
+  }
+  @include response(tab-port) {
+    padding: 15rem 10rem;
+  }
+  @include response(phone) {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, min-content);
+    padding: 10rem 5rem 10rem 5rem;
+  }
+
+  .imageContainer {
+    height: 35rem;
+    border-radius: 2rem;
+    overflow: hidden;
+
+    @include response(tab-port) {
+      height: 100%;
+    }
+
+    .img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .divider {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr min-content 2fr;
+    gap: 2rem;
+
+    @include response(phone) {
+      grid-template-columns: 2fr min-content 1fr;
+      grid-template-rows: min-content;
+    }
+
+    .lineOne,
+    .lineTwo {
+      height: 100%;
+      width: 2px;
+      background-color: $color-primary;
+      justify-self: center;
+
+      @include response(phone) {
+        height: 2px;
+        width: 100%;
+        align-self: center;
+      }
+    }
+
+    .lineOne {
+      height: 100%;
+      width: 2px;
+
+      @include response(phone) {
+        height: 2px;
+        width: 100%;
+      }
+    }
+    .box {
+      height: 2rem;
+      width: 2rem;
+      background-color: $color-primary;
+    }
+    .lineTwo {
+      height: 100%;
+      width: 2px;
+
+      @include response(phone) {
+        height: 2px;
+        width: 100%;
+      }
+    }
+  }
+
+  .contentContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .heading {
+      font-size: 4.5rem;
+      font-weight: 900;
+      margin-bottom: 3rem;
+      color: $color-text-darkGrey;
+    }
+    .shortDesc {
+      font-size: 2rem;
+      font-weight: 400;
+    }
+    .btnContainer {
+      padding: 3rem 0;
+    }
+  }
+}

@@ -1,0 +1,94 @@
+@import '../../../style/utils/base';
+
+.medicalCare {
+  padding-bottom: 15rem;
+  overflow: hidden;
+
+  .contentContainer {
+    position: relative;
+    padding: 20rem;
+
+    @include response(M-desktop) {
+      padding: 15rem;
+    }
+    @include response(tab-port) {
+      padding: 15rem 10rem;
+    }
+    @include response(phone) {
+      padding: 10rem 5rem;
+    }
+    @include response(s-phone) {
+      padding: 8rem 3rem;
+    }
+
+    .layoutLeft {
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      height: 55rem;
+
+      @include response(phone) {
+        height: 25rem;
+      }
+
+      .img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+      }
+    }
+    .layoutRight {
+      position: absolute;
+      bottom: 0;
+      right: -20rem;
+
+      height: 25rem;
+      transform: rotateZ(90deg);
+
+      @include response(phone) {
+        height: 20rem;
+      }
+
+      .img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .heading,
+    .parag {
+      position: relative;
+      z-index: 1;
+    }
+
+    .heading {
+      color: $color-primary;
+      font-size: 6.5rem;
+      font-weight: 900;
+      line-height: 1.1;
+      text-align: center;
+      margin-bottom: 4rem;
+
+      @include response(phone) {
+        font-size: 5.5rem;
+      }
+
+      span {
+        display: block;
+      }
+    }
+    .parag {
+      font-size: 1.8rem;
+      max-width: 50%;
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+
+      @include response(phone) {
+        max-width: 80%;
+      }
+    }
+  }
+}

@@ -1,0 +1,219 @@
+@import '../../../style/utils/base';
+
+.heroSection {
+  position: relative;
+  height: calc(100svh - 16rem);
+
+  @include response(phone) {
+    height: calc(100svh - 12rem);
+  }
+
+  .bgImageContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+
+    .bgImage {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+  .content {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+
+    background-color: $color-secondary;
+    border-radius: 35rem 0 0 0;
+    overflow: hidden;
+    padding: 14rem 21rem;
+
+    @include response(M-desktop) {
+      padding: 12rem 19rem;
+    }
+    @include response(phone) {
+      width: 100%;
+      border-radius: 25rem 0 0 0;
+      padding: 10rem 15rem;
+    }
+
+    .heading {
+      position: relative;
+      z-index: 2;
+      font-size: clamp(1.2rem, calc(0.35rem + 4.27vw), 5.47rem);
+      font-weight: 900;
+      line-height: 1.2;
+      color: white;
+
+      @include response(phone) {
+        font-size: clamp(1.44rem, calc(0.36rem + 5.4vw), 6.84rem);
+      }
+
+      span {
+        display: block;
+        white-space: nowrap;
+      }
+    }
+
+    .juSubHeading {
+      position: relative;
+      z-index: 2;
+      font-size: 2.5rem;
+      font-weight: 400;
+      line-height: 1.2;
+      color: white;
+      margin-bottom: 2rem;
+
+      @include response(phone) {
+        font-size: 2rem;
+      }
+
+      span {
+        display: block;
+        white-space: nowrap;
+      }
+    }
+    .juHeading {
+      position: relative;
+      z-index: 2;
+      font-size: 3rem;
+      font-weight: 600;
+      line-height: 1.2;
+      color: white;
+
+      @include response(phone) {
+        font-size: 2.5rem;
+      }
+
+      span {
+        display: block;
+        white-space: nowrap;
+      }
+    }
+
+    .healthcareSubHeading {
+      position: relative;
+      z-index: 1;
+
+      color: $color-text-light;
+
+      span {
+        display: block;
+      }
+      span:nth-of-type(1),
+      span:nth-of-type(2) {
+        font-weight: 900;
+        line-height: 1.2;
+      }
+      span:nth-of-type(1) {
+        font-size: clamp(0.8rem, calc(0.3rem + 2.28vw), 3.27rem);
+        font-weight: 900;
+      }
+      span:nth-of-type(2) {
+        font-size: clamp(1.2rem, calc(0.35rem + 4.27vw), 5.47rem);
+        font-weight: 900;
+        margin-left: -6rem;
+
+        @include response(phone) {
+          margin-left: -4rem;
+        }
+      }
+    }
+    .healthcareHeading {
+      position: relative;
+      z-index: 1;
+      color: $color-text-light;
+
+      span {
+        display: block;
+        font-size: clamp(1.2rem, calc(0.35rem + 4.27vw), 5.47rem);
+        font-weight: 900;
+        line-height: 1.2;
+      }
+      span:nth-of-type(1) {
+        width: 100%;
+        margin-left: 8rem;
+
+        @include response(phone) {
+          margin-left: 4rem;
+        }
+      }
+    }
+    .storyHeading {
+      color: $color-text-light;
+      span {
+        display: block;
+        font-size: clamp(1.2rem, calc(0.35rem + 4.27vw), 5.47rem);
+        font-weight: 900;
+        line-height: 1.2;
+      }
+      span:nth-of-type(1) {
+        margin-left: -12rem;
+
+        @include response(phone) {
+          margin-left: -5rem;
+        }
+      }
+    }
+
+    .layoutContainer {
+      height: 45rem;
+      width: 45rem;
+
+      position: absolute;
+      top: 0;
+      right: 0;
+
+      @include response(M-desktop) {
+        height: 40rem;
+        width: 40rem;
+      }
+      @include response(phone) {
+        height: 25rem;
+        width: 25rem;
+      }
+
+      .layoutImage {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+  .juContent {
+    padding: 10rem 18rem;
+    border-radius: 30rem 0 0 0;
+
+    @include response(phone) {
+      border-radius: 20rem 0 0 0;
+      padding: 8rem 10rem;
+    }
+  }
+  .healthcareContent {
+    padding: 14rem 25rem 14rem 32rem;
+
+    @include response(M-desktop) {
+      padding: 12rem 30rem 12rem 30rem;
+    }
+    @include response(phone) {
+      border-radius: 25rem 0 0 0;
+      padding: 10rem 15rem;
+    }
+  }
+  .storyContent {
+    padding: 18rem 25rem 18rem 32rem;
+
+    @include response(M-desktop) {
+      padding: 16rem 30rem 16rem 30rem;
+    }
+    @include response(phone) {
+      border-radius: 25rem 0 0 0;
+      padding: 10rem 15rem;
+    }
+  }
+}

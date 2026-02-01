@@ -1,0 +1,87 @@
+@import '../../../style/utils/base';
+
+.microHealthSection {
+  height: 100svh;
+  position: relative;
+  margin-top: 40rem;
+
+  @media screen and (max-width: 810px) {
+    margin-top: 30rem;
+  }
+  @include response(phone) {
+    margin-top: 20rem;
+  }
+  @include response(M-phone) {
+    margin-top: 15rem;
+  }
+
+  .heading {
+    font-size: 25rem;
+    line-height: 1;
+    text-align: center;
+    color: $color-primary;
+    opacity: 0.3;
+
+    position: relative;
+    top: -22.5rem;
+    z-index: 1;
+
+    @include response(s-desktop) {
+      font-size: 20rem;
+      top: -18.5rem;
+    }
+    @media screen and (max-width: 810px) {
+      font-size: 16rem;
+      top: -15.5rem;
+    }
+    @include response(phone) {
+      font-size: 12rem;
+      top: -12.5rem;
+    }
+    @include response(M-phone) {
+      font-size: 10rem;
+      top: -10.5rem;
+    }
+    @include response(s-phone) {
+      font-size: 7rem;
+      top: -8.5rem;
+    }
+
+    span {
+      display: block;
+    }
+  }
+  .container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    .bgContainer {
+      height: 100%;
+      width: 100%;
+
+      .img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+    .contentContainer {
+      padding-bottom: 15rem;
+
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+
+      background: rgba($color: black, $alpha: 0.3);
+    }
+  }
+}

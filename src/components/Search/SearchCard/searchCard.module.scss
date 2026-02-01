@@ -1,0 +1,36 @@
+@import '../../../style/utils/base';
+
+.searchCard {
+  display: flex;
+  gap: 2rem;
+
+  .imageContainer {
+    height: 20rem;
+    width: 30rem;
+
+    @include response(tab-port) {
+      flex: 1;
+    }
+    @include response(phone) {
+      height: 15rem;
+    }
+
+    .img {
+      height: 100%;
+      width: 100%;
+    }
+  }
+  .content {
+    @include response(tab-port) {
+      flex: 2;
+    }
+    p {
+      font-size: 2rem;
+      line-height: 1.3;
+
+      &:not(:last-of-type) {
+        margin-bottom: 1rem;
+      }
+    }
+  }
+}

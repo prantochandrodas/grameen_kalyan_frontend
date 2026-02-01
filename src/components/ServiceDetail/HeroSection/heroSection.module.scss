@@ -1,0 +1,54 @@
+@import '../../../style/utils/base';
+
+.serviceDetail {
+  border-radius: 35rem 0 0 0;
+  overflow: hidden;
+  padding: 6rem 20rem;
+  position: relative;
+  height: calc(100svh - 16rem);
+
+  display: flex;
+  align-items: flex-end;
+
+  @include response(phone) {
+    height: calc(100svh - 12rem);
+    border-radius: 20rem 0 0 0;
+    padding: 4rem 5rem;
+  }
+
+  .bgImageContainer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+
+    .bgImage {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+  h1 {
+    position: relative;
+    z-index: 2;
+    font-weight: 900;
+    line-height: 1.2;
+    color: white;
+
+    span {
+      display: block;
+    }
+    span:nth-of-type(1) {
+      font-size: clamp(1.2rem, calc(0.35rem + 4.27vw), 5.47rem);
+
+      @include response(phone) {
+        font-size: clamp(1.44rem, calc(0.36rem + 5.4vw), 6.84rem);
+      }
+    }
+    span:nth-of-type(2) {
+      font-size: clamp(0.8rem, calc(0.3rem + 2.28vw), 3.27rem);
+    }
+  }
+}

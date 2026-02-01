@@ -1,0 +1,25 @@
+@import '../../../../style/utils/base';
+
+.horiLayout {
+  margin: 4rem 0;
+
+  display: grid;
+  grid-template-columns: 70% max-content 25%;
+  gap: 1rem;
+
+  .horiLineLeft,
+  .horiLineRight {
+    height: 1px;
+    background-color: $color-secondary;
+    align-self: center;
+  }
+  .box {
+    height: 1.5rem;
+    width: 1.5rem;
+    background-color: $color-secondary;
+  }
+}
+
+.horiLayoutReverse {
+  grid-template-columns: 25% max-content 70%;
+}

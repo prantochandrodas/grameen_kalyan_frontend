@@ -1,0 +1,32 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "next/core-web-vitals",
+    "airbnb-base/legacy",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "warn",
+    "indent": ["error", 2],
+    "linebreak-style": "off",
+    "no-nested-ternary": "off",
+    "no-shadow": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "no-use-before-define": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "max-len": "off",
+    "react/no-unescaped-entities": "off",
+    "no-useless-escape": "off",
+    "radix": "off",
+    "comma-dangle": "off",
+    "operator-linebreak": "off",
+    "spaced-comment": "off",
+    "object-curly-spacing": "off",
+    "padded-blocks": "off",
+    "no-multiple-empty-lines": "off"
+  }
+}

@@ -1,0 +1,76 @@
+@import '../../../style/utils/base';
+
+.empoweringSection {
+  position: relative;
+  padding: 10rem;
+
+  @include response(phone) {
+    padding: 5rem;
+  }
+  @include response(s-phone) {
+    padding: 5rem 3rem;
+  }
+
+  .layoutLeft {
+    height: 25rem;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    .img {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .heading,
+  .parag {
+    text-align: center;
+  }
+
+  .heading {
+    position: relative;
+    z-index: 1;
+
+    text-align: center;
+    font-size: clamp(1.44rem, calc(0.36rem + 5.4vw), 6.84rem);
+    font-weight: 900;
+    text-transform: capitalize;
+    line-height: 1.2;
+    color: $color-primary;
+    margin-bottom: 5rem;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+
+    @include response(M-desktop) {
+      max-width: 100%;
+    }
+  }
+  .paragraphsContainer {
+    p {
+      position: relative;
+      z-index: 1;
+
+      text-align: center;
+      font-size: 2.2rem;
+      font-weight: 400;
+      max-width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+
+      &:not(:last-of-type) {
+        margin-bottom: 3rem;
+      }
+
+      @include response(M-desktop) {
+        max-width: 100%;
+      }
+      @include response(phone) {
+        font-size: 2rem;
+      }
+    }
+  }
+}

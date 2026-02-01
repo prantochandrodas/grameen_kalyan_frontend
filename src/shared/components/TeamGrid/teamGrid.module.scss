@@ -1,0 +1,30 @@
+@import '../../../style/utils/base';
+
+.gridContainer {
+  // padding: 10rem 20rem;
+  padding: 0rem 20rem;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+
+  @include response(desktop) {
+    padding: 0rem 10rem;
+  }
+  @include response(s-desktop) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @include response(phone) {
+    grid-template-columns: 1fr;
+
+    padding: 0rem 5rem;
+  }
+
+  .cardContainer {
+    justify-self: center;
+  }
+
+  .layout {
+    grid-column: 1 / -1;
+  }
+}

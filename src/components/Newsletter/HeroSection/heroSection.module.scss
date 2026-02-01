@@ -1,0 +1,59 @@
+@import '../../../style/utils/base';
+
+.heroSection {
+  height: calc(100svh - 16rem);
+  display: flex;
+
+  @include response(phone) {
+    height: calc(100svh - 12rem);
+    flex-direction: column;
+  }
+
+  .imageContainer {
+    flex: 1;
+
+    border-radius: 40rem 0 0 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+
+    @include response(tab-port) {
+      border-radius: 20rem 0 0 0;
+    }
+
+    .img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+  .content {
+    flex: 1;
+    background-color: $color-background-green;
+    border-radius: 0 0 40rem 0;
+
+    display: flex;
+    align-items: center;
+
+    @include response(tab-port) {
+      border-radius: 0 0 20rem 0;
+    }
+
+    .heading {
+      font-size: clamp(1.2rem, calc(0.35rem + 4.27vw), 5.47rem);
+      font-weight: 900;
+      line-height: 1.2;
+      color: $color-background-white;
+      padding-left: 10rem;
+
+      @include response(phone) {
+        font-size: clamp(1.44rem, calc(0.36rem + 5.4vw), 6.84rem);
+      }
+
+      span {
+        display: block;
+        white-space: nowrap;
+      }
+    }
+  }
+}

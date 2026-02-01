@@ -1,0 +1,67 @@
+@import '../../../../style/utils/base';
+
+.contactForm {
+  position: relative;
+  padding: 5rem 5rem 3rem 5rem;
+  background-color: rgba(255, 255, 255, 0.877);
+  border: 2px solid $color-primary;
+
+  .heading {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: $color-primary;
+    white-space: nowrap;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .form {
+    .box {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1rem;
+
+      label {
+        font-size: 1.6rem;
+        font-weight: 400;
+      }
+
+      input,
+      textarea {
+        font-size: 1.6rem;
+        padding: 0.5rem 1rem;
+        width: 40rem;
+        background-color: transparent;
+        outline: none;
+
+        @include response(s-phone) {
+          width: 32rem;
+        }
+      }
+
+      textarea {
+        border: 2px solid $color-primary;
+      }
+
+      input {
+        border: transparent;
+        border-bottom: 2px solid $color-primary;
+      }
+    }
+
+    .btnContainer {
+      display: flex;
+      justify-content: center;
+      margin-top: 3rem;
+
+      .submitBtn {
+        padding: 1rem 3rem;
+        font-size: 1.8rem;
+        background-color: $color-primary;
+        color: $color-text-light;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    }
+  }
+}

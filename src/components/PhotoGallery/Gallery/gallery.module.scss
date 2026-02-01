@@ -1,0 +1,55 @@
+@import '../../../style/utils/base';
+
+.galleryContainer {
+  padding: 5rem 20rem;
+
+  @include response(s-desktop) {
+    padding: 12rem;
+  }
+  @include response(phone) {
+    padding: 5rem;
+  }
+  @include response(s-phone) {
+    padding: 3rem;
+  }
+
+  .galleryGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+
+    @include response(phone) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  h2 {
+    font-size: 5.6rem;
+    color: #0b612d;
+    font-weight: 900;
+
+    @include response(phone) {
+      font-size: 3.5rem;
+      line-height: 1.2;
+      margin-bottom: 2rem;
+    }
+  }
+}
+
+.backButton {
+  padding-top: 5rem;
+  a {
+    font-size: 2rem;
+    color: #0b612d;
+    text-decoration: none;
+    border: 1px solid #0b612d;
+    padding: 1rem 2rem;
+    transition: 0.3s all ease-in-out;
+    border-radius: 4px;
+
+    &:hover {
+      background: #0b612d;
+      color: #fff;
+    }
+  }
+}

@@ -1,0 +1,61 @@
+@import '../../../style/utils/base';
+
+.aboutSection {
+  position: relative;
+  padding: 10rem 20rem 40rem 20rem;
+
+  @include response(tab-port) {
+    padding: 10rem 10rem 30rem 10rem;
+  }
+  @include response(phone) {
+    padding: 8rem 5rem 25rem 5rem;
+  }
+  @include response(s-phone) {
+    padding: 8rem 3rem 20rem 3rem;
+  }
+
+  .layoutLeft {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20rem;
+
+    @include response(phone) {
+      height: 15rem;
+    }
+
+    .img {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+    }
+  }
+  .layoutRight {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    height: 70rem;
+
+    @include response(phone) {
+      height: 60rem;
+    }
+
+    .img {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .text {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 400;
+    color: $color-text-darkGrey;
+
+    &:not(:last-of-type) {
+      margin-bottom: 3rem;
+    }
+  }
+}

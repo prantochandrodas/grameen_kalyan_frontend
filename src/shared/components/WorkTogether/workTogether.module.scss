@@ -1,0 +1,79 @@
+@import '../../../style/utils/base';
+
+.workTogether {
+  padding: 10rem 15rem;
+
+  display: flex;
+  align-items: center;
+  gap: 5rem;
+
+  @include response(s-desktop) {
+    padding: 10rem;
+  }
+  @include response(tab-port) {
+    flex-direction: column;
+  }
+  @include response(phone) {
+    padding: 5rem;
+  }
+  @include response(s-phone) {
+    padding: 5rem 3rem;
+  }
+
+  .imgContainer {
+    flex: 1;
+    height: 70rem;
+    border-radius: 30rem 0 0 0;
+    overflow: hidden;
+
+    @include response(s-desktop) {
+      height: 60rem;
+    }
+    @include response(tab-port) {
+      flex: auto;
+      width: 100%;
+    }
+    @include response(phone) {
+      border-radius: 20rem 0 0 0;
+      height: 50rem;
+    }
+    // @include response(phone){
+    //     border-radius: 20rem 0 0 0;
+    // }
+
+    .img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+  .contentContainer {
+    flex: 1;
+
+    .headingSmall,
+    .headingLarge {
+      line-height: 1.2;
+      font-weight: 900;
+      color: $color-primary;
+    }
+
+    .headingSmall {
+      font-size: clamp(1.44rem, calc(0.36rem + 5.4vw), 6.84rem);
+    }
+    .headingLarge {
+      font-size: clamp(2.07rem, calc(0.35rem + 8.61vw), 10.68rem);
+      margin-bottom: 4rem;
+    }
+    .parag {
+      font-size: 2rem;
+      line-height: 1.4;
+
+      &:first-of-type {
+        margin-bottom: 2rem;
+      }
+      &:last-of-type {
+        margin-bottom: 4rem;
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+@import '../../../style/utils/base';
+
+.albumContainer {
+  padding: 5rem 20rem 10rem 20rem;
+
+  @include response(s-desktop) {
+    padding: 12rem;
+  }
+  @include response(phone) {
+    padding: 5rem;
+  }
+  @include response(s-phone) {
+    padding: 3rem;
+  }
+
+  .albumGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem;
+
+    @include response(tab-port) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include response(phone) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    .link {
+      text-decoration: none;
+    }
+  }
+}

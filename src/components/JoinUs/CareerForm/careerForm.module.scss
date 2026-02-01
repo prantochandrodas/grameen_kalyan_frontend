@@ -1,0 +1,117 @@
+@import '../../../style/utils/base';
+
+.careerForm {
+  position: relative;
+  margin-top: 30rem;
+  background-color: #d0edd7;
+
+  @include response(tab-port) {
+    margin-top: 15rem;
+  }
+
+  .heading {
+    font-size: 35rem;
+    font-weight: 900;
+    white-space: nowrap;
+    line-height: 1;
+    color: #d0edd7;
+
+    position: absolute;
+    top: -32rem;
+    left: 50%;
+    transform: translateX(-50%);
+
+    @include response(tab-port) {
+      font-size: 25rem;
+      top: -22rem;
+    }
+    @include response(phone) {
+      font-size: 20rem;
+      top: -18rem;
+    }
+    @include response(M-phone) {
+      font-size: 12rem;
+      top: -10.5rem;
+    }
+  }
+  .formContainer {
+    padding: 25rem 10rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include response(phone) {
+      padding: 10rem 5rem;
+    }
+    @include response(s-phone) {
+      padding: 10rem 3rem;
+    }
+
+    .form {
+      width: 50%;
+
+      @include response(tab-port) {
+        width: 80%;
+      }
+      @include response(phone) {
+        width: 100%;
+      }
+
+      .box {
+        display: grid;
+        grid-template-columns: [col-sm-start] 25% [col-sm-end col-lg-start] 75% [col-lg-end];
+        grid-template-rows: repeat(2, [row-start] max-content [row-end]);
+        align-items: center;
+        margin-bottom: 2rem;
+
+        label {
+          grid-column: col-sm-start / col-sm-end;
+          grid-row: row-start 1 / row-end 1;
+
+          margin-left: auto;
+          white-space: nowrap;
+          margin-right: 1rem;
+          font-size: 1.6rem;
+
+          @include response(phone) {
+            white-space: wrap;
+          }
+        }
+
+        select,
+        input {
+          grid-column: col-lg-start / col-lg-end;
+          grid-row: row-start 1 / row-end 1;
+
+          margin-left: auto;
+          padding: 1.5rem 3rem;
+          width: 100%;
+          font-size: 1.8rem;
+          border-radius: 2rem 0 2rem 0;
+          border: none;
+          background-color: white;
+          // width: 30rem;
+        }
+
+        .errorContainer {
+          grid-column: col-lg-start / col-lg-end;
+          grid-row: row-start 2 / row-end 2;
+        }
+      }
+
+      .submitBtn {
+        position: relative;
+        left: 65%;
+        transform: translateX(-65%);
+        margin-top: 3rem;
+        padding: 1rem 4rem;
+        font-size: 1.6rem;
+        border-radius: 0.5rem;
+        border: none;
+        color: $color-text-light;
+        background-color: $color-primary;
+      }
+    }
+  }
+}

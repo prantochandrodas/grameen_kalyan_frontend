@@ -1,0 +1,127 @@
+@import '../../../style/utils/base';
+
+.container {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 9999999;
+
+  width: max-content;
+  margin-left: auto;
+  border-radius: 1rem 1rem 0 0;
+
+  .positionContainer {
+    position: relative;
+    width: max-content;
+    border-radius: 1rem 1rem 0 0;
+
+    .sidebarSticky {
+      position: relative;
+      z-index: 4;
+
+      width: max-content;
+      padding: 5.5rem 1.8rem;
+      border-radius: 1rem 1rem 0 0;
+      background-color: $color-primary;
+      margin-left: auto;
+
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(5, min-content);
+      gap: 2rem;
+
+      .divider {
+        height: 1px;
+        width: 100%;
+        background-color: $color-secondary;
+      }
+
+      .iconBox {
+        font-size: 3rem;
+        color: $color-secondary;
+        cursor: pointer;
+
+        display: flex;
+        align-items: center;
+      }
+    }
+    .searchContainer {
+      position: absolute;
+      top: 4.5rem;
+      right: -40rem;
+      transition: all 500ms;
+
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      input {
+        font-size: 1.8rem;
+        padding: 1.5rem 3rem;
+        width: 35rem;
+        outline: none;
+        border: 2px solid $color-primary;
+        border-radius: 5px 0 0 5px;
+      }
+      .exit {
+        font-size: 1.8rem;
+        height: 2.2rem;
+        width: 2.2rem;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.877);
+        color: $color-primary;
+
+        @include alignItem();
+        cursor: pointer;
+      }
+    }
+    .numberContainer {
+      position: absolute;
+      top: 11rem;
+      right: -40rem;
+
+      padding: 1.5rem 3rem;
+      border: 2px solid $color-primary;
+      border-radius: 0.5rem;
+      background-color: rgba(255, 255, 255, 0.877);
+      width: max-content;
+      transition: all 500ms;
+
+      p {
+        font-size: 2rem;
+        font-weight: 400;
+        color: $color-primary;
+      }
+    }
+
+    .formContainer {
+      position: absolute;
+      bottom: 0;
+      right: -55rem;
+      transition: all 500ms;
+
+      .exit {
+        position: absolute;
+        top: 3rem;
+        left: 3rem;
+        z-index: 2;
+
+        font-size: 1.8rem;
+        height: 2.2rem;
+        width: 2.2rem;
+        border-radius: 50%;
+        background-color: $color-primary;
+        color: $color-text-light;
+
+        @include alignItem();
+        cursor: pointer;
+      }
+    }
+
+    .visibleNumber,
+    .visibleForm,
+    .visibleSearch {
+      right: 6.6rem;
+    }
+  }
+}

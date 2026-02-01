@@ -1,0 +1,90 @@
+@import '../../../style/utils/base';
+
+.storySection {
+  position: relative;
+  padding: 20rem 20rem 50rem 20rem;
+
+  @include response(M-desktop) {
+    padding: 20rem 15rem 40rem 15rem;
+  }
+  @include response(tab-port) {
+    padding: 15rem 10rem 30rem 10rem;
+  }
+  @include response(phone) {
+    padding: 10rem 5rem 20rem 5rem;
+  }
+  @include response(s-phone) {
+    padding: 10rem 3rem;
+  }
+
+  .heading {
+    font-size: clamp(1.44rem, calc(0.36rem + 5.4vw), 6.84rem);
+    font-weight: 900;
+    margin-bottom: 4rem;
+    line-height: 1.4;
+    color: $color-primary;
+
+    position: relative;
+    z-index: 1;
+
+    span {
+      display: block;
+      text-align: center;
+    }
+  }
+  .parag {
+    font-size: 2.2rem;
+    text-align: center;
+
+    position: relative;
+    z-index: 1;
+  }
+
+  .layoutLeftTop {
+    height: 40rem;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    @include response(M-desktop) {
+      height: 30rem;
+    }
+    @include response(phone) {
+      height: 20rem;
+    }
+
+    .img {
+      height: 100%;
+      width: 100%;
+      object-fit: Contain;
+    }
+  }
+  .layoutRightBottom {
+    height: 60rem;
+
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    @include response(M-desktop) {
+      height: 50rem;
+    }
+    @include response(tab-port) {
+      height: 40rem;
+    }
+    @include response(phone) {
+      height: 30rem;
+    }
+
+    .img {
+      height: 100%;
+      width: 100%;
+      object-fit: Contain;
+    }
+  }
+}
+
+.storyDisplay {
+  margin-bottom: 20rem;
+}

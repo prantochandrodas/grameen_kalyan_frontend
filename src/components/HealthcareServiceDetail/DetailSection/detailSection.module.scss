@@ -1,0 +1,32 @@
+@import '../../../style/utils/base';
+
+.detailSection {
+  padding: 10rem 20rem;
+
+  @include response(M-desktop) {
+    padding: 10rem 15rem;
+  }
+  @include response(tab-port) {
+    padding: 10rem 10rem;
+  }
+  @include response(phone) {
+    padding: 5rem;
+  }
+  @include response(s-phone) {
+    padding: 5rem 3rem;
+  }
+
+  .contentContainer {
+    h1 {
+      font-size: 5rem;
+    }
+    p {
+      font-size: 2rem;
+
+      margin-bottom: 2rem;
+    }
+  }
+  .btnContainer {
+    padding: 10rem 0;
+  }
+}

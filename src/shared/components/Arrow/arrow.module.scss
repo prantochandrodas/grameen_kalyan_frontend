@@ -1,0 +1,12 @@
+@import '../../../style/utils/base';
+
+.arrow {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+
+  .icon {
+    font-size: 4rem;
+    color: $color-primary;
+  }
+}

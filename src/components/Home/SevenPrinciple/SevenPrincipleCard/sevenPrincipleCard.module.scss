@@ -1,0 +1,20 @@
+@import '../../../../style/utils/base';
+
+.sevenPrincipleCard {
+  border: 1px solid $color-secondary;
+  border-radius: 5rem 0 5rem 0;
+  padding: 1rem 2rem;
+
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+
+  .serial {
+    font-size: 5rem;
+    font-weight: 400;
+  }
+  .description {
+    font-size: 1.8rem;
+    line-height: 1.3;
+  }
+}

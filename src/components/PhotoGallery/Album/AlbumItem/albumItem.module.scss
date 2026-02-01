@@ -1,0 +1,36 @@
+@import '../../../../style/utils/base';
+
+.albumItem {
+  background: #09612e;
+  border-radius: 0.25rem 0.25rem 30px 30px !important;
+  overflow: hidden;
+  border: 1px solid #09612e;
+  height: 100%;
+
+  .imgContainer {
+    height: 30rem;
+
+    .img {
+      border-bottom-right-radius: 5rem;
+      border-bottom-left-radius: 5rem;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      transition: all 0.3s ease-in-out;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  .textContainer {
+    padding: 5rem 3rem;
+
+    .title {
+      font-size: 2.2rem;
+      line-height: 1.2;
+      color: $color-text-light;
+    }
+  }
+}

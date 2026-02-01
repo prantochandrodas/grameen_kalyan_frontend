@@ -1,0 +1,34 @@
+@import '../../../../style/utils/base';
+
+.commentCard {
+  background-color: $color-background-paleAqua;
+  padding: 3rem;
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+
+    margin-bottom: 1rem;
+
+    .userName,
+    .commentDate {
+      display: inline;
+    }
+
+    .userName {
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: $color-primary;
+    }
+    .commentDate {
+      font-size: 2rem;
+    }
+  }
+
+  .comment {
+    p {
+      font-size: 2rem;
+    }
+  }
+}

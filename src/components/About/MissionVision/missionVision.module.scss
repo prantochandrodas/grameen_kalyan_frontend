@@ -1,0 +1,104 @@
+@import '../../../style/utils/base';
+
+.missionVision {
+  position: relative;
+  padding: 20rem;
+
+  display: flex;
+  gap: 5rem;
+
+  @include response(s-desktop) {
+    padding: 15rem 10rem;
+  }
+  @include response(tab-port) {
+    padding: 10rem 5rem;
+  }
+  @include response(phone) {
+    padding: 5rem;
+    flex-direction: column;
+    gap: 3rem;
+  }
+  @include response(s-phone) {
+    padding: 5rem 3rem;
+  }
+
+  .layoutLeft {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    height: 22rem;
+
+    .img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .layoutRight {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    height: 70%;
+
+    .img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .missionContainer,
+  .visionContainer {
+    position: relative;
+    z-index: 1;
+
+    background-color: $color-background-green;
+    padding: 15rem 5rem;
+    color: $color-text-light;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @include response(tab-port) {
+      padding: 10rem 5rem;
+    }
+    @include response(phone) {
+      padding: 8rem 5rem;
+    }
+
+    .title {
+      font-size: 5rem;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .desc {
+      font-size: 1.8rem;
+      font-weight: 400;
+      max-width: 35rem;
+      text-align: center;
+    }
+  }
+
+  .visionContainer {
+    flex: 1;
+    border-radius: 20rem 0 0 0;
+
+    @include response(phone) {
+      border-radius: 10rem 0 0 0;
+    }
+  }
+
+  .missionContainer {
+    flex: 1;
+    border-radius: 0 0 20rem 0;
+
+    @include response(phone) {
+      border-radius: 0 0 10rem 0;
+    }
+  }
+}

@@ -1,0 +1,131 @@
+@import '../../../style/utils/base';
+
+.heroSection {
+  height: calc(100svh - 16rem);
+  position: relative;
+
+  @include response(phone) {
+    height: calc(100svh - 12rem);
+  }
+
+  .bgImage {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+
+    // display: flex;
+
+    .imgContainer {
+      height: 100%;
+      width: 100%;
+
+      // @include alignItem();
+    }
+
+    .img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      object-position: left;
+
+      @include response(vp-800) {
+        object-position: 20%;
+      }
+      @include response(phone) {
+        object-position: 29%;
+      }
+    }
+
+    .slick-track {
+      height: calc(100svh - 16rem);
+
+      @include response(phone) {
+        height: calc(100svh - 12rem);
+      }
+    }
+    .slick-track .slick-slide > div {
+      height: 100%;
+    }
+  }
+
+  .layout {
+    height: 45rem;
+    width: 45rem;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 4;
+
+    @include response(phone) {
+      height: 35rem;
+      width: 35rem;
+    }
+
+    .img {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .glory {
+    height: 21rem;
+    width: 21rem;
+
+    position: absolute;
+    top: 8rem;
+    right: 13rem;
+    z-index: 5;
+
+    .img {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .contentContainer {
+    background-color: rgba($color: black, $alpha: 0.3);
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 3;
+
+    display: flex;
+    align-items: center;
+
+    @include response(phone) {
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .imgContainer {
+      position: relative;
+      height: 45rem;
+      width: 45rem;
+      margin-left: 10rem;
+
+      @include response(tab-port) {
+        height: 35rem;
+        width: 35rem;
+        margin-bottom: 5rem;
+      }
+      @include response(phone) {
+        margin-left: 0;
+        margin-bottom: 10rem;
+      }
+
+      .img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+}

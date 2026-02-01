@@ -1,0 +1,148 @@
+@import '../../../style/utils/base';
+
+.achievementSection {
+  padding: 10rem 20rem;
+  background-color: $color-primary;
+
+  display: grid;
+  grid-template-columns: 1fr max-content 1fr;
+  grid-template-rows: repeat(auto-fill, max-content);
+  gap: 3rem;
+
+  @include response(s-desktop) {
+    padding: 10rem;
+  }
+  @include response(phone) {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding: 10rem 5rem;
+  }
+  @include response(s-phone) {
+    padding: 5rem 3rem;
+  }
+
+  .imageContainer {
+    height: 60rem;
+    border-radius: 20rem 0 0 0;
+    overflow: hidden;
+    background-color: $color-text-grey;
+
+    @include response(vp-800) {
+      border-radius: 10rem 0 0 0;
+    }
+
+    .img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .imageContainerReverse {
+    border-radius: 0 0 20rem 0;
+
+    @include response(vp-800) {
+      border-radius: 0 0 10rem 0;
+    }
+  }
+
+  .contentContainer {
+    color: $color-text-light;
+    background-color: $color-secondary;
+    padding: 3rem 4rem;
+    border-radius: 0 0 20rem 0;
+
+    @include response(vp-800) {
+      border-radius: 0 0 10rem 0;
+    }
+
+    .heading {
+      font-size: 4rem;
+      font-weight: 900;
+      margin-bottom: 2rem;
+    }
+    table {
+      border: 1px solid transparent !important;
+      border-collapse: collapse;
+
+      tr {
+        display: block;
+        border: 1px solid transparent !important;
+        margin-bottom: 1rem;
+
+        td {
+          font-size: 1.8rem;
+          width: 100%;
+          max-width: max-content;
+          border-bottom: 1px solid black;
+
+          &:not(:last-of-type) {
+            margin-bottom: 1rem;
+          }
+        }
+      }
+    }
+  }
+
+  .contentContainerReverse {
+    border-radius: 20rem 0 0 0;
+    text-align: end;
+
+    @include response(vp-800) {
+      border-radius: 10rem 0 0 0;
+    }
+
+    table {
+      margin-left: auto;
+
+      tr {
+        margin-left: auto;
+        display: flex;
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  .verticalTopLine {
+    width: 1px;
+    background-color: $color-secondary;
+    justify-self: center;
+
+    @include response(phone) {
+      display: none;
+    }
+  }
+
+  .horizontalLeftLine {
+    height: 1px;
+    background-color: $color-secondary;
+    align-self: center;
+  }
+  .squareBox {
+    height: 1.5rem;
+    width: 1.5rem;
+    background-color: $color-secondary;
+
+    @include response(phone) {
+      display: none;
+    }
+  }
+  .horizontalRightLine {
+    height: 1px;
+    background-color: $color-secondary;
+    align-self: center;
+
+    @include response(phone) {
+      display: none;
+    }
+  }
+  .verticalBottomLine {
+    width: 1px;
+    background-color: $color-secondary;
+    justify-self: center;
+
+    @include response(phone) {
+      display: none;
+    }
+  }
+}

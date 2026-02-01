@@ -1,0 +1,169 @@
+@import '../../../style/utils/base';
+
+.annualSection {
+  // height: 100svh;
+  position: relative;
+
+  // @include response(phone){
+  //     height: 45rem;
+  // }
+
+  .heading {
+    font-size: clamp(2.07rem, calc(0.35rem + 8.61vw), 10.68rem);
+    font-weight: 900;
+    line-height: 1;
+    text-align: center;
+    color: $color-primary;
+    opacity: 0.3;
+    margin-bottom: 10rem;
+    z-index: 1;
+
+    @include response(phone) {
+      margin-bottom: 5rem;
+    }
+    @include response(s-phone) {
+      margin-bottom: 5rem;
+    }
+
+    // position: relative;
+    // top: -22rem;
+
+    // @include response(vp-800) {
+    //   top: -20rem;
+    // }
+    // @include response(phone) {
+    //   top: -18rem;
+    // }
+    // @include response(s-phone) {
+    //   top: -11rem;
+    // }
+
+    span {
+      display: block;
+    }
+  }
+  .headingSingle {
+    top: -12rem;
+
+    @include response(vp-800) {
+      top: -10rem;
+    }
+    @include response(phone) {
+      top: -8rem;
+    }
+    @include response(s-phone) {
+      top: -5rem;
+    }
+  }
+
+  .container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    .bgContainer {
+      height: 100%;
+      width: 100%;
+
+      .img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        object-position: top;
+
+        @include response(phone) {
+          object-fit: contain;
+        }
+      }
+    }
+    .contentContainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+      display: flex;
+      align-items: flex-end;
+
+      background-image: linear-gradient(
+        transparent 50%,
+        rgb($color-primary, 0.9)
+      );
+
+      .gridContainer {
+        width: 100%;
+        padding: 10rem 20rem;
+
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(2, max-content);
+        row-gap: 3rem;
+
+        @include response(s-desktop) {
+          padding: 10rem;
+        }
+        @include response(phone) {
+          padding: 5rem;
+
+          grid-template-columns: repeat(2, 1fr);
+          grid-template-rows: repeat(4, max-content);
+        }
+
+        .content {
+          .text {
+            color: $color-text-light;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            @include response(phone) {
+              align-items: center;
+            }
+
+            .number {
+              font-size: 7rem;
+              line-height: 1.2;
+              font-weight: 500;
+
+              @include response(M-desktop) {
+                font-size: 5rem;
+              }
+              @media screen and (max-width: 810px) {
+                font-size: 4rem;
+              }
+            }
+            .title {
+              font-size: 2rem;
+              font-weight: 600;
+
+              @include response(M-desktop) {
+                font-size: 1.8rem;
+              }
+              @media screen and (max-width: 810px) {
+                font-size: 1.6rem;
+              }
+            }
+          }
+        }
+      }
+    }
+    .contentContainerT {
+      background-image: linear-gradient(transparent 50%, rgb(black, 0.5));
+    }
+  }
+}
+
+.annualSectionT {
+  margin-top: 25rem;
+
+  @include response(phone) {
+    margin-top: 20rem;
+  }
+  @include response(s-phone) {
+    margin-top: 10rem;
+  }
+}
