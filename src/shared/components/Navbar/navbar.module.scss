@@ -1,18 +1,106 @@
 @import '../../../style/utils/base';
+.iconBox {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;           // square box
+  height: 35px;
+  border: 1px solid #fff; // 1px white border
+  border-radius: 0px;    // slightly rounded corners
+  background-color: #355694; // black background (change if needed)
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+
+  svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  &:hover {
+    transform: translateY(-3px);        // slight lift effect
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); // shadow effect
+  }
+}
+.instaiconBox {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;           // square box
+  height: 35px;
+  border: 1px solid #fff; // 1px white border
+  border-radius: 0px;    // slightly rounded corners
+  background-color: #F60E4B; // black background (change if needed)
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+
+  svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  &:hover {
+    transform: translateY(-3px);        // slight lift effect
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); // shadow effect
+  }
+}
+.twitericonBox {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;           // square box
+  height: 35px;
+  border: 1px solid #fff; // 1px white border
+  border-radius: 0px;    // slightly rounded corners
+  background-color: #000000; // black background (change if needed)
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+
+  svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  &:hover {
+    transform: translateY(-3px);        // slight lift effect
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); // shadow effect
+  }
+}
+.linkDiniconBox {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 35px;           // square box
+  height: 35px;
+  border: 1px solid #fff; // 1px white border
+  border-radius: 0px;    // slightly rounded corners
+  background-color: #0071AE; // black background (change if needed)
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+
+  svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  &:hover {
+    transform: translateY(-3px);        // slight lift effect
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); // shadow effect
+  }
+}
 
 .topInfoBar {
-  position: absolute;
+  position: relative;
   right: 0;
   top: 0;
-  width: 65%;
-  background: #ffffff;
-  border-top-left-radius: 15px;
+  width: 100%;
+  background: #BD8326;
+  // border-top-left-radius: 15px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 15px;
+  padding: 6px 5rem;
   font-size: 12px;
-  color: #0b612d;
+  color: #ffffff;
   font-weight: 600;
   z-index: 1;
   gap: 8px;
@@ -36,7 +124,7 @@
 
   a {
     color: #0b612d;
-    font-size: 18px;
+    font-size: 13px;
   }
 }
 
@@ -63,7 +151,11 @@
 .navbar {
   position: relative;
   z-index: 999999;
-  padding: 4rem 10rem;
+  padding-left:  10rem;
+  padding-right:  10rem;
+  padding-top:  10px;
+  padding-bottom: 3rem;
+
   background-color: white;
 
   display: flex;
@@ -110,7 +202,7 @@
     align-items: center;
 
     position: absolute;
-    bottom: -2.5rem;
+    bottom: 1rem;
     right: 0;
 
     @include response(tab-port) {

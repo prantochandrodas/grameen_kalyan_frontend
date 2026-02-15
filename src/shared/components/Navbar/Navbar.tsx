@@ -276,8 +276,8 @@ const Navbar = ({ badgeImage }: INavbarProps) => {
 
   return (
     <>
+      <TopInfoBar />
       <div className={navbar}>
-        <TopInfoBar />
         <Link className={link} href="/">
           <div className={logoContainer}>
             <Image className={logo} src={gkLogo} alt="GK logo" priority />
