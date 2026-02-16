@@ -1,6 +1,62 @@
+// .section {
+//   padding: 60px 0;
+//   background: #BD8326;// ✅ Section background
+// }
+
+// .videoContainer {
+//   max-width: 1400px;
+//   margin: 0 auto;
+//   padding: 0 16px;
+// }
+
+// /* Grid: 2 videos per row */
+// .grid {
+//   display: grid;
+//   grid-template-columns: repeat(2, 1fr);
+//   gap: 30px;
+//   justify-content: center;
+// }
+
+// /* Center if only 1 video */
+// .grid:has(.videoItem:only-child) {
+//   grid-template-columns: 1fr;
+//   max-width: 500px;
+//   margin: 0 auto;
+// }
+
+// /* Video card */
+// .videoItem {
+//   padding: 12px;
+//   border-radius: 12px;
+//   background: transparent;
+// }
+
+// /* Responsive YouTube iframe with border */
+// .iframeBox {
+//   position: relative;
+//   width: 100%;
+//   padding-top: 56.25%;
+
+//   iframe {
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     width: 100%;
+//     height: 100%;
+//     border: 2px solid #ffffff; // ✅ subtle border
+//     border-radius: 8px;
+//   }
+// }
+
+// /* Mobile: 1 column */
+// @media (max-width: 768px) {
+//   .grid {
+//     grid-template-columns: 1fr;
+//   }
+// }
 .section {
   padding: 60px 0;
-  background: #BD8326;// ✅ Section background
+  background: #BD8326;
 }
 
 .videoContainer {
@@ -9,7 +65,7 @@
   padding: 0 16px;
 }
 
-/* Grid: 2 videos per row */
+/* 🔹 Grid: 2 videos per row */
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -17,25 +73,26 @@
   justify-content: center;
 }
 
-/* Center if only 1 video */
-.grid:has(.videoItem:only-child) {
-  grid-template-columns: 1fr;
-  max-width: 500px;
-  margin: 0 auto;
+/* 🔹 Last row single item → center */
+.grid > .videoItem:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  justify-self: center;
+ max-width: 700px;
+  width: 100%;
 }
 
-/* Video card */
+/* 🔹 Video card */
 .videoItem {
   padding: 12px;
   border-radius: 12px;
   background: transparent;
 }
 
-/* Responsive YouTube iframe with border */
+/* 🔹 Responsive iframe */
 .iframeBox {
   position: relative;
   width: 100%;
-  padding-top: 56.25%;
+  padding-top: 56.25%; // 16:9
 
   iframe {
     position: absolute;
@@ -43,14 +100,22 @@
     left: 0;
     width: 100%;
     height: 100%;
-    border: 2px solid #ffffff; // ✅ subtle border
+
+    border: 2px solid #ffffff;
     border-radius: 8px;
   }
 }
 
-/* Mobile: 1 column */
+/* 🔹 Mobile: 1 column */
 @media (max-width: 768px) {
   .grid {
     grid-template-columns: 1fr;
+  }
+
+  /* mobile এ center rule লাগবে না */
+  .grid > .videoItem:last-child:nth-child(odd) {
+    grid-column: auto;
+    justify-self: stretch;
+    max-width: 100%;
   }
 }

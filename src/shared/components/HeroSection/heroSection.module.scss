@@ -5,7 +5,8 @@
   height: calc(100svh - 16rem);
 
   @include response(phone) {
-    height: calc(100svh - 12rem);
+    // height: calc(100svh - 12rem);
+     height: calc(50svh - 12rem);
   }
 
   .bgImageContainer {
@@ -191,7 +192,7 @@
 
     @include response(phone) {
       border-radius: 20rem 0 0 0;
-      padding: 8rem 10rem;
+      padding: 2rem 10rem;
     }
   }
   .healthcareContent {
