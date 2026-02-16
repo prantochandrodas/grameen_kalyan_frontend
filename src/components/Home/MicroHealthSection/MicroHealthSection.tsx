@@ -11,8 +11,10 @@ import style from './microHealthSection.module.scss';
 const {
   microHealthSection,
   heading,
+  microHealth,
   container,
   bgContainer,
+  insuranceText,
   img,
   contentContainer,
 } = style;
@@ -25,8 +27,8 @@ const MicroHealthSection = ({ image }: IMicroHealthSectionProps) => {
   return (
     <div className={microHealthSection}>
       <h1 className={heading}>
-        <span> Micro Health</span>
-        <span>Insurance</span>
+        <span className={microHealth}> Micro Health</span>
+        <span style={{ color: 'white' }} className={insuranceText}>Insurance</span>
       </h1>
       <div className={container}>
         <div className={bgContainer}>

@@ -13,14 +13,16 @@
   }
 
   .heading {
-    font-size: 45rem;
+    font-size: 35rem;
+    // font-size: 45rem;
     line-height: 1.2;
     text-align: center;
     color: $color-primary;
     opacity: 0.3;
 
     position: relative;
-    top: -30rem;
+    // top: -30rem;
+    top: -23rem;
     z-index: 1;
 
     @include response(s-desktop) {

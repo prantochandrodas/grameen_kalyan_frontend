@@ -15,12 +15,20 @@
     margin-top: 15rem;
   }
 
+.insuranceText {
+  color: white !important;
+  opacity: 0.7!important;
+}
+.microHealth {
+  opacity: 0.3!important;
+}
+
   .heading {
     font-size: 25rem;
     line-height: 1;
     text-align: center;
     color: $color-primary;
-    opacity: 0.3;
+   
 
     position: relative;
     top: -22.5rem;

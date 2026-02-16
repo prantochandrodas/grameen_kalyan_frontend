@@ -37,7 +37,7 @@ const AnnuallyServe = (data: IAnnuallyServeProps) => {
         transition={{ duration: 0.5, delay: 0.1 }}
         className={secondText}
       >
-        People Across 30 Districts in Bangladesh
+        People Across the Country
       </motion.h3>
     </div>
   );
