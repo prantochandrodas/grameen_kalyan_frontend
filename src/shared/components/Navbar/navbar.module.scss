@@ -128,6 +128,48 @@
   }
 }
 
+/* Medium Laptop */
+@media (max-width: 1200px) and (min-width: 992px) {
+   .topInfoBar {
+    flex-wrap: nowrap!important; // prevent wrapping
+    justify-content: space-between!important; // make items spread in one line
+  }
+
+  .topInfoItem {
+    width: auto !important; // allow automatic width so all items fit
+  }
+
+  .locationRow p {
+    font-size: 12px !important; // smaller text
+  }
+  .navbar {
+    padding-left: 5rem!important;  // reduce padding
+    padding-right: 5rem!important;
+    padding-top: 5px!important;
+    padding-bottom: 2rem!important;
+
+    .list {
+      padding: 0 3rem 0 2rem !important;  // reduce ul padding
+      .item,
+      .dropdownItem {
+        padding: 1rem 1.5rem !important;   // reduce menu item padding
+        font-size: 1.6rem !important;      // reduce font size
+      }
+
+      .dropdownList {
+        .subItem {
+          padding: 0.8rem 1.5rem !important; // smaller dropdown items
+        }
+      }
+
+      .badgeContainer {
+        top: 50% !important;
+        right: 3rem !important; // reduce distance from right
+      }
+    }
+  }
+}
+
 /* Tablet */
 @media (max-width: 991px) {
   .topInfoBar {
