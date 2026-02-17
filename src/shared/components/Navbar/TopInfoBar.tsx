@@ -97,21 +97,22 @@ const TopInfoBar = () => {
           <FaTwitter />
         </Link> */}
         <Link
-          href="https://twitter.com/GrameenKalyan"
+          href="https://www.youtube.com/@GrameenKalyan1996"
           target="_blank"
           rel="noopener noreferrer"
-          className={twitericonBox}
+          className={twitericonBox} // you can rename this class if needed
         >
           <svg
             aria-hidden="true"
-            viewBox="0 0 512 512"
+            viewBox="0 0 576 512"
             width="20"
             height="20"
             fill="#ffffff"
           >
-            <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z" />
+            <path d="M549.655 124.083c-6.281-23.65-24.813-42.182-48.466-48.464C456.004 64 288 64 288 64s-168.004 0-213.189 11.619c-23.653 6.282-42.185 24.815-48.466 48.464C16.726 169.266 16 256 16 256s.726 86.734 10.345 131.917c6.281 23.65 24.813 42.182 48.466 48.464C119.996 448 288 448 288 448s168.004 0 213.189-11.619c23.653-6.282 42.185-24.815 48.466-48.464C559.274 342.734 560 256 560 256s-.726-86.734-10.345-131.917zM232 334.9V177.1L345 256 232 334.9z" />
           </svg>
         </Link>
+
         {/* <Link
           href="https://www.linkedin.com/company/grameenkalyan/"
           target="_blank"

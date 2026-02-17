@@ -16,22 +16,22 @@
   }
 
 .insuranceText {
-  color: white !important;
-  opacity: 0.7!important;
+  opacity: 0.3!important;
 }
 .microHealth {
   opacity: 0.3!important;
 }
 
   .heading {
-    font-size: 25rem;
+    font-size: 20rem;
     line-height: 1;
     text-align: center;
     color: $color-primary;
    
 
     position: relative;
-    top: -22.5rem;
+  top: -31rem;
+
     z-index: 1;
 
     @include response(s-desktop) {

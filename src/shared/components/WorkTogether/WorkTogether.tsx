@@ -36,16 +36,16 @@ const WorkTogether = () => {
         >
           Let's Work
         </motion.h3>
-        <motion.h2
-          style={{ position: 'relative' }}
+        <motion.h3
+          style={{ position: 'relative', marginBottom: '10px' }}
           initial={{ opacity: 0, bottom: '-5rem' }}
           whileInView={{ opacity: 1, bottom: '0' }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className={headingLarge}
+          className={headingSmall}
         >
           Together
-        </motion.h2>
+        </motion.h3>
         <motion.p
           style={{ position: 'relative' }}
           initial={{ opacity: 0, bottom: '-5rem' }}

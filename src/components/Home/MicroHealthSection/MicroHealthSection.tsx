@@ -28,7 +28,7 @@ const MicroHealthSection = ({ image }: IMicroHealthSectionProps) => {
     <div className={microHealthSection}>
       <h1 className={heading}>
         <span className={microHealth}> Micro Health</span>
-        <span style={{ color: 'white' }} className={insuranceText}>Insurance</span>
+        <span className={insuranceText}>Insurance</span>
       </h1>
       <div className={container}>
         <div className={bgContainer}>
