@@ -4,6 +4,19 @@
   height: calc(100svh - 16rem);
   position: relative;
 
+  .slick-dots {
+    position: absolute;
+    bottom: 10px; // adjust as needed
+    z-index: 10;  // make sure dots are on top
+    display: flex !important;
+    justify-content: center;
+    li {
+      button {
+        cursor: pointer; // ensures pointer
+      }
+    }
+  }
+
   @include response(phone) {
     height: calc(100svh - 12rem);
   }

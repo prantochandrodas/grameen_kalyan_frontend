@@ -1,12 +1,41 @@
 @import '../../../style/utils/base';
 
+// .arrow {
+//     position: absolute; 
+//   border: none;
+//   background-color: transparent;
+//   cursor: pointer;
+
+//   .icon {
+//     font-size: 4rem;
+//     color: $color-primary;
+//   }
+// }
 .arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
   border: none;
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0.4);
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
   cursor: pointer;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
 
   .icon {
     font-size: 4rem;
-    color: $color-primary;
+    color: #fff;
   }
+}
+
+.prevArrow {
+  left: 2rem;
+}
+
+.nextArrow {
+  right: 2rem;
 }

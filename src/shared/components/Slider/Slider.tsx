@@ -21,7 +21,7 @@ const Sliders = ({
   centerMode = true,
   autoplaySpeed = 2000,
   children,
-  arrows = false,
+  arrows = true,
 }: ISliderProps) => {
   // const {
   //   sliderBox, circleDot, flatDot, slickMain

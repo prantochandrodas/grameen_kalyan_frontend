@@ -2,7 +2,7 @@
 
 .sliderBox {
   height: 100%;
-
+  position: relative;
   // circle dot
   .circleDot {
     bottom: 30px;
@@ -35,4 +35,11 @@
       }
     }
   }
+}
+.slick-prev:before {
+  display: none !important;
+}
+
+.slick-next:before {
+  display: none !important;
 }

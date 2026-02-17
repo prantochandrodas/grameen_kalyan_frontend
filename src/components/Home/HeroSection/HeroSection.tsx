@@ -25,6 +25,8 @@ const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
           slideToShowMob={1}
           autoPlay={true}
           autoplaySpeed={3000}
+          dots={true}
+          customDot="circle"
         >
           {sliderImages?.map((data) => (
             <div key={data.id} className="imgContainer">
