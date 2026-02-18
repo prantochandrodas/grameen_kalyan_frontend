@@ -132,6 +132,19 @@ background-color: #0b612d;
             color: $color-primary;
             transition: all 500ms;
           }
+          .linkdinIcon{
+           color: #0071AE!important;
+         }
+         .youtubeIcon {
+            color: #FF0033!important;
+          }
+          .instagramIcon {
+            color: #F60E4B!important;
+          }
+
+          .facebookIcon {
+            color: #ffffff!important;
+          }
 
           &:hover .icon {
             // color: white;
