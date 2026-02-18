@@ -59,9 +59,18 @@ const VideoSection = () => {
   return (
     <section className={section}>
       <h3 style={{
-        margin: '20px 0px', fontSize: '28px', fontWeight: 'bold', textAlign: 'center', color: '#ffffff'
+        margin: '20px 0px', fontSize: '40px', fontWeight: 'bold', textAlign: 'center', color: '#0B612D'
 
-      }}>Our Initiative Goals and Stories</h3>
+      }}>Our Stories</h3>
+      <div
+        style={{
+          width: '100px',
+          height: '4px',
+          backgroundColor: '#0B612D',
+          margin: '0 auto 30px',
+          borderRadius: '2px',
+        }}
+      />
       <div className={videoContainer}>
         <Slider {...sliderSettings}>
           {videos.map((video) => (

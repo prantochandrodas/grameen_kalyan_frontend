@@ -2,7 +2,6 @@
 
 .footer {
   padding-left: 5rem;
-background-color: #0b612d;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -16,9 +15,11 @@ background-color: #0b612d;
   }
 
   .logoContainer {
+    background: #ffffff;
+    padding: 1rem;
+    margin-left: 30px;
     flex: 1;
-    padding: 3rem;
-    height: 20rem;
+    height: 12rem;
 
     display: flex;
     align-items: center;
@@ -35,41 +36,45 @@ background-color: #0b612d;
       object-fit: contain;
     }
   }
+
   .contentContainer {
     flex: 3;
     background-color: $color-primary;
     padding: 15rem 20rem;
-    border-radius: 50rem 0 0 0;
+    border-radius: 50rem 50rem 0 0;
 
     display: flex;
     justify-content: space-between;
     gap: 2rem;
+    flex-wrap: wrap; // 🔥 important
 
     @include response(M-desktop) {
       padding: 10rem 10rem 10rem 20rem;
-      // padding: 15rem 10rem 15rem 20rem;
+       border-radius: 25rem 25rem 0 0; 
     }
+
     @include response(s-desktop) {
       padding: 10rem 5rem 10rem 15rem;
     }
+
     @include response(vp-800) {
       flex: auto;
       flex-direction: column;
       align-items: center;
       gap: 5rem;
-      border-radius: 20rem 0 0 0;
+      border-radius: 20rem 20rem 0 0;
       padding: 10rem 5rem;
     }
 
     .address,
     .contact,
     .socialmedia {
-      font-size:2rem;
-      // font-size: 1.8rem;
+      font-size: 2rem;
       color: $color-text-light;
     }
 
     .address {
+      flex: 1.2;
       display: flex;
       gap: 2rem;
 
@@ -79,38 +84,24 @@ background-color: #0b612d;
     }
 
     .contact {
+      flex: 1.2;
       display: grid;
-      grid-template-columns: repeat(2, [col-start] max-content [col-end]);
-      grid-template-rows: repeat(2, [row-start] max-content [row-end]);
+      grid-template-columns: repeat(2, max-content);
       column-gap: 2rem;
 
       .phoneTitle,
       .emailTitle {
         font-weight: 600;
       }
-
-      .phoneTitle {
-        grid-column: col-start 1 / col-end 1;
-        grid-row: row-start 1 / row-end 1;
-      }
-      .phoneData {
-        grid-column: col-start 2 / col-end 2;
-        grid-row: row-start 1 / row-end 1;
-      }
-      .emailTitle {
-        grid-column: col-start 1 / col-end 1;
-        grid-row: row-start 2 / row-end 2;
-      }
-      .emailData {
-        grid-column: col-start 2 / col-end 2;
-        grid-row: row-start 2 / row-end 2;
-      }
     }
+
     .socialmedia {
+      flex: 0.8;
+
       .container {
         display: flex;
         align-items: center;
-        gap: 2rem;
+        gap: 1rem;
 
         @include response(vp-800) {
           justify-content: center;
@@ -132,43 +123,34 @@ background-color: #0b612d;
             color: $color-primary;
             transition: all 500ms;
           }
-          .linkdinIcon{
-           color: #0071AE!important;
-         }
-         .youtubeIcon {
-            color: #FF0033!important;
+
+          .linkdinIcon {
+            color: #0071ae !important;
           }
+
+          .youtubeIcon {
+            color: #ff0033 !important;
+          }
+
           .instagramIcon {
-            color: #F60E4B!important;
+            color: #f60e4b !important;
           }
 
           .facebookIcon {
-            color: #ffffff!important;
+            color: #ffffff !important;
           }
-
-          &:hover .icon {
-            // color: white;
-          }
-         
-          &:hover .linkdinIcon {
-            color: #0071AE;
-          }
-          &:hover .youtubeIcon {
-            color: #FF0033;
-          }
-          &:hover .instagramIcon {
-            color: #F60E4B;
-          }
-          &:hover .facebookIcon {
-            color: #ffffff;
-          }
-         
         }
       }
-      .copywrite {
-        font-size: 1.5rem;
-        // font-size: 1.3rem;
-      }
+    }
+
+    // 🔥 copyright bottom full width
+    .copywrite {
+      width: 100%;
+      flex-basis: 100%;
+      text-align: center;
+      font-size: 1.5rem;
+      margin-top: 4rem;
+      color: $color-text-light;
     }
   }
 }

@@ -69,7 +69,7 @@ const TopInfoBar = () => {
       <div
         className={topInfoItem}
         style={{
-          display: 'flex', alignItems: 'center', gap: '5px'
+          display: 'flex', alignItems: 'center', gap: '5px', marginRight: '30px'
         }}
       >
         {/* <FiMail style={{ fontSize: '20px', color: '#ffffff' }} /> */}
