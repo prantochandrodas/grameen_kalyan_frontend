@@ -2,7 +2,7 @@
 
 .footer {
   padding-left: 5rem;
-
+background-color: #0b612d;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -46,7 +46,8 @@
     gap: 2rem;
 
     @include response(M-desktop) {
-      padding: 15rem 10rem 15rem 20rem;
+      padding: 10rem 10rem 10rem 20rem;
+      // padding: 15rem 10rem 15rem 20rem;
     }
     @include response(s-desktop) {
       padding: 10rem 5rem 10rem 15rem;
@@ -63,7 +64,8 @@
     .address,
     .contact,
     .socialmedia {
-      font-size: 1.8rem;
+      font-size:2rem;
+      // font-size: 1.8rem;
       color: $color-text-light;
     }
 
@@ -132,12 +134,27 @@
           }
 
           &:hover .icon {
-            color: white;
+            // color: white;
           }
+         
+          &:hover .linkdinIcon {
+            color: #0071AE;
+          }
+          &:hover .youtubeIcon {
+            color: #FF0033;
+          }
+          &:hover .instagramIcon {
+            color: #F60E4B;
+          }
+          &:hover .facebookIcon {
+            color: #ffffff;
+          }
+         
         }
       }
       .copywrite {
-        font-size: 1.3rem;
+        font-size: 1.5rem;
+        // font-size: 1.3rem;
       }
     }
   }

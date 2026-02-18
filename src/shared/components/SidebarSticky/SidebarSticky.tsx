@@ -66,15 +66,45 @@ const SidebarSticky = () => {
       <div className={positionContainer}>
         <div className={sidebarSticky}>
           <div className={iconBox} onClick={() => handleSearchToggle()}>
-            <FaSearch />
+            <img
+              src="/images/search.png"
+              alt="search"
+              style={{
+                width: '20px',
+                height: '20px',
+                marginRight: '5px',
+                objectFit: 'contain',
+              }}
+            />
+            {/* <FaSearch /> */}
           </div>
           <div className={divider} />
           <div className={iconBox} onClick={() => handlePhoneToggle()}>
-            <BiSolidPhoneCall />
+            <img
+              src="/images/phonesdfjs.png"
+              alt="phone"
+              style={{
+                width: '20px',
+                height: '20px',
+                marginRight: '5px',
+                objectFit: 'contain',
+              }}
+            />
+            {/* <BiSolidPhoneCall style={{ color: '#355694' }} /> */}
           </div>
           <div className={divider} />
           <div className={iconBox} onClick={() => handleContactFormToggle()}>
-            <IoIosMail />
+            {/* <IoIosMail /> */}
+            <img
+              src="/images/gmail.png"
+              alt="gmail"
+              style={{
+                width: '20px',
+                height: '20px',
+                marginRight: '5px',
+                objectFit: 'contain'
+              }}
+            />
           </div>
         </div>
 

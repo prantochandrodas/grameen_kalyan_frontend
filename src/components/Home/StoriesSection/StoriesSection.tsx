@@ -52,7 +52,7 @@ const StoriesSection = ({ storyCategory }: IStoriesSectionProps) => {
             whileInView={{ opacity: 1, bottom: '0' }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className={large}
+            className={small}
           >
             Smile
           </motion.span>

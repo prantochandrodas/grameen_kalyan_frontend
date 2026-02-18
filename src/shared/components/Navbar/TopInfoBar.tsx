@@ -8,12 +8,14 @@ import {
   FaInstagram,
   FaTwitter,
   FaLinkedinIn,
+  FaPhoneAlt,
 } from 'react-icons/fa';
 
 import style from './navbar.module.scss';
 
 
 const {
+  addressText,
   topInfoBar,
   topInfoItem,
   topInfoSocial,
@@ -29,8 +31,18 @@ const TopInfoBar = () => {
     <div className={topInfoBar}>
       <div className={topInfoItem} style={{ width: '42%', display: 'flex', alignItems: 'center', gap: '5px' }}>
         <div className={locationRow}>
-          <span>  <FaMapMarkerAlt style={{ color: 'white', fontSize: '15px', marginRight: '5px' }} /></span>
-          <p>
+          <span>  <img
+            src="/images/location.png"
+            alt="location"
+            style={{
+              width: '20px',
+              height: '20px',
+              marginRight: '5px',
+              objectFit: 'contain'
+            }}
+          /></span>
+          {/* <span>  <FaMapMarkerAlt style={{ color: 'white', fontSize: '15px', marginRight: '5px' }} /></span> */}
+          <p className={addressText}>
             5th Floor, Grameen Telecom Bhaban, 53/1 Box Nagar, Mirpur 1, Dhaka
             1216, Bangladesh
           </p>
@@ -40,7 +52,18 @@ const TopInfoBar = () => {
       <div className={topInfoItem} style={{
         display: 'flex', alignItems: 'center', gap: '5px'
       }}>
-        <FiPhone style={{ marginRight: '5px', fontSize: '20px', color: '#ffffff' }} /> +880244802111 | +8809642115500
+        {/* <FaPhoneAlt style={{ marginRight: '5px', fontSize: '20px', color: '#ffffff' }} /> */}
+        <img
+          src="/images/phonesdfjs.png"
+          alt="phone"
+          style={{
+            width: '20px',
+            height: '20px',
+            marginRight: '5px',
+            objectFit: 'contain'
+          }}
+        />
+        +880244802111 | +8809642115500
 
       </div>
       <div
@@ -49,7 +72,17 @@ const TopInfoBar = () => {
           display: 'flex', alignItems: 'center', gap: '5px'
         }}
       >
-        <FiMail style={{ fontSize: '20px', color: '#ffffff' }} />
+        {/* <FiMail style={{ fontSize: '20px', color: '#ffffff' }} /> */}
+        <img
+          src="/images/gmail.png"
+          alt="gmail"
+          style={{
+            width: '20px',
+            height: '20px',
+            marginRight: '5px',
+            objectFit: 'contain'
+          }}
+        />
         contact@grameenkalyan.com
       </div>
 

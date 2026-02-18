@@ -87,7 +87,9 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); // shadow effect
   }
 }
-
+.addressText{
+  font-size: 14px!important;
+}
 .topInfoBar {
   position: relative;
   right: 0;
@@ -108,7 +110,9 @@
 }
 
 .topInfoItem {
+  font-size: 14px;
   line-height: 1.4;
+  
 }
 
 .locationRow {
@@ -140,7 +144,7 @@
   }
 
   .locationRow p {
-    font-size: 12px !important; /* smaller text */
+    font-size: 14px !important; /* smaller text */
   }
 
   .navbar {

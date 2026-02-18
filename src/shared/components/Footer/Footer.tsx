@@ -8,6 +8,7 @@ import {
   FaInstagram,
   FaTwitter,
   FaLinkedinIn,
+  FaYoutube,
 } from 'react-icons/fa6';
 
 import gkLogo from '@/assets/logo/gk-logo.svg';
@@ -32,6 +33,10 @@ const {
   link,
   copywrite,
   icon,
+  linkdinIcon,
+  youtubeIcon,
+  instagramIcon,
+  facebookIcon,
 } = style;
 
 const Footer = () => {
@@ -82,7 +87,7 @@ const Footer = () => {
               href={'https://www.facebook.com/grameenkalyan/'}
               target="_blank"
             >
-              <FaFacebookF className={icon} />
+              <FaFacebookF className={`${icon} ${facebookIcon}`} />
             </Link>
             <Link
               className={link}
@@ -91,14 +96,14 @@ const Footer = () => {
               }
               target="_blank"
             >
-              <FaInstagram className={icon} />
+              <FaInstagram className={`${icon} ${instagramIcon}`} />
             </Link>
             <Link
               className={link}
-              href={'https://twitter.com/GrameenKalyan'}
+              href={'https://www.youtube.com/@GrameenKalyan1996'}
               target="_blank"
             >
-              <FaTwitter className={icon} />
+              <FaYoutube className={`${icon} ${youtubeIcon}`} />
             </Link>
             <Link
               className={link}
@@ -107,7 +112,7 @@ const Footer = () => {
               }
               target="_blank"
             >
-              <FaLinkedinIn className={icon} />
+              <FaLinkedinIn className={`${icon} ${linkdinIcon}`} />
             </Link>
           </div>
           <p className={copywrite}>
