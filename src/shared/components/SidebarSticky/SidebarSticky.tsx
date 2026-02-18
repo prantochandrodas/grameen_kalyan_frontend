@@ -70,8 +70,8 @@ const SidebarSticky = () => {
               src="/images/search.png"
               alt="search"
               style={{
-                width: '20px',
-                height: '20px',
+                width: '25px',
+                height: '25px',
                 marginRight: '5px',
                 objectFit: 'contain',
               }}
@@ -80,31 +80,31 @@ const SidebarSticky = () => {
           </div>
           <div className={divider} />
           <div className={iconBox} onClick={() => handlePhoneToggle()}>
-            {/* <img
+            <img
               src="/images/phonesdfjs.png"
               alt="phone"
               style={{
-                width: '20px',
-                height: '20px',
+                width: '25px',
+                height: '25px',
                 marginRight: '5px',
                 objectFit: 'contain',
               }}
-            /> */}
-            <BiSolidPhoneCall style={{ color: '#024DB5' }} />
+            />
+            {/* <BiSolidPhoneCall style={{ color: '#024DB5' }} /> */}
           </div>
           <div className={divider} />
           <div className={iconBox} onClick={() => handleContactFormToggle()}>
-            <IoIosMail style={{ color: '#0057CA' }} />
-            {/* <img
+            {/* <IoIosMail style={{ color: '#0057CA' }} /> */}
+            <img
               src="/images/gmail.png"
               alt="gmail"
               style={{
-                width: '20px',
-                height: '20px',
+                width: '25px',
+                height: '25px',
                 marginRight: '5px',
                 objectFit: 'contain'
               }}
-            /> */}
+            />
           </div>
         </div>
 
