@@ -115,11 +115,11 @@ const Footer = () => {
               <FaLinkedinIn className={`${icon} ${linkdinIcon}`} />
             </Link>
           </div>
-
+          <p className={copywrite}>
+            Copyright © 2023 Grameen Kalyan. All Rights Reserved
+          </p>
         </div>
-        <p className={copywrite}>
-          Copyright © 2023 Grameen Kalyan. All Rights Reserved
-        </p>
+
       </div>
     </div>
   );

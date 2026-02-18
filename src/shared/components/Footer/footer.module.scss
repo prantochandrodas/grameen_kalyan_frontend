@@ -41,7 +41,7 @@
     flex: 3;
     background-color: $color-primary;
     padding: 15rem 20rem;
-    border-radius: 50rem 50rem 0 0;
+    border-radius: 30rem 30rem 0 0;
 
     display: flex;
     justify-content: space-between;
@@ -50,7 +50,7 @@
 
     @include response(M-desktop) {
       padding: 10rem 10rem 10rem 20rem;
-       border-radius: 25rem 25rem 0 0; 
+       border-radius: 20rem 20rem 0 0; 
     }
 
     @include response(s-desktop) {
@@ -74,7 +74,7 @@
     }
 
     .address {
-      flex: 1.2;
+      flex: 1.1;
       display: flex;
       gap: 2rem;
 
@@ -84,7 +84,7 @@
     }
 
     .contact {
-      flex: 1.2;
+      flex: 1.1;
       display: grid;
       grid-template-columns: repeat(2, max-content);
       column-gap: 2rem;
@@ -96,7 +96,7 @@
     }
 
     .socialmedia {
-      flex: 0.8;
+      flex: 0.9;
 
       .container {
         display: flex;
@@ -147,9 +147,9 @@
     .copywrite {
       width: 100%;
       flex-basis: 100%;
-      text-align: center;
+      // text-align: center;
       font-size: 1.5rem;
-      margin-top: 4rem;
+      // margin-top: 4rem;
       color: $color-text-light;
     }
   }
