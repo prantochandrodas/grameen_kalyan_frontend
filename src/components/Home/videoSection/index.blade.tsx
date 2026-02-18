@@ -59,7 +59,7 @@ const VideoSection = () => {
   return (
     <section className={section}>
       <h3 style={{
-        margin: '0 0 20px 0', fontSize: '40px', fontWeight: 'bold', textAlign: 'center', color: '#0B612D'
+        margin: '0 0 20px 0', fontSize: '45px', fontWeight: 'bold', textAlign: 'center', color: '#0B612D'
 
       }}>Our Stories</h3>
       <div
@@ -67,7 +67,7 @@ const VideoSection = () => {
           width: '100px',
           height: '4px',
           backgroundColor: '#0B612D',
-          margin: '0 auto 30px',
+          margin: '0 auto 10px',
           borderRadius: '2px',
         }}
       />
