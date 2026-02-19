@@ -150,16 +150,16 @@
   .navbar {
     padding-left: 5rem !important;  /* reduce padding */
     padding-right: 5rem !important;
-    padding-top: 5px !important;
+    padding-top: 2rem !important;
     padding-bottom: 2rem !important;
   }
 
   
-  .navbar .list .item,
-  .navbar .list .dropdownItem {
+  // .navbar .list .item,
+  // .navbar .list .dropdownItem {
   
-    font-size: 1.6rem !important;      /* reduce font size */
-  }
+  //   font-size: 1.6rem !important;      /* reduce font size */
+  // }
 
   // .navbar .list .dropdownList .subItem {
   //   padding: 0.8rem 1.5rem !important; /* smaller dropdown items */
@@ -298,7 +298,7 @@
   z-index: 999999;
   padding-left:  10rem;
   padding-right:  10rem;
-  padding-top:  10px;
+  padding-top:  3rem;
   padding-bottom: 3rem;
 
   background-color: white;
@@ -374,7 +374,7 @@
       padding: 1.5rem 2rem;
       font-size: 2rem;
       // font-weight: 400;
-      font-weight: 600;
+      font-weight: 500;
       list-style: none;
       color: $color-text-light;
       text-transform: capitalize;
