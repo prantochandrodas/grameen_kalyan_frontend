@@ -123,7 +123,7 @@ const Footer = () => {
         </div>
       </div>
       <p className={newCopyrightcopywrite}>
-        Copyright © 2023 Grameen Kalyan. All Rights Reserved
+        Copyright © 2026 Grameen Kalyan. All Rights Reserved
       </p>
     </>
 
