@@ -1,6 +1,19 @@
 @import '../../../style/utils/base';
 
+.newCopyrightcopywrite{
+  text-align: center;
+  font-size: 1.7rem;
+  padding: 1.5rem 0;
+  color: $color-text-light;
+  background: #95c11f;
+
+  @include response(vp-800) {  // mobile breakpoint
+    font-size: 1.3rem;
+    padding: 1rem 0;
+  }
+}
 .footer {
+  width: 95%;
   padding-left: 5rem;
   display: flex;
   align-items: center;
@@ -8,6 +21,7 @@
   gap: 5rem;
 
   @include response(s-desktop) {
+    width: 100%;
     flex-direction: column;
     align-items: normal;
     gap: 2rem;
@@ -36,11 +50,11 @@
       object-fit: contain;
     }
   }
-
+  
   .contentContainer {
-    flex: 3;
+    flex: 4;
     background-color: $color-primary;
-    padding: 15rem 20rem;
+    padding: 10rem 20rem;
     border-radius: 30rem 30rem 0 0;
 
     display: flex;

@@ -67,7 +67,7 @@ const VideoSection = () => {
           width: '100px',
           height: '4px',
           backgroundColor: '#0B612D',
-          margin: '0 auto 10px',
+          margin: '0 auto 30px',
           borderRadius: '2px',
         }}
       />

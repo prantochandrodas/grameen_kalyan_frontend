@@ -30,7 +30,7 @@ const TopInfoBar = () => {
   return (
     <div className={topInfoBar}>
       <div className={topInfoItem} style={{ width: '42%', display: 'flex', alignItems: 'center', gap: '5px' }}>
-        <div className={locationRow}>
+        <div className={locationRow} style={{ marginRight: '30px' }}>
           <span>  <img
             src="/images/location.png"
             alt="location"
