@@ -47,8 +47,8 @@
     }
   }
   .headingT {
-    top: -52rem;
-    font-size: 25rem;
+    top: -33rem;
+    font-size: 20rem;
     font-weight: 900;
     line-height: 1;
 
@@ -168,7 +168,7 @@
 }
 
 .annualSectionT {
-  margin-top: 50rem;
+  margin-top: 40rem;
 
   @include response(s-desktop) {
     margin-top: 40rem;

@@ -110,8 +110,7 @@
 }
 
 .topInfoItem {
-  font-size: 14px;
-  line-height: 1.4;
+  font-size: 13px;
   
 }
 
@@ -133,46 +132,36 @@
 }
 
 /* Medium Laptop */
-@media (max-width: 1800px) and (min-width: 1201px) {
-  .topInfoBar {
-    flex-wrap: nowrap !important; /* prevent wrapping */
-    justify-content: space-between !important; /* make items spread in one line */
-  }
+// @media (max-width: 1800px) and (min-width: 1201px) {
+//   .topInfoBar {
+//     flex-wrap: nowrap !important; /* prevent wrapping */
+//     justify-content: space-between !important; /* make items spread in one line */
+//   }
 
-  .topInfoItem {
-    width: auto !important; /* allow automatic width so all items fit */
-  }
+//   .topInfoItem {
+//     width: auto !important; /* allow automatic width so all items fit */
+//   }
 
-  .locationRow p {
-    font-size: 14px !important; /* smaller text */
-  }
+//   .locationRow p {
+//     font-size: 14px !important; /* smaller text */
+//   }
 
-  .navbar {
-    padding-left: 5rem !important;  /* reduce padding */
-    padding-right: 5rem !important;
-    padding-top: 2rem !important;
-    padding-bottom: 2rem !important;
-  }
-
-  
-  // .navbar .list .item,
-  // .navbar .list .dropdownItem {
-  
-  //   font-size: 1.6rem !important;      /* reduce font size */
-  // }
-
-  // .navbar .list .dropdownList .subItem {
-  //   padding: 0.8rem 1.5rem !important; /* smaller dropdown items */
-  // }
-
-  .navbar .list .badgeContainer {
-    top: 50% !important;
-    right: 3rem !important; /* reduce distance from right */
-  }
-}
+//   .navbar {
+//     padding-left: 5rem !important;  /* reduce padding */
+//     padding-right: 5rem !important;
+//     padding-top: 2rem !important;
+//     padding-bottom: 2rem !important;
+//   }
 
 
-@media (max-width: 1750px) and (min-width: 960px) {
+//   .navbar .list .badgeContainer {
+//     top: 50% !important;
+//     right: 3rem !important; /* reduce distance from right */
+//   }
+// }
+
+
+@media (max-width: 1800px) and (min-width: 1200px) {
   .topInfoBar {
     flex-wrap: nowrap !important;
     justify-content: space-between !important;
@@ -183,11 +172,11 @@
   }
 
   .locationRow p {
-    font-size: 12px !important;
+    font-size: 13px !important;
   }
 
   .navbar {
-    padding: 5px 2rem 1rem 2rem !important; /* reduce top/bottom padding */
+    padding: 2rem 2rem 2rem 2rem !important; /* reduce top/bottom padding */
     display: flex;
     align-items: center; /* vertically align logo & menu */
   }
@@ -207,15 +196,70 @@
   .navbar .list .item,
   .navbar .list {
      
-    padding: 0.8rem 2rem !important; /* smaller padding */
-    font-size: 1.6rem !important;
+    padding: 0.8rem 1.5rem !important; /* smaller padding */
+    font-size: 2rem !important;
+    // font-size: 1.8rem !important;
   }
   .dropdownItem  {
     padding: 1rem 1rem !important; /* smaller padding */
-    font-size: 1.6rem !important;
+    font-size: 1.8rem !important;
   }
   .navbar .list .dropdownList .subItem {
-    padding: 0.6rem 1rem !important;
+    // padding: 0.6rem 1rem !important;
+    padding: 1rem 2rem;
+  }
+
+  .navbar .list .badgeContainer {
+    top: 50% !important;
+    right: 1rem !important; /* adjust badge distance */
+  }
+}
+@media (max-width: 1199px) and (min-width: 950px) {
+  .topInfoBar {
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+  }
+
+  .topInfoItem {
+    width: auto !important;
+  }
+
+  .locationRow p {
+    font-size: 13px !important;
+  }
+
+  .navbar {
+    padding: 2rem 2rem 2rem 2rem !important; /* reduce top/bottom padding */
+    display: flex;
+    align-items: center; /* vertically align logo & menu */
+  }
+
+  .navbar .logo {
+    margin-right: 2rem; /* gap between logo & menu */
+  }
+
+  .navbar .list {
+    padding: 0 !important; /* remove extra UL padding */
+    margin: 0; /* remove default UL margin */
+    display: flex;
+    gap: 1rem; /* spacing between menu items */
+    list-style: none;
+  }
+
+  .navbar .list .item,
+  .navbar .list {
+     
+    padding: 0.8rem 1rem !important; /* smaller padding */
+    font-size: 1.5rem !important;
+    // font-size: 1.8rem !important;
+  }
+  .dropdownItem  {
+    padding: 1rem 1rem !important; /* smaller padding */
+    font-size: 1.8rem !important;
+  }
+  .navbar .list .dropdownList .subItem {
+    // padding: 0.6rem 1rem !important;
+    padding: 1rem 2rem;
   }
 
   .navbar .list .badgeContainer {
@@ -224,55 +268,6 @@
   }
 }
 
-// @media (max-width: 1200px) and (min-width: 960px) {
-//   .topInfoBar {
-//     flex-wrap: nowrap !important;
-//     justify-content: space-between !important;
-//   }
-
-//   .topInfoItem {
-//     width: auto !important;
-//   }
-
-//   .locationRow p {
-//     font-size: 12px !important;
-//   }
-
-//   .navbar .item{
-//     padding: 5px 1rem 1rem 2rem !important; /* reduce top/bottom padding */
-//     display: flex;
-//     align-items: center; /* vertically align logo & menu */
-//   }
-
-//   .navbar .logo {
-//     margin-right: 2rem; /* gap between logo & menu */
-//   }
-
-  
-//   .dropdownItem  {
-//     padding: 1.5rem1rem !important; /* smaller padding */
-//     font-size: 1.6rem !important;
-//   }
-//   .item {
-//     padding: 0.8rem 1rem !important; /* smaller padding */
-    
-//     font-size: 1.6rem !important;
-//   }
- 
- 
-//  .dropdownList {
-//    padding: 0rem 1rem !important;
-//  }
-//   .navbar  .subItem {
-//     margin-top: 0px !important;
-//     padding: 0.6rem 1rem !important;
-//   }
-
-//   .navbar .list .badgeContainer {
-//     top: 50% !important;
-//     right: 1rem !important; /* adjust badge distance */
-//   }
-// }
 
 /* Tablet */
 @media (max-width: 991px) {
@@ -372,8 +367,8 @@
 
     .item,
     .dropdownItem {
-      padding: 1.5rem 2rem;
-      font-size: 2rem;
+      padding: 1.5rem 1.2rem;
+      font-size: 2.2rem;
       // font-weight: 400;
       font-weight: 500;
       list-style: none;
