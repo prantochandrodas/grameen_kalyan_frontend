@@ -1,14 +1,28 @@
 @import '../../../style/utils/base';
 
-.footer {
-  padding-left: 5rem;
+.newCopyrightcopywrite{
+  text-align: center;
+  font-size: 1.7rem;
+  padding: 1.5rem 0;
+  color: $color-text-light;
+  background: #0B612D;
 
+  @include response(vp-800) {  // mobile breakpoint
+    
+    font-size: 1.5rem;
+    padding: 1rem 0;
+  }
+}
+.footer {
+  width: 95%;
+  padding-left: 5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 5rem;
 
   @include response(s-desktop) {
+    width: 100%;
     flex-direction: column;
     align-items: normal;
     gap: 2rem;
@@ -16,9 +30,11 @@
   }
 
   .logoContainer {
+    background: #ffffff;
+    padding: 1rem;
+    margin-left: 30px;
     flex: 1;
-    padding: 3rem;
-    height: 20rem;
+    height: 12rem;
 
     display: flex;
     align-items: center;
@@ -35,84 +51,74 @@
       object-fit: contain;
     }
   }
+  
   .contentContainer {
-    flex: 3;
+    flex: 4;
     background-color: $color-primary;
-    padding: 15rem 20rem;
-    border-radius: 50rem 0 0 0;
+    padding: 10rem 20rem;
+    border-radius: 30rem 30rem 0 0;
 
     display: flex;
     justify-content: space-between;
     gap: 2rem;
+    flex-wrap: wrap; // 🔥 important
 
     @include response(M-desktop) {
-      padding: 15rem 10rem 15rem 20rem;
+      padding: 10rem 10rem 10rem 20rem;
+       border-radius: 20rem 20rem 0 0; 
     }
+
     @include response(s-desktop) {
       padding: 10rem 5rem 10rem 15rem;
     }
+
     @include response(vp-800) {
       flex: auto;
       flex-direction: column;
       align-items: center;
       gap: 5rem;
-      border-radius: 20rem 0 0 0;
+      border-radius: 20rem 20rem 0 0;
       padding: 10rem 5rem;
     }
 
     .address,
     .contact,
     .socialmedia {
-       font-size: 2rem;
+      font-size: 2rem;
       color: $color-text-light;
     }
 
     .address {
+      flex: 1.1;
       display: flex;
       gap: 2rem;
 
       .addressTitle {
         font-weight: 600;
-         color:#95C11F
-         
+        color:#95C11F
       }
     }
 
     .contact {
+      flex: 1.1;
       display: grid;
-      grid-template-columns: repeat(2, [col-start] max-content [col-end]);
-      grid-template-rows: repeat(2, [row-start] max-content [row-end]);
+      grid-template-columns: repeat(2, max-content);
       column-gap: 2rem;
 
       .phoneTitle,
       .emailTitle {
         font-weight: 600;
-        color:#95C11F;
-        
-      }
-
-      .phoneTitle {
-        grid-column: col-start 1 / col-end 1;
-        grid-row: row-start 1 / row-end 1;
-      }
-      .phoneData {
-        grid-column: col-start 2 / col-end 2;
-        grid-row: row-start 1 / row-end 1;
-      }
-      .emailTitle {
-        grid-column: col-start 1 / col-end 1;
-        grid-row: row-start 2 / row-end 2;
-      }
-      .emailData {
-        grid-column: col-start 2 / col-end 2;
-        grid-row: row-start 2 / row-end 2;
+         color:#95C11F
       }
     }
+
     .socialmedia {
+      flex: 0.9;
+
       .container {
         display: flex;
         align-items: center;
-        gap: 2rem;
+        gap: 1rem;
 
         @include response(vp-800) {
           justify-content: center;
@@ -135,11 +141,7 @@
             transition: all 500ms;
           }
 
-          // &:hover .icon {
-          //   color: white;
-          // }
-
-            .linkdinIcon {
+          .linkdinIcon {
             color: #0071ae !important;
           }
 
@@ -156,9 +158,16 @@
           }
         }
       }
-      .copywrite {
-        font-size: 1.5rem;
-      }
+    }
+
+    // 🔥 copyright bottom full width
+    .copywrite {
+      width: 100%;
+      flex-basis: 100%;
+      // text-align: center;
+      font-size: 1.5rem;
+      // margin-top: 4rem;
+      color: $color-text-light;
     }
   }
 }
