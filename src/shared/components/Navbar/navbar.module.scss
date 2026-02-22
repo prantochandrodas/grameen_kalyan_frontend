@@ -172,7 +172,7 @@
 }
 
 
-@media (max-width: 1300px) and (min-width: 960px) {
+@media (max-width: 1750px) and (min-width: 960px) {
   .topInfoBar {
     flex-wrap: nowrap !important;
     justify-content: space-between !important;
@@ -206,7 +206,8 @@
 
   .navbar .list .item,
   .navbar .list {
-    padding: 0.8rem 1rem !important; /* smaller padding */
+     
+    padding: 0.8rem 2rem !important; /* smaller padding */
     font-size: 1.6rem !important;
   }
   .dropdownItem  {
