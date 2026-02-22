@@ -94,7 +94,7 @@ const SidebarSticky = () => {
           </div>
           <div className={divider} />
           <div className={iconBox} onClick={() => handleContactFormToggle()}>
-            <IoIosMail style={{ color: '#0C52C2' }} />
+            <IoIosMail style={{ color: '#F7A220' }} />
             {/* <img
               src="/images/gmail.png"
               alt="gmail"
