@@ -9,13 +9,23 @@
   background-color: $color-text-grey;
 
   .imgContainer {
-    height: 40rem;
-
+    height: 60rem;
+    @include response(tab-port) {
+      height: 40rem;
+    }
+    @include response(phone) {
+      height: 40rem;
+    }
+    @include response(s-phone) {
+      height: 40rem;
+    }
     .img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
+
+
   }
 
   .mask {
