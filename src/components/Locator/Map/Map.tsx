@@ -12,7 +12,6 @@ import style from './map.module.scss';
 const {
   heroSection,
   bgImageContainer,
-
   content,
   heading,
   layoutContainer,
@@ -47,7 +46,6 @@ const Map = () => {
         <div className={layoutContainer}>
           <Image className={layoutImage} src={layoutImg} alt="layout" />
         </div>
-
         <div className={taglineFooter}>
           <Link href="#">
             <Image src={arrowIcon} alt="" />

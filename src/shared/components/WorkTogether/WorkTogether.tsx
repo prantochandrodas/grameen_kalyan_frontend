@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 
 import testImage from '@/assets/images/lets-work.webp';
 import { Button } from '../Button';
-
 import style from './workTogether.module.scss';
 
 const {

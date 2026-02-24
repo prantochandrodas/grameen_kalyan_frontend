@@ -5,7 +5,6 @@ import Image from 'next/image';
 
 import layoutLT from '@/assets/layout/locator/GK_website_OPT_01_People_HealthForce-02.svg';
 import { IOfficeLocationsProps } from './OfficeLocations.types';
-
 import style from './officeLocations.module.scss';
 import Link from 'next/link';
 const {
@@ -21,6 +20,7 @@ const {
 } = style;
 
 const OfficeLocations = ({ officeLocationsData }: IOfficeLocationsProps) => {
+
   return (
     <div className={mainContainer}>
       <div className={officeLocationContainer}>
@@ -28,7 +28,6 @@ const OfficeLocations = ({ officeLocationsData }: IOfficeLocationsProps) => {
           <Image className={img} src={layoutLT} alt="layout" />
         </div>
         <h2>Regional Office across Bangladesh</h2>
-
         <div className={locationContainer}>
           {officeLocationsData?.map((data, i) => (
             <div

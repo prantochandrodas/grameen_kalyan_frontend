@@ -3,7 +3,6 @@
 .mainContainer {
   position: relative;
 }
-
 .officeLocationContainer {
   width: 75%;
   margin: 0 auto;
@@ -15,7 +14,6 @@
   @include response(phone) {
     width: 100%;
   }
-
   h2 {
     font-size: calc(max(5vw, 32px));
     line-height: 1.2;
@@ -70,7 +68,6 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-
       h3 {
         font-size: 3.2rem;
         color: #fff;
@@ -102,7 +99,6 @@
         border-bottom-right-radius: 10rem;
       }
     }
-
     .cardTwo {
       border-bottom-right-radius: 10rem;
       text-align: left;

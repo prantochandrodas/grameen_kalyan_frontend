@@ -43,7 +43,6 @@
     @include response(s-phone) {
       padding: 8rem 3rem;
     }
-
     .mapContainer {
       svg {
         g {
@@ -114,7 +113,6 @@
             fill: transparent;
             transition: all 250ms;
             cursor: pointer;
-
             &:hover {
               fill: $color-primary;
             }

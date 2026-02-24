@@ -59,6 +59,7 @@ const MapSection = () => {
   const [centerDivision, setCenterDivision] = useState<string | null>();
 
   const loadDivisionData = async (key: number | string) => {
+
     const dataByDivisionId = await getDataByDivisionId(key);
     setData(dataByDivisionId.data);
     setCenterDivision(dataByDivisionId.division_name);
