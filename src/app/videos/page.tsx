@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import style from './VideoSection.module.scss';
 import { FaPlay } from 'react-icons/fa';
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const {
   section,
@@ -28,30 +29,19 @@ interface Video {
 
 const IMAGE_BASE_URL = 'https://admin-grameenkalyan.stitbd.app';
 
-const VideoSection = () => {
-  const [videos, setVideos] = useState<Video[]>([]);
+const VideoSection = async () => {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchVideos = async () => {
-      try {
-        const res = await fetch('/api/video-galleries'); // ✅ নতুন proxy
-        const json = await res.json();
-        setVideos(json.data); // API data state এ set
-      } catch (error) {
-        console.error('Video fetch error:', error);
-      }
-    };
+  const videoData = await useFetchLaravelData({ url: '/video-galleries' });
 
-    fetchVideos();
-  }, []);
+  const videos = videoData?.data || [];
 
   return (
     <>
       <section className={section}>
         <div className={videoContainer}>
           <div className={grid}>
-            {videos.map((video) => (
+            {videos.map((video: any) => (
               <div
                 key={video.id}
                 className={card}

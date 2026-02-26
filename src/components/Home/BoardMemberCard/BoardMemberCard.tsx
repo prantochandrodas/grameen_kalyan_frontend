@@ -27,6 +27,7 @@ interface IBoardMemberCardProps {
 }
 
 const BoardMemberCard = ({ memberData }: IBoardMemberCardProps) => {
+
   return (
     <>
       {memberData.reverse ? (

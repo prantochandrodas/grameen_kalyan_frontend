@@ -22,6 +22,7 @@ interface IBoardMemberProps {
 }
 
 const BoardMember = ({ memberData }: IBoardMemberProps) => {
+
   return (
     <div className={boardMember}>
       <div className={layoutRight}>
@@ -31,6 +32,7 @@ const BoardMember = ({ memberData }: IBoardMemberProps) => {
         <Image className={img} src={layoutBL} alt="layout" />
       </div>
       {memberData.map((data) => (
+
         <div className={memberCardContainer} key={data.id}>
           <BoardMemberCard memberData={data} />
         </div>
