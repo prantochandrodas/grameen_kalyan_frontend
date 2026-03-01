@@ -116,7 +116,7 @@ const Footer = () => {
             </Link>
           </div>
           <p className={copywrite}>
-            Copyright © 2023 Grameen Kalyan. All Rights Reserved
+            Copyright © 2026 Grameen Kalyan. All Rights Reserved
           </p>
         </div>
       </div>
