@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { BiSolidPhoneCall } from 'react-icons/bi';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { FiPhone } from 'react-icons/fi';
 import { FiMail } from 'react-icons/fi';
@@ -53,7 +54,7 @@ const TopInfoBar = () => {
         display: 'flex', alignItems: 'center', gap: '5px'
       }}>
         {/* <FaPhoneAlt style={{ marginRight: '5px', fontSize: '20px', color: '#ffffff' }} /> */}
-        <img
+        {/* <img
           src="/images/phonesdfjs.png"
           alt="phone"
           style={{
@@ -62,7 +63,8 @@ const TopInfoBar = () => {
             marginRight: '5px',
             objectFit: 'contain'
           }}
-        />
+        /> */}
+        <BiSolidPhoneCall style={{ marginRight: '5px', fontSize: '20px', color: '#95c11f' }} />
         +880244802111 | +8809642115500
 
       </div>
