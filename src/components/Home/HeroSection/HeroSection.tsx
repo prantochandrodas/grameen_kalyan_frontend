@@ -32,7 +32,7 @@ const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
             <div key={data.id} className="imgContainer">
               <Image
                 className="img"
-                src={'https://admin-grameenkalyan.stitbd.app' + data.banner_image}
+                src={IMAGE_BASE_URL + data.banner_image}
                 alt="Background img"
                 width={2000}
                 height={2000}
