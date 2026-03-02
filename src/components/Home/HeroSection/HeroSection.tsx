@@ -1,5 +1,4 @@
 /* eslint-disable quotes */
-
 'use client';
 
 import React from 'react';
@@ -15,9 +14,11 @@ import { IHeroSectionProps } from './HeroSection.types';
 import './heroSection.scss';
 
 const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
-  console.log(sliderImages + ' Banner Image');
+  console.log('Slider Images Array:', sliderImages);
+
   return (
     <div className="heroSection">
+      {/* ========== SLIDER SECTION ========== */}
       <div className="bgImage">
         <Sliders
           infinite={true}
@@ -28,23 +29,34 @@ const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
           dots={true}
           customDot="circle"
         >
-          {sliderImages?.map((data) => (
-            <div key={data.id} className="imgContainer">
-              <Image
-                className="img"
-                src={IMAGE_BASE_URL + data.banner_image}
-                alt="Background img"
-                width={2000}
-                height={2000}
-                priority
-              />
-            </div>
-          ))}
+          {sliderImages?.map((data) => {
+            const imageSrc = 'https://admin-grameenkalyan.stitbd.app/' + data.banner_image;
+
+            // Console log for each banner image src
+            console.log('Banner Image Src:', imageSrc);
+
+            return (
+              <div key={data.id} className="imgContainer">
+                <Image
+                  className="img"
+                  src={imageSrc}
+                  alt="Background img"
+                  width={2000}
+                  height={2000}
+                  priority
+                />
+              </div>
+            );
+          })}
         </Sliders>
       </div>
+
+      {/* ========== LAYOUT IMAGE ========== */}
       <div className="layout">
         <Image className="img" src={layoutImage} alt="layout" />
       </div>
+
+      {/* ========== BADGE / GLORY IMAGE ========== */}
       <div className="glory">
         <Image
           className="img"
@@ -55,6 +67,8 @@ const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
           priority={true}
         />
       </div>
+
+      {/* ========== TITLE / CONTENT SECTION ========== */}
       <div className="contentContainer">
         <motion.div
           initial={{ opacity: 0, left: '-20rem' }}
