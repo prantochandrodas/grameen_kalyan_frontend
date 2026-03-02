@@ -22,13 +22,16 @@ import {
   AnnualReportSection,
 } from '@/shared/components';
 import VideoSection from '@/components/Home/videoSection/index.blade';
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const Home = async () => {
   const homePageContentData = await useFetch({ url: '/home-contents' });
   const summeryReportData = await useFetch({
     url: '/summary-report-settings/basic',
   });
-  const sliderImages = await useFetch({ url: '/home-slider-content' });
+  // const sliderImages = await useFetch({ url: '/home-slider-content' });
+  const sliderImages = await useFetchLaravelData({ url: '/home-slider-contents' });
+
   const storyCategory = await useFetch({ url: '/story-categories' });
   const serviceContent = await useFetch({ url: '/service-contents/home' });
 
