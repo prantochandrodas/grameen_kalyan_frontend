@@ -32,8 +32,6 @@ const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
           {sliderImages?.map((data) => {
             const imageSrc = 'https://admin-grameenkalyan.stitbd.app' + data.banner_image;
 
-            // Console log for each banner image src
-            console.log('Banner Image Src:', imageSrc);
 
             return (
               <div key={data.id} className="imgContainer">
