@@ -42,6 +42,7 @@ const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
                   width={2000}
                   height={2000}
                   priority
+                  unoptimized
                 />
               </div>
             );
