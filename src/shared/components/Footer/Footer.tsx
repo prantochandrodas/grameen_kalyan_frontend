@@ -121,7 +121,8 @@ const Footer = () => {
 
       {/* COPYRIGHT at bottom right */}
       <p className={copywrite}>
-        Copyright © 2026 Grameen Kalyan. All Rights Reserved
+        Copyright © 2026 Grameen Kalyan | Maintenance by GK IT Team
+        {/* Copyright © 2026 Grameen Kalyan. All Rights Reserved */}
       </p>
     </div>
   );
