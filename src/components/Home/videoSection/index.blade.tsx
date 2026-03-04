@@ -6,8 +6,8 @@ import style from './VideoSection.module.scss';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Arrow } from '@/shared/components'; // optional custom arrows
-
-const { section, videoContainer, videoItem, iframeBox } = style;
+import { motion } from 'framer-motion';
+const { section, videoContainer, videoItem, iframeBox, heading } = style;
 
 interface Video {
   id: number;
@@ -58,7 +58,26 @@ const VideoSection = () => {
 
   return (
     <section className={section}>
-      <h3 style={{
+
+      <motion.h2
+        initial={{ opacity: 0, bottom: '-10rem' }}
+        whileInView={{ opacity: 1, bottom: '0' }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        className={heading}
+      >
+        Our Stories
+      </motion.h2>
+      <div
+        style={{
+          width: '100px',
+          height: '4px',
+          backgroundColor: '#0B612D',
+          margin: '0 auto 30px',
+          borderRadius: '2px',
+        }}
+      />
+      {/* <h3 style={{
         margin: '0 0 20px 0', fontSize: '50px', fontWeight: 'bold', textAlign: 'center', color: '#0B612D'
 
       }}>Our Stories</h3>
@@ -70,7 +89,7 @@ const VideoSection = () => {
           margin: '0 auto 30px',
           borderRadius: '2px',
         }}
-      />
+      /> */}
       <div className={videoContainer}>
         <Slider {...sliderSettings}>
           {videos.map((video) => (
