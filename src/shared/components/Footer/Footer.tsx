@@ -91,6 +91,13 @@ const Footer = () => {
             </Link>
             <Link
               className={link}
+              href={'https://www.youtube.com/@GrameenKalyan1996'}
+              target="_blank"
+            >
+              <FaYoutube className={`${icon} ${youtubeIcon}`} />
+            </Link>
+            <Link
+              className={link}
               href={
                 'https://www.instagram.com/explore/locations/118227903152262/grameen-kalyan/'
               }
@@ -98,13 +105,7 @@ const Footer = () => {
             >
               <FaInstagram className={`${icon} ${instagramIcon}`} />
             </Link>
-            <Link
-              className={link}
-              href={'https://www.youtube.com/@GrameenKalyan1996'}
-              target="_blank"
-            >
-              <FaYoutube className={`${icon} ${youtubeIcon}`} />
-            </Link>
+
             <Link
               className={link}
               href={
@@ -115,12 +116,13 @@ const Footer = () => {
               <FaLinkedinIn className={`${icon} ${linkdinIcon}`} />
             </Link>
           </div>
-          <p className={copywrite}>
-            Copyright © 2026 Grameen Kalyan. All Rights Reserved
-          </p>
         </div>
       </div>
 
+      {/* COPYRIGHT at bottom right */}
+      <p className={copywrite}>
+        Copyright © 2026 Grameen Kalyan. All Rights Reserved
+      </p>
     </div>
   );
 };
