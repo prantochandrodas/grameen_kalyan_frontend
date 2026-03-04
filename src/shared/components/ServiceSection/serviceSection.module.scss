@@ -142,7 +142,8 @@
       .text {
         font-size: clamp(1rem, calc(0.33rem + 3.38vw), 4.38rem);
         font-weight: 900;
-        color: $color-text-primary;
+        color:#ffffff;
+        // color: $color-text-primary;
         line-height: 1.3;
         margin-bottom: 3rem;
 
