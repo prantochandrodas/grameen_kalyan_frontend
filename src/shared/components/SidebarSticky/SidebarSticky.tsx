@@ -142,7 +142,7 @@ const SidebarSticky = () => {
           <div className={exit} onClick={() => handleContactFormToggle()}>
             <RxCross2 />
           </div>
-          <ContactForm />
+          <ContactForm closeSidebar={handleContactFormToggle} />
         </div>
       </div>
     </div>

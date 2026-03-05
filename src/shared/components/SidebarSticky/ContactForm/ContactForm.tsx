@@ -10,7 +10,9 @@ interface IformInputs {
   subject: string;
   message: string;
 }
-
+interface ContactFormProps {
+  closeSidebar?: () => void; // optional, function to close sidebar
+}
 import style from './contactForm.module.scss';
 
 const {
@@ -27,7 +29,7 @@ const {
   btnContainer,
 } = style;
 
-const ContactForm = () => {
+const ContactForm: React.FC<ContactFormProps> = ({ closeSidebar }) => {
   // Form Submission Successful
   const [submissionSuccessful, setSubmissionSuccessful] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -35,6 +37,7 @@ const ContactForm = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<IformInputs>();
 
@@ -57,6 +60,11 @@ const ContactForm = () => {
       }
 
       setSubmissionSuccessful(true);
+      reset();
+      // ✅ Close the sidebar automatically like the exit button
+      if (closeSidebar) closeSidebar();
+
+      setTimeout(() => setSubmissionSuccessful(false), 1000);
     } catch (error: unknown) {
       const errorInstance = error instanceof Error;
       const errMessage = errorInstance ? error.message : 'Something went wrong';
