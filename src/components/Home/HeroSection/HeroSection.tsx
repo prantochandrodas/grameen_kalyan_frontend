@@ -14,7 +14,6 @@ import { IHeroSectionProps } from './HeroSection.types';
 import './heroSection.scss';
 
 const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
-  console.log('Slider Images Array:', sliderImages);
 
   return (
     <div className="heroSection">

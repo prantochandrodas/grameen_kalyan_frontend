@@ -26,6 +26,8 @@ import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const Home = async () => {
   const homePageContentData = await useFetch({ url: '/home-contents' });
+  const homeNewPageContentData = await useFetchLaravelData({ url: '/home-contents' });
+
   const summeryReportData = await useFetch({
     url: '/summary-report-settings/basic',
   });
@@ -44,21 +46,39 @@ const Home = async () => {
     subTitleTwo: homePageContentData?.intro_sub_title_two,
   };
 
+  // const boardMemberArray = [
+  //   {
+  //     id: 1,
+  //     name: homePageContentData?.chairman_name,
+  //     description: homePageContentData?.chairman_speech,
+  //     designation: homePageContentData?.chairman_designation,
+  //     image: homePageContentData?.chairman_thumb_image,
+  //     reverse: false,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: homePageContentData?.md_name,
+  //     description: homePageContentData?.md_speech,
+  //     designation: homePageContentData?.md_designation,
+  //     image: homePageContentData?.md_thumb_image,
+  //     reverse: true,
+  //   },
+  // ];
   const boardMemberArray = [
     {
       id: 1,
-      name: homePageContentData?.chairman_name,
-      description: homePageContentData?.chairman_speech,
-      designation: homePageContentData?.chairman_designation,
-      image: homePageContentData?.chairman_thumb_image,
+      name: homeNewPageContentData?.chairman_name,
+      description: homeNewPageContentData?.chairman_speech,
+      designation: homeNewPageContentData?.chairman_designation,
+      image: homeNewPageContentData?.chairman_thumb_image,
       reverse: false,
     },
     {
       id: 2,
-      name: homePageContentData?.md_name,
-      description: homePageContentData?.md_speech,
-      designation: homePageContentData?.md_designation,
-      image: homePageContentData?.md_thumb_image,
+      name: homeNewPageContentData?.md_name,
+      description: homeNewPageContentData?.md_speech,
+      designation: homeNewPageContentData?.md_designation,
+      image: homeNewPageContentData?.md_thumb_image,
       reverse: true,
     },
   ];

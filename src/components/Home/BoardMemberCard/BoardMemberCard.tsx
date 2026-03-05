@@ -28,6 +28,7 @@ interface IBoardMemberCardProps {
 
 const BoardMemberCard = ({ memberData }: IBoardMemberCardProps) => {
 
+
   return (
     <>
       {memberData.reverse ? (
@@ -35,7 +36,7 @@ const BoardMemberCard = ({ memberData }: IBoardMemberCardProps) => {
           <div className={`${imageContainer} ${reverseImageContainer}`}>
             <Image
               className={img}
-              src={IMAGE_BASE_URL + memberData.image}
+              src={'https://admin-grameenkalyan.stitbd.app' + memberData.image}
               width={1000}
               height={1000}
               priority
@@ -113,10 +114,11 @@ const BoardMemberCard = ({ memberData }: IBoardMemberCardProps) => {
           <div className={imageContainer}>
             <Image
               className={img}
-              src={IMAGE_BASE_URL + memberData.image}
+              src={'https://admin-grameenkalyan.stitbd.app' + memberData.image}
               width={1000}
               height={1000}
               priority
+              unoptimized
               alt="Yunus"
             />
           </div>
