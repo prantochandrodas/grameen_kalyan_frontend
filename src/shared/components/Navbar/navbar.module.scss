@@ -91,9 +91,9 @@
   font-size: 14px!important;
 }
 .topInfoBar {
-  // position: relative;
-  position: sticky;
-  z-index: 1000000;
+  position: relative;
+  // position: sticky;
+  z-index: 1;
   right: 0;
   top: 0;
   width: 100%;
@@ -293,7 +293,7 @@
 .navbar {
   // position: relative;
  position: sticky;   // change from relative → sticky
-  top: 40px;
+  top: 0;
   z-index: 999999;
   padding-left:  10rem;
   padding-right:  10rem;
