@@ -43,6 +43,7 @@ const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
                   priority
                   unoptimized
                 />
+
               </div>
             );
           })}

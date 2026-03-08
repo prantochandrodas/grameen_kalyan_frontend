@@ -1,24 +1,25 @@
 @import '../../../style/utils/base';
 
 .heroSection {
-  height: calc(100svh - 16rem);
+  height: 110svh ;// desktop slider bigger
   position: relative;
 
   .slick-dots {
     position: absolute;
-    bottom: 10px; // adjust as needed
-    z-index: 10;  // make sure dots are on top
+    bottom: 20px;
+    z-index: 10;
     display: flex !important;
     justify-content: center;
+
     li {
       button {
-        cursor: pointer; // ensures pointer
+        cursor: pointer;
       }
     }
   }
 
   @include response(phone) {
-    height: calc(100svh - 12rem);
+    height: 60svh; // mobile same
   }
 
   .bgImage {
@@ -28,36 +29,36 @@
     left: 0;
     bottom: 0;
 
-    // display: flex;
-
     .imgContainer {
       height: 100%;
       width: 100%;
-
-      // @include alignItem();
     }
 
     .img {
       height: 100%;
       width: 100%;
       object-fit: cover;
-      object-position: left;
+      object-position: center;
 
-      @include response(vp-800) {
-        object-position: 20%;
-      }
-      @include response(phone) {
-        object-position: 29%;
+      // Desktop fix: make sure full image fits
+      @include response(tab-land-up) {
+        object-fit: contain;
+        max-height: 100%;
       }
     }
 
     .slick-track {
-      height: calc(100svh - 16rem);
+       height: 110svh;
+
+      @include response(tab-land-up) {
+        height: 100%;
+      }
 
       @include response(phone) {
-        height: calc(100svh - 12rem);
+        height: 60svh;
       }
     }
+
     .slick-track .slick-slide > div {
       height: 100%;
     }
@@ -73,8 +74,8 @@
     z-index: 4;
 
     @include response(phone) {
-      height: 35rem;
-      width: 35rem;
+      height: 30rem;
+      width: 30rem;
     }
 
     .img {
@@ -92,6 +93,13 @@
     top: 8rem;
     right: 13rem;
     z-index: 5;
+
+    @include response(phone) {
+      height: 15rem;
+      width: 15rem;
+      right: 3rem;
+      top: 6rem;
+    }
 
     .img {
       height: 100%;
@@ -129,15 +137,24 @@
         width: 35rem;
         margin-bottom: 5rem;
       }
+
       @include response(phone) {
+        height: 25rem;
+        width: 25rem;
         margin-left: 0;
-        margin-bottom: 10rem;
+        margin-bottom: 8rem;
       }
 
       .img {
         height: 100%;
         width: 100%;
         object-fit: contain;
+
+        // Desktop fix
+        @include response(tab-land-up) {
+          object-fit: contain;
+          max-height: 100%;
+        }
       }
     }
   }
