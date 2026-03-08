@@ -9,6 +9,7 @@
     margin-top: 15rem;
   }
   @include response(phone) {
+     height: 50svh;
     margin-top: 15rem;
   }
   @include response(M-phone) {
