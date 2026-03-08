@@ -6,7 +6,7 @@
 
   @include response(phone) {
     // height: calc(100svh - 12rem);
-     height: calc(50svh - 12rem);
+     height: calc(60svh - 12rem);
   }
 
   .bgImageContainer {
@@ -71,7 +71,7 @@
       margin-bottom: 2rem;
 
       @include response(phone) {
-        font-size: 2rem;
+        font-size: 1.5rem;
       }
 
       span {
@@ -88,7 +88,7 @@
       color: white;
 
       @include response(phone) {
-        font-size: 2.5rem;
+        font-size: 2rem;
       }
 
       span {
