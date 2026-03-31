@@ -8,7 +8,6 @@ import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 const {
   section,
   videoContainer,
-  title,
   grid,
   card,
   thumbBox,
@@ -23,25 +22,31 @@ interface Video {
   id: number;
   title: string;
   short_description: string;
-  video_link: string;
+  video_link: string; // YouTube video ID
   thumb_image: string;
 }
 
 const IMAGE_BASE_URL = 'https://admin.grameenkalyan.com';
 
-const VideoSection = async () => {
+const VideoSection = () => {
+  const [videos, setVideos] = useState<Video[]>([]);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
-  const videoData = await useFetchLaravelData({ url: '/video-galleries' });
-
-  const videos = videoData?.data || [];
+  // Fetch videos
+  useEffect(() => {
+    const fetchVideos = async () => {
+      const res = await useFetchLaravelData({ url: '/video-galleries' });
+      if (res?.data) setVideos(res.data);
+    };
+    fetchVideos();
+  }, []);
 
   return (
     <>
       <section className={section}>
         <div className={videoContainer}>
           <div className={grid}>
-            {videos.map((video: any) => (
+            {videos.map((video: Video) => (
               <div
                 key={video.id}
                 className={card}
@@ -52,7 +57,13 @@ const VideoSection = async () => {
                     src={`${IMAGE_BASE_URL}${video.thumb_image}`}
                     alt={video.title}
                   />
-                  <button className={playBtn}>
+                  <button
+                    className={playBtn}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent card click bubbling
+                      setActiveVideo(video.video_link);
+                    }}
+                  >
                     <FaPlay />
                   </button>
                 </div>
@@ -72,7 +83,7 @@ const VideoSection = async () => {
           <div className={modal} onClick={(e) => e.stopPropagation()}>
             <div className={iframeBox}>
               <iframe
-                src={`https://www.youtube.com/embed/${activeVideo}`}
+                src={`https://www.youtube.com/embed/${activeVideo}?autoplay=1`}
                 allow="autoplay; encrypted-media"
                 allowFullScreen
               />
