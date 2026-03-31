@@ -54,7 +54,6 @@
     @include response(s-desktop) {
       grid-column: col-start / col-end;
       grid-row: row-start 2 / row-end 2;
-
        height: 32rem;
     }
 

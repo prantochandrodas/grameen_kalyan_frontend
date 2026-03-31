@@ -55,7 +55,7 @@ const VideoSection = () => {
       },
     ],
   };
-
+  console.log('Recommended Videos:', videos); // Debug log
   return (
     <section className={section}>
 

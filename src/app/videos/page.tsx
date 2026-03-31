@@ -27,7 +27,7 @@ interface Video {
   thumb_image: string;
 }
 
-const IMAGE_BASE_URL = 'https://admin-grameenkalyan.stitbd.app';
+const IMAGE_BASE_URL = 'https://admin.grameenkalyan.com';
 
 const VideoSection = async () => {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
