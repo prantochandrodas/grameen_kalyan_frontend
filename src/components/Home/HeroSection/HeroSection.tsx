@@ -29,7 +29,7 @@ const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
           customDot="circle"
         >
           {sliderImages?.map((data) => {
-            const imageSrc = 'https://admin-grameenkalyan.stitbd.app' + data.banner_image;
+            const imageSrc = 'https://admin.grameenkalyan.com' + data.banner_image;
 
 
             return (
