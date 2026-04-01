@@ -80,6 +80,7 @@ const Footer = () => {
             <p>contact@grameenkalyan.com</p>
           </div>
         </div>
+        {/* <div className={socialmedia}> */}
         <div className={socialmedia}>
           <div className={container}>
             <Link

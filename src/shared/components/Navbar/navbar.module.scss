@@ -1,4 +1,60 @@
 @import '../../../style/utils/base';
+
+ .socialmedia {
+      font-size: 2rem;
+      color: $color-text-light;
+    }
+.socialmedia {
+      .container {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+
+        @include response(vp-800) {
+          justify-content: center;
+        }
+
+        .link {
+          height: 3.5rem;
+          aspect-ratio: 1;
+          border-radius: 50%;
+          background-color: $color-secondary;
+          margin-bottom: 5px;
+          margin-top: 5px;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          .icon {
+            font-size: 1.8rem;
+            color: $color-primary;
+            transition: all 500ms;
+          }
+
+          .linkdinIcon {
+            color: #0071ae !important;
+          }
+
+          .youtubeIcon {
+            color: #ff0033 !important;
+          }
+
+          .instagramIcon {
+            color: #f60e4b !important;
+          }
+
+          .facebookIcon {
+            color: #0C52C2 !important;
+          }
+        }
+      }
+    }
+
+
+
+
+
 .iconBox {
   display: inline-flex;
   justify-content: center;

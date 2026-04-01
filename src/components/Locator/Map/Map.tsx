@@ -26,7 +26,8 @@ const Map = () => {
   return (
     <div className={heroSection}>
       <div className={bgImageContainer}>
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.286476263072!2d90.34785941118281!3d23.808409986457153!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c134aa8c4db7%3A0x9c24803a1413f9a9!2sGrameen%20Telecom%20Trust!5e0!3m2!1sen!2sbd!4v1690104837934!5m2!1sen!2sbd"></iframe>
+        {/* <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.286476263072!2d90.34785941118281!3d23.808409986457153!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c134aa8c4db7%3A0x9c24803a1413f9a9!2sGrameen%20Telecom%20Trust!5e0!3m2!1sen!2sbd!4v1690104837934!5m2!1sen!2sbd"></iframe> */}
+        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d456.28681477838296!2d90.3503437!3d23.8081239!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c108eabc683b%3A0x3f4df94c55d19627!2sGrameen%20Kalyan!5e0!3m2!1sen!2sbd!4v1775020631634!5m2!1sen!2sbd"></iframe>
       </div>
       <div className={content}>
         <h2 className={heading}>Opening Hours</h2>
