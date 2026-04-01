@@ -11,14 +11,17 @@
 
   .heading {
     // font-size: 35rem;
-    font-size: 30rem;
+    font-size: 25rem;
     font-weight: 900;
     white-space: nowrap;
     line-height: 1;
-    color: #d0edd7;
+    // color: #d0edd7;
+        color: #0b612d;
+    opacity: 0.3;
 
     position: absolute;
-    top: -32rem;
+    top: -15rem;
+    // top: -32rem;
     left: 50%;
     transform: translateX(-50%);
 
