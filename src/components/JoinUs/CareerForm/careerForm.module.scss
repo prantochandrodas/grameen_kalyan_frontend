@@ -3,8 +3,7 @@
 .careerForm {
   position: relative;
   margin-top: 30rem;
-  // background-color: #d0edd7;
-  background-color: #0b612d;
+  background-color: #d0edd7;
 
   @include response(tab-port) {
     margin-top: 15rem;
