@@ -35,9 +35,13 @@ const Corporate = async () => {
     corporate?.data,
     'Audit & Internal Compliance'
   );
+  // const filterBrandingAndSecretariatData = filterDataByDepartment(
+  //   corporate?.data,
+  //   'Branding & Secretariat'
+  // );
   const filterBrandingAndSecretariatData = filterDataByDepartment(
     corporate?.data,
-    'Branding & Secretariat'
+    'Secretariat Communications & Optometrist'
   );
 
   const filterMarketingOperationsAndMonitoringData = filterDataByDepartment(
@@ -119,11 +123,16 @@ const Corporate = async () => {
       />
       <TeamGrid datas={filterMarketingOperationsAndMonitoringData} />
       <TeamGroup
+        headingTextOne="Secretariat, Communications and Optometrist"
+        marginTop
+        image={brandingImg}
+      />
+      {/* <TeamGroup
         headingTextOne="M&E, Branding & Communications"
         headingTextTwo="and Secretariate"
         marginTop
         image={brandingImg}
-      />
+      /> */}
       <TeamGrid datas={filterBrandingAndSecretariatData} />
       <TeamGroup headingTextTwo="Training" marginTop image={trainingImg} />
       <TeamGrid datas={filterTrainingData} />
