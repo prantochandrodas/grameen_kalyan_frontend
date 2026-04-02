@@ -11,6 +11,7 @@ import {
   WorkTogether,
 } from '@/shared/components';
 import { filterDataByDepartment } from '@/shared/utils/pageHelpers/filterData.helper';
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const bgHero =
   'https://res.cloudinary.com/dboyf6lad/image/upload/v1692259177/IMG_1382_bhjrmk.jpg';
@@ -24,7 +25,8 @@ const regionalManagersImg =
   'https://res.cloudinary.com/dd1yxy9yy/image/upload/v1709014836/alternative_of_RM_group_photo_fnq48m.jpg';
 
 const HealthForce = async () => {
-  const corporate = await useFetch({ url: '/peoples' });
+  const corporate = await useFetchLaravelData({ url: '/peoples' });
+  // const corporate = await useFetch({ url: '/peoples' });
 
   const filterRegionalManagersData = filterDataByDepartment(
     corporate?.data,

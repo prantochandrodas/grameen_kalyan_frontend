@@ -9,9 +9,11 @@ import {
 import { PeopleCulture } from '@/components/Corporate';
 import { useFetch } from '@/shared/hook';
 import { filterDataByDepartment } from '@/shared/utils/pageHelpers/filterData.helper';
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const Corporate = async () => {
-  const corporate = await useFetch({ url: '/peoples' });
+  // const corporate = await useFetch({ url: '/peoples' });
+  const corporate = await useFetchLaravelData({ url: '/peoples' });
 
   const filterManagementData = filterDataByDepartment(
     corporate?.data,
