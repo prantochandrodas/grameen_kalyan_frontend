@@ -5,4 +5,5 @@ export interface ITeamGrid {
   department: string;
   profile_photo: string;
   desc: string;
+  serial_no: number | null;
 }
