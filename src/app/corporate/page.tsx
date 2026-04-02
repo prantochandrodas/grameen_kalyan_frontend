@@ -39,6 +39,11 @@ const Corporate = async () => {
     corporate?.data,
     'Branding & Secretariat'
   );
+
+  const filterMarketingOperationsAndMonitoringData = filterDataByDepartment(
+    corporate?.data,
+    'Marketing, Operations & Monitoring'
+  );
   const filterTrainingData = filterDataByDepartment(
     corporate?.data,
     'Training'
@@ -107,6 +112,12 @@ const Corporate = async () => {
         image={auditImg}
       />
       <TeamGrid datas={filterAuditData} />
+      <TeamGroup
+        headingTextOne="Marketing, Operations & Monitoring"
+        marginTop
+        image={brandingImg}
+      />
+      <TeamGrid datas={filterMarketingOperationsAndMonitoringData} />
       <TeamGroup
         headingTextOne="M&E, Branding & Communications"
         headingTextTwo="and Secretariate"
