@@ -29,7 +29,7 @@ const Corporate = async () => {
   );
   const filterAdministration = filterDataByDepartment(
     corporate?.data,
-    'Human Resources & Administration'
+    'Administration'
   );
   const filterServicesAndProcurementData = filterDataByDepartment(
     corporate?.data,
