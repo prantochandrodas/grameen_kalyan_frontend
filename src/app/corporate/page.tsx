@@ -27,6 +27,8 @@ const Corporate = async () => {
     corporate?.data,
     'Human Resources'
   );
+
+
   const filterAdministration = filterDataByDepartment(
     corporate?.data,
     'Administration'
@@ -101,6 +103,8 @@ const Corporate = async () => {
         image={accountImg}
       />
       <TeamGrid datas={filterAccountAndFinanceData} />
+
+
       <TeamGroup
         headingTextOne="Human Resources"
         marginTop

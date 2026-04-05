@@ -60,7 +60,7 @@ const HealthForce = async () => {
         image={doctorsImg}
       />
       <TeamGrid datas={filterDoctorsData} />
-      <TeamGroup headingTextTwo="Our DMFs" marginTop image={dmfsImg} />
+      <TeamGroup headingTextTwo="Our DMF's" marginTop image={dmfsImg} />
       <TeamGrid datas={filterDMFsData} />
       <TeamGroup
         headingTextOne="Our Community"
