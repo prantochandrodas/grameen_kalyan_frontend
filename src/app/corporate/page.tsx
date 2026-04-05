@@ -25,6 +25,10 @@ const Corporate = async () => {
   );
   const filterHumanResourceData = filterDataByDepartment(
     corporate?.data,
+    'Human Resources'
+  );
+  const filterAdministration = filterDataByDepartment(
+    corporate?.data,
     'Human Resources & Administration'
   );
   const filterServicesAndProcurementData = filterDataByDepartment(
@@ -98,12 +102,18 @@ const Corporate = async () => {
       />
       <TeamGrid datas={filterAccountAndFinanceData} />
       <TeamGroup
+        headingTextOne="Human Resources"
+        marginTop
+        image={hrImg}
+      />
+      <TeamGrid datas={filterHumanResourceData} />
+      <TeamGroup
         headingTextOne="Human Resources &"
         headingTextTwo="Administration"
         marginTop
         image={hrImg}
       />
-      <TeamGrid datas={filterHumanResourceData} />
+      <TeamGrid datas={filterAdministration} />
       <TeamGroup
         headingTextOne="Services & Procurement"
         marginTop
