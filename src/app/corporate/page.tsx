@@ -108,8 +108,7 @@ const Corporate = async () => {
       />
       <TeamGrid datas={filterHumanResourceData} />
       <TeamGroup
-        headingTextOne="Human Resources &"
-        headingTextTwo="Administration"
+        headingTextOne="Administration"
         marginTop
         image={hrImg}
       />
