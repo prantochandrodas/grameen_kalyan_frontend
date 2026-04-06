@@ -123,7 +123,7 @@ const TopInfoBar = () => {
         <div className={container}>
           <Link
             className={link}
-            href={'https://www.facebook.com/grameenkalyan/'}
+            href={'https://www.facebook.com/share/1Fam3kM6je/'}
             target="_blank"
           >
             <FaFacebookF className={`${icon} ${facebookIcon}`} />
