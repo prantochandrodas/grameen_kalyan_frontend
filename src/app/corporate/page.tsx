@@ -136,7 +136,7 @@ const Corporate = async () => {
       />
       <TeamGrid datas={filterMarketingOperationsAndMonitoringData} />
       <TeamGroup
-        headingTextOne="Secretariat, Communications and Optometrist"
+        headingTextOne="Secretariat, Research and Communications"
         marginTop
         image={brandingImg}
       />
