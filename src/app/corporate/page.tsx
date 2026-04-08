@@ -47,7 +47,7 @@ const Corporate = async () => {
   // );
   const filterBrandingAndSecretariatData = filterDataByDepartment(
     corporate?.data,
-    'Secretariat Communications & Optometrist'
+    'Secretariat Research & Communications'
   );
 
   const filterMarketingOperationsAndMonitoringData = filterDataByDepartment(
