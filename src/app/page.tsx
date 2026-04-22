@@ -107,7 +107,7 @@ const Home = async () => {
       <MicroHealthSection image={microHealthData} />
       <SevenPrinciple />
       <StoriesSection storyCategory={storyCategory.data} />
-      <WorkTogether image={workTogetherImage} />
+      <WorkTogether image={workTogetherImage ?? ''} />
     </>
   );
 };
