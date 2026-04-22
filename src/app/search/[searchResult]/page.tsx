@@ -19,7 +19,7 @@ const Search = async ({ params }: { params: { searchResult: string } }) => {
     <>
       <HeroSection heroFor="search" backgroundImage={heroImage} />
       <SearchResult searchResultData={searchResult.data.health_centers} />
-      <WorkTogether image={workTogetherImage ?? ''} />
+      <WorkTogether image={workTogetherImage} />
     </>
   );
 };

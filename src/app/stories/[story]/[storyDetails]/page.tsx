@@ -39,7 +39,7 @@ const StoryDetails = async ({
       <DetailSection data={detailData} />
       <CommentSection storyId={id} />
       <RecentPost data={recentPostData} />
-      <WorkTogether image={workTogetherImage ?? ''} />
+      <WorkTogether image={workTogetherImage} />
     </>
   );
 };

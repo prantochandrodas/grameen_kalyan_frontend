@@ -70,7 +70,7 @@ const HealthForce = async () => {
         image={communityImg}
       />
       <TeamGrid datas={filterCommunityHealthAssistantsData} />
-      <WorkTogether image={workTogetherImage ?? ''} />
+      <WorkTogether image={workTogetherImage} />
     </>
   );
 };

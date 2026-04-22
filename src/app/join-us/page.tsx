@@ -17,7 +17,7 @@ const JoinUs = async () => {
       <HeroSection heroFor="join-us" backgroundImage={bgImage} />
       <CulturalPriorities />
       <CareerForm departmentsData={departments} />
-      <WorkTogether image={workTogetherImage ?? ''} />
+      <WorkTogether image={workTogetherImage} />
     </>
   );
 };

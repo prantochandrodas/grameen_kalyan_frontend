@@ -156,7 +156,7 @@ const Corporate = async () => {
         image={itImg}
       />
       <TeamGrid datas={filterTechnologyData} />
-      <WorkTogether image={workTogetherImage ?? ''} />
+      <WorkTogether image={workTogetherImage} />
     </>
   );
 };

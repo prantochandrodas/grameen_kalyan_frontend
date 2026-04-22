@@ -28,7 +28,7 @@ const Stories = async () => {
         backgroundImage={bgHero}
       />
       <StorySection stroyCategories={storyCategoriesData} />
-      <WorkTogether image={workTogetherImage ?? ''} />
+      <WorkTogether image={workTogetherImage} />
     </>
   );
 };

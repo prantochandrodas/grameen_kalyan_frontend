@@ -78,7 +78,7 @@ const About = async () => {
       <AboutGrameenKalyan aboutGkData={aboutGrameenKalyanSectionData} />
       <AchievementSection achievementData={achievementData?.data} />
       <BoardMemberSection boardMembersData={boardMemberData?.data} />
-      <WorkTogether image={workTogetherImage ?? ''} />
+      <WorkTogether image={workTogetherImage} />
     </>
   );
 };

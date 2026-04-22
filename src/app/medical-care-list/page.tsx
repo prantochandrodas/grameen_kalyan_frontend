@@ -21,7 +21,7 @@ const MedicalCareList = async () => {
     <>
       <HeroSection data={heroData} />
       <MedicalCareListSection data={medicalCare?.data} />
-      <WorkTogether image={workTogetherImage ?? ''} />
+      <WorkTogether image={workTogetherImage} />
     </>
   );
 };

@@ -18,7 +18,7 @@ const Newsletter = async () => {
     <>
       <HeroSection data={heroData} />
       <NewsletterSection data={newsletters.data} />
-      <WorkTogether image={workTogetherImage ?? ''} />
+      <WorkTogether image={workTogetherImage} />
     </>
   );
 };

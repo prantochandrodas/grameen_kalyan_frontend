@@ -18,7 +18,7 @@ const StoryList = async () => {
     <>
       <HeroSection data={heroData} />
       <StoryListSection data={stories.data} />
-      <WorkTogether image={workTogetherImage ?? ''} />
+      <WorkTogether image={workTogetherImage} />
     </>
   );
 };

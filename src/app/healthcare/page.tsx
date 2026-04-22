@@ -36,7 +36,7 @@ const Healthcare = async () => {
       <MapSection />
       <MedicalCare />
       <MedicalCareList medicalCareCategory={medicalCareCategoryData} />
-      <WorkTogether image={workTogetherImage ?? ''} />
+      <WorkTogether image={workTogetherImage} />
     </>
   );
 };

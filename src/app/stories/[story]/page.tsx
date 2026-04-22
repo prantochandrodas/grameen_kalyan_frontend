@@ -32,7 +32,7 @@ const Story = async ({ params }: { params: { story: number } }) => {
       <HeroSection data={heroSectionData} />
       <StoryShortDetail data={storyShortDetail} />
       <RecentPost data={recentPostData} />
-      <WorkTogether image={workTogetherImage ?? ''} />
+      <WorkTogether image={workTogetherImage} />
     </>
   );
 };

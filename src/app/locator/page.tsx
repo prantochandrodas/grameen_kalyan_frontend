@@ -13,7 +13,7 @@ const LocatorPage = async () => {
     <>
       <Map />
       <OfficeLocations officeLocationsData={locators?.data} />
-      <WorkTogether image={workTogetherImage ?? ''} />
+      <WorkTogether image={workTogetherImage} />
     </>
   );
 };
