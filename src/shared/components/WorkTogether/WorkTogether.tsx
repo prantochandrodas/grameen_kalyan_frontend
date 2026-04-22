@@ -25,7 +25,7 @@ const WorkTogether = ({ image }: IMicroHealthSectionProps) => {
     <div className={workTogether}>
       <div className={imgContainer}>
         <Image className={img} src={'https://admin.grameenkalyan.com' + image} width={1000}
-          height={1000} alt="img" />
+          height={1000} alt="img" unoptimized />
       </div>
       <div className={contentContainer}>
         <motion.h3
