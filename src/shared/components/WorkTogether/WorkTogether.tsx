@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import testImage from '@/assets/images/lets-work.jpeg';
 import { Button } from '../Button';
 import style from './workTogether.module.scss';
-
+import { IMAGE_BASE_URL } from '@/config';
 const {
   workTogether,
   imgContainer,
@@ -17,12 +17,15 @@ const {
   headingLarge,
   parag,
 } = style;
-
-const WorkTogether = () => {
+interface IMicroHealthSectionProps {
+  image: string;
+}
+const WorkTogether = ({ image }: IMicroHealthSectionProps) => {
   return (
     <div className={workTogether}>
       <div className={imgContainer}>
-        <Image className={img} src={testImage} alt="img" />
+        <Image className={img} src={IMAGE_BASE_URL + image} width={1000}
+          height={1000} alt="img" />
       </div>
       <div className={contentContainer}>
         <motion.h3

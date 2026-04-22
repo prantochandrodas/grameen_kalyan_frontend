@@ -39,6 +39,7 @@ const Home = async () => {
 
   const heroSliderImages = sliderImages?.data;
   const badgeImage = homePageContentData?.badge_image;
+  const workTogetherImage = homePageContentData?.work_together_image;
 
   const aboutSectionData = {
     title: homePageContentData?.intro_title,
@@ -106,7 +107,7 @@ const Home = async () => {
       <MicroHealthSection image={microHealthData} />
       <SevenPrinciple />
       <StoriesSection storyCategory={storyCategory.data} />
-      <WorkTogether />
+      <WorkTogether image={workTogetherImage} />
     </>
   );
 };
