@@ -13,12 +13,13 @@ const Search = async ({ params }: { params: { searchResult: string } }) => {
   const searchResult = await useFetch({
     url: `/search-results?search=${keyword}`,
   });
-
+  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const workTogetherImage = homePageContentData?.work_together_image;
   return (
     <>
       <HeroSection heroFor="search" backgroundImage={heroImage} />
       <SearchResult searchResultData={searchResult.data.health_centers} />
-      <WorkTogether />
+      <WorkTogether image={workTogetherImage ?? ''} />
     </>
   );
 };

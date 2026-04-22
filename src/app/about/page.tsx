@@ -50,6 +50,10 @@ const About = async () => {
 
   const aboutGrameenKalyanSectionData = aboutUsData?.presence_details;
 
+
+  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const workTogetherImage = homePageContentData?.work_together_image;
+
   return (
     <>
       <HeroSection
@@ -74,7 +78,7 @@ const About = async () => {
       <AboutGrameenKalyan aboutGkData={aboutGrameenKalyanSectionData} />
       <AchievementSection achievementData={achievementData?.data} />
       <BoardMemberSection boardMembersData={boardMemberData?.data} />
-      <WorkTogether />
+      <WorkTogether image={workTogetherImage ?? ''} />
     </>
   );
 };

@@ -17,7 +17,8 @@ const Stories = async () => {
     banner_image: data.banner_image,
     dataType: 'story',
   }));
-
+  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const workTogetherImage = homePageContentData?.work_together_image;
   return (
     <>
       <HeroSection
@@ -27,7 +28,7 @@ const Stories = async () => {
         backgroundImage={bgHero}
       />
       <StorySection stroyCategories={storyCategoriesData} />
-      <WorkTogether />
+      <WorkTogether image={workTogetherImage ?? ''} />
     </>
   );
 };

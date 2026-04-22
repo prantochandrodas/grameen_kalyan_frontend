@@ -12,11 +12,13 @@ const heroData = {
 
 const StoryList = async () => {
   const stories = await useFetch({ url: '/stories' });
+  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const workTogetherImage = homePageContentData?.work_together_image;
   return (
     <>
       <HeroSection data={heroData} />
       <StoryListSection data={stories.data} />
-      <WorkTogether />
+      <WorkTogether image={workTogetherImage ?? ''} />
     </>
   );
 };

@@ -7,12 +7,13 @@ import { useFetch } from '@/shared/hook';
 
 const LocatorPage = async () => {
   const locators = await useFetch({ url: '/locators' });
-
+  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const workTogetherImage = homePageContentData?.work_together_image;
   return (
     <>
       <Map />
       <OfficeLocations officeLocationsData={locators?.data} />
-      <WorkTogether />
+      <WorkTogether image={workTogetherImage ?? ''} />
     </>
   );
 };

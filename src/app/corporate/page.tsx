@@ -81,7 +81,8 @@ const Corporate = async () => {
     'https://res.cloudinary.com/dboyf6lad/image/upload/v1692608043/training_section_banner_mukpax.jpg';
   const itImg =
     'https://res.cloudinary.com/dboyf6lad/image/upload/v1692608043/information_technology_section_banner_t3wy0u.jpg';
-
+  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const workTogetherImage = homePageContentData?.work_together_image;
   return (
     <>
       <HeroSection
@@ -155,7 +156,7 @@ const Corporate = async () => {
         image={itImg}
       />
       <TeamGrid datas={filterTechnologyData} />
-      <WorkTogether />
+      <WorkTogether image={workTogetherImage ?? ''} />
     </>
   );
 };

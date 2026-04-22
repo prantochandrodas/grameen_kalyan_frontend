@@ -38,7 +38,8 @@ const HealthForce = async () => {
     corporate?.data,
     'Community Health Assistants'
   );
-
+  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const workTogetherImage = homePageContentData?.work_together_image;
   return (
     <>
       <HeroSection
@@ -69,7 +70,7 @@ const HealthForce = async () => {
         image={communityImg}
       />
       <TeamGrid datas={filterCommunityHealthAssistantsData} />
-      <WorkTogether />
+      <WorkTogether image={workTogetherImage ?? ''} />
     </>
   );
 };

@@ -27,7 +27,8 @@ const Healthcare = async () => {
 
   const bgHero =
     'https://res.cloudinary.com/dboyf6lad/image/upload/v1692259176/healthcare-bg_lgc2rn.png';
-
+  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const workTogetherImage = homePageContentData?.work_together_image;
   return (
     <>
       <HeroSection heroFor="healthcare" backgroundImage={bgHero} />
@@ -35,7 +36,7 @@ const Healthcare = async () => {
       <MapSection />
       <MedicalCare />
       <MedicalCareList medicalCareCategory={medicalCareCategoryData} />
-      <WorkTogether />
+      <WorkTogether image={workTogetherImage ?? ''} />
     </>
   );
 };

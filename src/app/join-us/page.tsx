@@ -10,13 +10,14 @@ const JoinUs = async () => {
 
   const departmentsData = await useFetch({ url: '/departments' });
   const departments = departmentsData?.data;
-
+  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const workTogetherImage = homePageContentData?.work_together_image;
   return (
     <>
       <HeroSection heroFor="join-us" backgroundImage={bgImage} />
       <CulturalPriorities />
       <CareerForm departmentsData={departments} />
-      <WorkTogether />
+      <WorkTogether image={workTogetherImage ?? ''} />
     </>
   );
 };

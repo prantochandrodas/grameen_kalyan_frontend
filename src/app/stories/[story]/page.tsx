@@ -25,13 +25,14 @@ const Story = async ({ params }: { params: { story: number } }) => {
   const recentPostData = stories?.data?.slice(
     (data: IStories) => data.id === id
   );
-
+  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const workTogetherImage = homePageContentData?.work_together_image;
   return (
     <>
       <HeroSection data={heroSectionData} />
       <StoryShortDetail data={storyShortDetail} />
       <RecentPost data={recentPostData} />
-      <WorkTogether />
+      <WorkTogether image={workTogetherImage ?? ''} />
     </>
   );
 };

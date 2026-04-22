@@ -15,11 +15,13 @@ const heroData = {
 
 const MedicalCareList = async () => {
   const medicalCare = await useFetch({ url: '/disease-specific-medicare' });
+  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const workTogetherImage = homePageContentData?.work_together_image;
   return (
     <>
       <HeroSection data={heroData} />
       <MedicalCareListSection data={medicalCare?.data} />
-      <WorkTogether />
+      <WorkTogether image={workTogetherImage ?? ''} />
     </>
   );
 };
