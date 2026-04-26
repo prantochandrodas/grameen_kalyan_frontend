@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 
-import testImage from '@/assets/images/Website Group Photo 4.3.jpg.jpeg';
+import testImage from '@/assets/images/lets-work.jpeg';
 import { Button } from '../Button';
 import style from './workTogether.module.scss';
 import { IMAGE_BASE_URL } from '@/config';
