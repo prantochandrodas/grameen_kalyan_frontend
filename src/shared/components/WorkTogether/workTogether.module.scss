@@ -22,7 +22,8 @@
   }
 
   .imgContainer {
-    flex: 1;
+    // flex: 1;
+    width: 60%;
     height: 70rem;
     border-radius: 30rem 0 0 0;
     overflow: hidden;
@@ -50,7 +51,8 @@
     }
   }
   .contentContainer {
-    flex: 1;
+    // flex: 1;
+    width: 40%;
 
     .headingSmall,
     .headingLarge {
