@@ -60,6 +60,7 @@ const HealthcareService = ({ servicesData }: IHealthcareServiceProps) => {
                       alt="healthcare"
                       width={500}
                       height={500}
+                     unoptimized
                     />
                   </div>
                 </Link>
