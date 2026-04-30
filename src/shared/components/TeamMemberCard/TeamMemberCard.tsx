@@ -51,6 +51,7 @@ const TeamMemberCard = ({
           alt="member"
           width={500}
           height={500}
+          unoptimized
         />
       </div>
       <p className={memberName}>{data && data.name}</p>
