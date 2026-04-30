@@ -56,6 +56,7 @@ const ServiceCard = ({ reverse, serviceData }: IServiceSectionProps) => {
           height={500}
           width={500}
           priority
+          unoptimized
         />
       </div>
       <div
