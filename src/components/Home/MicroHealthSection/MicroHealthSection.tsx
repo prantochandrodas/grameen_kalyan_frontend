@@ -7,6 +7,7 @@ import { Button } from '@/shared/components';
 import { IMAGE_BASE_URL } from '@/config';
 
 import style from './microHealthSection.module.scss';
+import NewButton from '@/shared/components/Button/NewButton';
 
 const {
   microHealthSection,
@@ -16,6 +17,7 @@ const {
   bgContainer,
   insuranceText,
   img,
+
   contentContainer,
 } = style;
 
@@ -42,7 +44,13 @@ const MicroHealthSection = ({ image }: IMicroHealthSectionProps) => {
           />
         </div>
         <div className={contentContainer}>
-          <Button text="Read More" url="/healthcare/4" btnSecondary={true} />
+          {/* <Button text="Read More" url="/healthcare/4" btnSecondary={true}
+            style={{ border: '1px solid #fff', color: '#fff' }} /> */}
+          <NewButton
+            text="Read More"
+            url="/healthcare/4"
+            btnSecondary={true}
+          />
         </div>
       </div>
     </div>
