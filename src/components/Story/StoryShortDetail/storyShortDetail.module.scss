@@ -98,6 +98,10 @@
       color: $color-text-darkGrey;
     }
     .shortDesc {
+        display: -webkit-box;
+  -webkit-line-clamp: 5; // কত লাইন দেখাবে
+  -webkit-box-orient: vertical;
+  overflow: hidden; 
       font-size: 2rem;
       font-weight: 400;
     }

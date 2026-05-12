@@ -28,6 +28,7 @@ interface IStoryShortDetailProps {
 }
 
 const StoryShortDetail = ({ data }: IStoryShortDetailProps) => {
+  console.log(data);
   return (
     <div className={storyDetail}>
       <div className={imageContainer}>
@@ -46,12 +47,10 @@ const StoryShortDetail = ({ data }: IStoryShortDetailProps) => {
       </div>
       <div className={contentContainer}>
         <h2 className={heading}>{data.title}</h2>
-        <p className={shortDesc}>
-          The coronavirus outbreak occurred worldwide at the end of 2019, and
-          Bangladesh was hit by the deadly virus in March 2020. As the
-          fast-spreading coronavirus claimed many lives and affected people
-          countrywide, Grameen Kalyan did not place a...
-        </p>
+        <div className={shortDesc}
+          dangerouslySetInnerHTML={{ __html: data.description }}
+        ></div>
+
         <div className={btnContainer}>
           <Button
             text="Read More"
