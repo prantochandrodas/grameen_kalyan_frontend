@@ -1,33 +1,116 @@
-@import '../../../style/utils/base';
+// @import '../../../style/utils/base';
 
+// .detailSection {
+//   padding: 10rem 20rem;
+
+//   @include response(M-desktop) {
+//     padding: 10rem 15rem;
+//   }
+//   @include response(tab-port) {
+//     padding: 10rem 10rem;
+//   }
+//   @include response(phone) {
+//     padding: 5rem;
+//   }
+//   @include response(s-phone) {
+//     padding: 5rem 3rem;
+//   }
+
+//   .contentContainer {
+//     h1 {
+//       font-size: 5rem;
+//     }
+//     p,
+//     div,
+//     table {
+//       font-size: 2rem !important;
+
+//       margin-bottom: 2rem;
+//     }
+//   }
+//   .btnContainer {
+//     margin-top: 10rem;
+//     padding: 10rem 0;
+//   }
+// }
+
+@import '../../../style/utils/base';
+.title {
+  font-size: 3.2rem;
+  margin-bottom: 3rem;
+  font-weight: 700;
+}
 .detailSection {
   padding: 10rem 20rem;
 
   @include response(M-desktop) {
     padding: 10rem 15rem;
   }
+
   @include response(tab-port) {
     padding: 10rem 10rem;
   }
+
   @include response(phone) {
     padding: 5rem;
   }
+
   @include response(s-phone) {
     padding: 5rem 3rem;
   }
 
   .contentContainer {
+       text-align: justify;
+    // headings
     h1 {
       font-size: 5rem;
     }
+
+    h2, h3, h4, h5, h6 {
+      margin-bottom: 2rem;
+    }
+
+    // text
     p,
     div,
     table {
       font-size: 2rem !important;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
 
+    // ✅ FIX: bold not working issue
+    strong,
+    b {
+      font-size: 2rem !important;
+      font-weight: 700 !important;
+    }
+
+    // TinyMCE sometimes uses span
+    span[style*="bold"],
+    span[style*="700"] {
+     font-size: 2rem !important;
+      font-weight: 700 !important;
+    }
+
+    ul,
+    ol {
+      font-size: 2rem;
+      margin-left: 3rem;
       margin-bottom: 2rem;
     }
+
+    a {
+      color: blue;
+      text-decoration: underline;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
   }
+
   .btnContainer {
     margin-top: 10rem;
     padding: 10rem 0;

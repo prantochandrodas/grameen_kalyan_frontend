@@ -6,15 +6,19 @@ import style from './detailSection.module.scss';
 import { Button } from '@/shared/components';
 import { IDetailSectionData } from './DetailSection.types';
 
-const { detailSection, contentContainer, btnContainer } = style;
+const { detailSection, contentContainer, btnContainer, title } = style;
 
 interface IDetailSectionProps {
   data: IDetailSectionData;
 }
 
 const DetailSection = ({ data }: IDetailSectionProps) => {
+
   return (
     <div className={detailSection}>
+      <h1 className={title}>
+        {data.title || 'No Title Found'}
+      </h1>
       <div
         className={contentContainer}
         dangerouslySetInnerHTML={{ __html: data.description }}

@@ -4,6 +4,7 @@ import { HeroSection, StoryShortDetail } from '@/components/Story';
 import { RecentPost, WorkTogether } from '@/shared/components';
 import { useFetch } from '@/shared/hook';
 import { IStories } from '@/shared/types/stories';
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const Story = async ({ params }: { params: { story: number } }) => {
   const id = parseInt(params.story.toString());
@@ -12,9 +13,13 @@ const Story = async ({ params }: { params: { story: number } }) => {
   const stories = await useFetch({ url: '/stories' });
   const storyCategory = await useFetch({ url: '/story-categories' });
 
+  const matchedCategory = storyCategory?.data?.find(
+    (item: any) => item.id === id
+  );
+
   const heroSectionData = {
     title: story?.title,
-    image: storyCategory?.data[id]?.banner_image,
+    image: matchedCategory?.banner_image,
   };
   const storyShortDetail = {
     id: id,

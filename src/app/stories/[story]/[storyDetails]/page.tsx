@@ -8,6 +8,7 @@ import {
 import { RecentPost, WorkTogether } from '@/shared/components';
 import { useFetch } from '@/shared/hook';
 import { IStories } from '@/shared/types/stories';
+import NewHeroSection from '@/components/StoryDetails/HeroSection/NewHeroSection';
 
 const StoryDetails = async ({
   params,
@@ -26,6 +27,7 @@ const StoryDetails = async ({
   };
   const detailData = {
     id: story?.id,
+    title: story?.title,
     description: story?.desc,
   };
   const recentPostData = stories?.data?.slice(
@@ -35,7 +37,8 @@ const StoryDetails = async ({
   const workTogetherImage = homePageContentData?.work_together_image;
   return (
     <>
-      <HeroSection data={heroSectionData} />
+      <NewHeroSection data={heroSectionData} />
+      {/* <HeroSection data={heroSectionData} /> */}
       <DetailSection data={detailData} />
       <CommentSection storyId={id} />
       <RecentPost data={recentPostData} />
