@@ -55,9 +55,10 @@
     }
 
     .content {
+      font-weight: 600;
       padding: 0.5rem 2rem;
       border-radius: 1rem;
-      border: 1px solid $color-text-light;
+      border: 2px solid $color-text-light;
       cursor: pointer;
 
       @include response(phone) {
