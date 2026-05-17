@@ -302,13 +302,14 @@ const MapSection = () => {
           </h3>
           <div className={locationContact}>
             <div className={address} >
-              <FaLocationDot className={icon} />
+
               <a
                 href={activeHealthCenter ? healthCenterData?.map_location : firstData?.map_location}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ textDecoration: 'none', color: 'inherit' }}
+                style={{ textDecoration: 'none', color: 'inherit', display: 'flex', gap: '2rem' }}
               >
+                <FaLocationDot className={icon} />
                 <p>
                   {activeHealthCenter ? healthCenterData?.address : centerAddress}
                   ,{' '}
