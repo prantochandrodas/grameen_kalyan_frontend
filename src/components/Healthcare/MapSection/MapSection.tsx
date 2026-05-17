@@ -58,6 +58,7 @@ const MapSection = () => {
   const [activeHealthCenter, setActiveHealthCenter] = useState<boolean>(false);
   const [centerDivision, setCenterDivision] = useState<string | null>();
 
+
   const loadDivisionData = async (key: number | string) => {
 
     const dataByDivisionId = await getDataByDivisionId(key);
@@ -100,6 +101,7 @@ const MapSection = () => {
       }
     }
   };
+
 
   useEffect(() => {
     loadDivisionData(divisionId);
@@ -299,15 +301,22 @@ const MapSection = () => {
             {activeHealthCenter ? healthCenterData?.name : centerName}
           </h3>
           <div className={locationContact}>
-            <div className={address}>
+            <div className={address} >
               <FaLocationDot className={icon} />
-              <p>
-                {activeHealthCenter ? healthCenterData?.address : centerAddress}
-                ,{' '}
-                {activeHealthCenter
-                  ? healthCenterData?.division_name
-                  : centerDivision}
-              </p>
+              <a
+                href={activeHealthCenter ? healthCenterData?.map_location : firstData?.map_location}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <p>
+                  {activeHealthCenter ? healthCenterData?.address : centerAddress}
+                  ,{' '}
+                  {activeHealthCenter
+                    ? healthCenterData?.division_name
+                    : centerDivision}
+                </p>
+              </a>
             </div>
             <div className={contact}>
               <FaPhone className={icon} />
@@ -327,7 +336,7 @@ const MapSection = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 
