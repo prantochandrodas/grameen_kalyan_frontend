@@ -9,7 +9,7 @@ import { PhotoView } from 'react-photo-view';
 import { IGalleryData } from '../Gallery.types';
 
 import style from './photoCard.module.scss';
-const { photoCard, mask, imgContainer, img } = style;
+const { photoCard, mask, imgContainer, img, title } = style;
 
 interface IPhotoCardProps {
   data: IGalleryData;
@@ -28,7 +28,10 @@ const PhotoCard = ({ data }: IPhotoCardProps) => {
             height={500}
           />
         </div>
-        <div className={mask}>
+        {/* <div className={mask}>
+          <h4>{data.title}</h4>
+        </div> */}
+        <div className={title}>
           <h4>{data.title}</h4>
         </div>
       </div>

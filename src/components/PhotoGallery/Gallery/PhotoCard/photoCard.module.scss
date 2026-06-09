@@ -3,8 +3,8 @@
 .photoCard {
   overflow: hidden;
   position: relative;
-  transition: 0.3s all ease-in-out;
-  cursor: pointer;
+  // transition: 0.3s all ease-in-out;
+  // cursor: pointer;
   border-radius: 0.8rem;
   background-color: $color-text-grey;
 
@@ -27,7 +27,17 @@
 
 
   }
+.title {
+  padding: 1rem;
+  text-align: justify;
+  background: #fff;
 
+  h4 {
+    font-size: 2rem;
+    color: #333;
+    margin: 0;
+  }
+}
   .mask {
     position: absolute;
     inset: 0;
