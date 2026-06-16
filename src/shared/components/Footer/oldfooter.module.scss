@@ -12,7 +12,7 @@
   
 .topbarothericon{
     //  height: 4.5rem;
-    padding: 6px;
+    padding: 4px;
  border-radius: 50%;
   border: 1px solid white;
       display: flex;
@@ -134,11 +134,10 @@
         }
 
         .link {
-          height: 4.5rem;
+          height: 3.5rem;
           aspect-ratio: 1;
           border-radius: 50%;
-
-          // background-color: $color-secondary;
+          background-color: $color-secondary;
           margin-bottom: 1rem;
 
           display: flex;
@@ -146,25 +145,25 @@
           justify-content: center;
 
           .icon {
-            font-size: 2.8rem;
+            font-size: 1.8rem;
             color: $color-primary;
             transition: all 500ms;
           }
 
           .linkdinIcon {
-            color: #ffffff !important;
+            color: #0071ae !important;
           }
 
           .youtubeIcon {
-            color: #ffffff !important;
+            color: #ff0033 !important;
           }
 
           .instagramIcon {
-            color: #ffffff !important;
+            color: #f60e4b !important;
           }
 
           .facebookIcon {
-            color: #ffffff !important;
+            color: #0C52C2 !important;
           }
         }
       }

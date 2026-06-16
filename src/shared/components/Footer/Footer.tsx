@@ -37,14 +37,15 @@ const {
   youtubeIcon,
   instagramIcon,
   facebookIcon,
+  topbarothericon
 } = style;
 
 const Footer = () => {
   return (
     <div className={footer}>
-      <div className={logoContainer}>
+      {/* <div className={logoContainer}>
         <Image className={logo} src={gkLogo} alt="logo" />
-      </div>
+      </div> */}
       <div className={contentContainer}>
         <div className={address}>
           <div className={addressTitle}>
@@ -88,14 +89,19 @@ const Footer = () => {
               href={'https://www.facebook.com/share/1Fam3kM6je/'}
               target="_blank"
             >
-              <FaFacebookF className={`${icon} ${facebookIcon}`} />
+              <div className={`${topbarothericon}`}>
+                <FaFacebookF className={`${icon} ${facebookIcon}`} />
+              </div>
             </Link>
             <Link
               className={link}
               href={'https://www.youtube.com/@GrameenKalyan1996'}
               target="_blank"
             >
-              <FaYoutube className={`${icon} ${youtubeIcon}`} />
+              <div className={`${topbarothericon}`}>
+                <FaYoutube className={`${icon} ${youtubeIcon}`} />
+              </div>
+
             </Link>
             <Link
               className={link}
@@ -104,7 +110,10 @@ const Footer = () => {
               }
               target="_blank"
             >
-              <FaInstagram className={`${icon} ${instagramIcon}`} />
+              <div className={`${topbarothericon}`}>
+                <FaInstagram className={`${icon} ${instagramIcon}`} />
+              </div>
+
             </Link>
 
             <Link
@@ -114,7 +123,10 @@ const Footer = () => {
               }
               target="_blank"
             >
-              <FaLinkedinIn className={`${icon} ${linkdinIcon}`} />
+              <div className={`${topbarothericon}`}>
+                <FaLinkedinIn className={`${icon} ${linkdinIcon}`} />
+              </div>
+
             </Link>
           </div>
         </div>

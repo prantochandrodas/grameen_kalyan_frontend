@@ -15,11 +15,10 @@
         }
 
         .link {
-          height: 4.5rem;
+          height: 3.5rem;
           aspect-ratio: 1;
           border-radius: 50%;
-        //   background-color: $color-secondary;
-        border: 1px solid white!important;
+          background-color: $color-secondary;
           
           margin-bottom: 5px;
           margin-top: 5px;
@@ -29,25 +28,25 @@
           justify-content: center;
 
           .icon {
-            font-size: 2.8rem;
-            color: white;
+            font-size: 1.8rem;
+            color: $color-primary;
             transition: all 500ms;
           }
 
           .linkdinIcon {
-            color: white !important;
+            color: #0071ae !important;
           }
 
           .youtubeIcon {
-            color: white !important;
+            color: #ff0033 !important;
           }
 
           .instagramIcon {
-            color: white !important;
+            color: #f60e4b !important;
           }
 
           .facebookIcon {
-            color: white !important;
+            color: #0C52C2 !important;
           }
         }
       }
@@ -170,17 +169,7 @@
 
 .topInfoItem {
   font-size: 14px;
- 
-}
-
-.topbarothericon{
-    //  height: 4.5rem;
-    padding: 4px;
- border-radius: 50%;
-  border: 1px solid white;
-      display: flex;
-    align-items: center;
-    justify-content: center;
+  
 }
 
 .locationRow {

@@ -4,6 +4,7 @@ import { BiSolidPhoneCall } from 'react-icons/bi';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { FiPhone } from 'react-icons/fi';
 import { FiMail } from 'react-icons/fi';
+import { IoIosMail } from 'react-icons/io';
 import {
   FaFacebookF,
   FaInstagram,
@@ -17,6 +18,7 @@ import style from './navbar.module.scss';
 
 
 const {
+  topbarothericon,
   addressText,
   topInfoBar,
   topInfoItem,
@@ -51,7 +53,7 @@ const TopInfoBar = () => {
               objectFit: 'contain'
             }}
           /></span> */}
-          <a
+          {/* <a
             href="https://www.google.com/maps/place/Grameen+Kalyan/@23.8081239,90.3503437,20z/data=!4m6!3m5!1s0x3755c108eabc683b:0x3f4df94c55d19627!8m2!3d23.8082406!4d90.3503652!16s%2Fg%2F11rrjpsngc?entry=ttu&g_ep=EgoyMDI2MDMyOS4wIKXMDSoASAFQAw%3D%3D"
             target="_blank"
             rel="noopener noreferrer"
@@ -69,8 +71,15 @@ const TopInfoBar = () => {
                 }}
               />
             </span>
+          </a> */}
+          <a
+            href="https://www.google.com/maps/place/Grameen+Kalyan/@23.8081239,90.3503437,20z/data=!4m6!3m5!1s0x3755c108eabc683b:0x3f4df94c55d19627!8m2!3d23.8082406!4d90.3503652!16s%2Fg%2F11rrjpsngc?entry=ttu&g_ep=EgoyMDI2MDMyOS4wIKXMDSoASAFQAw%3D%3D"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>  <FaMapMarkerAlt style={{ color: 'white', fontSize: '15px', marginRight: '5px' }} /></span>
           </a>
-          {/* <span>  <FaMapMarkerAlt style={{ color: 'white', fontSize: '15px', marginRight: '5px' }} /></span> */}
+
           <p className={addressText}>
             5th Floor, Grameen Telecom Bhaban, 53/1 Box Nagar, Mirpur 1, Dhaka
             1216, Bangladesh
@@ -92,7 +101,9 @@ const TopInfoBar = () => {
             objectFit: 'contain'
           }}
         /> */}
-        <BiSolidPhoneCall style={{ marginRight: '5px', fontSize: '20px', color: '#95c11f' }} />
+        <div className={topbarothericon} style={{ padding: '6px' }}>
+          <FaPhoneAlt style={{ fontSize: '15px' }} />
+        </div>
         +880244802111 | +8809642115500
 
       </div>
@@ -102,8 +113,10 @@ const TopInfoBar = () => {
           display: 'flex', alignItems: 'center', gap: '5px', marginRight: '30px'
         }}
       >
-        {/* <FiMail style={{ fontSize: '20px', color: '#ffffff' }} /> */}
-        <img
+        <div className={topbarothericon} >
+          <IoIosMail style={{ fontSize: '20px', color: '#ffffff' }} />
+        </div>
+        {/* <img
           src="/images/gmail.png"
           alt="gmail"
           style={{
@@ -112,7 +125,7 @@ const TopInfoBar = () => {
             marginRight: '5px',
             objectFit: 'contain'
           }}
-        />
+        /> */}
         contact@grameenkalyan.com
       </div>
 
