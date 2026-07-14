@@ -71,7 +71,7 @@ const VideoSection = () => {
         style={{
           width: '100px',
           height: '4px',
-          backgroundColor: '#0B612D',
+          backgroundColor: '#424744',
           margin: '0 auto 30px',
           borderRadius: '2px',
         }}
