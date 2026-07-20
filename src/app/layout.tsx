@@ -27,12 +27,14 @@ export default async function RootLayout({
     url: '/home-contents',
     revalidateIn: 86400,
   });
+
   const badgeImage = navbarData?.badge_image;
+  const logoImage = navbarData?.navbar_logo;
 
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-        <Navbar badgeImage={badgeImage} />
+        <Navbar badgeImage={badgeImage} logoImage={logoImage} />
         {children}
         <SidebarSticky />
         <Footer />

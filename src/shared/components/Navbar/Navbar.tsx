@@ -38,9 +38,10 @@ const {
 
 interface INavbarProps {
   badgeImage: string;
+  logoImage: string;
 }
 
-const Navbar = ({ badgeImage }: INavbarProps) => {
+const Navbar = ({ badgeImage, logoImage }: INavbarProps) => {
   const pathName = usePathname();
   const [toggle, setToggle] = useState(false);
   const [isHomePage, setIsHomePage] = useState(false);
@@ -60,6 +61,9 @@ const Navbar = ({ badgeImage }: INavbarProps) => {
   };
 
   const badge = IMAGE_BASE_URL + badgeImage;
+  const logoSrc = IMAGE_BASE_URL + logoImage;
+
+
   // const isHomePage = pathName === '/';
 
   const handleActiveHomePage = (page: string) => {
@@ -280,7 +284,14 @@ const Navbar = ({ badgeImage }: INavbarProps) => {
       <div className={navbar}>
         <Link className={link} href="/">
           <div className={logoContainer}>
-            <Image className={logo} src={gkLogo} alt="GK logo" priority />
+            <Image
+              className={logo}
+              src={logoSrc}
+              alt="GK logo"
+              width={150}
+              height={60}
+              priority
+            />
           </div>
         </Link>
         <ul className={toggle ? `${list} ${openList}` : `${list}`}>
