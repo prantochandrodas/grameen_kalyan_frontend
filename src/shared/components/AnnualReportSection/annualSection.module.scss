@@ -117,9 +117,13 @@
         @include response(s-desktop) {
           padding: 10rem;
         }
-          @media screen and (max-width: 1000px) {
+
+        @media screen and (min-width: 1020px) and (max-width: 1200px) {
+          padding: 10rem 15rem;
+        }
+        @media screen and (max-width: 1000px) {
                 padding: 6rem;
-              }
+         }
         @include response(phone) {
           padding: 5rem;
 
@@ -147,8 +151,16 @@
               @include response(M-desktop) {
                 font-size: 5rem;
               }
+
+               @media screen and (min-width: 1001px) and (max-width: 1250px) {
+                font-size: 5rem;
+              }
+             
               @media screen and (max-width: 1000px) {
-                font-size: 4rem;
+                font-size: 3.5rem;
+              }
+              @media screen and (min-width: 601px) and (max-width: 800px) {
+                font-size: 3rem;
               }
             }
             .title {
@@ -160,6 +172,10 @@
               }
               @media screen and (max-width: 1000px) {
                 font-size: 1.6rem;
+              }
+
+              @media screen and (min-width: 601px) and (max-width: 800px) {
+                font-size: 1.2rem;
               }
             }
           }
