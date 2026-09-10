@@ -12,9 +12,9 @@ const { section, videoContainer, videoItem, iframeBox, heading } = style;
 
 interface Video {
   id: number;
+  serial_no: string;
   video_link: string;
 }
-
 const VideoSection = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   // Fetch videos
