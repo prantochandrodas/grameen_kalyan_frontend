@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Slider from 'react-slick';
 import style from './VideoSection.module.scss';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Arrow } from '@/shared/components'; // optional custom arrows
 import { motion } from 'framer-motion';
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 const { section, videoContainer, videoItem, iframeBox, heading } = style;
 
 interface Video {
@@ -16,23 +17,31 @@ interface Video {
 
 const VideoSection = () => {
   const [videos, setVideos] = useState<Video[]>([]);
+  // Fetch videos
+  useEffect(() => {
+    const fetchVideos = async () => {
+      const res = await useFetchLaravelData({ url: '/recommended-video-galleries' });
+      if (res?.data) setVideos(res.data);
+    };
+    fetchVideos();
+  }, []);
 
+  // ✅ serial_no অনুযায়ী explicit sort, API order-এর উপর নির্ভর না করে
+  const sortedVideos = useMemo(
+    () => [...videos].sort((a, b) => Number(a.serial_no) - Number(b.serial_no)),
+    [videos]
+  );
   const getYouTubeId = (url: string) => {
     const regExp =
       /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?/]+)/;
     const match = url.match(regExp);
     return match ? match[1] : url;
   };
-
+  // Fetch videos
   useEffect(() => {
     const fetchVideos = async () => {
-      try {
-        const res = await fetch('/api/recommended-videos');
-        const result = await res.json();
-        setVideos(result.data || []);
-      } catch (error) {
-        console.error('Video fetch error:', error);
-      }
+      const res = await useFetchLaravelData({ url: '/recommended-video-galleries' });
+      if (res?.data) setVideos(res.data);
     };
     fetchVideos();
   }, []);
