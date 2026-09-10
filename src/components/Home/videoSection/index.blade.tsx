@@ -51,7 +51,7 @@ const VideoSection = () => {
     infinite: true,
     speed: 500,
     slidesToShow: 2, // desktop
-    slidesToScroll: 1,
+    slidesToScroll: 2,
     arrows: true,
     nextArrow: <Arrow type="next" />,
     prevArrow: <Arrow type="prev" />,
