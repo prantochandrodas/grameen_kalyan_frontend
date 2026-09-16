@@ -104,7 +104,7 @@ const TopInfoBar = () => {
         <div className={topbarothericon} style={{ padding: '6px' }}>
           <FaPhoneAlt style={{ fontSize: '15px' }} />
         </div>
-        +880244802111 | +8809642115500
+        +880244802111 | +8809642115500  | +8801334944640
 
       </div>
       <div
