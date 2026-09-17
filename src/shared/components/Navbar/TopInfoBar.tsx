@@ -42,7 +42,7 @@ const TopInfoBar = () => {
   return (
     <div className={topInfoBar}>
       <div className={topInfoItem} style={{ width: '42%', display: 'flex', alignItems: 'center', gap: '5px' }}>
-        <div className={locationRow} style={{ marginRight: '30px' }}>
+        <div className={locationRow} style={{ marginRight: '20px' }}>
           {/* <span>  <img
             src="/images/location.png"
             alt="location"
@@ -87,11 +87,11 @@ const TopInfoBar = () => {
         </div>
       </div>
 
-      <div className={topInfoItem} style={{
+      {/* <div className={topInfoItem} style={{
         display: 'flex', alignItems: 'center', gap: '5px'
       }}>
-        {/* <FaPhoneAlt style={{ marginRight: '5px', fontSize: '20px', color: '#ffffff' }} /> */}
-        {/* <img
+        <FaPhoneAlt style={{ marginRight: '5px', fontSize: '20px', color: '#ffffff' }} />
+        <img
           src="/images/phonesdfjs.png"
           alt="phone"
           style={{
@@ -100,12 +100,23 @@ const TopInfoBar = () => {
             marginRight: '5px',
             objectFit: 'contain'
           }}
-        /> */}
+        /> 
         <div className={topbarothericon} style={{ padding: '6px' }}>
           <FaPhoneAlt style={{ fontSize: '15px' }} />
         </div>
         +880244802111 | +8809642115500  | +8801334944640
 
+      </div> */}
+      <div className={topInfoItem} style={{
+        display: 'flex', alignItems: 'center', gap: '5px', flexShrink: 0, marginRight: '20px'
+      }}>
+        <div className={topbarothericon} style={{ padding: '6px', flexShrink: 0 }}>
+          <FaPhoneAlt style={{ fontSize: '15px' }} />
+        </div>
+        <span style={{ whiteSpace: 'nowrap' }}>
+          <span style={{ display: 'block' }}>+8801334944640</span>
+          <span style={{ display: 'block' }}>+880244802111 | +8809642115500</span>
+        </span>
       </div>
       <div
         className={topInfoItem}
