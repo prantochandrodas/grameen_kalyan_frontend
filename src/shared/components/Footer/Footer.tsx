@@ -69,6 +69,8 @@ const Footer = () => {
           </div>
           <div className={phoneData}>
             <p>
+              +8801334944640
+              <br />
               +880244802111
               <br />
               +8809642115500
