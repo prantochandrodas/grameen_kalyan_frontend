@@ -129,7 +129,7 @@ const SidebarSticky = () => {
               : `${numberContainer}`
           }
         >
-          <p>+880244802111, +8809642115500</p>
+          <p>+8809642115500,+8801334944640</p>
         </div>
         {/* Contact Form */}
         <div

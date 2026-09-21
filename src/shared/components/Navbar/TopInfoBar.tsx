@@ -107,7 +107,7 @@ const TopInfoBar = () => {
         +880244802111 | +8809642115500  | +8801334944640
 
       </div> */}
-      <div className={topInfoItem} style={{
+      {/* <div className={topInfoItem} style={{
         display: 'flex', alignItems: 'center', gap: '5px', flexShrink: 0, marginRight: '20px'
       }}>
         <div className={topbarothericon} style={{ padding: '6px', flexShrink: 0 }}>
@@ -117,7 +117,7 @@ const TopInfoBar = () => {
           <span style={{ display: 'block' }}>+8801334944640</span>
           <span style={{ display: 'block' }}>+880244802111 | +8809642115500</span>
         </span>
-      </div>
+      </div> */}
       <div
         className={topInfoItem}
         style={{
