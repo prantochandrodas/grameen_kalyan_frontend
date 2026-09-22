@@ -118,7 +118,7 @@ const TopInfoBar = () => {
           <span style={{ display: 'block' }}>+880244802111 | +8809642115500</span>
         </span>
       </div> */}
-      <div
+      {/* <div
         className={topInfoItem}
         style={{
           display: 'flex', alignItems: 'center', gap: '5px', marginRight: '30px'
@@ -127,7 +127,7 @@ const TopInfoBar = () => {
         <div className={topbarothericon} >
           <IoIosMail style={{ fontSize: '20px', color: '#ffffff' }} />
         </div>
-        {/* <img
+        <img
           src="/images/gmail.png"
           alt="gmail"
           style={{
@@ -136,9 +136,9 @@ const TopInfoBar = () => {
             marginRight: '5px',
             objectFit: 'contain'
           }}
-        /> */}
+        />
         contact@grameenkalyan.com
-      </div>
+      </div> */}
 
 
 
