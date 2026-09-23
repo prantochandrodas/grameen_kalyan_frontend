@@ -8,19 +8,11 @@ const nextConfig = {
   },
   distDir: 'build',
   images: {
-<<<<<<< HEAD
     domains: ['admin.grameenkalyan.com', 'admin-grameenkalyan.stitbd.app', 'res.cloudinary.com'],
   },
   // experimental: {
   //   appDir: true,
   // },
-=======
-    domains: ['admin.grameenkalyan.com', 'res.cloudinary.com'],
-  },
-  experimental: {
-    appDir: true,
-  },
->>>>>>> f2096c123a55563548cfd705b9b6ff1b4cf9e9d7
 };
 
 module.exports = nextConfig;
