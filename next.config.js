@@ -7,25 +7,9 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   distDir: 'build',
- images: {
-  remotePatterns: [
-    {
-      protocol: 'https',
-      hostname: 'admin.grameenkalyan.com',
-      pathname: '/uploads/**',
-    },
-    {
-      protocol: 'https',
-      hostname: 'admin-grameenkalyan.stitbd.app',
-      pathname: '/**',
-    },
-    {
-      protocol: 'https',
-      hostname: 'res.cloudinary.com',
-      pathname: '/**',
-    },
-  ],
-},
+  images: {
+    domains: ['admin.grameenkalyan.com', 'admin-grameenkalyan.stitbd.app', 'res.cloudinary.com'],
+  },
   // experimental: {
   //   appDir: true,
   // },
