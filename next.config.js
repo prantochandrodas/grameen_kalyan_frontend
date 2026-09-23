@@ -9,6 +9,7 @@ const nextConfig = {
   distDir: 'build',
   images: {
     domains: ['admin.grameenkalyan.com', 'admin-grameenkalyan.stitbd.app', 'res.cloudinary.com'],
+    unoptimized: true,
   },
   // experimental: {
   //   appDir: true,
