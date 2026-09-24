@@ -27,6 +27,10 @@ export default async function RootLayout({
     url: '/home-contents',
     revalidateIn: 86400,
   });
+  // const navbarData = await useFetch({
+  //   url: '/home-contents',
+  //   revalidateIn: 86400,
+  // });
 
   const badgeImage = navbarData?.badge_image;
   const logoImage = navbarData?.navbar_logo;

@@ -24,6 +24,7 @@ const HeroSection = ({ data }: IHeroSectionProps) => {
           alt="bg img"
           width={500}
           height={500}
+          priority
         />
       </div>
       <div className={content}>
