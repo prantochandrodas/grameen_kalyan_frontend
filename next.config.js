@@ -8,6 +8,7 @@ const nextConfig = {
   },
   distDir: 'build',
   images: {
+     unoptimized: true,
     domains: ['admin.grameenkalyan.com', 'admin-grameenkalyan.stitbd.app', 'res.cloudinary.com'],
   },
   // experimental: {
