@@ -36,12 +36,19 @@ const {
   activeSubItem,
 } = style;
 
+
+interface IDonate {
+  id: number;
+  name: string;
+}
+
 interface INavbarProps {
   badgeImage: string;
   logoImage: string;
+  donates?: IDonate[];
 }
 
-const Navbar = ({ badgeImage, logoImage }: INavbarProps) => {
+const Navbar = ({ badgeImage, logoImage, donates = [] }: INavbarProps) => {
   const pathName = usePathname();
   const [toggle, setToggle] = useState(false);
   const [isHomePage, setIsHomePage] = useState(false);
@@ -56,6 +63,7 @@ const Navbar = ({ badgeImage, logoImage }: INavbarProps) => {
   const [isLocatorPage, setIsLocatorPage] = useState(false);
   const [isNewsletterPage, setIsNewsletterPage] = useState(false);
   const [isVideosPage, setIsVideosPage] = useState(false);
+  const safeDonates = Array.isArray(donates) ? donates : [];
   const handleToggle = () => {
     setToggle(!toggle);
   };
@@ -455,6 +463,39 @@ const Navbar = ({ badgeImage, logoImage }: INavbarProps) => {
               </Link>
             </ul>
           </li>
+          {/* ---------- Donate dropdown menu ---------- */}
+          <li className={dropdownItem}>
+            <span className={itemText}>
+              donate <BiSolidDownArrow />
+            </span>
+            <ul className={dropdownList}>
+              {safeDonates.map((donate, index) => (
+                <Link
+                  key={donate.id}
+                  className={link}
+                  href={`/donates/${donate.id}`}
+                  onClick={() => setToggle(false)}
+                >
+                  <li
+                    className={
+                      pathName === `/donates/${donate.id}`
+                        ? `${subItem} ${index === safeDonates.length - 1
+                          ? subItemNoBorder
+                          : ''
+                        } ${activeSubItem}`
+                        : `${subItem} ${index === safeDonates.length - 1
+                          ? subItemNoBorder
+                          : ''
+                        }`
+                    }
+                  >
+                    {donate.name}
+                  </li>
+                </Link>
+              ))}
+            </ul>
+          </li>
+          {/* ------------------------------------------- */}
           <Link
             className={link}
             href="/locator"

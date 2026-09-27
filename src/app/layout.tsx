@@ -9,6 +9,7 @@ import {
   ButtonScrollTop,
 } from '@/shared/components';
 import { useFetch } from '@/shared/hook';
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 // const inter = Inter({ subsets: ['latin'] });
 
@@ -32,13 +33,28 @@ export default async function RootLayout({
   //   revalidateIn: 86400,
   // });
 
+  const donatesRes = await useFetchLaravelData({
+    url: '/donates',
+    revalidateIn: 3600,
+  });
+
+  // API shape: { success: true, data: [...] }
+  // tai .data ber kore array na hole empty array pathacchi
+  const donates = Array.isArray(donatesRes)
+    ? donatesRes
+    : (donatesRes?.data ?? []);
+
   const badgeImage = navbarData?.badge_image;
   const logoImage = navbarData?.navbar_logo;
 
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-        <Navbar badgeImage={badgeImage} logoImage={logoImage} />
+        <Navbar
+          badgeImage={badgeImage}
+          logoImage={logoImage}
+          donates={donates}
+        />
         {children}
         <SidebarSticky />
         <Footer />
