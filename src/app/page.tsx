@@ -23,6 +23,7 @@ import {
 } from '@/shared/components';
 import VideoSection from '@/components/Home/videoSection/index.blade';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
+import NewsEventSection from '@/components/Home/newsEventSection/NewsEventSection';
 
 const Home = async () => {
   const homePageContentData = await useFetch({ url: '/home-contents' });
@@ -98,6 +99,7 @@ const Home = async () => {
   return (
     <>
       <HeroSection badgeImage={badgeImage} sliderImages={heroSliderImages} />
+      <NewsEventSection />
       <VideoSection />
       <AboutSection data={aboutSectionData} />
       <ServiceSection serviceData={serviceContent.data} />

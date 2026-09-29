@@ -1,0 +1,159 @@
+@import '../../style/utils/base';
+
+.section {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 60px 60px 80px;
+
+  @media (max-width: 1200px) {
+    padding: 50px 40px 70px;
+  }
+
+  @media (max-width: 900px) {
+    padding: 40px 24px 60px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 30px 16px 50px;
+  }
+}
+
+.header {
+  margin-bottom: 40px;
+  max-width: 700px;
+}
+
+.heading {
+  color: #0b612d;
+  font-size: 38px;
+  font-weight: 800;
+  margin-bottom: 12px;
+
+  @media (max-width: 640px) {
+    font-size: 28px;
+  }
+}
+
+.desc {
+  color: #5b6560;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  a {
+    text-decoration: none;
+    display: block;
+  }
+}
+
+.imageBox {
+  position: relative;
+  width: 100%;
+  padding-top: 62%;
+  border-radius: 14px 14px 0 0;
+  overflow: hidden;
+  background: #ddd;
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.dateBadge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: #0b612d;
+  color: #fff;
+  border-radius: 6px;
+  padding: 6px 10px;
+  text-align: center;
+  line-height: 1.1;
+}
+
+.day {
+  display: block;
+  font-weight: 800;
+  font-size: 16px;
+  color: #fff;
+}
+
+.month {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.cardBody {
+  background: #fff;
+  border-radius: 0 0 14px 14px;
+  padding: 16px 16px 18px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+
+  p {
+    color: #7a827c;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 8px 0 14px;
+  }
+}
+
+.title {
+  color: #0b612d;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.bottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.arrowBtn {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: #e0a132;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader {
+  text-align: center;
+  padding: 30px 0;
+  color: #5b6560;
+  font-size: 14px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 60px 0;
+  color: #8a8f8a;
+  font-size: 15px;
+}

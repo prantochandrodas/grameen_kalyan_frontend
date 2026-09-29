@@ -1,23 +1,42 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
-import style from './VideoSection.module.scss';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { Arrow } from '@/shared/components'; // optional custom arrows
-import { motion } from 'framer-motion';
+import style from './VideoSection.module.scss';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
-const { section, videoContainer, videoItem, iframeBox, heading } = style;
+
+const {
+  section, wave, leaf, goldCurve, wrapper, leftCol, tag, heading, desc, viewAllBtn,
+  sliderCol, navBtns, navBtn, navBtnNext, navBtnDisabled,
+  videoItem, iframeBox,
+} = style;
 
 interface Video {
   id: number;
-  serial_no: string;
   video_link: string;
 }
+
+const ArrowIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const ChevronIcon = ({ flip }: { flip?: boolean }) => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ transform: flip ? 'rotate(180deg)' : undefined }}>
+    <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const getSlidesToShow = (itemCount: number, want: number) => Math.max(1, Math.min(want, itemCount));
+
 const VideoSection = () => {
   const [videos, setVideos] = useState<Video[]>([]);
-  // Fetch videos
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const sliderRef = useRef<Slider>(null);
+
   useEffect(() => {
     const fetchVideos = async () => {
       const res = await useFetchLaravelData({ url: '/recommended-video-galleries' });
@@ -26,93 +45,116 @@ const VideoSection = () => {
     fetchVideos();
   }, []);
 
-  // ✅ serial_no অনুযায়ী explicit sort, API order-এর উপর নির্ভর না করে
-  const sortedVideos = useMemo(
-    () => [...videos].sort((a, b) => Number(a.serial_no) - Number(b.serial_no)),
-    [videos]
-  );
   const getYouTubeId = (url: string) => {
-    const regExp =
-      /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?/]+)/;
+    const regExp = /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?/]+)/;
     const match = url.match(regExp);
     return match ? match[1] : url;
   };
-  // Fetch videos
-  useEffect(() => {
-    const fetchVideos = async () => {
-      const res = await useFetchLaravelData({ url: '/recommended-video-galleries' });
-      if (res?.data) setVideos(res.data);
-    };
-    fetchVideos();
-  }, []);
 
-  const sliderSettings = {
+  const desktopSlides = getSlidesToShow(videos.length, 2);
+  const mobileSlides = getSlidesToShow(videos.length, 1);
+
+  const settings = {
     dots: false,
-    infinite: true,
+    infinite: videos.length > desktopSlides,
     speed: 500,
-    slidesToShow: 2, // desktop
+    slidesToShow: desktopSlides,
     slidesToScroll: 2,
-    arrows: true,
-    nextArrow: <Arrow type="next" />,
-    prevArrow: <Arrow type="prev" />,
+    arrows: false,
+    afterChange: (index: number) => setCurrentSlide(index),
     responsive: [
       {
-        breakpoint: 768, // mobile
+        breakpoint: 768,
         settings: {
-          slidesToShow: 1,
+          slidesToShow: mobileSlides,
+          infinite: videos.length > mobileSlides,
         },
       },
     ],
   };
+
+  if (!videos.length) return null;
+
+  const showNav = videos.length > 1;
+  const maxSlideIndex = videos.length - desktopSlides;
+  const isPrevDisabled = !settings.infinite && currentSlide <= 0;
+  const isNextDisabled = !settings.infinite && currentSlide >= maxSlideIndex;
+
   return (
     <section className={section}>
-
-      <motion.h2
-        initial={{ opacity: 0, bottom: '-10rem' }}
-        whileInView={{ opacity: 1, bottom: '0' }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        className={heading}
+      {/* Wave transition from previous (light) section into this dark green section */}
+      <svg
+        className={wave}
+        viewBox="0 0 1600 110"
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        Our Stories
-      </motion.h2>
-      <div
-        style={{
-          width: '100px',
-          height: '4px',
-          backgroundColor: '#424744',
-          margin: '0 auto 30px',
-          borderRadius: '2px',
-        }}
-      />
-      {/* <h3 style={{
-        margin: '0 0 20px 0', fontSize: '50px', fontWeight: 'bold', textAlign: 'center', color: '#0B612D'
+        <path
+          d="M0,0 L1600,0 L1600,40 C1300,110 300,0 0,60 Z"
+          fill="currentColor"
+        />
+      </svg>
 
-      }}>Our Stories</h3>
-      <div
-        style={{
-          width: '100px',
-          height: '4px',
-          backgroundColor: '#0B612D',
-          margin: '0 auto 30px',
-          borderRadius: '2px',
-        }}
-      /> */}
-      <div className={videoContainer}>
-        <Slider {...sliderSettings}>
-          {videos.map((video) => (
-            <div key={video.id} className={videoItem}>
-              <div className={iframeBox}>
-                <iframe
-                  src={`https://www.youtube.com/embed/${getYouTubeId(video.video_link)}`}
-                  title={`Video ${video.id}`}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
+      {/* Decorative gold curve, bottom-right */}
+      <svg
+        className={goldCurve}
+        viewBox="0 0 300 200"
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M300,200 L300,60 C220,20 120,140 0,200 Z" fill="#e0a132" />
+      </svg>
+
+      <div className={wrapper}>
+        <div className={leftCol}>
+          <span className={tag}>— VIDEOS</span>
+          <h2 className={heading}>Our Stories</h2>
+          <p className={desc}>
+            Watch how we are making a difference in people&apos;s lives through
+            healthcare, education and community development.
+          </p>
+          <a href="/videos" className={viewAllBtn}>
+            View All Videos <ArrowIcon />
+          </a>
+        </div>
+
+        <div className={sliderCol}>
+          {showNav && (
+            <div className={navBtns}>
+              <button
+                type="button"
+                className={`${navBtn} ${isPrevDisabled ? navBtnDisabled : ''}`}
+                aria-label="Previous"
+                onClick={() => sliderRef.current?.slickPrev()}
+              >
+                <ChevronIcon flip />
+              </button>
+              <button
+                type="button"
+                className={`${navBtn} ${navBtnNext} ${isNextDisabled ? navBtnDisabled : ''}`}
+                aria-label="Next"
+                onClick={() => sliderRef.current?.slickNext()}
+              >
+                <ChevronIcon />
+              </button>
             </div>
-          ))}
-        </Slider>
+          )}
+
+          <Slider ref={sliderRef} {...settings}>
+            {videos.map((video) => (
+              <div key={video.id} className={videoItem}>
+                <div className={iframeBox}>
+                  <iframe
+                    src={`https://www.youtube.com/embed/${getYouTubeId(video.video_link)}`}
+                    title={`Video ${video.id}`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            ))}
+          </Slider>
+        </div>
       </div>
     </section>
   );
