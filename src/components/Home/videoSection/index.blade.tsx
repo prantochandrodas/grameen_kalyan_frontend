@@ -111,7 +111,7 @@ const VideoSection = () => {
           <h2 className={heading}>Our Stories</h2>
           <p className={desc}>
             Watch how we are making a difference in people&apos;s lives through
-            healthcare, education and community development.
+            healthcare.
           </p>
           <a href="/videos" className={viewAllBtn}>
             View All Videos <ArrowIcon />
