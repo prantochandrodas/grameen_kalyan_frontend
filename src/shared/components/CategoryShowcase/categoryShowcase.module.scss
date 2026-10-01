@@ -1,0 +1,375 @@
+@import '../../../style/utils/base';
+
+$green: #0e6b48;
+$green-soft: #dcefe4;
+$ink: #1f2d27;
+
+.showcase {
+  position: relative;
+  overflow: hidden;
+  padding: 2rem 0 9rem;
+
+  @include response(phone) {
+    padding: 2rem 0 6rem;
+  }
+
+  // soft leaf on the left edge
+  &::before {
+    content: '';
+    position: absolute;
+    left: -5rem;
+    top: 42%;
+    width: 15rem;
+    height: 22rem;
+    background: rgba($green, 0.08);
+    border-radius: 0 100% 0 100%;
+    transform: rotate(-25deg);
+    pointer-events: none;
+  }
+
+  // ---------- stage: flex row (desktop) | 2-col grid (tablet) | 1-col (phone) ----------
+  .stage {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    padding: 0 5rem;
+
+    @include response(tab-port) {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+      gap: 3rem 2.4rem;
+      padding: 0 4rem;
+    }
+    @include response(phone) {
+      grid-template-columns: minmax(0, 1fr);
+      padding: 0 2.4rem;
+    }
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .leftColumn {
+    flex: 1 1 0;
+    max-width: 52rem;
+    gap: 3rem;
+
+    // tablet/phone: children join the grid so we can place them
+    @include response(tab-port) {
+      display: contents;
+    }
+  }
+
+  .rightColumn {
+    flex: 1 1 0;
+    max-width: 46rem;
+    gap: 1.8rem;
+
+    @include response(tab-port) {
+      grid-column: 2;
+      order: 3;
+      max-width: none;
+      gap: 1.4rem;
+    }
+    @include response(phone) {
+      grid-column: 1;
+    }
+  }
+
+  .intro {
+    @include response(tab-port) {
+      grid-column: 1 / -1;
+      order: 0;
+    }
+  }
+
+  .pills {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    max-width: 46rem;
+    min-width: 0;
+
+    @include response(tab-port) {
+      grid-column: 1;
+      order: 2;
+      max-width: none;
+    }
+    @include response(phone) {
+      grid-column: 1;
+    }
+  }
+
+  // ---------- links ----------
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 1.8rem;
+    color: $ink;
+    text-decoration: none;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      color 0.2s ease,
+      box-shadow 0.2s ease;
+
+    &:focus-visible {
+      outline: 2px solid $green;
+      outline-offset: 2px;
+    }
+
+    .iconWrap {
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: $green;
+      color: #fff;
+      transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+
+      svg {
+        width: 52%;
+        height: 52%;
+      }
+    }
+
+    .text {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+    }
+    .title {
+      line-height: 1.2;
+    }
+    .arrow {
+      flex-shrink: 0;
+      width: 2.6rem;
+      height: 2.6rem;
+      color: $ink;
+
+      @include response(phone) {
+        width: 2.2rem;
+        height: 2.2rem;
+      }
+    }
+  }
+
+  // left: slim outlined pill
+  .pill {
+    padding: 0.7rem 2.4rem 0.7rem 0.7rem;
+    border-radius: 999px;
+    font-size: 2.2rem;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1.5px solid rgba($green, 0.6);
+    box-shadow: 0 0 0 0.35rem rgba($green, 0.05);
+
+    .iconWrap {
+      height: 6rem;
+      width: 6rem;
+    }
+    .title {
+      font-weight: 500;
+    }
+
+    @include response(tab-port) {
+      font-size: min(2.2rem, 2.6vw);
+      .iconWrap {
+        height: min(6rem, 7vw);
+        width: min(6rem, 7vw);
+      }
+    }
+    @include response(phone) {
+      font-size: min(2rem, 4.6vw);
+      .iconWrap {
+        height: min(6rem, 12vw);
+        width: min(6rem, 12vw);
+      }
+    }
+  }
+
+  // right: light, soft card
+  .card {
+    padding: 1.4rem 2.6rem 1.4rem 1.4rem;
+    border-radius: 999px;
+    font-size: 2.1rem;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.85),
+      rgba(238, 246, 240, 0.6)
+    );
+    border: 1px solid rgba($green, 0.2);
+    box-shadow: 0 0.4rem 1.4rem rgba($green, 0.06);
+
+    .iconWrap {
+      height: 6.6rem;
+      width: 6.6rem;
+      background: $green-soft;
+      color: $green;
+
+      svg {
+        width: 54%;
+        height: 54%;
+      }
+    }
+    .title {
+      font-weight: 600;
+    }
+
+    @include response(tab-port) {
+      padding: 1.1rem 2rem 1.1rem 1.1rem;
+      font-size: min(2.1rem, 2.6vw);
+      .iconWrap {
+        height: min(6.6rem, 7.6vw);
+        width: min(6.6rem, 7.6vw);
+      }
+    }
+    @include response(phone) {
+      font-size: min(2rem, 4.6vw);
+      .iconWrap {
+        height: min(6.6rem, 13vw);
+        width: min(6.6rem, 13vw);
+      }
+    }
+  }
+
+  // ---------- one hover / active effect for BOTH sides ----------
+  .item {
+    &:hover,
+    &:focus-visible,
+    &.active {
+      background: $green;
+      border-color: $green;
+      color: #fff;
+      box-shadow: 0 0.8rem 2.2rem rgba($green, 0.25);
+
+      .iconWrap {
+        background: #fff;
+        color: $green;
+      }
+      .arrow {
+        color: #fff;
+      }
+    }
+  }
+
+  // ---------- centre image ----------
+  .circleWrap {
+    position: relative;
+    flex-shrink: 0;
+    padding: 1.8rem;
+
+    @include response(tab-port) {
+      grid-column: 1 / -1;
+      order: 1;
+      justify-self: center;
+      padding: 1.4rem;
+    }
+    @include response(phone) {
+      padding: 1.2rem;
+    }
+
+    // thin gold arc around the left / bottom
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 110deg,
+        rgba($color-secondary-goldenrod, 0) 0deg,
+        $color-secondary-goldenrod 40deg,
+        $color-secondary-goldenrod 170deg,
+        rgba($color-secondary-goldenrod, 0) 210deg,
+        rgba($color-secondary-goldenrod, 0) 360deg
+      );
+      -webkit-mask: radial-gradient(
+        farthest-side,
+        transparent calc(100% - 0.3rem),
+        #000 calc(100% - 0.3rem)
+      );
+      mask: radial-gradient(
+        farthest-side,
+        transparent calc(100% - 0.3rem),
+        #000 calc(100% - 0.3rem)
+      );
+    }
+  }
+
+  .circle {
+    position: relative;
+    width: min(50rem, 29vw);
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1.1rem solid $green;
+    background: $green-soft;
+
+    @include response(tab-port) {
+      width: min(64vw, 46rem);
+      border-width: 0.9rem;
+    }
+    @include response(phone) {
+      width: min(78vw, 42rem);
+      border-width: 0.8rem;
+    }
+
+    .circleImg {
+      object-fit: cover;
+      animation: fadeIn 0.4s ease;
+    }
+  }
+
+  // ---------- pagination dots ----------
+  .dots {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    gap: 1.1rem;
+    margin-top: 3rem;
+
+    .dot {
+      height: 1rem;
+      width: 1rem;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: rgba($green, 0.22);
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+
+      &:focus-visible {
+        outline: 2px solid $green;
+        outline-offset: 3px;
+      }
+    }
+    .dotActive {
+      background: $green;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .showcase .circle .circleImg {
+    animation: none;
+  }
+}

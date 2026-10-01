@@ -1,13 +1,14 @@
 import React from 'react';
 import Image from 'next/image';
 
-import { ImageDisplay } from '@/shared/components/ImageDisplay';
+import CategoryShowcase from '@/shared/components/CategoryShowcase/CategoryShowcase';
 import { ICategory } from '@/shared/types/category';
 import layoutLT from '@/assets/layout/stories/GK_website_OPT_01_People_HealthForce-02.svg';
 import layoutRB from '@/assets/layout/stories/GK_website_OPT_01-02.svg';
 
 import style from './storySection.module.scss';
 const {
+  page,
   storySection,
   heading,
   parag,
@@ -22,27 +23,34 @@ interface IStorySectionProps {
 }
 
 const StorySection = ({ stroyCategories }: IStorySectionProps) => {
+  // Links need a dataType; default to "story" when the API data has none.
+  const showcaseData = stroyCategories?.map((category) => ({
+    ...category,
+    dataType: (category as { dataType?: string }).dataType ?? 'story',
+  }));
+
   return (
-    <>
+    <div className={page}>
+      <div className={layoutLeftTop}>
+        <Image
+          src={layoutLT}
+          className={img}
+          alt=""
+          width={100}
+          height={100}
+        />
+      </div>
+      <div className={layoutRightBottom}>
+        <Image
+          src={layoutRB}
+          className={img}
+          alt=""
+          width={100}
+          height={100}
+        />
+      </div>
+
       <div className={storySection}>
-        <div className={layoutLeftTop}>
-          <Image
-            src={layoutLT}
-            className={img}
-            alt="layout"
-            width={100}
-            height={100}
-          />
-        </div>
-        <div className={layoutRightBottom}>
-          <Image
-            src={layoutRB}
-            className={img}
-            alt="layout"
-            width={100}
-            height={100}
-          />
-        </div>
         <h2 className={heading}>
           <span>Effort Behind</span>
           <span>Thousand Real Stories</span>
@@ -54,10 +62,11 @@ const StorySection = ({ stroyCategories }: IStorySectionProps) => {
           became a part of their journey of well-being.
         </p>
       </div>
+
       <div className={storyDisplay}>
-        <ImageDisplay data={stroyCategories} />
+        <CategoryShowcase data={showcaseData} />
       </div>
-    </>
+    </div>
   );
 };
 
