@@ -56,7 +56,7 @@ const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
       </div>
 
       {/* ========== BADGE / GLORY IMAGE ========== */}
-      <div className="glory">
+      {/* <div className="glory">
         <Image
           className="img"
           src={IMAGE_BASE_URL + badgeImage}
@@ -65,7 +65,7 @@ const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
           height={300}
           priority={true}
         />
-      </div>
+      </div> */}
 
       {/* ========== TITLE / CONTENT SECTION ========== */}
       <div className="contentContainer">

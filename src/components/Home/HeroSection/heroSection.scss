@@ -74,32 +74,34 @@
 
   // ========== CORNER PATTERN ==========
   .layout {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 4;
-    pointer-events: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 4;
+  pointer-events: none;
 
-    // px floor, vw scaling, px ceiling
-    height: clamp(260px, 33vw, 720px);
-    width: clamp(260px, 33vw, 720px);
+  // was clamp(180px, 22vw, 480px)
+  height: clamp(120px, 15vw, 320px);
+  width: clamp(120px, 15vw, 320px);
 
-    @include response(tab-port) {
-      height: clamp(200px, 38vw, 300px);
-      width: clamp(200px, 38vw, 300px);
-    }
-
-    @include response(phone) {
-      height: clamp(120px, 38vw, 170px);
-      width: clamp(120px, 38vw, 170px);
-    }
-
-    .img {
-      height: 100%;
-      width: 100%;
-      object-fit: contain;
-    }
+  @include response(tab-port) {
+    // was clamp(140px, 26vw, 200px)
+    height: clamp(100px, 18vw, 140px);
+    width: clamp(100px, 18vw, 140px);
   }
+
+  @include response(phone) {
+    // was clamp(80px, 26vw, 115px)
+    height: clamp(60px, 19vw, 85px);
+    width: clamp(60px, 19vw, 85px);
+  }
+
+  .img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+  }
+}
 
   // ========== GLORY BADGE ==========
   .glory {
