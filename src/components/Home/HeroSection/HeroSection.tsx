@@ -76,7 +76,7 @@ const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
           transition={{ duration: 0.5, delay: 0.5 }}
           className="imgContainer"
         >
-          <Image className="img" src={titleImage} alt="title" />
+          {/* <Image className="img" src={titleImage} alt="title" /> */}
         </motion.div>
       </div>
     </div>

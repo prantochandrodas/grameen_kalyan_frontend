@@ -99,7 +99,38 @@
   :global(.slick-slide) > div {
     padding: 0 12px;
     height: 100%;
+    display: flex;          // <-- notun
   }
+}
+
+.card {
+  flex: 1;                  // <-- height: 100% er poriborte
+  display: flex;
+
+  a {
+    text-decoration: none;
+    display: flex;          // <-- block theke flex
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+.cardBody {
+  background: #fff;
+  border-radius: 0 0 14px 14px;
+  padding: 16px 16px 18px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+
+  flex: 1;                  // <-- notun: image er niche baki jayga nibe
+  display: flex;            // <-- notun
+  flex-direction: column;   // <-- notun
+}
+
+.bottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: auto;         // <-- notun: arrow button shobsomoy niche thakbe
 }
 
 .navBtns {
@@ -215,19 +246,17 @@
   color: #0b612d;
   font-size: 16px;
   font-weight: 700;
-  line-height: 1.35;
+  line-height: 1.5;
   margin-bottom: 10px;
 
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   overflow: hidden;
 
-  min-height: 44px;
-
-  @media (max-width: 640px) {
-    min-height: auto;
-  }
+  // 3 line er jayga sobsomoy rakhbe, tai title choto hole-o card soman thakbe
+  min-height: calc(1.5em * 3);
 }
 .bottomRow {
   display: flex;

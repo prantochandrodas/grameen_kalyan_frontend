@@ -32,9 +32,16 @@ const ChevronIcon = ({ flip }: { flip?: boolean }) => (
 
 const getSlidesToShow = (itemCount: number, want: number) => Math.max(1, Math.min(want, itemCount));
 
+// slick breakpoint er sathe mil rekhe: <=768 mobile, baki desktop
+const getWantedSlides = () => {
+  if (typeof window === 'undefined') return 2;
+  return window.innerWidth <= 768 ? 1 : 2;
+};
+
 const VideoSection = () => {
   const [videos, setVideos] = useState<Video[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [wantedSlides, setWantedSlides] = useState(2);
   const sliderRef = useRef<Slider>(null);
 
   useEffect(() => {
@@ -43,6 +50,13 @@ const VideoSection = () => {
       if (res?.data) setVideos(res.data);
     };
     fetchVideos();
+  }, []);
+
+  useEffect(() => {
+    const update = () => setWantedSlides(getWantedSlides());
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
   }, []);
 
   const getYouTubeId = (url: string) => {
@@ -56,7 +70,7 @@ const VideoSection = () => {
 
   const settings = {
     dots: false,
-    infinite: videos.length > desktopSlides,
+    infinite: false, // <-- main fix: 1st video er por r left e jabe na
     speed: 500,
     slidesToShow: desktopSlides,
     slidesToScroll: 2,
@@ -67,7 +81,8 @@ const VideoSection = () => {
         breakpoint: 768,
         settings: {
           slidesToShow: mobileSlides,
-          infinite: videos.length > mobileSlides,
+          slidesToScroll: 1,
+          infinite: false,
         },
       },
     ],
@@ -75,10 +90,11 @@ const VideoSection = () => {
 
   if (!videos.length) return null;
 
-  const showNav = videos.length > 1;
-  const maxSlideIndex = videos.length - desktopSlides;
-  const isPrevDisabled = !settings.infinite && currentSlide <= 0;
-  const isNextDisabled = !settings.infinite && currentSlide >= maxSlideIndex;
+  const visibleSlides = getSlidesToShow(videos.length, wantedSlides);
+  const maxSlideIndex = Math.max(0, videos.length - visibleSlides);
+  const showNav = videos.length > visibleSlides;
+  const isPrevDisabled = currentSlide <= 0;
+  const isNextDisabled = currentSlide >= maxSlideIndex;
 
   return (
     <section className={section}>

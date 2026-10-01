@@ -34,13 +34,21 @@ const ChevronIcon = ({ flip }: { flip?: boolean }) => (
     </svg>
 );
 
-// slidesToShow er cheye item kom thakle sob shomoy shob slide dekhabe,
-// tai slidesToShow ke items.length er beshi hote deya jabe na
+// slidesToShow ke items.length er beshi hote deya jabe na
 const getSlidesToShow = (itemCount: number, want: number) => Math.max(1, Math.min(want, itemCount));
+
+// slick breakpoint er sathe mil rekhe: <=640 mobile, <=1024 tablet
+const getWantedSlides = () => {
+    if (typeof window === 'undefined') return 3;
+    if (window.innerWidth <= 640) return 1;
+    if (window.innerWidth <= 1024) return 2;
+    return 3;
+};
 
 const NewsEventSection = () => {
     const [items, setItems] = useState<NewsEventItem[]>([]);
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [wantedSlides, setWantedSlides] = useState(3);
     const sliderRef = useRef<Slider>(null);
 
     useEffect(() => {
@@ -51,42 +59,38 @@ const NewsEventSection = () => {
         fetchNewsEvents();
     }, []);
 
+    useEffect(() => {
+        const update = () => setWantedSlides(getWantedSlides());
+        update();
+        window.addEventListener('resize', update);
+        return () => window.removeEventListener('resize', update);
+    }, []);
+
     const desktopSlides = getSlidesToShow(items.length, 3);
     const tabletSlides = getSlidesToShow(items.length, 2);
     const mobileSlides = getSlidesToShow(items.length, 1);
 
     const settings = {
         dots: false,
-        infinite: items.length > desktopSlides,
+        infinite: false,
         speed: 500,
         slidesToShow: desktopSlides,
         slidesToScroll: 1,
         arrows: false,
         afterChange: (index: number) => setCurrentSlide(index),
         responsive: [
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: tabletSlides,
-                    infinite: items.length > tabletSlides,
-                },
-            },
-            {
-                breakpoint: 640,
-                settings: {
-                    slidesToShow: mobileSlides,
-                    infinite: items.length > mobileSlides,
-                },
-            },
+            { breakpoint: 1024, settings: { slidesToShow: tabletSlides, infinite: false } },
+            { breakpoint: 640, settings: { slidesToShow: mobileSlides, infinite: false } },
         ],
     };
 
     if (!items.length) return null;
 
-    const showNav = items.length > 1;
-    const maxSlideIndex = items.length - desktopSlides;
-    const isPrevDisabled = !settings.infinite && currentSlide <= 0;
-    const isNextDisabled = !settings.infinite && currentSlide >= maxSlideIndex;
+    const visibleSlides = getSlidesToShow(items.length, wantedSlides);
+    const maxSlideIndex = Math.max(0, items.length - visibleSlides);
+    const showNav = items.length > visibleSlides;
+    const isPrevDisabled = currentSlide <= 0;
+    const isNextDisabled = currentSlide >= maxSlideIndex;
 
     return (
         <section className={section}>
@@ -149,7 +153,6 @@ const NewsEventSection = () => {
                     </Slider>
                 </div>
             </div>
-
         </section>
     );
 };
