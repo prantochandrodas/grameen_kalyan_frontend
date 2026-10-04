@@ -34,7 +34,7 @@ const Healthcare = async () => {
       <HeroSection heroFor="healthcare" backgroundImage={bgHero} />
       <HealthcareService servicesData={healthcareService?.data} />
       <MapSection />
-      <MedicalCare />
+      <MedicalCare medicalCareCategory={medicalCareCategoryData} />
       <MedicalCareList medicalCareCategory={medicalCareCategoryData} />
       <WorkTogether image={workTogetherImage} />
     </>
