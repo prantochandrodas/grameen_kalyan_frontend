@@ -6,7 +6,6 @@ import Link from 'next/link';
 import {
     ArrowRight,
     Baby,
-    Bug,
     FileText,
     Heart,
     Ribbon,
@@ -14,6 +13,7 @@ import {
     Stethoscope,
     User,
 } from 'lucide-react';
+import { FaHeadSideMask } from 'react-icons/fa';
 
 import { IMAGE_BASE_URL } from '@/config';
 import { ICategory } from '@/shared/types/category';
@@ -33,7 +33,7 @@ interface ICategoryShowcaseProps {
 // Icon chosen by keyword in the category name (falls back to the heart icon).
 const META: { match: RegExp; icon: React.ElementType }[] = [
     { match: /emergency/i, icon: User },
-    { match: /pandemic/i, icon: Bug },
+    { match: /pandemic/i, icon: FaHeadSideMask }, // face mask icon
     { match: /diagnosis/i, icon: Stethoscope },
     { match: /compliance/i, icon: ShieldCheck },
     { match: /mother|child/i, icon: Baby },
@@ -79,7 +79,7 @@ const CategoryShowcase = ({ data, intro, primary }: ICategoryShowcaseProps) => {
                 onFocus={() => setActiveIndex(index)}
             >
                 <span className={style.iconWrap}>
-                    <Icon size={22} strokeWidth={2} />
+                    <Icon size={22} />
                 </span>
                 <span className={style.text}>
                     <span className={style.title}>{item.name}</span>
