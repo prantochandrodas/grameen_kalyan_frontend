@@ -1,66 +1,75 @@
-'use client';
-
 import React from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { FaLeaf } from 'react-icons/fa';
 
+import CategoryShowcase from '@/shared/components/CategoryShowcase/CategoryShowcase';
+import { ICategory } from '@/shared/types/category';
 import layoutL from '@/assets/layout/healthcare/GK_website_OPT_01_Healthcare-04.svg';
 import layoutR from '@/assets/layout/healthcare/GK_website_OPT_01_Locator-04.svg';
 
 import style from './medicalCare.module.scss';
 
 const {
-  medicalCare,
-  contentContainer,
+  page,
+  medicalSection,
+  eyebrow,
+  eyebrowLine,
   heading,
+  highlight,
   parag,
+  divider,
+  dividerLine,
+  dividerIcon,
+  showcaseWrap,
   layoutLeft,
   layoutRight,
   img,
 } = style;
 
-const MedicalCare = () => {
+interface IMedicalCareProps {
+  medicalCareCategory: ICategory[];
+}
+
+const MedicalCare = ({ medicalCareCategory }: IMedicalCareProps) => {
+  // Links need a dataType; default to "medical" when the API data has none.
+  const showcaseData = medicalCareCategory?.map((category) => ({
+    ...category,
+    dataType: (category as { dataType?: string }).dataType ?? 'medical',
+  }));
+
   return (
-    <div className={medicalCare}>
-      <div className={contentContainer}>
-        <div className={layoutLeft}>
-          <Image className={img} src={layoutL} alt="layout" />
-        </div>
-        <div className={layoutRight}>
-          <Image className={img} src={layoutR} alt="layout" />
-        </div>
+    <div className={page}>
+      <div className={layoutLeft}>
+        <Image className={img} src={layoutL} alt="" />
+      </div>
+      <div className={layoutRight}>
+        <Image className={img} src={layoutR} alt="" />
+      </div>
+
+      <div className={medicalSection}>
+        <p className={eyebrow}>
+          <span className={eyebrowLine} />
+          Primary Healthcare
+          <span className={eyebrowLine} />
+        </p>
+
         <h2 className={heading}>
-          <motion.span
-            style={{ position: 'relative' }}
-            initial={{ opacity: 0, bottom: '-5rem' }}
-            whileInView={{ opacity: 1, bottom: '0' }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            Disease Specific
-          </motion.span>
-          <motion.span
-            style={{ position: 'relative' }}
-            initial={{ opacity: 0, bottom: '-5rem' }}
-            whileInView={{ opacity: 1, bottom: '0' }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            Medical Care
-          </motion.span>
+          <span>Disease Specific</span>
+          <span className={highlight}>Medical Care</span>
         </h2>
-        <motion.p
-          style={{ position: 'relative' }}
-          initial={{ opacity: 0, bottom: '-5rem' }}
-          whileInView={{ opacity: 1, bottom: '0' }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className={parag}
-        >
+
+        <p className={parag}>
           To ensure comprehensive primary healthcare, our disease specific
           medical care lays on these areas, for patients to choose from
-        </motion.p>
+        </p>
+
+        <div className={divider} aria-hidden="true">
+          <span className={dividerLine} />
+          <FaLeaf className={dividerIcon} />
+          <span className={dividerLine} />
+        </div>
       </div>
+
     </div>
   );
 };

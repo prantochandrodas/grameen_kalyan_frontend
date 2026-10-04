@@ -72,11 +72,7 @@ const StorySection = ({ stroyCategories }: IStorySectionProps) => {
         </h2>
 
         <p className={parag}>
-          Since 1996, Grameen Kalyan has delivered affordable and quality
-          primary healthcare to rural communities and economically vulnerable
-          people, creating a healthier and brighter future. Our effort has
-          reached millions of people across the country and become a part of
-          their journey of well-being.
+          Since 1996, Grameen Kalyan has delivered affordable and quality primary healthcare to minimize health inequalities and economic setbacks. Our effort touched millions of people across the country and became a part of their journey of well-being.
         </p>
 
         <div className={divider} aria-hidden="true">
