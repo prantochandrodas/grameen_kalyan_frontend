@@ -1,0 +1,260 @@
+$green: #0f4a2c;
+$green-light: #e4efe6;
+$gold: #e8a523;
+$bg: #f6f5f1;
+$text: #5b6660;
+
+.journey {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) 2.4fr;
+  gap: 4rem;
+  align-items: center;
+  padding: 10rem 6rem;
+  overflow: hidden;
+  background: $bg;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding: 6rem 1.5rem;
+  }
+}
+
+/* ---------- Background decoration ---------- */
+.decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.blobLeft,
+.blobRight,
+.dotsLeft,
+.dotsRight {
+  position: absolute;
+  display: block;
+}
+
+.blobLeft {
+  left: -12rem;
+  bottom: -14rem;
+  width: 46rem;
+  height: 38rem;
+  background: $green-light;
+  border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+}
+
+/* left blob-er mirror, dan side-e */
+.blobRight {
+  right: -12rem;
+  bottom: -14rem;
+  width: 46rem;
+  height: 38rem;
+  background: $green-light;
+  border-radius: 37% 63% 46% 54% / 55% 48% 52% 45%;
+}
+
+.dotsLeft,
+.dotsRight {
+  bottom: 8rem;
+  width: 11rem;
+  height: 7rem;
+  background-image: radial-gradient(rgba($gold, 0.7) 2px, transparent 2.5px);
+  background-size: 2.2rem 2.2rem;
+}
+
+.dotsLeft {
+  left: 4rem;
+}
+
+.dotsRight {
+  right: 4rem;
+}
+
+/* ---------- Left intro ---------- */
+.intro,
+.cards {
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $gold;
+  margin-bottom: 1.2rem;
+
+  &::before {
+    content: '';
+    width: 1.6rem;
+    height: 0.2rem;
+    background: $gold;
+  }
+}
+
+.heading {
+  font-size: clamp(4rem, 5vw, 6.4rem);
+  line-height: 1.05;
+  font-weight: 800;
+  color: $green;
+
+  .num {
+    color: $gold;
+  }
+}
+
+.sub {
+  margin-top: 1.6rem;
+  font-size: 2.1rem;
+  line-height: 1.35;
+  font-weight: 700;
+  color: $green;
+}
+
+.para {
+  margin-top: 1.6rem;
+  font-size: 1.6rem;
+  line-height: 1.7;
+  color: $text;
+  max-width: 38rem;
+}
+
+/* ---------- Cards (pastel colored) ---------- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.4rem;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  --c: #1a9a5b;
+  --bg: #e2f5e8;
+  --glow: rgba(26, 154, 91, 0.25);
+  display: block;
+  text-decoration: none;
+  border-radius: 2.8rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, var(--bg) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 1.2rem 3rem rgba(20, 60, 50, 0.07),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(6px);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+
+  &:hover {
+    transform: translateY(-0.8rem);
+    box-shadow: 0 2rem 4.5rem var(--glow);
+
+    .photo img {
+      transform: scale(1.08);
+    }
+    .arrow {
+      transform: translateX(0.4rem);
+    }
+  }
+
+  &.green  { --c: #1a9a5b; --bg: #dff4e6; --glow: rgba(26, 154, 91, 0.28); }
+  &.orange { --c: #f29110; --bg: #fff0d9; --glow: rgba(242, 145, 16, 0.28); }
+  &.blue   { --c: #1f7ae0; --bg: #dcedff; --glow: rgba(31, 122, 224, 0.28); }
+  &.purple { --c: #7a3fcf; --bg: #ebe1fb; --glow: rgba(122, 63, 207, 0.28); }
+}
+
+.cardInner {
+  position: relative;
+  height: 100%;
+  min-height: 42rem;
+  padding: 0.9rem 0.9rem 2.2rem;
+  overflow: hidden;
+  border-radius: 2.8rem;
+
+  /* soft leaf-shaped decoration at card bottom-left */
+  &::after {
+    content: '';
+    position: absolute;
+    left: -1.5rem;
+    bottom: -1.5rem;
+    width: 9rem;
+    height: 9rem;
+    background: var(--c);
+    opacity: 0.12;
+    border-radius: 0 100% 0 100%;
+    transform: rotate(-10deg);
+    pointer-events: none;
+  }
+
+  h3 {
+    margin: 1rem 1.4rem 0.6rem;
+    font-size: 2.4rem;
+    font-weight: 800;
+    line-height: 1.15;
+    color: $green;
+  }
+
+  p {
+    margin: 0 1.4rem;
+    font-size: 1.5rem;
+    line-height: 1.55;
+    color: $text;
+    padding-right: 3.5rem;
+  }
+}
+
+.photo {
+  position: relative;
+  height: 20rem;
+  border-radius: 2.2rem 2.2rem 5rem 2.2rem;
+  overflow: hidden;
+  box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.12);
+
+  img {
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 6rem;
+  height: 6rem;
+  margin: -1.2rem 0 0 1.4rem;
+  border-radius: 50%;
+  background: var(--c);
+  color: #fff;
+  font-size: 2.6rem;
+  position: relative;
+  z-index: 2;
+  border: 0.4rem solid #fff;
+  box-shadow: 0 0.8rem 1.8rem var(--glow);
+}
+
+.arrow {
+  position: absolute;
+  right: 1.8rem;
+  bottom: 1.8rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 3.8rem;
+  height: 3.8rem;
+  border-radius: 50%;
+  background: var(--c);
+  color: #fff;
+  font-size: 1.6rem;
+  box-shadow: 0 0.6rem 1.4rem var(--glow);
+  transition: transform 0.3s ease;
+}

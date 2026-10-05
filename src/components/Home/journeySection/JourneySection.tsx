@@ -1,0 +1,160 @@
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import { FaStethoscope, FaUsers, FaShieldAlt, FaArrowRight } from 'react-icons/fa';
+
+import { IServiceSectionData } from '@/shared/types/ServiceSection';
+import { IAboutdata } from '../AboutSection/aboutData.type';
+
+import style from './journeySection.module.scss';
+
+interface IJourneySectionProps {
+    about: IAboutdata;
+    serviceData: IServiceSectionData[];
+}
+
+type Theme = {
+    cls: string;
+    href: string;
+    Icon: React.ElementType;
+    desc: string;
+};
+
+const DEFAULT_THEME: Theme = {
+    cls: 'green',
+    href: '/services#healthcare',
+    Icon: FaStethoscope,
+    desc: 'Quality and affordable healthcare for every community.',
+};
+
+const THEMES: Record<string, Theme> = {
+    Healthcare: DEFAULT_THEME,
+    'Well-Being': {
+        cls: 'orange',
+        href: '/services#well-being',
+        Icon: FaUsers,
+        desc: 'Improving lives through prevention, education and support.',
+    },
+    'Emergency Response': {
+        cls: 'blue',
+        href: '/services#emergency-response',
+        Icon: FaShieldAlt,
+        desc: 'Quick action when it matters most.',
+    },
+    'Social Business': {
+        cls: 'purple',
+        href: '/services#social-business',
+        Icon: FaUsers,
+        desc: 'Creating opportunities for sustainable livelihoods.',
+    },
+};
+
+const IMAGE_BASE = 'https://admin.grameenkalyan.com';
+
+const getImageSrc = (src?: string) => {
+    if (!src) return '';
+    if (src.startsWith('http')) return src;
+    return `${IMAGE_BASE}${src.startsWith('/') ? '' : '/'}${src}`;
+};
+
+const JourneySection = ({ about, serviceData }: IJourneySectionProps) => {
+    // title: "29+ Years" -> "29+" (gold) + "Years"
+    const [num, ...rest] = (about?.title || '').split(' ');
+
+    return (
+        <section className={style.journey}>
+            {/* Background decoration */}
+            <div className={style.decor} aria-hidden="true">
+                <span className={style.blobLeft} />
+                <span className={style.blobRight} />
+                <span className={style.dotsLeft} />
+                <span className={style.dotsRight} />
+            </div>
+
+            <div className={style.intro}>
+                <motion.span
+                    className={style.eyebrow}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                >
+                    Our Journey
+                </motion.span>
+
+                <motion.h2
+                    className={style.heading}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <span className={style.num}>{num}</span> {rest.join(' ')}
+                </motion.h2>
+
+                <motion.h4
+                    className={style.sub}
+                    initial={{ opacity: 0, y: 40 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                >
+                    {about?.subTitleOne}
+                </motion.h4>
+
+                <p className={style.para}>{about?.subTitleTwo}</p>
+            </div>
+
+            <div className={style.cards}>
+                {serviceData?.map((data: any, i: number) => {
+                    const theme = THEMES[data.title] ?? DEFAULT_THEME;
+                    const Icon = theme.Icon;
+                    const imgSrc = getImageSrc(data.homepage_thumb_image);
+
+                    return (
+                        <Link
+                            key={data.id ?? i}
+                            href={theme.href}
+                            className={`${style.card} ${style[theme.cls]}`}
+                        >
+                            <motion.div
+                                initial={{ opacity: 0, y: 50 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: 0.1 * i }}
+                                className={style.cardInner}
+                            >
+                                <div className={style.photo}>
+                                    {imgSrc && (
+                                        <Image
+                                            src={imgSrc}
+                                            alt={data.title}
+                                            fill
+                                            sizes="300px"
+                                            unoptimized
+                                        />
+                                    )}
+                                </div>
+
+                                <span className={style.icon}>
+                                    <Icon />
+                                </span>
+
+                                <h3>{data.title}</h3>
+                                <p>{theme.desc}</p>
+
+                                <span className={style.arrow}>
+                                    <FaArrowRight />
+                                </span>
+                            </motion.div>
+                        </Link>
+                    );
+                })}
+            </div>
+        </section>
+    );
+};
+
+export default JourneySection;
