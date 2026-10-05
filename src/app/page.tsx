@@ -103,6 +103,8 @@ const Home = async () => {
       <NewsEventSection />
       <VideoSection />
       <JourneySection about={aboutSectionData} serviceData={serviceContent.data} />
+
+
       {/* <AboutSection data={aboutSectionData} />
       <ServiceSection serviceData={serviceContent.data} /> */}
       <BoardMember memberData={boardMemberArray} />

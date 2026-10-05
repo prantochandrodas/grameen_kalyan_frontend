@@ -1,7 +1,6 @@
 $green: #0f4a2c;
-$green-light: #e4efe6;
 $gold: #e8a523;
-$bg: #f6f5f1;
+$bg: #ffffff;
 $text: #5b6660;
 
 .journey {
@@ -10,18 +9,18 @@ $text: #5b6660;
   grid-template-columns: minmax(280px, 0.9fr) 2.4fr;
   gap: 4rem;
   align-items: center;
-  padding: 10rem 6rem;
+  padding: 8rem 6rem 6rem;
   overflow: hidden;
   background: $bg;
 
   @media (max-width: 1100px) {
     grid-template-columns: 1fr;
     gap: 3rem;
-    padding: 6rem 1.5rem;
+    padding: 5rem 1.5rem 4rem;
   }
 }
 
-/* ---------- Background decoration ---------- */
+/* ---------- Soft background decoration ---------- */
 .decor {
   position: absolute;
   inset: 0;
@@ -29,48 +28,60 @@ $text: #5b6660;
   z-index: 0;
 }
 
-.blobLeft,
-.blobRight,
+.glowLeft,
+.glowRight,
 .dotsLeft,
 .dotsRight {
   position: absolute;
   display: block;
 }
 
-.blobLeft {
-  left: -12rem;
-  bottom: -14rem;
-  width: 46rem;
-  height: 38rem;
-  background: $green-light;
-  border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+/* soft green glow, intro text-er pichone (kono hard edge nei) */
+.glowLeft {
+  left: -18rem;
+  top: 50%;
+  width: 56rem;
+  height: 56rem;
+  transform: translateY(-50%);
+  background: radial-gradient(
+    circle,
+    rgba($green, 0.09) 0%,
+    rgba($green, 0.04) 40%,
+    transparent 70%
+  );
 }
 
-/* left blob-er mirror, dan side-e */
-.blobRight {
-  right: -12rem;
-  bottom: -14rem;
-  width: 46rem;
-  height: 38rem;
-  background: $green-light;
-  border-radius: 37% 63% 46% 54% / 55% 48% 52% 45%;
+/* soft gold glow, cards-er dan-niche-e */
+.glowRight {
+  right: -14rem;
+  bottom: -16rem;
+  width: 50rem;
+  height: 50rem;
+  background: radial-gradient(circle, rgba($gold, 0.16) 0%, transparent 70%);
 }
 
 .dotsLeft,
 .dotsRight {
-  bottom: 8rem;
   width: 11rem;
   height: 7rem;
-  background-image: radial-gradient(rgba($gold, 0.7) 2px, transparent 2.5px);
+  background-image: radial-gradient(rgba($gold, 0.65) 2px, transparent 2.5px);
   background-size: 2.2rem 2.2rem;
 }
 
 .dotsLeft {
   left: 4rem;
+  bottom: 5rem;
 }
 
 .dotsRight {
   right: 4rem;
+  top: 5rem;
+}
+
+@media (max-width: 1100px) {
+  .dotsRight {
+    display: none;
+  }
 }
 
 /* ---------- Left intro ---------- */
@@ -150,7 +161,7 @@ $text: #5b6660;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, var(--bg) 100%);
   border: 1.5px solid rgba(255, 255, 255, 0.9);
   box-shadow:
-    0 1.2rem 3rem rgba(20, 60, 50, 0.07),
+    0 1.4rem 3.4rem rgba(20, 60, 50, 0.1),
     inset 0 0 0 1px rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(6px);
   transition: transform 0.35s ease, box-shadow 0.35s ease;

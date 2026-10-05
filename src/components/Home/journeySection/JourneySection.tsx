@@ -66,10 +66,10 @@ const JourneySection = ({ about, serviceData }: IJourneySectionProps) => {
 
     return (
         <section className={style.journey}>
-            {/* Background decoration */}
+            {/* Soft background decoration */}
             <div className={style.decor} aria-hidden="true">
-                <span className={style.blobLeft} />
-                <span className={style.blobRight} />
+                <span className={style.glowLeft} />
+                <span className={style.glowRight} />
                 <span className={style.dotsLeft} />
                 <span className={style.dotsRight} />
             </div>
