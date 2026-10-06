@@ -171,7 +171,7 @@ const JourneySection = ({ about, serviceData }: IJourneySectionProps) => {
                                 </span>
 
                                 <h3>{data.title}</h3>
-                                <p>{theme.desc}</p>
+                                {/* <p>{theme.desc}</p> */}
 
                                 <span className={style.arrow}>
                                     <FaArrowRight />
