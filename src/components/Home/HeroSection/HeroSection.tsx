@@ -51,9 +51,9 @@ const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
       </div>
 
       {/* ========== LAYOUT IMAGE ========== */}
-      <div className="layout">
+      {/* <div className="layout">
         <Image className="img" src={layoutImage} alt="layout" />
-      </div>
+      </div> */}
 
       {/* ========== BADGE / GLORY IMAGE ========== */}
       {/* <div className="glory">

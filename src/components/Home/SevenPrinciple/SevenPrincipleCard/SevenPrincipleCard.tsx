@@ -2,13 +2,34 @@ import React from 'react';
 
 import style from './sevenPrincipleCard.module.scss';
 
-const { sevenPrincipleCard, serial, description } = style;
+const {
+  sevenPrincipleCard,
+  serial,
+  gold,
+  iconBox,
+  divider,
+  content,
+  title,
+  description,
+} = style;
 
-const SevenPrincipleCard = ({ num, desc }: { num: number; desc: string }) => {
+type Props = {
+  num: number;
+  icon: React.ReactNode;
+  title: string;
+  desc?: string;
+};
+
+const SevenPrincipleCard = ({ num, icon, title: heading, desc }: Props) => {
   return (
     <div className={sevenPrincipleCard}>
-      <h2 className={serial}>{num}</h2>
-      <p className={description}>{desc}</p>
+      <span className={`${serial} ${num % 2 === 0 ? gold : ''}`}>{num}</span>
+      <span className={iconBox}>{icon}</span>
+      <span className={divider} />
+      <div className={content}>
+        <h3 className={title}>{heading}</h3>
+        {desc && <p className={description}>{desc}</p>}
+      </div>
     </div>
   );
 };

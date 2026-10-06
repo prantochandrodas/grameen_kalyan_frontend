@@ -1,98 +1,155 @@
 @import '../../../style/utils/base';
 
-.sevenPrinciple {
-  padding: 10rem 20rem;
+$gold: #c9a13b;
 
-  display: grid;
-  grid-template-columns: [col-left-start] 1fr [col-left-end col-mid-start] max-content [col-mid-end col-right-start] 1fr [col-right-end];
-  grid-template-rows: repeat(2, [row-start] max-content [row-end]);
-  gap: 4rem;
+.sevenPrinciple {
+  position: relative;
+  padding: 8rem 15rem;
+  overflow: hidden;
+  background: linear-gradient(180deg, #eef5ef 0%, #f6faf7 55%, #fbfdfb 100%);
+
+  // soft leaf shape, kept away from the bottom edge so it never gets cut
+  &::before {
+    content: '';
+    position: absolute;
+    left: -14rem;
+    top: 40%;
+    width: 30rem;
+    height: 30rem;
+    background: #dfeadf;
+    border-radius: 0 100% 0 100%;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  // faint circle on the top right
+  &::after {
+    content: '';
+    position: absolute;
+    right: -14rem;
+    top: -10rem;
+    width: 32rem;
+    height: 32rem;
+    background: #6fa578;
+    border-radius: 50%;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 
   @include response(M-desktop) {
-    padding: 10rem 15rem;
+    padding: 8rem 10rem;
   }
   @include response(s-desktop) {
-    padding: 10rem;
-  }
-  @include response(tab-port) {
-    grid-template-columns: [col-start] 1fr [col-end];
-    grid-template-rows: repeat(4, [row-start] min-content [row-end]);
+    padding: 8rem 6rem;
   }
   @include response(phone) {
-    padding: 10rem 5rem;
+    padding: 6rem 3rem;
   }
-  @include response(s-phone) {
-    padding: 5rem 3rem;
+
+  .header {
+    text-align: center;
+    margin-bottom: 6rem;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: $color-primary;
+    margin-bottom: 1.5rem;
+
+    &::before,
+    &::after {
+      content: '';
+      width: 6rem;
+      height: 2px;
+      background: $gold;
+    }
   }
 
   .heading {
-    grid-column: col-left-start 1 / col-left-end 1;
-    grid-row: row-start 1 / row-end 1;
-
-    font-size: clamp(1.2rem, calc(0.35rem + 4.27vw), 5.47rem);
+    font-size: clamp(2.8rem, calc(1rem + 3vw), 5rem);
     line-height: 1.2;
-    max-width: 14ch;
     color: $color-primary;
-    margin-bottom: 2rem;
+  }
+
+  .highlight {
+    color: $gold;
+  }
+
+  .subtitle {
+    margin-top: 1.5rem;
+    font-size: 1.7rem;
+    color: $color-primary;
+    opacity: 0.8;
+  }
+
+  .body {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 5rem;
+    align-items: center;
 
     @include response(tab-port) {
-      grid-column: col-start / col-end;
-      grid-row: row-start 1 / row-end 1;
+      grid-template-columns: 1fr;
     }
   }
 
-  .imgContainer {
-    grid-column: col-left-start / col-left-end;
-    grid-row: row-start 2 / row-end 2;
-
+  .noteWrap {
     position: relative;
-    padding-bottom: 100%;
-    width: 100%;
+    padding: 4rem;
+  }
 
-    @include response(tab-port) {
-      grid-column: col-start / col-end;
-      grid-row: row-start 2 / row-end 2;
-    }
+  .blob {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 40% 30%, #6fa578 0%, #cfe3d0 70%);
+    border-radius: 50% 50% 45% 55%;
+    opacity: 0.45;
+    transform: scale(0.95);
+  }
 
-    .img {
+  .note {
+    position: relative;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 0.6rem;
+    box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.15);
+    transform: rotate(-4deg);
+
+    &::after {
+      content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      object-fit: contain;
+      bottom: -2.5rem;
+      left: -2.5rem;
+      width: 7rem;
+      height: 7rem;
+      border-radius: 50%;
+      background: $gold;
+      opacity: 0.85;
+      z-index: -1;
     }
   }
 
-  .divider {
-    grid-column: col-mid-start / col-mid-end;
-    grid-row: row-start 2 / row-end 2;
-
-    height: 100%;
-    width: 1px;
-    background: color #999;;
-
-    @include response(tab-port) {
-      width: 100%;
-      height: 1px;
-
-      grid-column: col-start / col-end;
-      grid-row: row-start 3 / row-end 3;
-    }
+  .img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
   }
 
-  .contentContainer {
-    grid-column: col-right-start / col-right-end;
-    grid-row: row-start 2 / row-end 2;
-
+  .list {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 2rem;
-
-    @include response(tab-port) {
-      grid-column: col-start / col-end;
-      grid-row: row-start 4 / row-end 4;
-    }
+    gap: 1.6rem;
   }
 }
