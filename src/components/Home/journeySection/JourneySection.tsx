@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { FaStethoscope, FaUsers, FaShieldAlt, FaArrowRight } from 'react-icons/fa';
 
+import { Button } from '@/shared/components';
 import { IServiceSectionData } from '@/shared/types/ServiceSection';
 import { IAboutdata } from '../AboutSection/aboutData.type';
 
@@ -74,6 +75,7 @@ const JourneySection = ({ about, serviceData }: IJourneySectionProps) => {
                 <span className={style.dotsRight} />
             </div>
 
+            {/* ---------- Left column ---------- */}
             <div className={style.intro}>
                 <motion.span
                     className={style.eyebrow}
@@ -105,8 +107,34 @@ const JourneySection = ({ about, serviceData }: IJourneySectionProps) => {
                 </motion.h4>
 
                 <p className={style.para}>{about?.subTitleTwo}</p>
+
+                {/* Statement + button: description er thik nicha */}
+                <div className={style.bottom}>
+                    <motion.h3
+                        className={style.statement}
+                        initial={{ opacity: 0, y: 40 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                    >
+                        Millions of People at{' '}
+                        <span className={style.highlight}>Bottom of the Pyramid</span>{' '}
+                        are Served with Empathy and Care
+                    </motion.h3>
+
+                    <motion.div
+                        className={style.btnWrap}
+                        initial={{ opacity: 0, y: 40 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
+                    >
+                        <Button text="read more" url="/services" />
+                    </motion.div>
+                </div>
             </div>
 
+            {/* ---------- Right column: cards ---------- */}
             <div className={style.cards}>
                 {serviceData?.map((data: any, i: number) => {
                     const theme = THEMES[data.title] ?? DEFAULT_THEME;

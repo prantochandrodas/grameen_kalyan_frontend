@@ -6,10 +6,10 @@ $text: #5b6660;
 .journey {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(280px, 0.9fr) 2.4fr;
+  grid-template-columns: minmax(300px, 1fr) 2.4fr;
   gap: 4rem;
-  align-items: center;
-  padding: 8rem 6rem 6rem;
+  align-items: stretch; // left column ar cards same line e shuru/shesh
+  padding: 7rem 6rem;
   overflow: hidden;
   background: $bg;
 
@@ -36,7 +36,6 @@ $text: #5b6660;
   display: block;
 }
 
-/* soft green glow, intro text-er pichone (kono hard edge nei) */
 .glowLeft {
   left: -18rem;
   top: 50%;
@@ -51,7 +50,6 @@ $text: #5b6660;
   );
 }
 
-/* soft gold glow, cards-er dan-niche-e */
 .glowRight {
   right: -14rem;
   bottom: -16rem;
@@ -70,37 +68,37 @@ $text: #5b6660;
 
 .dotsLeft {
   left: 4rem;
-  bottom: 5rem;
+  bottom: 3rem;
 }
 
 .dotsRight {
   right: 4rem;
-  top: 5rem;
+  top: 3rem;
 }
 
-@media (max-width: 1100px) {
-  .dotsRight {
-    display: none;
-  }
-}
-
-/* ---------- Left intro ---------- */
+/* ---------- Left column ---------- */
 .intro,
 .cards {
   position: relative;
   z-index: 1;
 }
 
+.intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 0.8rem;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: $gold;
-  margin-bottom: 1.2rem;
+  margin-bottom: 0.8rem;
 
   &::before {
     content: '';
@@ -110,8 +108,9 @@ $text: #5b6660;
   }
 }
 
+/* "29+ Years" */
 .heading {
-  font-size: clamp(4rem, 5vw, 6.4rem);
+  font-size: clamp(3rem, 3.4vw, 4.4rem);
   line-height: 1.05;
   font-weight: 800;
   color: $green;
@@ -122,19 +121,69 @@ $text: #5b6660;
 }
 
 .sub {
-  margin-top: 1.6rem;
-  font-size: 2.1rem;
+  margin-top: 1.2rem;
+  font-size: 1.8rem;
   line-height: 1.35;
   font-weight: 700;
   color: $green;
 }
 
 .para {
-  margin-top: 1.6rem;
-  font-size: 1.6rem;
-  line-height: 1.7;
+  margin-top: 1.2rem;
+  font-size: 1.5rem;
+  line-height: 1.65;
   color: $text;
   max-width: 38rem;
+}
+
+/* ---------- Statement + button (description er nicha) ---------- */
+.bottom {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.4rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba($green, 0.15);
+
+  /* border er upor chhoto gold bar */
+  &::before {
+    content: '';
+    position: absolute;
+    top: -0.2rem;
+    left: 0;
+    width: 5rem;
+    height: 0.3rem;
+    border-radius: 1rem;
+    background: $gold;
+  }
+}
+
+.statement {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif; // "Effort Behind..." heading er font jeta, seta dao
+  font-weight: 700;
+  font-size: clamp(1.7rem, 1.5vw, 2rem);
+  line-height: 1.35;
+  color: $green;
+
+  .highlight {
+    color: $gold;
+  }
+}
+
+/* Read more button choto */
+.btnWrap {
+  a,
+  button {
+    padding: 0.6rem 1.6rem !important;
+    font-size: 1.3rem !important;
+    line-height: 1.4 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    border-radius: 0.6rem !important;
+  }
 }
 
 /* ---------- Cards (pastel colored) ---------- */
@@ -268,4 +317,112 @@ $text: #5b6660;
   font-size: 1.6rem;
   box-shadow: 0 0.6rem 1.4rem var(--glow);
   transition: transform 0.3s ease;
+}
+
+/* =========================================================
+   MOBILE / TABLET (<= 1100px)
+   ========================================================= */
+@media (max-width: 1100px) {
+  .journey {
+    padding: 4.5rem 1.6rem 4rem;
+    gap: 3.2rem;
+  }
+
+  /* decoration halka kora */
+  .dotsLeft,
+  .dotsRight {
+    display: none;
+  }
+
+  .glowLeft {
+    left: 50%;
+    top: 12rem;
+    width: 40rem;
+    height: 40rem;
+    transform: translateX(-50%);
+  }
+
+  /* ---- intro: center ---- */
+  .intro {
+    align-items: center;
+    text-align: center;
+    justify-content: flex-start;
+  }
+
+  .eyebrow {
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+
+    /* duipashe chhoto line */
+    &::after {
+      content: '';
+      width: 1.6rem;
+      height: 0.2rem;
+      background: $gold;
+    }
+  }
+
+  .heading {
+    font-size: 3.6rem;
+  }
+
+  .sub {
+    max-width: 34rem;
+    margin: 1rem auto 0;
+    font-size: 1.7rem;
+  }
+
+  .para {
+    max-width: 34rem;
+    margin: 1rem auto 0;
+    font-size: 1.45rem;
+    line-height: 1.65;
+  }
+
+  /* ---- statement + button ---- */
+  .bottom {
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 34rem;
+    margin-top: 2.4rem;
+    padding-top: 2.2rem;
+    gap: 1.6rem;
+
+    /* gold bar majkhane */
+    &::before {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  .statement {
+    font-size: 1.9rem;
+    line-height: 1.4;
+  }
+}
+
+/* ---------- Small phones ---------- */
+@media (max-width: 560px) {
+  .journey {
+    padding: 4rem 1.4rem 3.4rem;
+    gap: 2.8rem;
+  }
+
+  .heading {
+    font-size: 3.2rem;
+  }
+
+  .sub {
+    font-size: 1.6rem;
+  }
+
+  .para {
+    font-size: 1.4rem;
+  }
+
+  .statement {
+    font-size: 1.75rem;
+  }
 }

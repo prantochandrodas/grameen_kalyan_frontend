@@ -6,12 +6,16 @@ import Link from 'next/link';
 import {
     ArrowRight,
     Baby,
-    FileText,
+    ClipboardList,
+    Droplet,
+    Ear,
+    Eye,
     Heart,
     Ribbon,
     ShieldCheck,
     Stethoscope,
     User,
+    Venus,
 } from 'lucide-react';
 import { FaHeadSideMask } from 'react-icons/fa';
 
@@ -32,11 +36,20 @@ interface ICategoryShowcaseProps {
 
 // Icon chosen by keyword in the category name (falls back to the heart icon).
 const META: { match: RegExp; icon: React.ElementType }[] = [
+    // Medical care categories
+    { match: /general|medicine/i, icon: Stethoscope },
+    { match: /gynae|gynec|obs/i, icon: Venus },
+    { match: /child|baby|pediatric|paediatric/i, icon: Baby },
+    { match: /\beye\b/i, icon: Eye },
+    { match: /\bent\b|\bear\b/i, icon: Ear },
+    { match: /diabet/i, icon: Droplet },
+
+    // Story categories
     { match: /emergency/i, icon: User },
-    { match: /pandemic/i, icon: FaHeadSideMask }, // face mask icon
+    { match: /pandemic/i, icon: FaHeadSideMask },
     { match: /diagnosis/i, icon: Stethoscope },
     { match: /compliance/i, icon: ShieldCheck },
-    { match: /mother|child/i, icon: Baby },
+    { match: /mother/i, icon: Baby },
     { match: /cancer/i, icon: Ribbon },
 ];
 
@@ -73,13 +86,13 @@ const CategoryShowcase = ({ data, intro, primary }: ICategoryShowcaseProps) => {
             <Link
                 key={item.id}
                 href={getHref(item)}
-                className={`${style.item} ${kind === 'pill' ? style.pill : style.card} ${index === activeIndex ? style.active : ''
-                    }`}
+                className={`${style.item} ${kind === 'pill' ? style.pill : style.card
+                    } ${index === activeIndex ? style.active : ''}`}
                 onMouseEnter={() => setActiveIndex(index)}
                 onFocus={() => setActiveIndex(index)}
             >
                 <span className={style.iconWrap}>
-                    <Icon size={22} />
+                    <Icon size={24} strokeWidth={1.8} />
                 </span>
                 <span className={style.text}>
                     <span className={style.title}>{item.name}</span>
@@ -121,7 +134,7 @@ const CategoryShowcase = ({ data, intro, primary }: ICategoryShowcaseProps) => {
                         className={`${style.item} ${style.card}`}
                     >
                         <span className={style.iconWrap}>
-                            <FileText size={22} strokeWidth={2} />
+                            <ClipboardList size={24} strokeWidth={1.8} />
                         </span>
                         <span className={style.text}>
                             <span className={style.title}>
@@ -141,7 +154,8 @@ const CategoryShowcase = ({ data, intro, primary }: ICategoryShowcaseProps) => {
                         role="tab"
                         aria-selected={i === activeIndex}
                         aria-label={d.name}
-                        className={`${style.dot} ${i === activeIndex ? style.dotActive : ''}`}
+                        className={`${style.dot} ${i === activeIndex ? style.dotActive : ''
+                            }`}
                         onClick={() => setActiveIndex(i)}
                     />
                 ))}
