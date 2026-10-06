@@ -79,13 +79,13 @@ const SevenPrinciple = () => {
   return (
     <section className={sevenPrinciple}>
       <div className={header}>
-        <span className={eyebrow}>Our Philosophy</span>
+        <span className={eyebrow}>7 Principles</span>
         <h2 className={heading}>
           7 Principles of <span className={highlight}>Social Business</span>
         </h2>
-        {/* <p className={subtitle}>
+        <p className={subtitle}>
           Guiding our work towards a more equitable and self-reliant society.
-        </p> */}
+        </p>
       </div>
 
       <div className={body}>
