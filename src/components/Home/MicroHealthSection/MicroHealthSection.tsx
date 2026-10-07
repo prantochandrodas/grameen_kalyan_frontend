@@ -26,7 +26,7 @@ interface IMicroHealthSectionProps {
 }
 
 const FEATURES = [
-  { label: 'Financial Security', Icon: FiShield },
+  { label: 'Health security', Icon: FiShield },
   { label: 'Better Healthcare', Icon: FiHeart },
   { label: 'Community Wellbeing', Icon: FiUsers },
   { label: 'Sustainable Future', Icon: FaLeaf },
