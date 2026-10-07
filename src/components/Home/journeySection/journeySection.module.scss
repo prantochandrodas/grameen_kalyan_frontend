@@ -29,11 +29,19 @@ $text: #5b6660;
 }
 
 .glowLeft,
-.glowRight,
-.dotsLeft,
 .dotsRight {
   position: absolute;
   display: block;
+}
+
+/* top-right corner er holud dots */
+.dotsRight {
+  right: 4rem;
+  top: 3rem;
+  width: 11rem;
+  height: 7rem;
+  background-image: radial-gradient(rgba($gold, 0.65) 2px, transparent 2.5px);
+  background-size: 2.2rem 2.2rem;
 }
 
 .glowLeft {
@@ -48,32 +56,6 @@ $text: #5b6660;
     rgba($green, 0.04) 40%,
     transparent 70%
   );
-}
-
-.glowRight {
-  right: -14rem;
-  bottom: -16rem;
-  width: 50rem;
-  height: 50rem;
-  background: radial-gradient(circle, rgba($gold, 0.16) 0%, transparent 70%);
-}
-
-.dotsLeft,
-.dotsRight {
-  width: 11rem;
-  height: 7rem;
-  background-image: radial-gradient(rgba($gold, 0.65) 2px, transparent 2.5px);
-  background-size: 2.2rem 2.2rem;
-}
-
-.dotsLeft {
-  left: 4rem;
-  bottom: 3rem;
-}
-
-.dotsRight {
-  right: 4rem;
-  top: 3rem;
 }
 
 /* ---------- Left column ---------- */
@@ -162,8 +144,7 @@ $text: #5b6660;
 
 .statement {
   margin: 0;
-  font-family: Georgia, 'Times New Roman', serif; // "Effort Behind..." heading er font jeta, seta dao
-  font-weight: 700;
+  font-weight: 800; // "29+ Years" er moto same font (font-family inherit hobe)
   font-size: clamp(1.7rem, 1.5vw, 2rem);
   line-height: 1.35;
   color: $green;
@@ -328,8 +309,6 @@ $text: #5b6660;
     gap: 3.2rem;
   }
 
-  /* decoration halka kora */
-  .dotsLeft,
   .dotsRight {
     display: none;
   }

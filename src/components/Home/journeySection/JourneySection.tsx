@@ -24,29 +24,30 @@ type Theme = {
     desc: string;
 };
 
+// Colors repeat: 1st & 3rd card -> blue, 2nd & 4th card -> purple
 const DEFAULT_THEME: Theme = {
-    cls: 'green',
+    cls: 'blue',
     href: '/services#healthcare',
     Icon: FaStethoscope,
     desc: 'Quality and affordable healthcare for every community.',
 };
 
 const THEMES: Record<string, Theme> = {
-    Healthcare: DEFAULT_THEME,
+    Healthcare: DEFAULT_THEME, // blue
     'Well-Being': {
-        cls: 'orange',
+        cls: 'purple',
         href: '/services#well-being',
         Icon: FaUsers,
         desc: 'Improving lives through prevention, education and support.',
     },
     'Emergency Response': {
-        cls: 'blue',
+        cls: 'blue', // was green
         href: '/services#emergency-response',
         Icon: FaShieldAlt,
         desc: 'Quick action when it matters most.',
     },
     'Social Business': {
-        cls: 'purple',
+        cls: 'purple', // was orange
         href: '/services#social-business',
         Icon: FaUsers,
         desc: 'Creating opportunities for sustainable livelihoods.',
@@ -70,8 +71,6 @@ const JourneySection = ({ about, serviceData }: IJourneySectionProps) => {
             {/* Soft background decoration */}
             <div className={style.decor} aria-hidden="true">
                 <span className={style.glowLeft} />
-                <span className={style.glowRight} />
-                <span className={style.dotsLeft} />
                 <span className={style.dotsRight} />
             </div>
 
@@ -108,7 +107,7 @@ const JourneySection = ({ about, serviceData }: IJourneySectionProps) => {
 
                 <p className={style.para}>{about?.subTitleTwo}</p>
 
-                {/* Statement + button: description er thik nicha */}
+                {/* Statement + button */}
                 <div className={style.bottom}>
                     <motion.h3
                         className={style.statement}
