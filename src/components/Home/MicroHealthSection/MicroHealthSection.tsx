@@ -2,58 +2,73 @@
 
 import React from 'react';
 import Image from 'next/image';
-
-import { Button } from '@/shared/components';
+import Link from 'next/link';
+import { FiShield, FiHeart, FiUsers, FiArrowRight } from 'react-icons/fi';
+import { FaLeaf } from 'react-icons/fa';
 import { IMAGE_BASE_URL } from '@/config';
-
 import style from './microHealthSection.module.scss';
-import NewButton from '@/shared/components/Button/NewButton';
 
 const {
   microHealthSection,
-  heading,
-  microHealth,
-  container,
   bgContainer,
-  insuranceText,
   img,
-
-  contentContainer,
+  content,
+  title,
+  subtitle,
+  cta,
+  features,
+  featureItem,
+  iconWrap,
 } = style;
 
 interface IMicroHealthSectionProps {
   image: string;
 }
 
+const FEATURES = [
+  { label: 'Financial Security', Icon: FiShield },
+  { label: 'Better Healthcare', Icon: FiHeart },
+  { label: 'Community Wellbeing', Icon: FiUsers },
+  { label: 'Sustainable Future', Icon: FaLeaf },
+];
+
 const MicroHealthSection = ({ image }: IMicroHealthSectionProps) => {
   return (
-    <div className={microHealthSection}>
-      <h1 className={heading}>
-        <span className={microHealth}> Micro Health</span>
-        <span className={insuranceText}>Insurance</span>
-      </h1>
-      <div className={container}>
-        <div className={bgContainer}>
-          <Image
-            className={img}
-            src={IMAGE_BASE_URL + image}
-            alt="bg-img"
-            width={1000}
-            height={1000}
-            priority
-          />
-        </div>
-        <div className={contentContainer}>
-          {/* <Button text="Read More" url="/healthcare/4" btnSecondary={true}
-            style={{ border: '1px solid #fff', color: '#fff' }} /> */}
-          <NewButton
-            text="Read More"
-            url="/healthcare/4"
-            btnSecondary={true}
-          />
-        </div>
+    <section className={microHealthSection}>
+      <div className={bgContainer}>
+        <Image
+          className={img}
+          src={IMAGE_BASE_URL + image} // production: IMAGE_BASE_URL + image
+          alt="Micro Health Insurance"
+          width={1920}
+          height={600}
+          priority
+        />
       </div>
-    </div>
+
+      <div className={content}>
+        <h2 className={title}>Micro Health Insurance</h2>
+        <p className={subtitle}>
+          Affordable healthcare. Stronger communities.
+          <br />
+          A sustainable future.
+        </p>
+        <Link href="/healthcare/4" className={cta}>
+          Learn More <FiArrowRight />
+        </Link>
+      </div>
+
+      <div className={features}>
+        {FEATURES.map(({ label, Icon }) => (
+          <div key={label} className={featureItem}>
+            <span className={iconWrap}>
+              <Icon />
+            </span>
+            <span>{label}</span>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 };
 
