@@ -24,30 +24,30 @@ type Theme = {
     desc: string;
 };
 
-// Colors repeat: 1st & 3rd card -> blue, 2nd & 4th card -> purple
+// Only 2 colors repeat: 1st & 3rd card -> green, 2nd & 4th card -> orange (golden)
 const DEFAULT_THEME: Theme = {
-    cls: 'blue',
+    cls: 'green',
     href: '/services#healthcare',
     Icon: FaStethoscope,
     desc: 'Quality and affordable healthcare for every community.',
 };
 
 const THEMES: Record<string, Theme> = {
-    Healthcare: DEFAULT_THEME, // blue
+    Healthcare: DEFAULT_THEME, // green
     'Well-Being': {
-        cls: 'purple',
+        cls: 'orange',
         href: '/services#well-being',
         Icon: FaUsers,
         desc: 'Improving lives through prevention, education and support.',
     },
     'Emergency Response': {
-        cls: 'blue', // was green
+        cls: 'green',
         href: '/services#emergency-response',
         Icon: FaShieldAlt,
         desc: 'Quick action when it matters most.',
     },
     'Social Business': {
-        cls: 'purple', // was orange
+        cls: 'orange',
         href: '/services#social-business',
         Icon: FaUsers,
         desc: 'Creating opportunities for sustainable livelihoods.',
