@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, animate, useInView } from 'framer-motion';
 import {
     FaStethoscope,
     FaPills,
@@ -45,7 +45,52 @@ const getIcon = (title: string = '') => {
     return <FaUsers />;
 };
 
-const format = (v: string | number = 0) => Number(v).toLocaleString('en-US');
+// "750,000" ba 750000 duto-i handle korbe
+const toNumber = (v: string | number = 0) => {
+    const n = Number(String(v).replace(/,/g, ''));
+    return Number.isFinite(n) ? n : 0;
+};
+
+const formatNumber = (n: number) => Math.round(n).toLocaleString('en-US');
+
+interface ICountUpProps {
+    value: string | number;
+    duration?: number;
+    delay?: number;
+    suffix?: string;
+    className?: string;
+}
+
+// Viewport e ashle 0 theke target porjonto count korbe (ekbar-i)
+const CountUp = ({ value, duration = 2, delay = 0, suffix = '+', className }: ICountUpProps) => {
+    const ref = useRef<HTMLSpanElement>(null);
+    const isInView = useInView(ref, { once: true, margin: '-60px' });
+    const target = toNumber(value);
+
+    useEffect(() => {
+        if (!isInView || !ref.current) return;
+
+        const node = ref.current;
+
+        const controls = animate(0, target, {
+            duration,
+            delay,
+            ease: 'easeOut',
+            // state na use kore sorasori DOM update, tai re-render hobe na
+            onUpdate: (latest) => {
+                node.textContent = `${formatNumber(latest)}${suffix}`;
+            },
+        });
+
+        return () => controls.stop();
+    }, [isInView, target, duration, delay, suffix]);
+
+    return (
+        <span ref={ref} className={className}>
+            {`${formatNumber(0)}${suffix}`}
+        </span>
+    );
+};
 
 const AnnualImpactSection = ({ serveData = [], data = [], image }: IAnnualImpactProps) => {
     const [annuallyServeData] = serveData;
@@ -69,7 +114,7 @@ const AnnualImpactSection = ({ serveData = [], data = [], image }: IAnnualImpact
                         viewport={{ once: true }}
                         transition={{ duration: 0.5 }}
                     >
-                        {format(annuallyServeData?.value)}+
+                        <CountUp value={annuallyServeData?.value ?? 0} duration={2.5} />
                     </motion.p>
                     <p className={style.totalSub}>People Across the Country</p>
                 </div>
@@ -86,7 +131,12 @@ const AnnualImpactSection = ({ serveData = [], data = [], image }: IAnnualImpact
                         >
                             <span className={style.icon}>{getIcon(item.title)}</span>
                             <span className={style.text}>
-                                <span className={style.number}>{format(item.value)}+</span>
+                                <CountUp
+                                    className={style.number}
+                                    value={item.value}
+                                    duration={2}
+                                    delay={index * 0.07}
+                                />
                                 <span className={style.title}>{item.title}</span>
                             </span>
                         </motion.li>

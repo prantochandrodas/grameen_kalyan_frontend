@@ -57,6 +57,11 @@ $green-dark: #174a2e;
     margin-bottom: 0.8rem;
   }
 
+  .totalNumber,
+.number {
+  font-variant-numeric: tabular-nums;
+}
+
  .totalNumber {
   font-size: clamp(3.5rem, 2rem + 3vw, 6rem);
   line-height: 1.05;
