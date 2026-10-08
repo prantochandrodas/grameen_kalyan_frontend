@@ -25,6 +25,7 @@ import VideoSection from '@/components/Home/videoSection/index.blade';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 import NewsEventSection from '@/components/Home/newsEventSection/NewsEventSection';
 import JourneySection from '@/components/Home/journeySection/JourneySection';
+import AnnualImpactSection from '@/components/Home/AnnualImpactSection/AnnualImpactSection';
 
 const Home = async () => {
   const homePageContentData = await useFetch({ url: '/home-contents' });
@@ -42,7 +43,7 @@ const Home = async () => {
   const heroSliderImages = sliderImages?.data;
   const badgeImage = homePageContentData?.badge_image;
   const workTogetherImage = homePageContentData?.work_together_image;
-
+  const annuallyServeImage = homePageContentData?.annually_serve;
   const aboutSectionData = {
     title: homePageContentData?.intro_title,
     subTitleOne: homePageContentData?.intro_sub_title_one,
@@ -109,8 +110,13 @@ const Home = async () => {
       <ServiceSection serviceData={serviceContent.data} /> */}
 
       <BoardMember memberData={boardMemberArray} />
-      <AnnuallyServe data={annuallyWeServeData} />
-      <AnnualReportSection data={annuallyReportData} headingText="Annual" />
+      <AnnualImpactSection
+        serveData={annuallyWeServeData}
+        data={annuallyReportData}
+        image={annuallyServeImage}
+      />
+      {/* <AnnuallyServe data={annuallyWeServeData} />
+      <AnnualReportSection data={annuallyReportData} headingText="Annual" /> */}
       <MicroHealthSection image={microHealthData} />
       <SevenPrinciple />
       <StoriesSection storyCategory={storyCategory.data} />
