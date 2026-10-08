@@ -1,0 +1,183 @@
+@import '../../../style/utils/base';
+
+$green: #1f5c3a;
+$green-dark: #174a2e;
+$gold: #e8a523;
+
+.section {
+  width: 100%;
+  padding: 0;
+  overflow: hidden;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr 1fr;
+  align-items: center;
+  overflow: hidden;
+  width: 100%;
+  min-height: 60rem;
+  background: linear-gradient(90deg, #f4f7f2 0%, #eef3ec 60%, #e7efe4 100%);
+
+  // Tablet: left + list on top, image below full width
+  @include response(tab-port) {
+    grid-template-columns: 1fr 1.2fr;
+    grid-template-areas:
+      'left list'
+      'image image';
+    min-height: auto;
+  }
+
+  @include response(phone) {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'left'
+      'list'
+      'image';
+    min-height: auto;
+  }
+}
+
+/* ---------- Left: heading ---------- */
+.left {
+  padding: 6rem 3rem 6rem clamp(3rem, 8vw, 10rem);
+
+  @include response(tab-port) {
+    grid-area: left;
+    padding: 5rem 2rem 2rem 4rem;
+  }
+
+  @include response(phone) {
+    padding: 4rem 2rem 1rem;
+    text-align: center;
+  }
+
+  .heading {
+    position: relative;
+    margin: 0;
+    padding-top: 2rem;
+    font-size: clamp(3.4rem, 2rem + 2.6vw, 5.6rem);
+    line-height: 1.1;
+    font-weight: 800;
+    color: $green-dark;
+
+    // small gold bar above the heading
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5rem;
+      height: 0.4rem;
+      border-radius: 1rem;
+      background: $gold;
+
+      @include response(phone) {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+  }
+}
+
+/* ---------- Middle: stats list ---------- */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 6rem 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3.5rem 2.5rem;
+  position: relative;
+  z-index: 2;
+
+  @include response(tab-port) {
+    grid-area: list;
+    padding: 5rem 4rem 2rem 2rem;
+    gap: 2.5rem 1.5rem;
+  }
+
+  @include response(phone) {
+    grid-area: list;
+    padding: 2rem 2rem;
+    gap: 2rem 1rem;
+  }
+
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    min-width: 0;
+
+    @include response(phone) {
+      gap: 1rem;
+    }
+  }
+
+  .icon {
+    flex: 0 0 auto;
+    display: flex;
+    font-size: 2.6rem;
+    color: $green;
+
+    @include response(phone) {
+      font-size: 2.2rem;
+    }
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+    min-width: 0;
+  }
+
+  .number {
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(1.8rem, 1.5rem + 0.5vw, 2.2rem);
+    font-weight: 700;
+    color: $green-dark;
+  }
+
+  .title {
+    font-size: clamp(1.2rem, 1.1rem + 0.2vw, 1.3rem);
+    color: #4a5a4f;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* ---------- Right: image ---------- */
+.imageWrap {
+  position: relative;
+  align-self: stretch;
+  min-height: 60rem;
+
+  @include response(tab-port) {
+    grid-area: image;
+    min-height: 40rem;
+  }
+
+  @include response(phone) {
+    grid-area: image;
+    min-height: 30rem;
+  }
+
+  .img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+
+    // image fades into the background from the left side
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 40%);
+    mask-image: linear-gradient(to right, transparent 0%, #000 40%);
+
+    // on tablet + phone the image is below, so fade from the top
+    @include response(tab-port) {
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 35%);
+      mask-image: linear-gradient(to bottom, transparent 0%, #000 35%);
+    }
+  }
+}

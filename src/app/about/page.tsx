@@ -16,7 +16,9 @@ import {
   WorkTogether,
 } from '@/shared/components';
 import { useFetch } from '@/shared/hook';
-import { reverseFilterDataByKey } from '@/shared/utils/pageHelpers/filterData.helper';
+import { reverseFilterDataByKey, filterDataByKey } from '@/shared/utils/pageHelpers/filterData.helper';
+import AnnualImpactSection from '@/components/Home/AnnualImpactSection/AnnualImpactSection';
+import { StoryOfInceptionSection } from '@/components/About/StoryOfInceptionSection';
 
 const About = async () => {
   const aboutUsData = await useFetch({ url: '/about-us-contents' });
@@ -37,7 +39,10 @@ const About = async () => {
     heading: aboutUsData?.company_intro_title,
     description: aboutUsData?.company_intro_description,
   };
-
+  const annuallyWeServeData = filterDataByKey(
+    summeryReportData?.data,
+    'annually_we_serve'
+  );
   const annuallyReportData = reverseFilterDataByKey(
     summeryReportData?.data,
     'annually_we_serve'
@@ -53,7 +58,7 @@ const About = async () => {
 
   const homePageContentData = await useFetch({ url: '/home-contents' });
   const workTogetherImage = homePageContentData?.work_together_image;
-
+  const annuallyServeImage = homePageContentData?.annually_serve;
   return (
     <>
       <HeroSection
@@ -64,11 +69,16 @@ const About = async () => {
       <MissionVision mission={mission} vision={vision} />
       <ServiceSection serviceData={serviceContent?.data} />
       <AboutUs data={aboutSectionData} />
-      <AnnualReportSection
+      <StoryOfInceptionSection
+        data={annuallyReportData}
+        image={annuallyServeImage}
+        headingText="Story of Inception"
+      />
+      {/* <AnnualReportSection
         data={annuallyReportData}
         headingTop={true}
         headingText="Story of Inception"
-      />
+      /> */}
       <EmpoweringSection empoweringData={empoweringSectionData} />
       <OurProudSection
         proudPresenceData={ourProudPresenceData?.data}
