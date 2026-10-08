@@ -1,159 +1,280 @@
-@import '../../../style/utils/base';
+$green: #0f4a2c;
+$gold: #e8a523;
+$bg: #ffffff;
 
-.serviceSection {
+.service {
   position: relative;
-  background-color:#ffffff;
+  display: grid;
+  grid-template-columns: minmax(34rem, 1.25fr) 2.4fr; // wider left column
+  gap: 4rem;
+  align-items: center;
+  padding: 7rem 6rem;
+  overflow: hidden;
+  background: $bg;
 
-  .layout {
-    height: 100%;
-    width: 60%;
-    background-color:#cbddd4;
-    border-radius: 2 2 2 70rem;
+  @media (max-width: 1100px) {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding: 5rem 1.5rem 4rem;
+  }
+}
 
-    position: absolute;
-    top: 0;
-    right: 0;
+/* ---------- Soft background decoration ---------- */
+.decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
 
-    @include response(s-desktop) {
-      height: 50%;
-      border-radius: 0 50rem 0 0;
+.glowLeft,
+.dotsRight {
+  position: absolute;
+  display: block;
+}
 
-      top: auto;
-      bottom: 0;
-      left: 0;
+.dotsRight {
+  right: 4rem;
+  top: 3rem;
+  width: 11rem;
+  height: 7rem;
+  background-image: radial-gradient(rgba($gold, 0.65) 2px, transparent 2.5px);
+  background-size: 2.2rem 2.2rem;
+}
+
+.glowLeft {
+  left: -18rem;
+  top: 50%;
+  width: 56rem;
+  height: 56rem;
+  transform: translateY(-50%);
+  background: radial-gradient(
+    circle,
+    rgba($green, 0.09) 0%,
+    rgba($green, 0.04) 40%,
+    transparent 70%
+  );
+}
+
+/* ---------- Left column ---------- */
+.intro,
+.cards {
+  position: relative;
+  z-index: 1;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ---------- Statement + button ---------- */
+.bottom {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2.4rem;
+}
+
+.statement {
+  margin: 0;
+  font-weight: 800;
+  font-size: clamp(2.8rem, 2.7vw, 3.8rem); // bigger font
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: $green;
+
+  .highlight {
+    color: $gold;
+  }
+}
+
+/* Read more button */
+.btnWrap {
+  a,
+  button {
+    padding: 0.8rem 2.2rem !important;
+    font-size: 1.4rem !important;
+    line-height: 1.4 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    border-radius: 0.8rem !important;
+  }
+}
+
+/* ---------- Cards (pastel colored) ---------- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.4rem;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  --c: #1a9a5b;
+  --bg: #e2f5e8;
+  --glow: rgba(26, 154, 91, 0.25);
+  display: block;
+  text-decoration: none;
+  border-radius: 2.8rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, var(--bg) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 1.4rem 3.4rem rgba(20, 60, 50, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(6px);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+
+  &:hover {
+    transform: translateY(-0.8rem);
+    box-shadow: 0 2rem 4.5rem var(--glow);
+
+    .photo img {
+      transform: scale(1.08);
+    }
+    .arrow {
+      transform: translateX(0.4rem);
     }
   }
-  .contentContainer {
-    padding-top: 10rem;
-    padding-bottom: 10rem;
-    padding-left: 10rem;
-    padding-right:  10rem;
 
-    position: relative;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
+  &.green  { --c: #1a9a5b; --bg: #dff4e6; --glow: rgba(26, 154, 91, 0.28); }
+  &.orange { --c: #f29110; --bg: #fff0d9; --glow: rgba(242, 145, 16, 0.28); }
+}
 
-    display: flex;
-    gap: 7rem;
+.cardInner {
+  position: relative;
+  height: 100%;
+  min-height: 42rem;
+  padding: 0.9rem 0.9rem 2.2rem;
+  overflow: hidden;
+  border-radius: 2.8rem;
 
-    @include response(s-desktop) {
-      flex-direction: column;
-      padding: 10rem;
-    }
-    @include response(phone) {
-      padding: 10rem 5rem;
-      gap: 5rem;
-    }
-    @include response(s-phone) {
-      padding: 8rem 3rem;
-    }
+  /* soft leaf-shaped decoration at card bottom-left */
+  &::after {
+    content: '';
+    position: absolute;
+    left: -1.5rem;
+    bottom: -1.5rem;
+    width: 9rem;
+    height: 9rem;
+    background: var(--c);
+    opacity: 0.12;
+    border-radius: 0 100% 0 100%;
+    transform: rotate(-10deg);
+    pointer-events: none;
+  }
 
-    .services {
-      flex: 6;
-      height: 100%;
+  h3 {
+    margin: 1rem 1.4rem 0.6rem;
+    font-size: 2.4rem;
+    font-weight: 800;
+    line-height: 1.15;
+    color: $green;
+  }
+}
 
-      display: grid;
-      grid-template-columns: [col-left-start] 1fr [col-left-end col-mid-start] min-content [col-mid-end col-right-start] 1fr [col-right-end];
-      grid-template-rows: [row-top-start] 1fr [row-top-end row-mid-start] min-content [row-mid-end row-bottom-start] 1fr [row-bottom-end];
-      gap: 2rem;
+.photo {
+  position: relative;
+  height: 20rem;
+  border-radius: 2.2rem 2.2rem 5rem 2.2rem;
+  overflow: hidden;
+  box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.12);
 
-      @include response(phone) {
-        gap: 1rem;
-      }
+  img {
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+}
 
-      .serviceOne {
-        grid-column: col-left-start / col-left-end;
-        grid-row: row-top-start / row-top-end;
-      }
-      .vLineOne {
-        grid-column: col-mid-start / col-mid-end;
-        grid-row: row-top-start / row-top-end;
+.icon {
+  display: grid;
+  place-items: center;
+  width: 6rem;
+  height: 6rem;
+  margin: -1.2rem 0 0 1.4rem;
+  border-radius: 50%;
+  background: var(--c);
+  color: #fff;
+  font-size: 2.6rem;
+  position: relative;
+  z-index: 2;
+  border: 0.4rem solid #fff;
+  box-shadow: 0 0.8rem 1.8rem var(--glow);
+}
 
-        height: 100%;
-        width: 1px;
-      }
-      .serviceTwo {
-        grid-column: col-right-start / col-right-end;
-        grid-row: row-top-start / row-top-end;
-      }
-      .hLineOne {
-        grid-column: col-left-start / col-left-end;
-        grid-row: row-mid-start / row-mid-end;
+.arrow {
+  position: absolute;
+  right: 1.8rem;
+  bottom: 1.8rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 3.8rem;
+  height: 3.8rem;
+  border-radius: 50%;
+  background: var(--c);
+  color: #fff;
+  font-size: 1.6rem;
+  box-shadow: 0 0.6rem 1.4rem var(--glow);
+  transition: transform 0.3s ease;
+}
 
-        width: 100%;
-        height: 1px;
-      }
-      .squareBox {
-        grid-column: col-mid-start / col-mid-end;
-        grid-row: row-mid-start / row-mid-end;
+/* =========================================================
+   MOBILE / TABLET (<= 1100px)
+   ========================================================= */
+@media (max-width: 1100px) {
+  .service {
+    padding: 4.5rem 1.6rem 4rem;
+    gap: 3.2rem;
+  }
 
-        height: 2rem;
-        width: 3rem;
-      }
-      .hLineTwo {
-        grid-column: col-right-start / col-right-end;
-        grid-row: row-mid-start / row-mid-end;
+  .dotsRight {
+    display: none;
+  }
 
-        width: 100%;
-        height: 1px;
-      }
-      .serviceThree {
-        grid-column: col-left-start / col-left-end;
-        grid-row: row-bottom-start / row-bottom-end;
-      }
-      .vLineTwo {
-        grid-column: col-mid-start / col-mid-end;
-        grid-row: row-bottom-start / row-bottom-end;
+  .glowLeft {
+    left: 50%;
+    top: 12rem;
+    width: 40rem;
+    height: 40rem;
+    transform: translateX(-50%);
+  }
 
-        height: 100%;
-        width: 1px;
-      }
-      .serviceFour {
-        grid-column: col-right-start / col-right-end;
-        grid-row: row-bottom-start / row-bottom-end;
-      }
+  .intro {
+    align-items: center;
+    text-align: center;
+  }
 
-      .serviceOne,
-      .serviceTwo,
-      .serviceThree,
-      .serviceFour {
-        width: 100%;
-      }
+  .bottom {
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 38rem;
+    gap: 2rem;
+  }
 
-      .vLineOne,
-      .vLineTwo {
-        justify-self: center;
-        background-color: $color-background-green;
-      }
-      .hLineOne,
-      .hLineTwo {
-        align-self: center;
-        background-color: $color-background-green;
-      }
-      .squareBox {
-        background-color: $color-background-green;
-      }
-    }
+  .statement {
+    font-size: 2.6rem;
+    line-height: 1.3;
+  }
+}
 
-    .content {
-      flex: 6;
-      height: 100%;
+/* ---------- Small phones ---------- */
+@media (max-width: 560px) {
+  .service {
+    padding: 4rem 1.4rem 3.4rem;
+    gap: 2.8rem;
+  }
 
-      .text {
-        font-size: clamp(1rem, calc(0.33rem + 3.38vw), 4.38rem);
-        font-weight: 900;
-        color:hsl(140, 100%, 1%);
-        // color: $color-text-primary;
-        line-height: 1.3;
-        margin-bottom: 3rem;
-
-        @include response(tab-port) {
-           color:hsl(140, 100%, 1%);
-        }
-      }
-    }
+  .statement {
+    font-size: 2.2rem;
   }
 }
