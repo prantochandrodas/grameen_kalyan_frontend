@@ -2,7 +2,8 @@
 
 .healthcareService {
   position: relative;
-  background-color: $color-secondary;
+  background-color: #ffffff;
+  // background-color: $color-secondary;
 
   .layoutTL {
     height: 20rem;
@@ -78,7 +79,8 @@
       }
       .heading {
         font-size: 3rem;
-        color: $color-text-light;
+        // color: $color-text-light;
+        color: #0B612D;
         text-align: center;
       }
     }
