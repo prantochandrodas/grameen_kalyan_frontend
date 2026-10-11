@@ -7,7 +7,7 @@ import layoutTL from '@/assets/layout/grid-top-leaf.svg';
 
 import style from './aboutUs.module.scss';
 
-const { aboutUs, heading, layoutLeft, img, description } = style;
+const { aboutUs, heading, first, second, layoutLeft, img, description } = style;
 
 interface IAboutUsProps {
   data: {
@@ -30,8 +30,8 @@ const AboutUs = ({ data }: IAboutUsProps) => {
         <Image className={img} src={layoutTL} alt="layout" />
       </div>
       <h2 className={heading}>
-        <span>{headingFirstPart}</span>
-        <span>{headingSecondPart}</span>
+        <span className={first}>{headingFirstPart}</span>
+        <span className={second}>{headingSecondPart}</span>
       </h2>
       <div
         className={description}

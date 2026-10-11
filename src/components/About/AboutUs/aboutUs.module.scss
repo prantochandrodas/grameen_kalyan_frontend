@@ -1,22 +1,28 @@
-@import '../../../style/utils/base';
+$green: #0f4a2c;
+$gold: #e8a523;
+$bg: #F7F5F2;
+$text: #5b6660;
 
 .aboutUs {
   position: relative;
-  padding: 10rem;
+  padding: 7rem 6rem;
+  overflow: hidden;
+  background: $bg;
 
-  @include response(phone) {
-    padding: 5rem;
+  @media (max-width: 1100px) {
+    padding: 5rem 1.5rem 4rem;
   }
-  @include response(s-phone) {
-    padding: 5rem 3rem;
+
+  @media (max-width: 560px) {
+    padding: 4rem 1.4rem 3.4rem;
   }
 
   .layoutLeft {
     height: 25rem;
-
     position: absolute;
     top: 0;
     left: 0;
+    pointer-events: none;
 
     .img {
       height: 100%;
@@ -25,43 +31,70 @@
     }
   }
 
+  /* JourneySection er "29+ Years" heading er moto same style */
   .heading {
     position: relative;
     z-index: 1;
-
     text-align: center;
-    font-size: clamp(1.44rem, calc(0.36rem + 5.4vw), 6.84rem);
-    font-weight: 900;
-    text-transform: capitalize;
-    line-height: 1.2;
-    color: $color-primary;
-    margin-bottom: 5rem;
+    font-size: clamp(3rem, 3.4vw, 4.4rem);
+    line-height: 1.05;
+    font-weight: 800;
+    color: $green;
+    margin-bottom: 3rem;
 
     span {
       display: block;
     }
+
+    .first {
+      color: $green;
+    }
+
+    .second {
+      color: $gold; // JourneySection e "29+" jemon gold
+    }
+
+    @media (max-width: 1100px) {
+      font-size: 3.6rem;
+    }
+
+    @media (max-width: 560px) {
+      font-size: 3.2rem;
+    }
   }
 
+  /* JourneySection er .para er moto same text style */
   .description {
     p {
-      text-align: center;
       position: relative;
       z-index: 1;
-
-      font-size: 2.2rem;
+      text-align: center;
+      font-size: 2rem;
       font-weight: 400;
+      line-height: 1.65;
+      color: $text;
       max-width: 70%;
       margin-left: auto;
       margin-right: auto;
 
       &:not(:last-of-type) {
-        margin-bottom: 3rem;
+        margin-bottom: 2rem;
       }
 
-      @include response(phone) {
-        font-size: 2rem;
+      @media (max-width: 1100px) {
+        font-size: 1.45rem;
         max-width: 100%;
       }
+
+      @media (max-width: 560px) {
+        font-size: 1.4rem;
+      }
+    }
+
+    strong,
+    b {
+      color: $green;
+      font-weight: 800;
     }
   }
 }
