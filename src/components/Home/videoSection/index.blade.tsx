@@ -8,7 +8,7 @@ import style from './VideoSection.module.scss';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const {
-  section, wave, leaf, goldCurve, wrapper, leftCol, tag, heading, desc, viewAllBtn,
+  section, wave, goldCurve, wrapper, leftCol, tag, heading, desc, viewAllBtn,
   sliderCol, navBtns, navBtn, navBtnNext, navBtnDisabled,
   videoItem, iframeBox,
 } = style;
@@ -70,7 +70,7 @@ const VideoSection = () => {
 
   const settings = {
     dots: false,
-    infinite: false, // <-- main fix: 1st video er por r left e jabe na
+    infinite: false,
     speed: 500,
     slidesToShow: desktopSlides,
     slidesToScroll: 2,
@@ -98,7 +98,7 @@ const VideoSection = () => {
 
   return (
     <section className={section}>
-      {/* Wave transition from previous (light) section into this dark green section */}
+      {/* Shudhu curve-er green border line, kono fill nai */}
       <svg
         className={wave}
         viewBox="0 0 1600 110"
@@ -106,8 +106,12 @@ const VideoSection = () => {
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d="M0,0 L1600,0 L1600,40 C1300,110 300,0 0,60 Z"
-          fill="currentColor"
+          d="M0,60 C300,0 1300,110 1600,40"
+          fill="none"
+          stroke="#0F4A2C"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
         />
       </svg>
 
