@@ -2,7 +2,8 @@
 
 .boardMember {
   position: relative;
-  padding: 20rem 15rem;
+  // padding: 20rem 15rem;
+     padding: 15rem 7rem;
 
   @include response(s-desktop) {
     padding: 10rem;

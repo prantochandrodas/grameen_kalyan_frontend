@@ -25,12 +25,12 @@ const BoardMember = ({ memberData }: IBoardMemberProps) => {
 
   return (
     <div className={boardMember}>
-      <div className={layoutRight}>
+      {/* <div className={layoutRight}>
         <Image className={img} src={layoutTR} alt="layout" />
       </div>
       <div className={layoutLeft}>
         <Image className={img} src={layoutBL} alt="layout" />
-      </div>
+      </div> */}
       {memberData.map((data) => (
 
         <div className={memberCardContainer} key={data.id}>
