@@ -97,7 +97,7 @@ const NewsEventSection = () => {
             <div className={wrapper}>
                 <div className={leftCol}>
                     <span className={tag}>— NEWS & EVENTS</span>
-                    <h2 className={heading}>Our Mejor Activities</h2>
+                    <h2 className={heading}>Our Major Activities</h2>
                     <p className={desc}>
                         Stay informed about our latest activities, success stories and upcoming events.
                     </p>
