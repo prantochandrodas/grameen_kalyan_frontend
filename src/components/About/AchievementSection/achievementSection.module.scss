@@ -1,148 +1,383 @@
 @import '../../../style/utils/base';
 
-.achievementSection {
-  padding: 10rem 20rem;
-  background-color: $color-primary;
+$hex-clip: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+$slide-min-height: 30rem; // beshi lagle barao, kom lagle komao
 
-  display: grid;
-  grid-template-columns: 1fr max-content 1fr;
-  grid-template-rows: repeat(auto-fill, max-content);
-  gap: 3rem;
+.achievementSection {
+  position: relative;
+  padding: 6rem 20rem;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
 
   @include response(s-desktop) {
-    padding: 10rem;
+    padding: 6rem 10rem;
   }
   @include response(phone) {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-    padding: 10rem 5rem;
+    padding: 6rem 5rem;
   }
   @include response(s-phone) {
-    padding: 5rem 3rem;
+    padding: 4rem 3rem;
+  }
+
+  /* ================= Top: Our Journey ================= */
+  .journeyBlock {
+    display: grid;
+    grid-template-columns: 24rem 1fr;
+    align-items: center;
+    gap: 3rem;
+
+    @include response(vp-800) {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+
+  .journeyHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.4rem;
+    padding-right: 3rem;
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
+
+    @include response(vp-800) {
+      padding-right: 0;
+      border-right: none;
+    }
+  }
+
+  .journeyTitle {
+    margin: 0;
+    font-size: 4.4rem;
+    font-weight: 900;
+    line-height: 1.1;
+    color: $color-primary;
+
+    @include response(vp-800) {
+      font-size: 3.6rem;
+    }
+  }
+
+  .journeyHighlight {
+    color: $color-secondary;
+  }
+
+  .journeyAccent {
+    display: block;
+    width: 7rem;
+    height: 0.5rem;
+    border-radius: 0.3rem;
+    background: linear-gradient(90deg, $color-primary 50%, $color-secondary 50%);
+  }
+
+  .trackScroller {
+    min-width: 0;
+    overflow-x: auto;
+    padding: 2rem 0;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  // hexagon gulor pichone horizontal line
+  .rail {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    gap: 2.5rem;
+    min-width: max-content;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 6.9rem;
+      height: 2px;
+      background-color: $color-secondary;
+      opacity: 0.5;
+    }
+  }
+
+  .hexItem {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 14rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    .hexOuter {
+      display: block;
+      width: 12rem;
+      height: 13.8rem;
+      padding: 0.4rem;
+      background-color: $color-secondary;
+      clip-path: $hex-clip;
+      transition: background-color 0.3s ease;
+    }
+
+    .hexInner {
+      display: block;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #fff;
+      clip-path: $hex-clip;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .hexPeriod {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: $color-primary;
+      white-space: nowrap;
+      background-color: #fff;
+      padding: 0 0.6rem;
+    }
+  }
+
+  .hexItemActive {
+    opacity: 1;
+    transform: translateY(-0.6rem) scale(1.1);
+
+    .hexOuter {
+      background-color: $color-primary;
+    }
+    .hexPeriod {
+      color: $color-secondary;
+    }
+  }
+
+  /* ================= Connector (top -> bottom) ================= */
+  .connector {
+    position: relative;
+    width: 1px;
+    height: 4rem;
+    background-color: $color-secondary;
+    transition: left 0.4s ease;
+
+    @include response(vp-800) {
+      display: none;
+    }
+  }
+
+  .connectorBox {
+    position: absolute;
+    left: 50%;
+    bottom: -0.75rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    transform: translateX(-50%);
+    background-color: $color-secondary;
+  }
+
+  /* ================= Bottom: Slider ================= */
+  .sliderBlock {
+    margin-top: 1.5rem;
+
+    @include response(vp-800) {
+      margin-top: 3rem;
+    }
+  }
+
+  .sliderViewport {
+    overflow: hidden;
+  }
+
+  .sliderTrack {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  // height ta shudhu card er content theke ashe, image oi height e fill hoy
+  .slide {
+    flex: 0 0 100%;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+    min-height: $slide-min-height;
+    gap: 0;
+
+    @include response(vp-800) {
+      grid-template-columns: 1fr;
+      grid-template-rows: 25rem auto;
+      min-height: 0;
+    }
   }
 
   .imageContainer {
-    height: 60rem;
-    border-radius: 20rem 0 0 0;
+    position: relative;
+    min-height: 25rem;
+    border-radius: 10rem 0 0 0;
     overflow: hidden;
     background-color: $color-text-grey;
 
     @include response(vp-800) {
-      border-radius: 10rem 0 0 0;
+      border-radius: 6rem 0 0 0;
     }
 
     .img {
-      height: 100%;
+      position: absolute;
+      inset: 0;
       width: 100%;
+      height: 100%;
       object-fit: cover;
     }
   }
 
-  .imageContainerReverse {
-    border-radius: 0 0 20rem 0;
-
-    @include response(vp-800) {
-      border-radius: 0 0 10rem 0;
-    }
-  }
-
-  .contentContainer {
-    color: $color-text-light;
-    background-color: $color-secondary;
+ .contentContainer {
+    color: #222;                       // bullet text color
+    background-color: #F1F7F2;            // image 2 er moto white background
     padding: 3rem 4rem;
-    border-radius: 0 0 20rem 0;
+    border-radius: 0 0 10rem 0;
+    border: 1px solid rgba(0, 0, 0, 0.08); // white section e card ta jeno mishe na jay
 
     @include response(vp-800) {
-      border-radius: 0 0 10rem 0;
+      padding: 2.5rem 3rem;
+      border-radius: 0 0 6rem 0;
     }
 
     .heading {
-      font-size: 4rem;
+      font-size: 3rem;
       font-weight: 900;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
+      color: $color-primary;           // dark green heading
     }
-    table {
-      border: 1px solid transparent !important;
-      border-collapse: collapse;
+
+    // admin editor er messy HTML (nested table, inline align/font) normalize kora
+    .details {
+      table,
+      tbody,
+      tr,
+      td {
+        display: block;
+        width: 100% !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+      }
 
       tr {
-        display: block;
-        border: 1px solid transparent !important;
-        margin-bottom: 1rem;
+        margin-bottom: 0.8rem !important;
+      }
 
-        td {
-          font-size: 1.8rem;
-          width: 100%;
-          max-width: max-content;
-          border-bottom: 1px solid black;
+      // shudhu leaf td (jar bhitore arekta table nai) e bullet, underline nai
+      td:not(:has(table)) {
+        position: relative;
+        width: 100% !important;
+        padding-left: 2rem !important;
+        border-bottom: none !important;
 
-          &:not(:last-of-type) {
-            margin-bottom: 1rem;
-          }
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0.4rem;
+          top: 0.8em;
+          width: 0.6rem;
+          height: 0.6rem;
+          border-radius: 50%;
+          background-color: #222;       // bullet dot
         }
       }
-    }
-  }
 
-  .contentContainerReverse {
-    border-radius: 20rem 0 0 0;
-    text-align: end;
+      // jodi editor theke ul/li ashe
+      ul {
+        margin: 0;
+        padding-left: 2rem;
+        list-style: disc;
+      }
+      li {
+        margin-bottom: 0.8rem;
+      }
 
-    @include response(vp-800) {
-      border-radius: 10rem 0 0 0;
-    }
+      p {
+        margin: 0 !important;
+        text-align: left !important;
+      }
 
-    table {
-      margin-left: auto;
-
-      tr {
-        margin-left: auto;
-        display: flex;
-        justify-content: flex-end;
+      p,
+      span,
+      li {
+        font-size: 1.6rem !important;
+        font-family: inherit !important;
+        line-height: 1.5 !important;
+        color: inherit !important;     // #222 inherit korbe
       }
     }
   }
 
-  .verticalTopLine {
-    width: 1px;
-    background-color: $color-secondary;
-    justify-self: center;
+  /* ================= Slider controls ================= */
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2.5rem;
+  }
 
-    @include response(phone) {
-      display: none;
+  .arrowBtn {
+    width: 4.2rem;
+    height: 4.2rem;
+    border: 1px solid $color-primary;
+    border-radius: 50%;
+    background-color: transparent;
+    color: $color-primary;
+    font-size: 2.8rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background-color: $color-primary;
+      color: #fff;
+    }
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
     }
   }
 
-  .horizontalLeftLine {
-    height: 1px;
-    background-color: $color-secondary;
-    align-self: center;
+  .dots {
+    display: flex;
+    gap: 1rem;
   }
-  .squareBox {
-    height: 1.5rem;
-    width: 1.5rem;
-    background-color: $color-secondary;
 
-    @include response(phone) {
-      display: none;
-    }
+  .dot {
+    width: 1rem;
+    height: 1rem;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
   }
-  .horizontalRightLine {
-    height: 1px;
-    background-color: $color-secondary;
-    align-self: center;
 
-    @include response(phone) {
-      display: none;
-    }
-  }
-  .verticalBottomLine {
-    width: 1px;
-    background-color: $color-secondary;
-    justify-self: center;
-
-    @include response(phone) {
-      display: none;
-    }
+  .dotActive {
+    width: 3rem;
+    border-radius: 1rem;
+    background-color: $color-primary;
   }
 }
