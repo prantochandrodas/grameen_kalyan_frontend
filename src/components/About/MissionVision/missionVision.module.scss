@@ -70,7 +70,7 @@ $gold: #e8a523;
     text-align: center;
     gap: 1.6rem;
     min-height: 44rem;
-    padding: 4.8rem 3.2rem 4rem;
+       padding: 2.8rem 3.2rem 4rem;
     background-color: #f6faf6;
     border: 0.1rem solid rgba($green, 0.08);
     border-radius: 2.4rem;
@@ -111,15 +111,20 @@ $gold: #e8a523;
 
     .cardTitle {
       margin: 0.8rem 0 0;
-      font-size: 3.4rem;
-      font-weight: 700;
+      font-size: 4.4rem;          // age 3.4rem chhilo, aro boro
+      font-weight: 800;
+      line-height: 1.1;
       color: $green;
+
+      @include response(phone) {
+        font-size: 3.6rem;
+      }
     }
 
     .line {
       order: 2;
       display: block;
-      width: 6rem;
+      width: 7rem;
       height: 0.3rem;
       border-radius: 0.2rem;
       background-color: $gold;
@@ -128,9 +133,14 @@ $gold: #e8a523;
     .cardText {
       order: 3;
       margin: 0;
-      font-size: 2rem;
-      line-height: 1.7;
-      color: #555;
+      font-size: 2.4rem;          // age 2rem chhilo, aro boro
+      font-weight: 700;           // bold
+      line-height: 1.6;
+      color: #444;
+
+      @include response(phone) {
+        font-size: 2rem;
+      }
     }
   }
 }
