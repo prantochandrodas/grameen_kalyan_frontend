@@ -41,9 +41,6 @@ const WorkTogether = ({ image }: IMicroHealthSectionProps) => (
     </motion.div>
 
     <div className={contentContainer}>
-      <motion.span {...fadeUp(0.1)} className={eyebrow}>
-        Partnerships
-      </motion.span>
 
       <motion.h3 {...fadeUp(0.15)} className={heading}>
         Let&apos;s Work Together
