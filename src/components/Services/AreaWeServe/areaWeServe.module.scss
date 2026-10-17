@@ -1,11 +1,33 @@
 @import '../../../style/utils/base';
 
+$green-dark: #0f4d2e;
+$gold: #c8892b;
+$icon-bg: #0f4d2e;
+$text-gray: #5f6b66;
+
 .areaWeServeSection {
   position: relative;
-  padding-top: 10rem;
+  padding: 10rem 0;
+  background: #fbfaf5;
+  overflow: hidden;
+
+  // leaf decoration (right side) - replace with an SVG background-image if you like
+  &::after {
+    content: '';
+    position: absolute;
+    right: -8rem;
+    bottom: 4rem;
+    width: 22rem;
+    height: 22rem;
+    border-radius: 50% 0 50% 0;
+    background: rgba($green-dark, 0.08);
+    transform: rotate(-20deg);
+    pointer-events: none;
+  }
 
   .contentContainer {
     padding: 0 20rem;
+    text-align: center;
 
     @include response(vp-800) {
       padding: 0 10rem;
@@ -17,122 +39,139 @@
       padding: 0 3rem;
     }
 
-    .heading {
-      font-size: clamp(1.73rem, calc(0.36rem + 6.82vw), 8.55rem);
-      font-weight: 900;
-      text-align: center;
-      color: $color-text-darkGrey;
-      margin-bottom: 2rem;
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 1.2rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: $gold;
+      margin-bottom: 1.6rem;
 
-      @include response(phone) {
-        margin-bottom: 1rem;
+      &::before,
+      &::after {
+        content: '';
+        width: 4rem;
+        height: 1px;
+        background: $gold;
       }
     }
-    .subHeading {
-      color: $color-text-darkGrey;
-      text-align: center;
-      font-size: 3.5rem;
-      line-height: 1.2;
-      font-weight: 500;
-      margin-bottom: 2rem;
 
-      @include response(phone) {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-      }
-      @include response(s-phone) {
-        font-size: 2rem;
-      }
+    .heading {
+      font-size: clamp(3.2rem, 1.5rem + 3vw, 5.6rem);
+      font-weight: 800;
+      color: $green-dark;
+      margin-bottom: 1.6rem;
+    }
 
-      span {
-        display: block;
-      }
+    .description {
+      max-width: 64rem;
+      margin: 0 auto;
+      font-size: 1.9rem;
+      line-height: 1.7;
+      color: $text-gray;
     }
   }
 
   .areaWeServeContainer {
     position: relative;
-
-    padding: 0 20rem;
-    margin: 10rem 0;
+    z-index: 1;
+    padding: 0 12rem;
+    margin-top: 7rem;
 
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 3rem;
+    gap: 4rem;
 
     @include response(s-desktop) {
       grid-template-columns: repeat(2, 1fr);
+      gap: 3.6rem;
     }
     @include response(vp-800) {
-      padding: 0 10rem;
+      padding: 0 8rem;
     }
     @include response(phone) {
       padding: 0 5rem;
       grid-template-columns: 1fr;
+      gap: 3rem;
     }
     @include response(s-phone) {
       padding: 0 3rem;
     }
 
-    .layout {
-      background-color: $color-primary;
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-
-      width: 100%;
-      height: 80%;
-    }
-
-    .areaHealthcare,
-    .areaWellBeing,
-    .areaEmergencyResponse,
-    .areaSocialBusiness {
+    .card {
       position: relative;
-      z-index: 1;
-      background-color: $color-secondary;
-
-      height: 30rem;
-
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      height: 100%;
+      min-height: 32rem;
+      padding: 3.2rem;
+      background: #fff;
+      border-radius: 2rem;
+      box-shadow: 0 0.4rem 2rem rgba(15, 77, 46, 0.08);
+      text-decoration: none;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-      .heading {
-        text-align: center;
-        font-size: 3rem;
-        color: $color-text-light;
-        margin-bottom: 2rem;
-        font-weight: 900;
+      &:hover {
+        transform: translateY(-0.6rem);
+        box-shadow: 0 1.2rem 3rem rgba(15, 77, 46, 0.15);
 
-        span {
-          display: block;
-          line-height: 1.2;
+        .arrowBtn {
+          transform: translateX(0.3rem);
         }
       }
 
-      .iconContainer {
-        height: 10rem;
+      .iconBadge {
+        width: 8.4rem;
+        height: 8.4rem;
+        border-radius: 50%;
+        background: $icon-bg;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 2.8rem;
 
-        .img {
-          height: 100%;
-          width: 100%;
+        img {
+          width: 4.6rem;
+          height: 4.6rem;
           object-fit: contain;
         }
       }
-    }
 
-    .areaHealthcare {
-      border-radius: 20rem 0 0 0;
-    }
+      .cardTitle {
+        font-size: 2.6rem;
+        font-weight: 700;
+        line-height: 1.25;
+        color: $green-dark;
+        margin-bottom: 1.4rem;
+      }
 
-    .areaSocialBusiness {
-      border-radius: 0 0 15rem 0;
-    }
+      .cardText {
+        font-size: 1.7rem;
+        line-height: 1.6;
+        color: $text-gray;
+        margin-bottom: 3rem;
+      }
 
-    a {
-      text-decoration: none;
+      .arrowBtn {
+        margin-top: auto;
+        align-self: flex-end;
+        width: 4.2rem;
+        height: 4.2rem;
+        border-radius: 50%;
+        background: $green-dark;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease;
+
+        svg {
+          width: 1.8rem;
+          height: 1.8rem;
+        }
+      }
     }
   }
 }
