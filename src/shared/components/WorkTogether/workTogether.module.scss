@@ -1,11 +1,7 @@
 @import '../../../style/utils/base';
 
-$green: #0e6b48;
-$muted: #5f6f68;
-
 .workTogether {
   padding: 10rem 15rem;
-  padding-right: 4rem;
   display: flex;
   flex-direction: row-reverse; // image on the right
   align-items: center;
@@ -13,12 +9,10 @@ $muted: #5f6f68;
 
   @include response(s-desktop) {
     padding: 8rem 10rem;
-    padding-right: 3rem;
   }
   @include response(tab-port) {
     flex-direction: column;
     gap: 4rem;
-    padding: 8rem 5rem;
   }
   @include response(phone) {
     padding: 5rem;
@@ -28,8 +22,8 @@ $muted: #5f6f68;
   }
 
   .imgContainer {
-    flex: 1 1 70%;
-    height: auto; // full image, no crop
+    flex: 1 1 62%; // wider image
+    height: 45rem; // fixed height, adjust as you like
     border-radius: 2rem;
     overflow: hidden;
     box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.12);
@@ -37,20 +31,24 @@ $muted: #5f6f68;
     @include response(tab-port) {
       flex: none;
       width: 100%;
+      height: 38rem;
     }
     @include response(phone) {
+      height: 30rem;
       border-radius: 1.5rem;
     }
 
     .img {
       display: block;
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: cover;
+      object-position: center; // try "center top" if faces get cropped
     }
   }
 
   .contentContainer {
-    flex: 0 1 30%;
+    flex: 1 1 38%; // narrower text column
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -58,48 +56,22 @@ $muted: #5f6f68;
 
     @include response(tab-port) {
       width: 100%;
-      flex: none;
     }
 
-    // same eyebrow style as StoriesSection (line + text)
     .eyebrow {
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
-      margin: 0;
-      font-size: 1.7rem;
+      font-size: 1.3rem;
       font-weight: 600;
-      color: $green;
-
-      &::before {
-        content: '';
-        width: 4rem;
-        height: 0.3rem;
-        background: $color-secondary-goldenrod;
-      }
+      letter-spacing: 0.25rem;
+      text-transform: uppercase;
+      color: $color-primary;
     }
 
-    // same two-line heading style as "Making Millions / Smile"
     .heading {
       margin: 0;
-      color: $green;
-
-      .small {
-        display: block;
-        line-height: 1.15;
-        font-weight: 900;
-        font-size: min(5.2rem, 5.4vw);
-
-        @include response(tab-port) {
-          font-size: min(5.6rem, 8vw);
-        }
-        @include response(phone) {
-          font-size: min(5rem, 11vw);
-        }
-      }
-      .gold {
-        color: $color-secondary-goldenrod;
-      }
+      line-height: 1.15;
+      font-weight: 800;
+      font-size: clamp(3rem, 3.5vw, 4.8rem);
+      color: $color-primary;
     }
 
     .parag {
@@ -107,7 +79,7 @@ $muted: #5f6f68;
       font-size: 1.7rem;
       line-height: 1.7;
       max-width: 52ch;
-      color: $muted;
+      opacity: 0.85;
     }
 
     .actions {
