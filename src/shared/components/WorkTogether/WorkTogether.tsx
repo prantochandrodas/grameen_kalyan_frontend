@@ -7,82 +7,68 @@ import { motion } from 'framer-motion';
 import testImage from '@/assets/images/lets-work.jpeg';
 import { Button } from '../Button';
 import style from './workTogether.module.scss';
-import { IMAGE_BASE_URL } from '@/config';
+
 const {
   workTogether,
   imgContainer,
   img,
   contentContainer,
-  headingSmall,
-  headingLarge,
+  eyebrow,
+  heading,
+  small,
+  gold,
   parag,
+  actions,
 } = style;
+
+const fadeUp = (delay = 0) => ({
+  initial: { opacity: 0, y: 40 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, amount: 0.3 },
+  transition: { duration: 0.6, delay, ease: 'easeOut' as const },
+});
 interface IMicroHealthSectionProps {
   image: string;
 }
-const WorkTogether = ({ image }: IMicroHealthSectionProps) => {
-  return (
-    <div className={workTogether}>
-      <div className={imgContainer}>
-        <Image className={img} src={testImage} width={1000}
-          height={1000} alt="img" unoptimized />
-      </div>
-      <div className={contentContainer}>
-        <motion.h3
-          style={{ position: 'relative' }}
-          initial={{ opacity: 0, bottom: '-5rem' }}
-          whileInView={{ opacity: 1, bottom: '0' }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className={headingSmall}
-        >
-          Let's Work
-        </motion.h3>
-        <motion.h3
-          style={{ position: 'relative', marginBottom: '10px' }}
-          initial={{ opacity: 0, bottom: '-5rem' }}
-          whileInView={{ opacity: 1, bottom: '0' }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className={headingSmall}
-        >
+const WorkTogether = ({ image }: IMicroHealthSectionProps) => (
+  <section className={workTogether}>
+    <motion.div {...fadeUp(0)} className={imgContainer}>
+      <Image
+        className={img}
+        src={testImage}
+        alt="Our team and partners working together"
+        sizes="(max-width: 900px) 100vw, 70vw"
+      />
+    </motion.div>
+
+    <div className={contentContainer}>
+
+
+      <h3 className={heading}>
+        <motion.span {...fadeUp(0.15)} className={small}>
+          Let&apos;s Work
+        </motion.span>
+        <motion.span {...fadeUp(0.25)} className={`${small} ${gold}`}>
           Together
-        </motion.h3>
-        <motion.p
-          style={{ position: 'relative' }}
-          initial={{ opacity: 0, bottom: '-5rem' }}
-          whileInView={{ opacity: 1, bottom: '0' }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className={parag}
-        >
-          Our promise is everyone at Bottom of the Pyramid will have equal
-          access to standard healthcare. We welcome partnerships and
-          collaboration to build a better future together.
-        </motion.p>
-        <motion.p
-          style={{ position: 'relative' }}
-          initial={{ opacity: 0, bottom: '-5rem' }}
-          whileInView={{ opacity: 1, bottom: '0' }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className={parag}
-        >
-          Reach out to know more about partnership and collaboration
-          opportunities.
-        </motion.p>
-        <motion.div
-          style={{ position: 'relative' }}
-          initial={{ opacity: 0, bottom: '-5rem' }}
-          whileInView={{ opacity: 1, bottom: '0' }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <Button text="Join Us" url="/join-us" btnSecondary={true} />
-        </motion.div>
-      </div>
+        </motion.span>
+      </h3>
+
+      <motion.p {...fadeUp(0.3)} className={parag}>
+        Our promise is that everyone at the Bottom of the Pyramid will have
+        equal access to standard healthcare. We welcome partnerships and
+        collaboration to build a better future together.
+      </motion.p>
+
+      <motion.p {...fadeUp(0.4)} className={parag}>
+        Reach out to learn more about partnership and collaboration
+        opportunities.
+      </motion.p>
+
+      <motion.div {...fadeUp(0.5)} className={actions}>
+        <Button text="Join Us" url="/join-us" />
+      </motion.div>
     </div>
-  );
-};
+  </section>
+);
 
 export default WorkTogether;
