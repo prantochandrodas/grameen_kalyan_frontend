@@ -1,8 +1,8 @@
 @import '../../../style/utils/base';
 
 .workTogether {
-  background-color: #F3F6F1;
-  padding: 10rem 15rem;
+  padding: 10rem 15rem 10rem 15rem;
+  padding-right: 4rem; // right side space onek komano holo
   display: flex;
   flex-direction: row-reverse; // image on the right
   align-items: center;
@@ -10,10 +10,12 @@
 
   @include response(s-desktop) {
     padding: 8rem 10rem;
+    padding-right: 3rem;
   }
   @include response(tab-port) {
     flex-direction: column;
     gap: 4rem;
+    padding: 8rem 5rem;
   }
   @include response(phone) {
     padding: 5rem;
@@ -23,8 +25,8 @@
   }
 
   .imgContainer {
-    flex: 1 1 62%; // wider image
-    height: 45rem; // fixed height, adjust as you like
+    flex: 1 1 70%; // aro boro image
+    height: 45rem;
     border-radius: 2rem;
     overflow: hidden;
     box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.12);
@@ -44,12 +46,12 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center; // try "center top" if faces get cropped
+      object-position: center;
     }
   }
 
   .contentContainer {
-    flex: 1 1 38%; // narrower text column
+    flex: 0 1 30%; // text column chhoto
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -57,6 +59,7 @@
 
     @include response(tab-port) {
       width: 100%;
+      flex: none;
     }
 
     .eyebrow {

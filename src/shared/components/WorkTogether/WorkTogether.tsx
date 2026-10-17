@@ -25,7 +25,6 @@ const fadeUp = (delay = 0) => ({
   viewport: { once: true, amount: 0.3 },
   transition: { duration: 0.6, delay, ease: 'easeOut' as const },
 });
-
 interface IMicroHealthSectionProps {
   image: string;
 }
@@ -41,6 +40,7 @@ const WorkTogether = ({ image }: IMicroHealthSectionProps) => (
     </motion.div>
 
     <div className={contentContainer}>
+
 
       <motion.h3 {...fadeUp(0.15)} className={heading}>
         Let&apos;s Work Together
