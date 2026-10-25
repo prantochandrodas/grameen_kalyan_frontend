@@ -1,121 +1,395 @@
 @import '../../../style/utils/base';
 
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+@keyframes photoIn {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+
 .careerForm {
   position: relative;
-  margin-top: 30rem;
-  background-color: #d0edd7;
+  margin-top: 8rem;
+  padding: 90px clamp(16px, 5vw, 64px);
+  background: linear-gradient(135deg, #f3f9f5 0%, #dcefe3 100%);
+  overflow: hidden;
 
-  @include response(tab-port) {
-    margin-top: 15rem;
+  // Photo on the right edge (image is passed from CareerForm.tsx as --join-bg)
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 22vw;
+    background:
+      var(--join-bg, none) center / cover no-repeat,
+      $color-primary-gradient;
+    border-top-left-radius: 200px;
+    opacity: 0;
+    pointer-events: none;
+
+    @media (max-width: 1100px) {
+      display: none;
+    }
+  }
+
+  // Soft glow, bottom-left
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -140px;
+    left: -140px;
+    width: 360px;
+    height: 360px;
+    background: rgba($color-primary, 0.06);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  @media (min-width: 1101px) {
+    padding-left: 6vw;
+    padding-right: 18vw;
+  }
+
+  @include response(phone) {
+    margin-top: 5rem;
+    padding: 56px 16px 64px;
+  }
+
+  // Light entrance animation (starts when the section scrolls into view)
+  .eyebrow,
+  .heading,
+  .subHeading,
+  .formCard,
+  .form>* {
+    opacity: 0;
+  }
+
+  &.show {
+    &::before {
+      opacity: 1;
+      animation: photoIn 0.9s ease 0.1s backwards;
+    }
+
+    .eyebrow,
+    .heading,
+    .subHeading,
+    .formCard,
+    .form>* {
+      opacity: 1;
+      animation: fadeUp 0.6s ease backwards;
+    }
+
+    .eyebrow {
+      animation-delay: 0.05s;
+    }
+
+    .heading {
+      animation-delay: 0.15s;
+    }
+
+    .subHeading {
+      animation-delay: 0.25s;
+    }
+
+    .formCard {
+      animation-delay: 0.2s;
+    }
+
+    .form> :nth-child(1) {
+      animation-delay: 0.35s;
+    }
+
+    .form> :nth-child(2) {
+      animation-delay: 0.42s;
+    }
+
+    .form> :nth-child(3) {
+      animation-delay: 0.49s;
+    }
+
+    .form> :nth-child(4) {
+      animation-delay: 0.56s;
+    }
+
+    .form> :nth-child(5) {
+      animation-delay: 0.63s;
+    }
+
+    .form> :nth-child(6) {
+      animation-delay: 0.7s;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+
+    &.show *,
+    &.show::before {
+      animation: none !important;
+    }
+  }
+
+  .formContainer {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+    gap: 48px;
+    align-items: center;
+
+    @include response(tab-port) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 32px;
+    }
+  }
+
+  .intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    @include response(tab-port) {
+      align-items: center;
+      text-align: center;
+    }
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $color-primary;
+
+    &::before {
+      content: '';
+      width: 36px;
+      height: 2px;
+      background: $color-secondary-goldenrod;
+    }
   }
 
   .heading {
-    // font-size: 35rem;
-    font-size: 25rem;
-    font-weight: 900;
-    white-space: nowrap;
-    line-height: 1;
-    // color: #d0edd7;
-        color: #0b612d;
-    opacity: 0.3;
+    margin-top: 14px;
+    font-size: clamp(36px, 4.4vw, 60px);
+    font-weight: 800;
+    line-height: 1.1;
+    color: $color-primary;
+  }
 
-    position: absolute;
-    top: -15rem;
-    // top: -32rem;
-    left: 50%;
-    transform: translateX(-50%);
+  .subHeading {
+    max-width: 380px;
+    margin-top: 16px;
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #666;
+  }
 
-    @include response(tab-port) {
-      font-size: 25rem;
-      top: -22rem;
-    }
+  .formCard {
+    padding: 36px 40px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba($color-primary, 0.15);
+
     @include response(phone) {
-      font-size: 20rem;
-      top: -18rem;
-    }
-    @include response(M-phone) {
-      font-size: 12rem;
-      top: -10.5rem;
+      padding: 24px 18px;
+      border-radius: 20px;
     }
   }
-  .formContainer {
-    padding: 25rem 10rem;
 
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  // One row = label on the left, field on the right
+  .box {
+    display: grid;
+    grid-template-columns: 140px minmax(0, 1fr);
+    align-items: center;
+    gap: 8px 16px;
+    min-width: 0;
+
+    @include response(phone) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      color: $color-text-darkGrey;
+
+      &::after {
+        content: ' *';
+        color: $color-error;
+      }
+    }
+
+    input:not([type='file']),
+    select {
+      width: 100%;
+      height: 50px;
+      padding: 0 16px;
+      font-family: inherit;
+      font-size: 16px; // 16px stops iOS zoom on focus
+      color: #222;
+      background: #f6faf7;
+      border: 1.5px solid #dbe7de;
+      border-radius: 14px;
+      outline: none;
+      transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        background 0.2s;
+
+      &::placeholder {
+        color: #9aa7a0;
+      }
+
+      &:focus {
+        background: #fff;
+        border-color: $color-primary;
+        box-shadow: 0 0 0 4px rgba($color-primary, 0.12);
+      }
+
+      &[aria-invalid='true'] {
+        border-color: $color-error;
+      }
+    }
+
+    select {
+      padding-right: 44px;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%230b612d' stroke-width='2'%3E%3Cpath d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+    }
+  }
+
+  .errorContainer {
+    grid-column: 2;
+    font-size: 13px;
+
+    @include response(phone) {
+      grid-column: 1;
+    }
+  }
+
+  .fileField {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    padding: 14px 16px;
+    background: #f6faf7;
+    border: 2px dashed #b9d8c2;
+    border-radius: 14px;
+    cursor: pointer;
+    transition:
+      border-color 0.2s,
+      background 0.2s;
+
+    &:hover,
+    &:focus-within {
+      background: #eef7f1;
+      border-color: $color-primary;
+    }
+
+    svg {
+      flex-shrink: 0;
+      width: 30px;
+      height: 30px;
+      color: $color-primary;
+    }
+
+    input {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+  }
+
+  .fileText {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+
+    strong {
+      overflow: hidden;
+      font-size: 15px;
+      font-weight: 600;
+      color: #222;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .fileHint {
+    font-size: 13px;
+    color: $color-text-grey;
+  }
+
+  .submitBtn {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 54px;
+    margin-top: 6px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: $color-text-light;
+    background: linear-gradient(135deg, #0f7a39 0%, $color-primary 100%);
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba($color-primary, 0.3);
+    transition:
+      transform 0.2s,
+      box-shadow 0.2s,
+      opacity 0.2s;
 
-    @include response(phone) {
-      padding: 10rem 5rem;
+    svg {
+      width: 20px;
+      height: 20px;
     }
-    @include response(s-phone) {
-      padding: 10rem 3rem;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba($color-primary, 0.38);
     }
 
-    .form {
-      width: 50%;
-
-      @include response(tab-port) {
-        width: 80%;
-      }
-      @include response(phone) {
-        width: 100%;
-      }
-
-      .box {
-        display: grid;
-        grid-template-columns: [col-sm-start] 25% [col-sm-end col-lg-start] 75% [col-lg-end];
-        grid-template-rows: repeat(2, [row-start] max-content [row-end]);
-        align-items: center;
-        margin-bottom: 2rem;
-
-        label {
-          grid-column: col-sm-start / col-sm-end;
-          grid-row: row-start 1 / row-end 1;
-
-          margin-left: auto;
-          white-space: nowrap;
-          margin-right: 1rem;
-          font-size: 1.6rem;
-
-          @include response(phone) {
-            white-space: wrap;
-          }
-        }
-
-        select,
-        input {
-          grid-column: col-lg-start / col-lg-end;
-          grid-row: row-start 1 / row-end 1;
-
-          margin-left: auto;
-          padding: 1.5rem 3rem;
-          width: 100%;
-          font-size: 1.8rem;
-          border-radius: 2rem 0 2rem 0;
-          border: none;
-          background-color: white;
-          // width: 30rem;
-        }
-
-        .errorContainer {
-          grid-column: col-lg-start / col-lg-end;
-          grid-row: row-start 2 / row-end 2;
-        }
-      }
-
-      .submitBtn {
-        position: relative;
-        left: 65%;
-        transform: translateX(-65%);
-        margin-top: 3rem;
-        padding: 1rem 4rem;
-        font-size: 1.6rem;
-        border-radius: 0.5rem;
-        border: none;
-        color: $color-text-light;
-        background-color: $color-primary;
-      }
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
     }
+  }
+
+  .submitError {
+    font-size: 14px;
+    text-align: center;
+    color: $color-error;
   }
 }
