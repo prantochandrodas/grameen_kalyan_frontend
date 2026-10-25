@@ -1,103 +1,262 @@
+// ================= START: healthcareService.module.scss =================
 @import '../../../style/utils/base';
+
+$hs-green: #0f4a2c;
+$hs-title-green: #0b6b4f; // same green as "Making Millions"
+$hs-gold: #C3953D;
+$hs-bg: #f7f5f2;
+$hs-gap: 2.4rem;
 
 .healthcareService {
   position: relative;
-  background-color: #ffffff;
-  // background-color: $color-secondary;
+  overflow: hidden;
+  background: $hs-bg;
+  padding: 9rem 6rem 9rem;
 
-  .layoutTL {
-    height: 20rem;
+  @media (max-width: 1100px) {
+    padding: 6rem 1.6rem 6rem;
+  }
+}
 
-    position: absolute;
-    top: 0;
-    left: 0;
+/* ---------- Soft background decoration (same as Our Journey) ---------- */
+.decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
 
-    .img {
-      height: 100%;
-      width: 100%;
-      object-fit: contain;
+.glowLeft,
+.dotsRight {
+  position: absolute;
+  display: block;
+}
+
+.dotsRight {
+  right: 4rem;
+  top: 3rem;
+  width: 11rem;
+  height: 7rem;
+  background-image: radial-gradient(rgba($hs-gold, 0.65) 2px, transparent 2.5px);
+  background-size: 2.2rem 2.2rem;
+
+  @media (max-width: 1100px) {
+    display: none;
+  }
+}
+
+.glowLeft {
+  left: -18rem;
+  top: 50%;
+  width: 56rem;
+  height: 56rem;
+  transform: translateY(-50%);
+  background: radial-gradient(circle,
+      rgba($hs-green, 0.09) 0%,
+      rgba($hs-green, 0.04) 40%,
+      transparent 70%);
+
+  @media (max-width: 1100px) {
+    left: 50%;
+    top: 14rem;
+    width: 40rem;
+    height: 40rem;
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- Title ---------- */
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 140rem;
+  margin: 0 auto;
+}
+
+.titleWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 5rem;
+
+  @media (max-width: 560px) {
+    margin-bottom: 3.4rem;
+  }
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $hs-gold;
+  margin-bottom: 0.8rem;
+
+  &::before,
+  &::after {
+    content: '';
+    width: 1.6rem;
+    height: 0.2rem;
+    background: $hs-gold;
+  }
+}
+
+// ================= START: .title block =================
+.title {
+  font-size: 5.6rem; // same size as "Making Millions Smile"
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: $hs-title-green; // "Our" = green
+
+  span {
+    color: $hs-gold; // "Services" = gold
+  }
+
+  @media (max-width: 1100px) {
+    font-size: 4.8rem;
+  }
+
+  @media (max-width: 560px) {
+    font-size: 4rem;
+  }
+}
+
+// ================== END: .title block ==================
+
+.titleBar {
+  display: block;
+  width: 6rem;
+  height: 0.4rem;
+  margin-top: 1.4rem;
+  border-radius: 1rem;
+  background: $hs-gold;
+}
+
+/* ---------- Cards grid: 4 per row, last row auto-centered ---------- */
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; // incomplete last row starts from the center
+  gap: $hs-gap;
+}
+
+// ================= START: .card block =================
+.card {
+  display: block;
+  text-decoration: none;
+  flex: 0 0 calc((100% - #{3 * $hs-gap}) / 4); // 4 per row
+  max-width: calc((100% - #{3 * $hs-gap}) / 4);
+  border-radius: 1rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, #dff4e6 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1.4rem 3.4rem rgba(20, 60, 50, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+
+  &:hover {
+    transform: translateY(-0.8rem);
+    box-shadow: 0 2rem 4.5rem rgba(26, 154, 91, 0.28);
+
+    .photo img {
+      transform: scale(1.22); // stronger smooth zoom
     }
   }
-  .layoutBR {
-    height: 100rem;
 
-    position: absolute;
-    bottom: 0;
-    right: 0;
-
-    .img {
-      height: 100%;
-      width: 100%;
-      object-fit: contain;
-    }
+  @media (max-width: 1100px) {
+    flex: 0 0 calc((100% - #{$hs-gap}) / 2); // 2 per row
+    max-width: calc((100% - #{$hs-gap}) / 2);
   }
 
-  .gridContainer {
+  @media (max-width: 560px) {
+    flex: 0 0 100%; // 1 per row
+    max-width: 100%;
+  }
+}
+
+// ================== END: .card block ==================
+
+// ================= START: .cardInner block =================
+.cardInner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 1rem;
+
+  /* soft leaf decoration */
+  &::after {
+    content: '';
+    position: absolute;
+    left: -1.5rem;
+    bottom: -1.5rem;
+    width: 9rem;
+    height: 9rem;
+    background: #1a9a5b;
+    opacity: 0.12;
+    border-radius: 0 100% 0 100%;
+    transform: rotate(-10deg);
+    pointer-events: none;
+  }
+
+  h3 {
     position: relative;
     z-index: 1;
-    padding: 30rem 20rem 10rem 20rem;
+    flex: 1; // all titles take equal space, cards stay equal height
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 6.4rem;
+    margin: 0;
+    padding: 1.2rem 1.4rem;
+    font-size: 1.55rem;
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: center;
+    color: $hs-green;
+  }
 
-    display: grid;
-    grid-template-columns: 1fr min-content 1fr;
-    gap: 2rem;
-
-    @include response(M-desktop) {
-      padding: 20rem 15rem 10rem 15rem;
-    }
-    @include response(tab-port) {
-      padding: 20rem 10rem 10rem 10rem;
-    }
-    @include response(phone) {
-      padding: 10rem 5rem;
-    }
-    @include response(s-phone) {
-      padding: 10rem 3rem;
-    }
-
-    .healthcareServiceCard {
-      .imageContainer {
-        height: 45rem;
-        margin-bottom: 2rem;
-        border-radius: 1rem;
-        overflow: hidden;
-        cursor: pointer;
-
-        @include response(phone) {
-          height: 30rem;
-        }
-
-        &:hover > .img {
-          transform: scale(1.1);
-        }
-
-        .img {
-          height: 100%;
-          width: 100%;
-          object-fit: cover;
-          transition: all 500ms;
-        }
-      }
-      .heading {
-        font-size: 3rem;
-        // color: $color-text-light;
-        color: #0B612D;
-        text-align: center;
-      }
-    }
-    .verticalLine {
-      width: 1px;
-      background-color: $color-secondary;
-      justify-self: center;
-    }
-    .horizontalLine {
-      height: 1px;
-      background-color: $color-secondary;
-      align-self: center;
-    }
-    .box {
-      height: 1.5rem;
-      width: 1.5rem;
-      background-color: $color-secondary;
+  @media (max-width: 560px) {
+    h3 {
+      min-height: 7rem;
+      font-size: 1.9rem;
     }
   }
 }
+
+// ================== END: .cardInner block ==================
+
+// ================= START: .photo block =================
+.photo {
+  position: relative;
+  height: 20rem;
+  border-radius: 1rem 1rem 0 0;
+  overflow: hidden;
+  isolation: isolate; // keeps rounded corners clean while image zooms
+  background: rgba(0, 0, 0, 0.04);
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1);
+    transform-origin: center;
+    will-change: transform;
+    transition: transform 1.9s cubic-bezier(0.22, 1, 0.36, 1); // smooth zoom in/out
+  }
+
+  @media (max-width: 560px) {
+    height: 22rem;
+  }
+}
+
+// ================== END: .photo block ==================
+
+
+// ================== END: healthcareService.module.scss ==================
