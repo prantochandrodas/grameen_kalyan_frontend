@@ -1,6 +1,8 @@
+'use client';
+
 /* eslint-disable comma-dangle */
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -16,13 +18,46 @@ const {
   heading,
   layoutContainer,
   layoutImage,
-  contentContainer,
-  contentLeft,
-  contentRight,
+  hoursTabs,
+  hoursTab,
+  hoursTabActive,
+  hoursPanel,
+  hoursTitle,
+  hoursDays,
+  hoursTime,
+  hoursIcon,
+  hoursInfo,
   taglineFooter,
 } = style;
 
+const schedules = [
+  {
+    id: 'head',
+    tabLabel: 'Head Office',
+    title: 'Head Office',
+    days: 'Sunday - Thursday',
+    time: '10:00 AM - 5:00 PM',
+  },
+  {
+    id: 'regional',
+    tabLabel: 'Regional · Sat-Wed',
+    title: 'Regional Office And Health Centers',
+    days: 'Saturday - Wednesday',
+    time: '9:00 AM - 5:00 PM',
+  },
+  {
+    id: 'regionalThu',
+    tabLabel: 'Regional · Thu',
+    title: 'Regional Office And Health Centers',
+    days: 'Thursday',
+    time: '9:00 AM - 2:00 PM',
+  },
+];
+
 const Map = () => {
+  const [activeId, setActiveId] = useState(schedules[0].id);
+  const activeSchedule =
+    schedules.find((item) => item.id === activeId) ?? schedules[0];
   return (
     <div className={heroSection}>
       <div className={bgImageContainer}>
@@ -31,17 +66,51 @@ const Map = () => {
       </div>
       <div className={content}>
         <h2 className={heading}>Opening Hours</h2>
-        <div className={contentContainer}>
-          <div className={contentLeft}>
-            <h4>Head Office</h4> <h5>Sunday - Thursday</h5>
-            <span>10:00 AM - 5:00 PM</span>
-          </div>
-          <div className={contentRight}>
-            <h4>Regional Office And Health Centers</h4>
-            <h5>Saturday - Wednesday</h5> <span>9:00 AM - 5:00 PM</span>
-            <br />
-            <br />
-            <h5>Thursday</h5> <span>9:00 AM - 2:00 PM</span>
+        <div
+          className={hoursTabs}
+          role="tablist"
+          aria-label="Select office type"
+        >
+          {schedules.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              role="tab"
+              aria-selected={item.id === activeId}
+              className={
+                item.id === activeId
+                  ? `${hoursTab} ${hoursTabActive}`
+                  : hoursTab
+              }
+              onClick={() => setActiveId(item.id)}
+            >
+              {item.tabLabel}
+            </button>
+          ))}
+        </div>
+        <div
+          key={activeSchedule.id}
+          className={hoursPanel}
+          role="tabpanel"
+          aria-live="polite"
+        >
+          <span className={hoursIcon} aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <polyline points="12 7 12 12 15 14" />
+            </svg>
+          </span>
+          <div className={hoursInfo}>
+            <p className={hoursTitle}>{activeSchedule.title}</p>
+            <p className={hoursDays}>{activeSchedule.days}</p>
+            <p className={hoursTime}>{activeSchedule.time}</p>
           </div>
         </div>
         <div className={layoutContainer}>
