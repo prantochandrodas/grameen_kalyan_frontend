@@ -38,7 +38,7 @@ const OfficeLocations = ({ officeLocationsData }: IOfficeLocationsProps) => {
           transition={{ duration: 0.6 }}
         >
           <h2 className={style.heading}>
-            Regional Office <span>across Bangladesh</span>
+            Regional Office <span>Across Bangladesh</span>
           </h2>
           <motion.span
             className={style.titleBar}
