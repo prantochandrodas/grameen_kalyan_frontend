@@ -17,9 +17,11 @@ html {
   @include response(lg-desktop) {
     font-size: 55%;
   }
+
   @include response(M-desktop) {
     font-size: 50%;
   }
+
   @include response(desktop) {
     font-size: 47%;
   }

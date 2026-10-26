@@ -15,6 +15,7 @@ const {
   contentContainer,
   eyebrow,
   heading,
+  highlight,
   parag,
   actions,
 } = style;
@@ -43,7 +44,7 @@ const WorkTogether = ({ image }: IMicroHealthSectionProps) => (
 
 
       <motion.h3 {...fadeUp(0.15)} className={heading}>
-        Let&apos;s Work Together
+        Let&apos;s Work <span className={highlight}>Together</span>
       </motion.h3>
 
       <motion.p {...fadeUp(0.2)} className={parag}>
