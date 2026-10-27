@@ -19,38 +19,28 @@ interface IJourneySectionProps {
 
 type Theme = {
     cls: string;
-    href: string;
     Icon: React.ElementType;
-    desc: string;
 };
 
-// Only 2 colors repeat: 1st & 3rd card -> green, 2nd & 4th card -> orange (golden)
+// 1st & 3rd card -> green, 2nd & 4th card -> orange
 const DEFAULT_THEME: Theme = {
     cls: 'green',
-    href: '/services#healthcare',
     Icon: FaStethoscope,
-    desc: 'Quality and affordable healthcare for every community.',
 };
 
 const THEMES: Record<string, Theme> = {
-    Healthcare: DEFAULT_THEME, // green
+    Healthcare: DEFAULT_THEME,
     'Well-Being': {
         cls: 'orange',
-        href: '/services#well-being',
         Icon: FaUsers,
-        desc: 'Improving lives through prevention, education and support.',
     },
     'Emergency Response': {
         cls: 'green',
-        href: '/services#emergency-response',
         Icon: FaShieldAlt,
-        desc: 'Quick action when it matters most.',
     },
     'Social Business': {
         cls: 'orange',
-        href: '/services#social-business',
         Icon: FaUsers,
-        desc: 'Creating opportunities for sustainable livelihoods.',
     },
 };
 
@@ -140,11 +130,20 @@ const JourneySection = ({ about, serviceData }: IJourneySectionProps) => {
                     const Icon = theme.Icon;
                     const imgSrc = getImageSrc(data.homepage_thumb_image);
 
+                    // 1st & 3rd -> green, 2nd & 4th -> orange (by position)
+                    const tone = i % 2 === 0 ? 'green' : 'orange';
+
+                    // same links as navbar: healthcare has its own page, others open by id
+                    const href =
+                        data.title === 'Healthcare' ? '/healthcare' : `/services/${data.id}`;
+
                     return (
                         <Link
                             key={data.id ?? i}
-                            href={theme.href}
-                            className={`${style.card} ${style[theme.cls]}`}
+                            href={href}
+                            data-tone={tone}
+                            aria-label={`Open ${data.title}`}
+                            className={`${style.card} ${style[tone] ?? ''}`}
                         >
                             <motion.div
                                 initial={{ opacity: 0, y: 50 }}
