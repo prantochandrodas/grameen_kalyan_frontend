@@ -33,6 +33,16 @@ export default async function RootLayout({
   //   revalidateIn: 86400,
   // });
 
+  // services list for navbar dropdown (same API as services page)
+  const servicesRes = await useFetch({
+    url: '/service-contents/services',
+    revalidateIn: 86400,
+  });
+
+  const services = Array.isArray(servicesRes)
+    ? servicesRes
+    : (servicesRes?.data ?? []);
+
   const donatesRes = await useFetchLaravelData({
     url: '/donates',
     revalidateIn: 3600,
@@ -54,6 +64,7 @@ export default async function RootLayout({
           badgeImage={badgeImage}
           logoImage={logoImage}
           donates={donates}
+          services={services}
         />
         {children}
         <SidebarSticky />

@@ -38,3 +38,29 @@ body {
 .PhotoView-Portal {
   z-index: 99999999999 !important;
 }
+
+
+
+/* ---------- Google Translate: hide default UI ---------- */
+body {
+  top: 0 !important;
+}
+
+iframe.skiptranslate,
+.skiptranslate iframe,
+.goog-te-banner-frame {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+}
+
+#goog-gt-tt,
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+}
+
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}

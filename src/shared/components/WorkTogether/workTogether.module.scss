@@ -7,6 +7,8 @@
   flex-direction: row-reverse; // image on the right
   align-items: center;
   gap: 6rem;
+  background: linear-gradient(180deg, #eef5ef, #f6faf7 55%, #fbfdfb);
+  ;
 
   @include response(s-desktop) {
     padding: 8rem 10rem;
