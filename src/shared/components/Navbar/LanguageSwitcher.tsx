@@ -82,11 +82,23 @@ const readCookieLang = (): string => {
 };
 
 const writeCookie = (value: string, expire = false) => {
-    const exp = expire ? '; expires=Thu, 01 Jan 1970 00:00:00 GMT' : '';
+    const exp = expire
+        ? '; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0'
+        : '';
     const host = window.location.hostname;
+
+    // every possible domain level: www.site.com -> .www.site.com, site.com, .site.com
+    const parts = host.split('.');
+    const domains: string[] = [];
+    for (let i = 0; i < parts.length - 1; i += 1) {
+        const d = parts.slice(i).join('.');
+        domains.push(d, `.${d}`);
+    }
+
     document.cookie = `googtrans=${value}; path=/${exp}`;
-    document.cookie = `googtrans=${value}; path=/; domain=${host}${exp}`;
-    document.cookie = `googtrans=${value}; path=/; domain=.${host}${exp}`;
+    domains.forEach((d) => {
+        document.cookie = `googtrans=${value}; path=/; domain=${d}${exp}`;
+    });
 };
 
 const LanguageSwitcher = () => {
