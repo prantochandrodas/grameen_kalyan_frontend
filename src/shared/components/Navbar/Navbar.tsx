@@ -208,7 +208,7 @@ const Navbar = ({
       </ul>
 
       <div className={style.navRight}>
-        <LanguageSwitcher />
+        {/* <LanguageSwitcher /> */}
 
         <div className={style.social}>
           {socials.map(({ icon: Icon, href }) => (
