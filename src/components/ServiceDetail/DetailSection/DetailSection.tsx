@@ -18,9 +18,6 @@ const DetailSection = ({ detail }: IDetailSectionProps) => {
         className={contentContainer}
         dangerouslySetInnerHTML={{ __html: detail }}
       ></div>
-      <div className={btnContainer}>
-        <Button text="Back" url="/services" btnSecondary />
-      </div>
     </div>
   );
 };

@@ -14,16 +14,24 @@ import {
 
 import { IMAGE_BASE_URL } from '@/config';
 import style from './mainNavbar.module.scss';
+import LanguageSwitcher from './LanguageSwitcher';
 
 interface IDonate {
   id: number;
   name: string;
 }
 
+
+interface IServiceItem {
+  id: number;
+  title: string;
+}
+
 interface INavbarProps {
   badgeImage: string;
   logoImage: string;
   donates?: IDonate[];
+  services?: IServiceItem[];
 }
 
 interface IMenuItem {
@@ -45,20 +53,35 @@ const socials = [
   },
 ];
 
-const Navbar = ({ badgeImage, logoImage, donates = [] }: INavbarProps) => {
+const Navbar = ({
+  badgeImage,
+  logoImage,
+  donates = [],
+  services = [],
+}: INavbarProps) => {
   const pathName = usePathname();
   const [toggle, setToggle] = useState(false);
   // which dropdown is open on mobile (tap to open/close)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   const safeDonates = Array.isArray(donates) ? donates : [];
+  const safeServices = Array.isArray(services) ? services : [];
   const logoSrc = IMAGE_BASE_URL + logoImage;
   const badgeSrc = IMAGE_BASE_URL + badgeImage;
 
   const menu: IMenuItem[] = [
     { label: 'home', href: '/' },
     { label: 'about us', href: '/about' },
-    { label: 'services', href: '/services' },
+    // { label: 'services', href: '/services' },
+    {
+      label: 'services',
+      children: safeServices
+        .filter((s) => s.title !== 'Healthcare') // healthcare has its own menu
+        .map((s) => ({
+          label: s.title,
+          href: `/services/${s.id}`,
+        })),
+    },
     { label: 'healthcare', href: '/healthcare' },
     {
       label: 'people',
@@ -184,18 +207,22 @@ const Navbar = ({ badgeImage, logoImage, donates = [] }: INavbarProps) => {
         </li>
       </ul>
 
-      <div className={style.social}>
-        {socials.map(({ icon: Icon, href }) => (
-          <Link
-            key={href}
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={style.socialIcon}
-          >
-            <Icon />
-          </Link>
-        ))}
+      <div className={style.navRight}>
+        <LanguageSwitcher />
+
+        <div className={style.social}>
+          {socials.map(({ icon: Icon, href }) => (
+            <Link
+              key={href}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={style.socialIcon}
+            >
+              <Icon />
+            </Link>
+          ))}
+        </div>
       </div>
 
       <button

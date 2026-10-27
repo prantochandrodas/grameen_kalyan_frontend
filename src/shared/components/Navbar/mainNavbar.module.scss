@@ -75,7 +75,8 @@ $nav-lime: #8db51f;
     right: 0;
     width: 100%;
     box-sizing: border-box;
-    justify-self: stretch; /* cancels the desktop justify-self: center */
+    justify-self: stretch;
+    /* cancels the desktop justify-self: center */
     margin: 0;
     /* closed: parked off-screen on the left, slides in to the right when opened */
     transform: translateX(-100%);
@@ -250,7 +251,8 @@ $nav-lime: #8db51f;
     top: 0;
     bottom: 0;
     right: 100%;
-    margin-right: -2.2rem; /* overlaps the body, so there is no seam */
+    margin-right: -2.2rem;
+    /* overlaps the body, so there is no seam */
     width: 8.5rem;
     background: $nav-gold;
     -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 40' preserveAspectRatio='none'><path d='M34 0C24 1 18 6 14 12L9 22C6 29 3 35 0 40H34Z'/></svg>") no-repeat 0 0 / 100% 100%;
@@ -268,7 +270,7 @@ $nav-lime: #8db51f;
     background: $nav-gold;
   }
 
-  > a {
+  >a {
     position: relative;
     z-index: 1;
   }
@@ -300,13 +302,30 @@ $nav-lime: #8db51f;
   }
 }
 
+/* ---------- Right side: language + social ---------- */
+.navRight {
+  justify-self: end;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 8rem;
+  /* keeps the pill clear of the green cap shape */
+
+  @include response(tab-port) {
+    align-self: center;
+    margin-left: auto;
+    margin-right: 0.5rem;
+    gap: 0;
+  }
+}
+
 /* ---------- Hamburger ---------- */
 .menuBtn {
   display: none;
   background: transparent;
   border: none;
   padding: 1rem 1.5rem;
-  margin-left: auto;
+  margin-left: 0;
   cursor: pointer;
 
   @include response(tab-port) {
@@ -399,7 +418,7 @@ $nav-lime: #8db51f;
     }
   }
 
-  .hasDropdown.dropdownOpen > .link {
+  .hasDropdown.dropdownOpen>.link {
     color: $nav-gold;
   }
 
