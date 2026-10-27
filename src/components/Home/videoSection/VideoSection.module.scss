@@ -9,6 +9,14 @@ $bg-light: #F7F5F2;
   padding: 130px 0 70px;
   background: $bg-light;
   overflow: hidden;
+
+  @media (max-width: 900px) {
+    padding: 80px 0 44px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 64px 0 36px;
+  }
 }
 
 // Upore shudhu curve-er border line (SVG-te stroke deya ache)
@@ -56,10 +64,12 @@ $bg-light: #F7F5F2;
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
+    gap: 14px;
     padding: 0 24px;
   }
 
   @media (max-width: 480px) {
+    gap: 10px;
     padding: 0 16px;
   }
 }
@@ -85,6 +95,10 @@ $bg-light: #F7F5F2;
   line-height: 1.2;
   margin-bottom: 14px;
 
+  @media (max-width: 900px) {
+    margin-bottom: 8px;
+  }
+
   @media (max-width: 640px) {
     font-size: 26px;
   }
@@ -95,6 +109,10 @@ $bg-light: #F7F5F2;
   font-size: 14px;
   line-height: 1.6;
   margin-bottom: 22px;
+
+  @media (max-width: 900px) {
+    margin-bottom: 14px;
+  }
 }
 
 .viewAllBtn {
@@ -134,7 +152,7 @@ $bg-light: #F7F5F2;
     height: auto;
   }
 
-  :global(.slick-slide) > div {
+  :global(.slick-slide)>div {
     padding: 0 15px;
     height: 100%;
   }
@@ -151,7 +169,12 @@ $bg-light: #F7F5F2;
   @media (max-width: 900px) {
     position: static;
     justify-content: flex-end;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 8px;
+    margin-bottom: 8px;
   }
 }
 
@@ -168,6 +191,11 @@ $bg-light: #F7F5F2;
   cursor: pointer;
   transition: all 0.2s ease;
   flex-shrink: 0;
+
+  @media (max-width: 480px) {
+    width: 34px;
+    height: 34px;
+  }
 
   &:hover {
     border-color: $brand-green;

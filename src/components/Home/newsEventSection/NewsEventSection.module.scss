@@ -3,6 +3,14 @@
 .section {
   padding: 60px 0;
   background: #f7f5f2;
+
+  @media (max-width: 900px) {
+    padding: 40px 0;
+  }
+
+  @media (max-width: 480px) {
+    padding: 32px 0;
+  }
 }
 
 .wrapper {
@@ -20,13 +28,16 @@
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
+    gap: 14px;
     padding: 0 24px;
   }
 
   @media (max-width: 480px) {
+    gap: 10px;
     padding: 0 16px;
   }
 }
+
 .leftCol {
   display: flex;
   flex-direction: column;
@@ -48,6 +59,10 @@
   line-height: 1.2;
   margin-bottom: 14px;
 
+  @media (max-width: 900px) {
+    margin-bottom: 8px;
+  }
+
   @media (max-width: 640px) {
     font-size: 26px;
   }
@@ -58,6 +73,10 @@
   font-size: 14px;
   line-height: 1.6;
   margin-bottom: 22px;
+
+  @media (max-width: 900px) {
+    margin-bottom: 14px;
+  }
 }
 
 .viewAllBtn {
@@ -96,20 +115,20 @@
     height: auto;
   }
 
-  :global(.slick-slide) > div {
+  :global(.slick-slide)>div {
     padding: 0 12px;
     height: 100%;
-    display: flex;          // <-- notun
+    display: flex; // <-- notun
   }
 }
 
 .card {
-  flex: 1;                  // <-- height: 100% er poriborte
+  flex: 1; // <-- height: 100% er poriborte
   display: flex;
 
   a {
     text-decoration: none;
-    display: flex;          // <-- block theke flex
+    display: flex; // <-- block theke flex
     flex-direction: column;
     width: 100%;
   }
@@ -121,16 +140,16 @@
   padding: 16px 16px 18px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
 
-  flex: 1;                  // <-- notun: image er niche baki jayga nibe
-  display: flex;            // <-- notun
-  flex-direction: column;   // <-- notun
+  flex: 1; // <-- notun: image er niche baki jayga nibe
+  display: flex; // <-- notun
+  flex-direction: column; // <-- notun
 }
 
 .bottomRow {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  margin-top: auto;         // <-- notun: arrow button shobsomoy niche thakbe
+  margin-top: auto; // <-- notun: arrow button shobsomoy niche thakbe
 }
 
 .navBtns {
@@ -144,7 +163,12 @@
   @media (max-width: 900px) {
     position: static;
     justify-content: flex-end;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 480px) {
+    gap: 8px;
+    margin-bottom: 8px;
   }
 }
 
@@ -161,6 +185,11 @@
   cursor: pointer;
   transition: all 0.2s ease;
   flex-shrink: 0;
+
+  @media (max-width: 480px) {
+    width: 34px;
+    height: 34px;
+  }
 
   &:hover {
     border-color: #0b612d;
@@ -258,6 +287,7 @@
   // 3 line er jayga sobsomoy rakhbe, tai title choto hole-o card soman thakbe
   min-height: calc(1.5em * 3);
 }
+
 .bottomRow {
   display: flex;
   align-items: center;
@@ -274,4 +304,36 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* ---------- Tablet & Mobile: compact card spacing ---------- */
+@media (max-width: 900px) {
+  .cardBody {
+    padding: 14px;
+  }
+
+  .title {
+    font-size: 15px;
+    line-height: 1.45;
+    margin-bottom: 8px;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    min-height: calc(1.45em * 2);
+  }
+}
+
+@media (max-width: 480px) {
+  .imageBox {
+    padding-top: 56%;
+  }
+
+  .cardBody {
+    padding: 12px;
+  }
+
+  .arrowBtn {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+  }
 }
