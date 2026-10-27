@@ -13,12 +13,13 @@ const {
   imgContainer,
   img,
   contentContainer,
-  eyebrow,
   heading,
   highlight,
   parag,
   actions,
 } = style;
+
+const BASE_URL = 'https://admin.grameenkalyan.com';
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 40 },
@@ -26,23 +27,31 @@ const fadeUp = (delay = 0) => ({
   viewport: { once: true, amount: 0.3 },
   transition: { duration: 0.6, delay, ease: 'easeOut' as const },
 });
-interface IMicroHealthSectionProps {
-  image: string;
+
+const getImageSrc = (image?: string | null) => {
+  if (!image) return testImage; // fallback to local image
+  if (image.startsWith('http')) return image; // already a full URL
+  return `${BASE_URL}${image.startsWith('/') ? '' : '/'}${image}`;
+};
+
+interface IWorkTogetherProps {
+  image?: string | null;
 }
-const WorkTogether = ({ image }: IMicroHealthSectionProps) => (
+
+const WorkTogether = ({ image }: IWorkTogetherProps) => (
   <section className={workTogether}>
     <motion.div {...fadeUp(0)} className={imgContainer}>
       <Image
         className={img}
-        src={testImage}
+        src={getImageSrc(image)}
         alt="Our team and partners working together"
+        width={1600}
+        height={1000}
         sizes="(max-width: 900px) 100vw, 62vw"
       />
     </motion.div>
 
     <div className={contentContainer}>
-
-
       <motion.h3 {...fadeUp(0.15)} className={heading}>
         Let&apos;s Work <span className={highlight}>Together</span>
       </motion.h3>
