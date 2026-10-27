@@ -12,8 +12,9 @@ import { filterDataByDepartment } from '@/shared/utils/pageHelpers/filterData.he
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const Corporate = async () => {
-  // const corporate = await useFetch({ url: '/peoples' });
+  const bannerData = await useFetchLaravelData({ url: '/banners/corporate' });
   const corporate = await useFetchLaravelData({ url: '/peoples' });
+  const homePageContentData = await useFetch({ url: '/home-contents' });
 
   const filterManagementData = filterDataByDepartment(
     corporate?.data,
@@ -27,8 +28,6 @@ const Corporate = async () => {
     corporate?.data,
     'Human Resources'
   );
-
-
   const filterAdministration = filterDataByDepartment(
     corporate?.data,
     'Administration'
@@ -41,15 +40,10 @@ const Corporate = async () => {
     corporate?.data,
     'Audit & Internal Compliance'
   );
-  // const filterBrandingAndSecretariatData = filterDataByDepartment(
-  //   corporate?.data,
-  //   'Branding & Secretariat'
-  // );
   const filterBrandingAndSecretariatData = filterDataByDepartment(
     corporate?.data,
     'Secretariat Research & Communications'
   );
-
   const filterMarketingOperationsAndMonitoringData = filterDataByDepartment(
     corporate?.data,
     'Marketing, Operations & Monitoring'
@@ -63,6 +57,7 @@ const Corporate = async () => {
     'Information Technology (IT)'
   );
 
+  // API te banner na thakle ei fallback image dekhabe
   const bgHero =
     'https://res.cloudinary.com/dboyf6lad/image/upload/v1693472682/MicrosoftTeams-image_80_wmqvsd.png';
   const managementImg =
@@ -81,15 +76,18 @@ const Corporate = async () => {
     'https://res.cloudinary.com/dboyf6lad/image/upload/v1692608043/training_section_banner_mukpax.jpg';
   const itImg =
     'https://res.cloudinary.com/dboyf6lad/image/upload/v1692608043/information_technology_section_banner_t3wy0u.jpg';
-  const homePageContentData = await useFetch({ url: '/home-contents' });
+
   const workTogetherImage = homePageContentData?.work_together_image;
+
   return (
     <>
       <HeroSection
         titleOne="Serving Bottom of the"
         titleTwo="Pyramid with Utmost"
         titleThree="Care and Sincerity"
-        backgroundImage={bgHero}
+        backgroundImage={bannerData?.data?.banner || bgHero}
+        title={bannerData?.data?.title}
+        subtitle={bannerData?.data?.subtitle}
       />
       <PeopleCulture />
       <TeamGroup
@@ -104,19 +102,9 @@ const Corporate = async () => {
         image={accountImg}
       />
       <TeamGrid datas={filterAccountAndFinanceData} />
-
-
-      <TeamGroup
-        headingTextOne="Human Resources"
-        marginTop
-        image={hrImg}
-      />
+      <TeamGroup headingTextOne="Human Resources" marginTop image={hrImg} />
       <TeamGrid datas={filterHumanResourceData} />
-      <TeamGroup
-        headingTextOne="Administration"
-        marginTop
-        image={hrImg}
-      />
+      <TeamGroup headingTextOne="Administration" marginTop image={hrImg} />
       <TeamGrid datas={filterAdministration} />
       <TeamGroup
         headingTextOne="Services & Procurement"
@@ -141,12 +129,6 @@ const Corporate = async () => {
         marginTop
         image={brandingImg}
       />
-      {/* <TeamGroup
-        headingTextOne="M&E, Branding & Communications"
-        headingTextTwo="and Secretariate"
-        marginTop
-        image={brandingImg}
-      /> */}
       <TeamGrid datas={filterBrandingAndSecretariatData} />
       <TeamGroup headingTextTwo="Training" marginTop image={trainingImg} />
       <TeamGrid datas={filterTrainingData} />

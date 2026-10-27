@@ -13,6 +13,7 @@ import {
 import { filterDataByDepartment } from '@/shared/utils/pageHelpers/filterData.helper';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
+// API te banner na thakle ei fallback image dekhabe
 const bgHero =
   'https://res.cloudinary.com/dboyf6lad/image/upload/v1692259177/IMG_1382_bhjrmk.jpg';
 const doctorsImg =
@@ -25,8 +26,9 @@ const regionalManagersImg =
   'https://res.cloudinary.com/dd1yxy9yy/image/upload/v1709014836/alternative_of_RM_group_photo_fnq48m.jpg';
 
 const HealthForce = async () => {
+  const bannerData = await useFetchLaravelData({ url: '/banners/health-force' });
   const corporate = await useFetchLaravelData({ url: '/peoples' });
-  // const corporate = await useFetch({ url: '/peoples' });;
+  const homePageContentData = await useFetch({ url: '/home-contents' });
 
   const filterRegionalManagersData = filterDataByDepartment(
     corporate?.data,
@@ -38,15 +40,18 @@ const HealthForce = async () => {
     corporate?.data,
     'Community Health Assistants'
   );
-  const homePageContentData = await useFetch({ url: '/home-contents' });
+
   const workTogetherImage = homePageContentData?.work_together_image;
+
   return (
     <>
       <HeroSection
         titleOne="Serving Bottom of the"
         titleTwo="Pyramid with Utmost"
         titleThree="Care and Sincerity"
-        backgroundImage={bgHero}
+        backgroundImage={bannerData?.data?.banner || bgHero}
+        title={bannerData?.data?.title}
+        subtitle={bannerData?.data?.subtitle}
       />
       <AboutSection />
       <TeamGroup

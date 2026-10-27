@@ -10,7 +10,6 @@ const ServiceDetails = async ({ params }: { params: { service: number } }) => {
   const service = await useFetch({
     url: `/service-contents/details?id=${decodeParams}`,
   });
-
   const heroSectionData = {
     heroTitle: service?.service_detail_slogan,
     heroImage: service?.service_detail_banner_image,

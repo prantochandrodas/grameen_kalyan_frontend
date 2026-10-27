@@ -16,11 +16,16 @@ import {
   WorkTogether,
 } from '@/shared/components';
 import { useFetch } from '@/shared/hook';
-import { reverseFilterDataByKey, filterDataByKey } from '@/shared/utils/pageHelpers/filterData.helper';
+import {
+  reverseFilterDataByKey,
+  filterDataByKey,
+} from '@/shared/utils/pageHelpers/filterData.helper';
 import AnnualImpactSection from '@/components/Home/AnnualImpactSection/AnnualImpactSection';
 import { StoryOfInceptionSection } from '@/components/About/StoryOfInceptionSection';
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const About = async () => {
+  const bannerData = await useFetchLaravelData({ url: '/banners/about' });
   const aboutUsData = await useFetch({ url: '/about-us-contents' });
   const summeryReportData = await useFetch({
     url: '/summary-report-settings/basic',
@@ -31,6 +36,7 @@ const About = async () => {
   const achievementData = await useFetch({ url: '/timeline' });
   const boardMemberData = await useFetch({ url: '/members' });
   const serviceContent = await useFetch({ url: '/service-contents/home' });
+  const homePageContentData = await useFetch({ url: '/home-contents' });
 
   const mission = aboutUsData?.mission;
   const vision = aboutUsData?.vision;
@@ -39,6 +45,7 @@ const About = async () => {
     heading: aboutUsData?.company_intro_title,
     description: aboutUsData?.company_intro_description,
   };
+
   const annuallyWeServeData = filterDataByKey(
     summeryReportData?.data,
     'annually_we_serve'
@@ -55,16 +62,21 @@ const About = async () => {
 
   const aboutGrameenKalyanSectionData = aboutUsData?.presence_details;
 
-
-  const homePageContentData = await useFetch({ url: '/home-contents' });
   const workTogetherImage = homePageContentData?.work_together_image;
   const annuallyServeImage = homePageContentData?.annually_serve;
+
+  // API theke asha banner image
+  const heroBackground = bannerData?.data?.banner;
+
   return (
     <>
       <HeroSection
         titleOne="With Joy"
         titleTwo="We Grow Together"
         titleThree="We Serve Together"
+        backgroundImage={bannerData?.data?.banner}
+        title={bannerData?.data?.title}
+        subtitle={bannerData?.data?.subtitle}
       />
       <MissionVision mission={mission} vision={vision} />
       <ServiceSection serviceData={serviceContent?.data} />

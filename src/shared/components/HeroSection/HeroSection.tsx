@@ -33,7 +33,37 @@ interface IHeroSectionProps {
   titleOne?: string;
   titleTwo?: string;
   titleThree?: string;
+  title?: string;
+  subtitle?: string;
 }
+
+const DEFAULT_TITLE_LINES = ['How People & Culture Thrive In', 'Grameen Kalyan'];
+const DEFAULT_SUBTITLE_LINES = [
+  'Be inspired to serve the people',
+  'across the nation',
+];
+
+// text ke word boundary te bhenge line baniye dey (max maxChars char per line)
+const splitIntoLines = (text: string, maxChars = 32): string[] => {
+  const lines: string[] = [];
+  let current = '';
+
+  text
+    .trim()
+    .split(/\s+/)
+    .forEach((word) => {
+      const next = current ? `${current} ${word}` : word;
+      if (current && next.length > maxChars) {
+        lines.push(current);
+        current = word;
+      } else {
+        current = next;
+      }
+    });
+
+  if (current) lines.push(current);
+  return lines;
+};
 
 const HeroSection = ({
   heroFor,
@@ -41,11 +71,13 @@ const HeroSection = ({
   titleOne,
   titleTwo,
   titleThree,
+  title,
+  subtitle,
 }: IHeroSectionProps) => {
   const isJoinUs = heroFor === 'join-us' || 'search';
   const isHealthcare = heroFor === 'healthcare';
   const isStory = heroFor === 'story';
-
+  console.log(backgroundImage);
   if (isJoinUs) {
     return (
       <div className={heroSection}>
@@ -69,8 +101,11 @@ const HeroSection = ({
             transition={{ duration: 0.5 }}
             className={juSubHeading}
           >
-            <span>How People & Culture Thrive In</span>
-            <span>Grameen Kalyan</span>
+            {(title ? splitIntoLines(title) : DEFAULT_TITLE_LINES).map(
+              (line) => (
+                <span key={line}>{line}</span>
+              )
+            )}
           </motion.h1>
           <motion.h1
             style={{ position: 'relative' }}
@@ -80,8 +115,11 @@ const HeroSection = ({
             transition={{ duration: 0.5 }}
             className={juHeading}
           >
-            <span>Be inspired to serve the people</span>
-            <span>across the nation</span>
+            {(subtitle ? splitIntoLines(subtitle) : DEFAULT_SUBTITLE_LINES).map(
+              (line) => (
+                <span key={line}>{line}</span>
+              )
+            )}
           </motion.h1>
           <div className={layoutContainer}>
             <Image className={layoutImage} src={layoutImg} alt="layout" />
