@@ -114,13 +114,13 @@
     width: clamp(36px, 3.4vw, 54px);
     height: clamp(36px, 3.4vw, 54px);
     padding: 0;
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.72);
-    -webkit-backdrop-filter: blur(10px) saturate(1.2);
-    backdrop-filter: blur(10px) saturate(1.2);
+    background: rgba(0, 0, 0, 0.22);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
-    color: $color-primary;
+    color: $color-text-light;
     cursor: pointer;
     opacity: 0.92;
     transform: translateY(-50%);
@@ -133,7 +133,7 @@
       transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 
     &::before {
-      color: $color-primary;
+      color: $color-text-light;
       opacity: 1;
       font-size: clamp(18px, 1.8vw, 26px);
       transition: color 0.3s ease;
@@ -143,8 +143,8 @@
     i {
       width: 52%;
       height: 52%;
-      color: $color-primary;
-      filter: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.55));
+      color: $color-text-light;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
       transition: color 0.3s ease;
     }
 
@@ -157,9 +157,9 @@
       &:hover {
         opacity: 1;
         color: #fff;
-        border-color: $color-secondary-goldenrod;
-        background: $color-secondary-goldenrod;
-        box-shadow: 0 10px 26px rgba(204, 155, 43, 0.45);
+        border-color: $color-text-light;
+        background: $color-primary;
+        box-shadow: 0 10px 26px rgba(30, 126, 1, 0.45);
         transform: translateY(-50%) scale(1.08);
 
         &::before,
