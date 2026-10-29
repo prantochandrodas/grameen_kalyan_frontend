@@ -323,32 +323,38 @@
     }
   }
 
-  // ---------- Desktop hover: image-er upor mouse gele green card smoothly hide ----------
+  // ---------- Desktop hover: mouse gele green card slowly fade + blur hoye hide hobe ----------
   @media (min-width: 1025px) and (hover: hover) and (pointer: fine) {
     .content {
       transform-origin: bottom right;
-      will-change: opacity, transform;
+      will-change: opacity, transform, filter;
+      // mouse bahire gele: card soft vabe fire ashbe
       transition:
-        opacity 0.5s ease,
-        transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 1s cubic-bezier(0.22, 1, 0.36, 1) 0.1s,
+        transform 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.1s,
+        filter 1s ease 0.1s,
         visibility 0s linear 0s;
     }
 
     &:hover .content {
       opacity: 0;
-      transform: translate(2.4rem, 2.4rem) scale(0.94);
+      transform: translate(3rem, 3rem) scale(0.96);
+      filter: blur(6px);
       visibility: hidden;
       pointer-events: none;
+      // 0.2s delay = hover-intent (mouse jhapt kore gele flicker hobe na)
       transition:
-        opacity 0.45s ease,
-        transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-        visibility 0s linear 0.45s;
+        opacity 1.4s cubic-bezier(0.4, 0, 0.2, 1) 0.2s,
+        transform 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s,
+        filter 1.4s ease 0.2s,
+        visibility 0s linear 1.6s;
     }
 
     @media (prefers-reduced-motion: reduce) {
       .content,
       &:hover .content {
         transform: none;
+        filter: none;
         transition: opacity 0.2s ease, visibility 0s linear 0.2s;
       }
     }

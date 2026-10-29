@@ -52,15 +52,34 @@ const NewsEventSection = () => {
     const sliderRef = useRef<Slider>(null);
 
     useEffect(() => {
+        let ignore = false;
+
         const fetchNewsEvents = async () => {
-            const res = await useFetchLaravelData({ url: '/news-events/slider?limit=10' });
-            if (res?.data) setItems(res.data);
+            try {
+                const res = await useFetchLaravelData({ url: '/news-events/slider?limit=10' });
+                if (!ignore && res?.data) setItems(res.data);
+            } catch (error) {
+                console.error('News & Events fetch failed:', error);
+            }
         };
         fetchNewsEvents();
+
+        return () => {
+            ignore = true;
+        };
     }, []);
 
     useEffect(() => {
-        const update = () => setWantedSlides(getWantedSlides());
+        const update = () => {
+            setWantedSlides((prev) => {
+                const next = getWantedSlides();
+                if (prev !== next) {
+                    setCurrentSlide(0);
+                    sliderRef.current?.slickGoTo(0, true);
+                }
+                return next;
+            });
+        };
         update();
         window.addEventListener('resize', update);
         return () => window.removeEventListener('resize', update);
@@ -77,6 +96,8 @@ const NewsEventSection = () => {
         slidesToShow: desktopSlides,
         slidesToScroll: 1,
         arrows: false,
+        swipeToSlide: true,
+        touchThreshold: 8,
         afterChange: (index: number) => setCurrentSlide(index),
         responsive: [
             { breakpoint: 1024, settings: { slidesToShow: tabletSlides, infinite: false } },
@@ -133,7 +154,9 @@ const NewsEventSection = () => {
                             <div key={item.id} className={card}>
                                 <Link href={`/news-events/${item.id}`} prefetch={false}>
                                     <div className={imageBox}>
-                                        {item.image && <img src={item.image} alt={item.title} />}
+                                        {item.image && (
+                                            <img src={item.image} alt={item.title} loading="lazy" decoding="async" />
+                                        )}
                                         <div className={dateBadge}>
                                             <span className={day}>{item.date_day}</span>
                                             <span className={month}>{item.date_month}</span>

@@ -171,6 +171,7 @@ $text: #5b6660;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 2.4rem;
+  align-self: center; // keeps the cards at their natural height
 
   @media (max-width: 1100px) {
     grid-template-columns: repeat(2, 1fr);
@@ -242,7 +243,7 @@ $text: #5b6660;
 .cardInner {
   position: relative;
   height: 100%;
-  min-height: 40rem;
+  min-height: 24rem;
   padding: 0.9rem 0.9rem 2.2rem;
   overflow: hidden;
   border-radius: 2.8rem;
@@ -264,7 +265,7 @@ $text: #5b6660;
 
   h3 {
     margin: 1rem 1.4rem 0.6rem;
-    padding-right: 3rem; // arrow button er niche text jeno na jay
+    padding-right: 5.4rem; // keeps a 2-line title clear of the arrow button
     font-size: 2.4rem;
     font-weight: 800;
     line-height: 1.15;
@@ -283,13 +284,24 @@ $text: #5b6660;
   position: relative;
   width: 100%;
   height: auto;
-  aspect-ratio: 5 / 3; // same ratio on desktop, tablet and mobile
-  border-radius: 2.2rem 2.2rem 5rem 2.2rem;
+  aspect-ratio: 16 / 9;
+  flex-shrink: 0;
+  border-radius: 2.2rem 2.2rem 3.2rem 2.2rem;
   overflow: hidden;
-  box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.12);
+  background: linear-gradient(135deg, #cedfd5, #efe0bf);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(15, 74, 44, 0) 55%, rgba(15, 74, 44, 0.22) 100%);
+  }
 
   img {
     object-fit: cover;
+    object-position: center;
     transition: transform 0.6s ease;
   }
 }
@@ -325,6 +337,26 @@ $text: #5b6660;
   font-size: 1.6rem;
   box-shadow: 0 0.6rem 1.4rem var(--glow);
   transition: transform 0.3s ease;
+}
+
+/* =========================================================
+   DESKTOP / LAPTOP (>= 1101px): arrow sits just below the title
+   ========================================================= */
+@media (min-width: 1101px) {
+  .cardInner {
+    min-height: auto; // no more big empty space at the card bottom
+    padding: 0.9rem 0.9rem 2rem;
+
+    h3 {
+      padding-right: 1.4rem; // arrow is no longer on the right, so the padding is not needed
+      min-height: calc(1.15em * 2); // reserve 2 lines, so arrows stay aligned in every card
+    }
+
+    .arrow {
+      position: static; // was absolute, now it follows the title
+      margin: 1.2rem 0 0 1.4rem; // small gap under the title, aligned with the title's left edge
+    }
+  }
 }
 
 /* =========================================================

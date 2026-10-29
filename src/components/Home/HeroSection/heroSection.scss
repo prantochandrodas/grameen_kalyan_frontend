@@ -203,7 +203,7 @@
     }
 
     .img {
-      --hero-zoom-max: 1.12;
+      --hero-zoom-max: 1.14; // ektu beshi zoom, tai speed aro feel hobe
       display: block;
       height: 100%;
       width: 100%;
@@ -212,16 +212,16 @@
       transform-origin: center center;
       will-change: transform;
       backface-visibility: hidden;
-      animation: heroSliderZoom 12s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate both;
+      animation: heroSliderZoom 6s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate both;
 
       @include response(tab-port) {
-        --hero-zoom-max: 1.08;
-        animation-duration: 10s;
+        --hero-zoom-max: 1.1;
+        animation-duration: 5s;
       }
 
       @include response(phone) {
-        --hero-zoom-max: 1.05;
-        animation-duration: 9s;
+        --hero-zoom-max: 1.08;
+        animation-duration: 4.5s;
       }
 
       @media (prefers-reduced-motion: reduce) {

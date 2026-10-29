@@ -158,7 +158,7 @@ const JourneySection = ({ about, serviceData }: IJourneySectionProps) => {
                                             src={imgSrc}
                                             alt={data.title}
                                             fill
-                                            sizes="300px"
+                                            sizes="(max-width: 560px) 100vw, (max-width: 1100px) 50vw, 25vw"
                                             unoptimized
                                         />
                                     )}

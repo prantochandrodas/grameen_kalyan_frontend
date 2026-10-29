@@ -104,6 +104,7 @@
 
   :global(.slick-list) {
     margin: 0 -12px;
+    padding: 10px 0 18px;
     overflow: hidden;
   }
 
@@ -123,14 +124,30 @@
 }
 
 .card {
-  flex: 1; // <-- height: 100% er poriborte
+  flex: 1;
   display: flex;
 
   a {
     text-decoration: none;
-    display: flex; // <-- block theke flex
+    display: flex;
     flex-direction: column;
     width: 100%;
+    border-radius: 14px;
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.35s ease;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 30px rgba(11, 97, 45, 0.16);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid #0b612d;
+      outline-offset: 3px;
+    }
   }
 }
 
@@ -139,17 +156,16 @@
   border-radius: 0 0 14px 14px;
   padding: 16px 16px 18px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
-
-  flex: 1; // <-- notun: image er niche baki jayga nibe
-  display: flex; // <-- notun
-  flex-direction: column; // <-- notun
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .bottomRow {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  margin-top: auto; // <-- notun: arrow button shobsomoy niche thakbe
+  margin-top: auto;
 }
 
 .navBtns {
@@ -212,30 +228,39 @@
   pointer-events: none;
 }
 
-.card {
-  height: 100%;
-
-  a {
-    text-decoration: none;
-    display: block;
-    height: 100%;
-  }
-}
 
 .imageBox {
   position: relative;
   width: 100%;
-  padding-top: 62%;
+  aspect-ratio: 16 / 9;
+  flex-shrink: 0;
   border-radius: 14px 14px 0 0;
   overflow: hidden;
-  background: #ddd;
+  background: linear-gradient(135deg, #cedfd5, #efe0bf);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(11, 97, 45, 0) 60%, rgba(11, 97, 45, 0.18) 100%);
+  }
 
   img {
     position: absolute;
     inset: 0;
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card a:hover .imageBox img {
+    transform: scale(1.07);
   }
 }
 
@@ -264,12 +289,6 @@
   text-transform: uppercase;
 }
 
-.cardBody {
-  background: #fff;
-  border-radius: 0 0 14px 14px;
-  padding: 16px 16px 18px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
-}
 
 .title {
   color: #0b612d;
@@ -280,18 +299,12 @@
 
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
 
-  // 3 line er jayga sobsomoy rakhbe, tai title choto hole-o card soman thakbe
-  min-height: calc(1.5em * 3);
-}
-
-.bottomRow {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  // always reserve 2 lines, so all cards stay equal height
+  min-height: calc(1.5em * 2);
 }
 
 .arrowBtn {
@@ -323,10 +336,6 @@
 }
 
 @media (max-width: 480px) {
-  .imageBox {
-    padding-top: 56%;
-  }
-
   .cardBody {
     padding: 12px;
   }
