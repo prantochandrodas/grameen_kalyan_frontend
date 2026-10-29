@@ -353,8 +353,8 @@ $text: #5b6660;
     }
 
     .arrow {
-      position: static; // was absolute, now it follows the title
-      margin: 1.2rem 0 0 1.4rem; // small gap under the title, aligned with the title's left edge
+      position: static; // follows the title, so it stays right below it
+      margin: 1.2rem 1.4rem 0 auto; // auto left margin pushes the arrow to the right edge of the card
     }
   }
 }
