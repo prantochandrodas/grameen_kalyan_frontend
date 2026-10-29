@@ -3,27 +3,10 @@
 .heroSection {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
   width: 100%;
-  // 1920x840 ratio, but never too short or too tall
-  aspect-ratio: 1920 / 840;
-  min-height: 440px;
-  max-height: 700px;
-
-  @include response(tab-port) {
-    aspect-ratio: auto;
-    height: auto;
-    min-height: 420px;
-    height: 56svh;
-    max-height: 560px;
-  }
-
-  // Mobile: no fixed height, the section follows the image height
-  @include response(phone) {
-    aspect-ratio: auto;
-    height: auto;
-    min-height: 0;
-    max-height: none;
-  }
+  aspect-ratio: 16 / 5; // fixed on every screen
+  background: $color-primary; // brand colour shows while the image loads
 
   // ========== SLIDER: DOTS ==========
   .slick-dots {
@@ -205,37 +188,23 @@
     position: absolute;
     inset: 0;
 
-    // Mobile: normal flow, so the image defines the parent's height
-    @include response(phone) {
-      position: relative;
-      inset: auto;
-    }
-
     .slick-slider,
     .slick-list,
     .slick-track,
     .slick-slide,
     .slick-slide>div {
       height: 100%;
-
-      @include response(phone) {
-        height: auto;
-      }
     }
 
     .imgContainer {
       height: 100%;
       width: 100%;
       overflow: hidden;
-
-      @include response(phone) {
-        height: auto;
-      }
     }
 
     .img {
       --hero-zoom-max: 1.12;
-
+      display: block;
       height: 100%;
       width: 100%;
       object-fit: cover;
@@ -253,10 +222,6 @@
       @include response(phone) {
         --hero-zoom-max: 1.05;
         animation-duration: 9s;
-        height: auto; // natural image ratio
-        object-fit: contain; // no cropping
-        object-position: center;
-        display: block; // removes the small gap under the image
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -361,21 +326,20 @@
 
     .imgContainer {
       position: relative;
-      height: clamp(260px, 31vw, 672px);
-      width: clamp(260px, 31vw, 672px);
+      height: 78%; // follows the 16:5 hero height
+      width: clamp(220px, 31vw, 672px);
       margin-left: clamp(24px, 6vw, 144px);
 
       @include response(tab-port) {
-        height: clamp(220px, 40vw, 300px);
-        width: clamp(220px, 40vw, 300px);
-        margin-left: clamp(20px, 4vw, 48px);
+        height: 76%;
+        width: 46%;
+        margin-left: clamp(16px, 4vw, 48px);
       }
 
       @include response(phone) {
-        height: clamp(150px, 48vw, 220px);
-        width: clamp(150px, 48vw, 220px);
-        margin-left: 0;
-        margin-bottom: 36px; // stays above the dots
+        height: 60%;
+        width: 70%;
+        margin: 0 0 24px; // stays above the dots
       }
 
       .img {

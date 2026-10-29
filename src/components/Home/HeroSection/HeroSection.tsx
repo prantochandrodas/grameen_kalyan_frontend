@@ -28,7 +28,7 @@ const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
           dots={true}
           customDot="circle"
         >
-          {sliderImages?.map((data) => {
+          {sliderImages?.map((data, index) => {
             const imageSrc = 'https://admin.grameenkalyan.com' + data.banner_image;
 
 
@@ -37,10 +37,10 @@ const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
                 <Image
                   className="img"
                   src={imageSrc}
-                  alt="Background img"
-                  width={2000}
-                  height={2000}
-                  priority
+                  alt={`Grameen Kalyan banner ${index + 1}`}
+                  width={1920}
+                  height={600}
+                  priority={index === 0}
                   unoptimized
                 />
 
@@ -70,10 +70,10 @@ const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
       {/* ========== TITLE / CONTENT SECTION ========== */}
       <div className="contentContainer">
         <motion.div
-          initial={{ opacity: 0, left: '-20rem' }}
-          whileInView={{ opacity: 1, left: '0' }}
+          initial={{ opacity: 0, x: -60 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.5 }}
+          transition={{ duration: 0.65, delay: 0.4, ease: 'easeOut' }}
           className="imgContainer"
         >
           {/* <Image className="img" src={titleImage} alt="title" /> */}
