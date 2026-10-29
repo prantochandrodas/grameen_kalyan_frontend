@@ -1,7 +1,7 @@
 @import '../../../../style/utils/base';
 
 .horiLayout {
-  margin: 4rem 0;
+  margin: clamp(1.5rem, 3vw, 3rem) 0;
 
   display: grid;
   grid-template-columns: 70% max-content 25%;
@@ -10,13 +10,13 @@
   .horiLineLeft,
   .horiLineRight {
     height: 1px;
-    background-color: $color-secondary;
+    background-color: $color-secondary-goldenrod;
     align-self: center;
   }
   .box {
     height: 1.5rem;
     width: 1.5rem;
-    background-color: $color-secondary;
+    background-color: $color-secondary-goldenrod;
   }
 }
 

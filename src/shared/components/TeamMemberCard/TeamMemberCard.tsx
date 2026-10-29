@@ -48,7 +48,7 @@ const TeamMemberCard = ({
         <Image
           className={img}
           src={IMAGE_BASE_URL + data.profile_photo}
-          alt="member"
+          alt={data?.name || 'member'}
           width={500}
           height={500}
           unoptimized

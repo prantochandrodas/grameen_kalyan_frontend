@@ -28,35 +28,30 @@ const BoardMemberSection = ({ boardMembersData }: IBoardMemberSectionProps) => {
   const middleDataTwo = handleMiddleIndex(boardMembers, 2);
   const firstData = handleMiddleIndex(boardMembers, 0);
   const lastData = handleMiddleIndex(boardMembers, 3);
-  let counter = 0;
+  // let counter = 0;
 
   return (
     <div className={boardMemberSection}>
       <h2 className={heading}>Board Members</h2>
       {chairman.map((data) => {
         return (
-          <>
-            <div key={data.id} className={cardContainer}>
+          <React.Fragment key={data.id}>
+            <div className={cardContainer}>
               <Link className={link} href={`/board-member/${data.id}`}>
                 <BoardMemberCard data={data} />
               </Link>
             </div>
-            <HorizontalLayout key={data.id} />
-          </>
+            <HorizontalLayout />
+          </React.Fragment>
         );
       })}
       <div className={gridContainer}>
         {boardMembers.map((data, index) => {
-          const isAfterFourMember = (index + 1) % 4 === 0;
+          const rowNumber = Math.floor(index / 4) + 1;
+          const isRowEnd = (index + 1) % 4 === 0;
           const isDataEnd = index === boardMembers.length - 1;
-          const counterArray: number[] = [];
-          const oddNumber = counterArray.filter((count) => count % 2 !== 0);
-          const evenNumber = counterArray.filter((count) => count % 2 === 0);
-
-          if (isAfterFourMember === true) {
-            counter += 1;
-            counterArray.push(counter);
-          }
+          const showDivider = isRowEnd || isDataEnd;
+          const isReverseDivider = rowNumber % 2 !== 0;
 
           const isFirstData = firstData.some(
             (firstData) => firstData?.id === data.id
@@ -72,7 +67,7 @@ const BoardMemberSection = ({ boardMembersData }: IBoardMemberSectionProps) => {
           );
 
           return (
-            <>
+            <React.Fragment key={data.id}>
               <Link className={link} href={`/board-member/${data.id}`}>
                 <div className={cardContainer}>
                   {isMiddleDataOne ? (
@@ -88,30 +83,12 @@ const BoardMemberSection = ({ boardMembersData }: IBoardMemberSectionProps) => {
                   )}
                 </div>
               </Link>
-              {counterArray.map((counter) => {
-                const oddNumber = counter % 2 !== 0;
-                const evenNumber = counter % 2 === 0;
-
-                return evenNumber ? (
-                  <div className={layout}>
-                    <HorizontalLayout />
-                  </div>
-                ) : oddNumber ? (
-                  <div className={layout}>
-                    <HorizontalLayout reverse={true} />
-                  </div>
-                ) : null;
-              })}
-              {isDataEnd && evenNumber ? (
+              {showDivider && (
                 <div className={layout}>
-                  <HorizontalLayout />
+                  <HorizontalLayout reverse={isReverseDivider} />
                 </div>
-              ) : isDataEnd && oddNumber ? (
-                <div className={layout}>
-                  <HorizontalLayout reverse={true} />
-                </div>
-              ) : null}
-            </>
+              )}
+            </React.Fragment>
           );
         })}
       </div>

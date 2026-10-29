@@ -1,7 +1,7 @@
 @import '../../../style/utils/base';
 
 .boardMemberSection {
-  padding: 10rem 20rem;
+  padding: 10rem 14rem;
 
   @include response(lg-desktop) {
     padding: 10rem 15rem;
@@ -59,6 +59,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 2rem;
+    margin-top: 2rem;
 
     @include response(s-desktop) {
       grid-template-columns: repeat(2, 1fr);
@@ -69,14 +70,34 @@
 
     .cardContainer {
       justify-self: center;
+      margin-top: 0;
     }
 
     .layout {
       grid-column: 1 / -1;
+
+      @include response(phone) {
+        display: none;
+      }
     }
   }
   .link {
+    display: block;
     text-decoration: none;
     color: $color-text-darkGrey;
+    transition:
+      transform 0.3s ease,
+      filter 0.3s ease;
+
+    &:hover,
+    &:focus-visible {
+      transform: translateY(-0.6rem);
+      filter: drop-shadow(0 1rem 1.5rem rgba(0, 0, 0, 0.12));
+    }
+
+    &:focus-visible {
+      outline: 2px solid $color-secondary;
+      outline-offset: 4px;
+    }
   }
 }

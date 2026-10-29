@@ -2,12 +2,10 @@
 
 .heroSection {
   position: relative;
-  height: calc(100svh - 16rem);
-
-  @include response(phone) {
-    // height: calc(100svh - 12rem);
-     height: calc(60svh - 12rem);
-  }
+  width: 100%;
+  aspect-ratio: 16 / 5;
+  height: auto;
+  overflow: hidden;
 
   .bgImageContainer {
     position: absolute;
@@ -15,21 +13,62 @@
     right: 0;
     left: 0;
     bottom: 0;
+    overflow: hidden;
+
+    // soft brand-green vignette for depth
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg,
+          rgba(11, 97, 45, 0.18) 0%,
+          rgba(11, 97, 45, 0) 35%,
+          rgba(11, 97, 45, 0.28) 100%);
+    }
 
     .bgImage {
+      --hero-zoom-max: 1.12;
+
       height: 100%;
       width: 100%;
       object-fit: cover;
-      object-position: center;
+      object-position: center 30%;
+      transform-origin: center 40%;
+      will-change: transform;
+      backface-visibility: hidden;
+      animation: heroZoom 12s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate both;
+
+      @media (max-width: 1024px) {
+        --hero-zoom-max: 1.07;
+        animation-duration: 9s;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
     }
   }
+
   .content {
     position: absolute;
     bottom: 0;
     right: 0;
     z-index: 1;
 
-    background-color: $color-secondary;
+    background: linear-gradient(135deg,
+        rgba(11, 97, 45, 0.62) 0%,
+        rgba(11, 97, 45, 0.44) 100%);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
+    backdrop-filter: blur(12px) saturate(1.2);
+    border-top: 0.4rem solid $color-secondary-goldenrod;
+    box-shadow: -1rem -0.6rem 3rem rgba(0, 0, 0, 0.14);
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+
+    // old browser fallback (blur support না থাকলে solid-ish green)
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      background: rgba(11, 97, 45, 0.86);
+    }
     border-radius: 35rem 0 0 0;
     overflow: hidden;
     padding: 14rem 21rem;
@@ -37,6 +76,7 @@
     @include response(M-desktop) {
       padding: 12rem 19rem;
     }
+
     @include response(phone) {
       width: 100%;
       border-radius: 25rem 0 0 0;
@@ -47,8 +87,10 @@
       position: relative;
       z-index: 2;
       font-size: clamp(1.2rem, calc(0.35rem + 4.27vw), 5.47rem);
-      font-weight: 900;
-      line-height: 1.2;
+      font-weight: 700;
+      line-height: 1.18;
+      letter-spacing: -0.01em;
+      text-shadow: 0 0.2rem 1.4rem rgba(0, 0, 0, 0.18);
       color: white;
 
       @include response(phone) {
@@ -61,6 +103,17 @@
       }
     }
 
+    .heading::before,
+    .juSubHeading::before {
+      content: '';
+      display: block;
+      width: 5rem;
+      height: 0.4rem;
+      border-radius: 0.4rem;
+      background: $color-secondary-goldenrod;
+      margin-bottom: 1rem;
+    }
+
     .juSubHeading {
       position: relative;
       z-index: 2;
@@ -68,7 +121,7 @@
       font-weight: 400;
       line-height: 1.2;
       color: white;
-      margin-bottom: 2rem;
+      margin-bottom: 1.2rem;
 
       @include response(phone) {
         font-size: 1.5rem;
@@ -79,6 +132,7 @@
         white-space: nowrap;
       }
     }
+
     .juHeading {
       position: relative;
       z-index: 2;
@@ -106,15 +160,18 @@
       span {
         display: block;
       }
+
       span:nth-of-type(1),
       span:nth-of-type(2) {
         font-weight: 900;
         line-height: 1.2;
       }
+
       span:nth-of-type(1) {
         font-size: clamp(0.8rem, calc(0.3rem + 2.28vw), 3.27rem);
         font-weight: 900;
       }
+
       span:nth-of-type(2) {
         font-size: clamp(1.2rem, calc(0.35rem + 4.27vw), 5.47rem);
         font-weight: 900;
@@ -125,6 +182,7 @@
         }
       }
     }
+
     .healthcareHeading {
       position: relative;
       z-index: 1;
@@ -136,6 +194,7 @@
         font-weight: 900;
         line-height: 1.2;
       }
+
       span:nth-of-type(1) {
         width: 100%;
         margin-left: 8rem;
@@ -145,14 +204,17 @@
         }
       }
     }
+
     .storyHeading {
       color: $color-text-light;
+
       span {
         display: block;
         font-size: clamp(1.2rem, calc(0.35rem + 4.27vw), 5.47rem);
         font-weight: 900;
         line-height: 1.2;
       }
+
       span:nth-of-type(1) {
         margin-left: -12rem;
 
@@ -162,30 +224,8 @@
       }
     }
 
-    .layoutContainer {
-      height: 45rem;
-      width: 45rem;
-
-      position: absolute;
-      top: 0;
-      right: 0;
-
-      @include response(M-desktop) {
-        height: 40rem;
-        width: 40rem;
-      }
-      @include response(phone) {
-        height: 25rem;
-        width: 25rem;
-      }
-
-      .layoutImage {
-        height: 100%;
-        width: 100%;
-        object-fit: contain;
-      }
-    }
   }
+
   .juContent {
     padding: 4rem 18rem;
     border-radius: 30rem 0 0 0;
@@ -195,26 +235,202 @@
       padding: 2rem 10rem;
     }
   }
+
   .healthcareContent {
     padding: 14rem 25rem 14rem 32rem;
 
     @include response(M-desktop) {
       padding: 12rem 30rem 12rem 30rem;
     }
+
     @include response(phone) {
       border-radius: 25rem 0 0 0;
       padding: 10rem 15rem;
     }
   }
+
   .storyContent {
     padding: 18rem 25rem 18rem 32rem;
 
     @include response(M-desktop) {
       padding: 16rem 30rem 16rem 30rem;
     }
+
     @include response(phone) {
       border-radius: 25rem 0 0 0;
       padding: 10rem 15rem;
     }
+  }
+
+
+    // ---------- Desktop: compact card ----------
+  .content,
+  .juContent,
+  .healthcareContent,
+  .storyContent {
+    padding: clamp(1.2rem, 1.8vw, 2.4rem) clamp(2rem, 3.2vw, 4.5rem)
+      clamp(1.3rem, 2vw, 2.6rem) clamp(3.5rem, 5.8vw, 8.5rem);
+    border-radius: clamp(8rem, 11vw, 20rem) 0 0 0;
+    border-top-width: 0.3rem;
+  }
+
+  // staggered title offsets
+  .content {
+    .healthcareSubHeading span:nth-of-type(2) {
+      margin-left: -1vw;
+    }
+
+    .healthcareHeading span:nth-of-type(1) {
+      margin-left: 1.4vw;
+    }
+
+    .storyHeading span:nth-of-type(1) {
+      margin-left: -2vw;
+    }
+  }
+
+  // desktop type scale (smaller, tighter)
+  @media (min-width: 1025px) {
+    .content {
+      .heading::before,
+      .juSubHeading::before {
+        width: 3.6rem;
+        height: 0.3rem;
+        margin-bottom: 0.6rem;
+      }
+
+      .heading,
+      .healthcareSubHeading span:nth-of-type(2),
+      .healthcareHeading span,
+      .storyHeading span {
+        font-size: clamp(1.3rem, calc(0.2rem + 2.4vw), 3rem);
+        line-height: 1.18;
+      }
+
+      .healthcareSubHeading span:nth-of-type(1) {
+        font-size: clamp(0.85rem, calc(0.2rem + 1.2vw), 1.6rem);
+      }
+
+      .juSubHeading {
+        font-size: clamp(0.9rem, calc(0.2rem + 1.25vw), 1.6rem);
+        margin-bottom: 0.5rem;
+      }
+
+      .juHeading {
+        font-size: clamp(1.2rem, calc(0.2rem + 1.9vw), 2.4rem);
+        margin: 0;
+      }
+    }
+  }
+
+  // ---------- Desktop hover: image-er upor mouse gele green card smoothly hide ----------
+  @media (min-width: 1025px) and (hover: hover) and (pointer: fine) {
+    .content {
+      transform-origin: bottom right;
+      will-change: opacity, transform;
+      transition:
+        opacity 0.5s ease,
+        transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+        visibility 0s linear 0s;
+    }
+
+    &:hover .content {
+      opacity: 0;
+      transform: translate(2.4rem, 2.4rem) scale(0.94);
+      visibility: hidden;
+      pointer-events: none;
+      transition:
+        opacity 0.45s ease,
+        transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+        visibility 0s linear 0.45s;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .content,
+      &:hover .content {
+        transform: none;
+        transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+      }
+    }
+  }
+
+  // ---------- Tablet + Mobile: 16:5 image on top, primary card below it ----------
+  @media (max-width: 1024px) {
+    aspect-ratio: auto;
+    display: flex;
+    flex-direction: column;
+    background-color: $color-primary;
+
+    .bgImageContainer {
+      position: relative;
+      inset: auto;
+      width: 100%;
+      aspect-ratio: 16 / 5;
+    }
+
+    .content {
+      position: relative;
+      width: 100%;
+      margin-top: -28px;
+      border-top-width: 3px;
+      border-radius: 20px 20px 0 0;
+      padding: 16px 18px 20px;
+      box-shadow: 0 -10px 28px rgba(0, 0, 0, 0.18);
+
+      .heading::before,
+      .juSubHeading::before {
+        width: 36px;
+        height: 3px;
+        margin-bottom: 8px;
+      }
+
+      .heading,
+      .juSubHeading,
+      .juHeading {
+        span {
+          white-space: normal;
+          text-wrap: balance;
+        }
+      }
+
+      .juSubHeading {
+        font-size: clamp(14px, 3.6vw, 20px);
+        margin-bottom: 4px;
+      }
+
+      .juHeading {
+        font-size: clamp(18px, 5vw, 28px);
+        margin: 0;
+      }
+
+      .heading,
+      .healthcareSubHeading span:nth-of-type(2),
+      .healthcareHeading span,
+      .storyHeading span {
+        font-size: clamp(20px, 5.6vw, 34px);
+        line-height: 1.2;
+        text-wrap: balance;
+      }
+
+      .healthcareSubHeading span:nth-of-type(1) {
+        font-size: clamp(14px, 3.6vw, 20px);
+      }
+
+      .healthcareSubHeading span:nth-of-type(2),
+      .healthcareHeading span:nth-of-type(1),
+      .storyHeading span:nth-of-type(1) {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
+@keyframes heroZoom {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(var(--hero-zoom-max, 1.12));
   }
 }

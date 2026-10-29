@@ -66,7 +66,7 @@ const CareerForm = ({ departmentsData }: ICareerFormProps) => {
     setErrorMessage(null);
 
     try {
-      const response = await fetch(BASE_URL + '/save-career-form', {
+      const response = await fetch('https://admin.grameenkalyan.com/api/save-career-form', {
         method: 'POST',
         body: formdata,
       });

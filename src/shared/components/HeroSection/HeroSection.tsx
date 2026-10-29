@@ -2,10 +2,9 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, MotionConfig } from 'framer-motion';
 
 import bgImg from '@/assets/images/about/about-bg.webp';
-import layoutImg from '@/assets/layout/layout-tr-small.svg';
 
 import style from './heroSection.module.scss';
 
@@ -15,8 +14,6 @@ const {
   bgImage,
   content,
   heading,
-  layoutContainer,
-  layoutImage,
   juSubHeading,
   juHeading,
   juContent,
@@ -35,6 +32,7 @@ interface IHeroSectionProps {
   titleThree?: string;
   title?: string;
   subtitle?: string;
+  imagePosition?: string; // e.g. 'center 60%' to move the crop focus
 }
 
 const DEFAULT_TITLE_LINES = ['How People & Culture Thrive In', 'Grameen Kalyan'];
@@ -65,7 +63,28 @@ const splitIntoLines = (text: string, maxChars = 32): string[] => {
   return lines;
 };
 
-const HeroSection = ({
+// Shared background image: fills the 16:5 box, no blur-hack, loads first (LCP)
+const HeroBackground = ({
+  src,
+  position = 'center 30%',
+}: {
+  src?: string;
+  position?: string;
+}) => (
+  <div className={bgImageContainer}>
+    <Image
+      className={bgImage}
+      style={{ objectPosition: position }}
+      src={src || bgImg}
+      alt=""
+      fill
+      priority
+      sizes="100vw"
+    />
+  </div>
+);
+
+const HeroContent = ({
   heroFor,
   backgroundImage,
   titleOne,
@@ -73,57 +92,44 @@ const HeroSection = ({
   titleThree,
   title,
   subtitle,
+  imagePosition,
 }: IHeroSectionProps) => {
-  const isJoinUs = heroFor === 'join-us' || 'search';
+  const isJoinUs = heroFor === 'join-us' || heroFor === 'search';
   const isHealthcare = heroFor === 'healthcare';
   const isStory = heroFor === 'story';
-  console.log(backgroundImage);
   if (isJoinUs) {
     return (
       <div className={heroSection}>
-        <div className={bgImageContainer}>
-          <Image
-            className={bgImage}
-            src={backgroundImage || bgImg}
-            alt="bg img"
-            width={10000}
-            height={10000}
-            placeholder="blur"
-            blurDataURL={`${backgroundImage}` || `${bgImg}`}
-          />
-        </div>
+        <HeroBackground src={backgroundImage} position={imagePosition} />
         <div className={`${content} ${juContent}`}>
           <motion.h1
             style={{ position: 'relative' }}
-            initial={{ opacity: 0, bottom: '-5rem' }}
-            whileInView={{ opacity: 1, bottom: '0' }}
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.65, ease: 'easeOut' }}
             className={juSubHeading}
           >
             {(title ? splitIntoLines(title) : DEFAULT_TITLE_LINES).map(
-              (line) => (
-                <span key={line}>{line}</span>
+              (line, i) => (
+                <span key={`${i}-${line}`}>{line}</span>
               )
             )}
           </motion.h1>
-          <motion.h1
+          <motion.p
             style={{ position: 'relative' }}
-            initial={{ opacity: 0, bottom: '-5rem' }}
-            whileInView={{ opacity: 1, bottom: '0' }}
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.65, ease: 'easeOut' }}
             className={juHeading}
           >
             {(subtitle ? splitIntoLines(subtitle) : DEFAULT_SUBTITLE_LINES).map(
-              (line) => (
-                <span key={line}>{line}</span>
+              (line, i) => (
+                <span key={`${i}-${line}`}>{line}</span>
               )
             )}
-          </motion.h1>
-          <div className={layoutContainer}>
-            <Image className={layoutImage} src={layoutImg} alt="layout" />
-          </div>
+          </motion.p>
         </div>
       </div>
     );
@@ -131,43 +137,30 @@ const HeroSection = ({
   if (isHealthcare) {
     return (
       <div className={heroSection}>
-        <div className={bgImageContainer}>
-          <Image
-            className={bgImage}
-            src={backgroundImage || bgImg}
-            alt="bg img"
-            width={10000}
-            height={10000}
-            placeholder="blur"
-            blurDataURL={`${backgroundImage}` || `${bgImg}`}
-          />
-        </div>
+        <HeroBackground src={backgroundImage} position={imagePosition} />
         <div className={`${content} ${healthcareContent}`}>
           <motion.h1
             style={{ position: 'relative' }}
-            initial={{ opacity: 0, bottom: '-5rem' }}
-            whileInView={{ opacity: 1, bottom: '0' }}
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.65, ease: 'easeOut' }}
             className={healthcareSubHeading}
           >
             <span>Serving People with</span>
             <span>Empathy</span>
           </motion.h1>
-          <motion.h1
+          <motion.div
             style={{ position: 'relative' }}
-            initial={{ opacity: 0, bottom: '-5rem' }}
-            whileInView={{ opacity: 1, bottom: '0' }}
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.65, ease: 'easeOut' }}
             className={healthcareHeading}
           >
             <span>Quality &</span>
             <span>Trust</span>
-          </motion.h1>
-          <div className={layoutContainer}>
-            <Image className={layoutImage} src={layoutImg} alt="layout" />
-          </div>
+          </motion.div>
         </div>
       </div>
     );
@@ -175,32 +168,19 @@ const HeroSection = ({
   if (isStory) {
     return (
       <div className={heroSection}>
-        <div className={bgImageContainer}>
-          <Image
-            className={bgImage}
-            src={backgroundImage || bgImg}
-            alt="bg img"
-            width={10000}
-            height={10000}
-            placeholder="blur"
-            blurDataURL={`${backgroundImage}` || `${bgImg}`}
-          />
-        </div>
+        <HeroBackground src={backgroundImage} position={imagePosition} />
         <div className={`${content} ${storyContent}`}>
           <motion.h1
             style={{ position: 'relative' }}
-            initial={{ opacity: 0, bottom: '-5rem' }}
-            whileInView={{ opacity: 1, bottom: '0' }}
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.65, ease: 'easeOut' }}
             className={storyHeading}
           >
             <span>{titleOne}</span>
             <span>{titleTwo}</span>
           </motion.h1>
-          <div className={layoutContainer}>
-            <Image className={layoutImage} src={layoutImg} alt="layout" />
-          </div>
         </div>
       </div>
     );
@@ -208,36 +188,29 @@ const HeroSection = ({
 
   return (
     <div className={heroSection}>
-      <div className={bgImageContainer}>
-        <Image
-          className={bgImage}
-          src={backgroundImage || bgImg}
-          alt="bg img"
-          width={1000}
-          height={1000}
-          placeholder="blur"
-          blurDataURL={`${backgroundImage}` || `${bgImg}`}
-        />
-      </div>
+      <HeroBackground src={backgroundImage} position={imagePosition} />
       <div className={content}>
         <motion.h1
           style={{ position: 'relative' }}
-          initial={{ opacity: 0, bottom: '-5rem' }}
-          whileInView={{ opacity: 1, bottom: '0' }}
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.65, ease: 'easeOut' }}
           className={heading}
         >
           <span>{titleOne}</span>
           <span>{titleTwo}</span>
           <span>{titleThree}</span>
         </motion.h1>
-        <div className={layoutContainer}>
-          <Image className={layoutImage} src={layoutImg} alt="layout" />
-        </div>
       </div>
     </div>
   );
 };
+
+const HeroSection = (props: IHeroSectionProps) => (
+  <MotionConfig reducedMotion="user">
+    <HeroContent {...props} />
+  </MotionConfig>
+);
 
 export default HeroSection;

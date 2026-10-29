@@ -73,14 +73,28 @@ const Navbar = ({
     { label: 'home', href: '/' },
     { label: 'about us', href: '/about' },
     // { label: 'services', href: '/services' },
+    // {
+    //   label: 'services',
+    //   children: safeServices
+    //     .filter((s) => s.title !== 'Healthcare') // healthcare has its own menu
+    //     .map((s) => ({
+    //       label: s.title,
+    //       href: `/services/${s.id}`,
+    //     })),
+    // },
+    // { label: 'healthcare', href: '/healthcare' },
+
     {
       label: 'services',
-      children: safeServices
-        .filter((s) => s.title !== 'Healthcare') // healthcare has its own menu
-        .map((s) => ({
-          label: s.title,
-          href: `/services/${s.id}`,
-        })),
+      children: [
+        { label: 'healthcare', href: '/healthcare' },
+        ...safeServices
+          .filter((s) => s.title !== 'Healthcare') // avoid duplicate healthcare
+          .map((s) => ({
+            label: s.title,
+            href: `/services/${s.id}`,
+          })),
+      ],
     },
     { label: 'healthcare', href: '/healthcare' },
     {

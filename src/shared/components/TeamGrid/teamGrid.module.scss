@@ -1,30 +1,40 @@
 @import '../../../style/utils/base';
 
 .gridContainer {
-  // padding: 10rem 20rem;
-  padding: 0rem 20rem;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 128rem;
+  margin: 0 auto;
+  padding: 0 2rem;
 
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  justify-items: center;
   gap: 2rem;
 
-  @include response(desktop) {
-    padding: 0rem 10rem;
-  }
   @include response(s-desktop) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: 76rem;
   }
   @include response(phone) {
-    grid-template-columns: 1fr;
-
-    padding: 0rem 5rem;
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 36rem;
+    gap: 3rem;
+    padding-bottom: 4rem;
   }
 
   .cardContainer {
-    justify-self: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
   }
 
   .layout {
     grid-column: 1 / -1;
+    width: 100%;
+
+    @include response(phone) {
+      display: none;
+    }
   }
 }

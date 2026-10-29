@@ -1,4 +1,6 @@
 export interface IHeroSectionData {
   heroTitle: string;
-  heroImage: string;
+  heroSubTitle?: string;
+  heroImage?: string;
+  bannerImages?: string[] | string | null;
 }

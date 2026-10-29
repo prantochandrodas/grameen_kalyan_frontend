@@ -138,36 +138,17 @@ const TeamGrid = ({ datas }: ITeamGridProps) => {
   const firstData = handleMiddleIndex(sortedDatas, 0);
   const lastData = handleMiddleIndex(sortedDatas, 3);
 
-  let counter = 0;
-
   return (
     <div className={gridContainer}>
 
       {sortedDatas &&
         sortedDatas.map((data, index) => {
 
-          const isAfterFourMember = (index + 1) % 4 === 0;
+          const rowNumber = Math.floor(index / 4) + 1;
+          const isRowEnd = (index + 1) % 4 === 0;
           const isDataEnd = index === sortedDatas.length - 1;
-
-          const counterArray: number[] = [];
-          const detectLastLineArray: number[] = [];
-
-          detectLastLineArray.push(index);
-
-          const isNumberFour = sortedDatas.length === 4;
-
-          const oddNumber = detectLastLineArray.filter(
-            (count) => count % 2 !== 0
-          );
-
-          const evenNumber = detectLastLineArray.filter(
-            (count) => count % 2 === 0
-          );
-
-          if (isAfterFourMember === true) {
-            counter += 1;
-            counterArray.push(counter);
-          }
+          const showDivider = isRowEnd || isDataEnd;
+          const isReverseDivider = rowNumber % 2 !== 0;
 
           const isFirstData = firstData.some(
             (firstData) => firstData?.id === data.id
@@ -202,32 +183,11 @@ const TeamGrid = ({ datas }: ITeamGridProps) => {
                 )}
               </div>
 
-              {/* After every 4 items layout */}
-              {counterArray.map((counter) => {
-                const isOdd = counter % 2 !== 0;
-                const isEven = counter % 2 === 0;
-
-                return isEven ? (
-                  <div className={layout} key={`even-${counter}`}>
-                    <HorizontalLayout />
-                  </div>
-                ) : isOdd ? (
-                  <div className={layout} key={`odd-${counter}`}>
-                    <HorizontalLayout reverse={true} />
-                  </div>
-                ) : null;
-              })}
-
-              {/* Last line layout */}
-              {isDataEnd && evenNumber.length > 0 && isNumberFour === false ? (
+              {showDivider && (
                 <div className={layout}>
-                  <HorizontalLayout />
+                  <HorizontalLayout reverse={isReverseDivider} />
                 </div>
-              ) : isDataEnd && oddNumber.length > 0 && isNumberFour === false ? (
-                <div className={layout}>
-                  <HorizontalLayout reverse={true} />
-                </div>
-              ) : null}
+              )}
 
             </React.Fragment>
           );

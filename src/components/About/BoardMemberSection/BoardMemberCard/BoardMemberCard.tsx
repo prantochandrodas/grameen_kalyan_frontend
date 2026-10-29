@@ -53,6 +53,7 @@ const BoardMemberCard = ({
           alt="member"
           width={500}
           height={500}
+          sizes="(max-width: 600px) 100vw, 340px"
           priority
         />
       </div>

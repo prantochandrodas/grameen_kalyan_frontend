@@ -8,6 +8,8 @@ interface IformInputs {
   name: string;
   email: string;
   subject: string;
+  phone: string;
+  date: string;
   message: string;
 }
 interface ContactFormProps {
@@ -48,9 +50,10 @@ const ContactForm: React.FC<ContactFormProps> = ({ closeSidebar }) => {
     formdata.append('subject', data.subject);
     formdata.append('email', data.email);
     formdata.append('message', data.message);
-
+    formdata.append('phone', data.phone);
+    formdata.append('date', data.date);
     try {
-      const response = await fetch(BASE_URL + '/save-contact-form', {
+      const response = await fetch('https://admin.grameenkalyan.com/api/save-contact-form', {
         method: 'POST',
         body: formdata,
       });
@@ -132,6 +135,29 @@ const ContactForm: React.FC<ContactFormProps> = ({ closeSidebar }) => {
             </div>
           )}
         </div>
+        <div className={box}>
+          <label htmlFor="userPhone">Your Phone:</label>
+          <input
+            id="userPhone"
+            type="tel"
+            {...register('phone')}
+          />
+
+        </div>
+        <div className={box}>
+          <label htmlFor="userDate">Date:</label>
+          <input
+            id="userDate"
+            type="date"
+            {...register('date')}
+          />
+          {errors.date?.type === 'required' && (
+            <div className={errorContainer}>
+              <FormErrorMessage message="Date is Required" />
+            </div>
+          )}
+        </div>
+
         <div className={`${messageBox} ${box}`}>
           <label htmlFor="userMessage">Your Message:</label>
           <textarea
