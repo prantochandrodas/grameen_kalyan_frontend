@@ -102,6 +102,8 @@ const ServiceSection = ({ serviceData }: IServiceSectionProps) => {
             <Link
               key={data.id ?? i}
               href={theme.href}
+              data-tone={theme.cls}
+              aria-label={`Open ${data.title}`}
               className={`${style.card} ${style[theme.cls]}`}
             >
               <motion.div
@@ -117,7 +119,7 @@ const ServiceSection = ({ serviceData }: IServiceSectionProps) => {
                       src={imgSrc}
                       alt={data.title}
                       fill
-                      sizes="300px"
+                      sizes="(max-width: 560px) 100vw, (max-width: 1100px) 50vw, 25vw"
                       unoptimized
                     />
                   )}
