@@ -1,158 +1,160 @@
 @import '../../../style/utils/base';
 
 .annualSection {
-  height: 100svh;
   position: relative;
-  margin-top: 20rem;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  aspect-ratio: 16 / 5;
+  margin-top: 10rem;
 
-  @include response(vp-800) {
-    margin-top: 15rem;
-  }
   @include response(phone) {
-     height: 50svh;
-    margin-top: 15rem;
+    margin-top: 6rem;
   }
-  @include response(M-phone) {
-    margin-top: 10rem;
+
+  .bgContainer {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+
+    .img {
+      object-fit: cover;
+      object-position: center top;
+    }
   }
-  @include response(s-phone) {
-    margin-top: 8rem;
+
+  .overlay {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      180deg,
+      rgba($color-primary, 0.88) 0%,
+      rgba($color-primary, 0.6) 45%,
+      rgba(0, 0, 0, 0.72) 100%
+    );
+  }
+
+  .inner {
+    width: 100%;
+    max-width: 130rem;
+    margin: 0 auto;
+    padding: clamp(6rem, 9vw, 12rem) clamp(2rem, 5vw, 6rem)
+      clamp(4rem, 6vw, 8rem);
+    display: flex;
+    flex-direction: column;
   }
 
   .heading {
-    font-size: 10rem;
-    font-weight: 900;
-    line-height: 1.2;
     text-align: center;
-    color: $color-primary;
+    color: $color-text-light;
+    font-size: clamp(3.6rem, 5.5vw, 7rem);
+    font-weight: 800;
+    line-height: 1.15;
 
-    position: relative;
-    top: -20rem;
-    z-index: 1;
-
-    @include response(vp-800) {
-      font-size: 8rem;
-      top: -16rem;
-    }
-    @include response(phone) {
-      font-size: 5rem;
-      top: -10rem;
-    }
-    @include response(s-phone) {
-      font-size: 4rem;
-      top: -8rem;
-    }
-
-    .subHeading {
-      font-size: 5rem;
-      font-weight: 600;
-      color: $color-text-darkGrey;
-
-      @include response(vp-800) {
-        font-size: 4rem;
-      }
-      @include response(phone) {
-        font-size: 2.5rem;
-      }
-      @include response(s-phone) {
-        font-size: 2rem;
-      }
-    }
     span {
       display: block;
     }
+
+    &::after {
+      content: '';
+      display: block;
+      width: 8rem;
+      height: 0.4rem;
+      margin: 2.4rem auto 0;
+      border-radius: 1rem;
+      background: $color-secondary;
+    }
+
+    .subHeading {
+      max-width: 70rem;
+      margin: 1.6rem auto 0;
+      font-size: clamp(1.8rem, 2vw, 2.4rem);
+      font-weight: 400;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.85);
+    }
   }
 
-  .container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+  .gridContainer {
+    margin-top: auto;
+    padding-top: clamp(4rem, 6vw, 8rem);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+    gap: clamp(1.2rem, 2vw, 2.4rem);
 
-    .bgContainer {
-      height: 100%;
-      width: 100%;
-
-      .img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-        object-position: top;
-      }
+    @include response(phone) {
+      grid-template-columns: repeat(2, 1fr);
     }
-    .contentContainer {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
 
+    .card {
+      position: relative;
       display: flex;
-      align-items: flex-end;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: clamp(2.4rem, 3vw, 3.6rem) 1.4rem;
+      text-align: center;
+      color: $color-text-light;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 1.6rem;
+      background: rgba(255, 255, 255, 0.08);
+      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, background 0.3s ease,
+        border-color 0.3s ease;
 
-      background-image: linear-gradient(transparent 50%, rgb(black, 0.5));
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 20%;
+        right: 20%;
+        height: 0.3rem;
+        border-radius: 0 0 1rem 1rem;
+        background: $color-secondary;
+      }
 
-      .gridContainer {
-        width: 100%;
-        padding: 10rem 20rem;
+      &:hover {
+        transform: translateY(-0.6rem);
+        background: rgba(255, 255, 255, 0.14);
+        border-color: rgba(255, 255, 255, 0.6);
+      }
 
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        grid-template-rows: max-content;
-        row-gap: 3rem;
-
-        @include response(s-desktop) {
-          padding: 10rem;
-        }
-        @include response(phone) {
-          padding: 5rem;
-
-          grid-template-columns: repeat(2, 1fr);
-          grid-template-rows: repeat(2, max-content);
-        }
-
-        .content {
-          .text {
-            color: $color-text-light;
-
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-
-            @include response(phone) {
-              align-items: center;
-            }
-
-            .number {
-              font-size: 7rem;
-              line-height: 1.2;
-              font-weight: 600;
-
-              @include response(M-desktop) {
-                font-size: 5rem;
-              }
-              @media screen and (max-width: 810px) {
-                font-size: 4rem;
-              }
-            }
-            .title {
-              font-size: 2rem;
-              font-weight: 600;
-
-              @include response(M-desktop) {
-                font-size: 1.8rem;
-              }
-              @media screen and (max-width: 810px) {
-                font-size: 1.6rem;
-              }
-            }
-          }
+      @include response(phone) {
+        &:last-child:nth-child(odd) {
+          grid-column: 1 / -1;
         }
       }
-    }
-    .contentContainerT {
-      background-image: linear-gradient(transparent 50%, rgb(black, 0.5));
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+        &:hover {
+          transform: none;
+        }
+      }
+
+      .number {
+        font-size: clamp(4.2rem, 4vw, 6.4rem);
+        font-weight: 800;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+        color: $color-text-light;
+        background: linear-gradient(180deg, #fff 40%, $color-secondary 140%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .title {
+        font-size: clamp(1.8rem, 1.4vw, 2.1rem);
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        line-height: 1.35;
+        color: rgba(255, 255, 255, 0.9);
+      }
     }
   }
 }
