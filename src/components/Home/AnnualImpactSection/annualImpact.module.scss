@@ -2,6 +2,7 @@
 
 $green: #1f5c3a;
 $green-dark: #174a2e;
+$gold: #e8a523;
 
 .section {
   width: 100%;
@@ -11,118 +12,233 @@ $green-dark: #174a2e;
 
 .card {
   display: grid;
-  grid-template-columns: 1fr 1.1fr 1fr;
+  grid-template-columns: 1fr 1.5fr 1fr;
   align-items: center;
   overflow: hidden;
   width: 100%;
-  min-height: 60rem;
+  min-height: 44rem;
   background: linear-gradient(90deg, #f4f7f2 0%, #eef3ec 60%, #e7efe4 100%);
 
-  // Tablet: left + list upore, image niche full width
+  // Tablet + phone: image becomes the background, content sits on top
   @include response(tab-port) {
-    grid-template-columns: 1fr 1.2fr;
+    position: relative;
+    isolation: isolate;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      'left list'
-      'image image';
+      'left'
+      'list';
+    align-items: start;
     min-height: auto;
+    padding-bottom: 2.4rem;
+    background: $green-dark;
   }
 
   @include response(phone) {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       'left'
-      'list'
-      'image';
+      'list';
     min-height: auto;
+    padding-bottom: 1.6rem;
   }
 }
 
 .left {
-  padding: 6rem 3rem 6rem clamp(3rem, 8vw, 10rem);
+  padding: 4rem 3rem 4rem clamp(3rem, 8vw, 10rem);
 
   @include response(tab-port) {
     grid-area: left;
-    padding: 5rem 2rem 2rem 4rem;
+    position: relative;
+    z-index: 2;
+    padding: 3rem 2rem 0;
+    text-align: center;
   }
 
   @include response(phone) {
-    padding: 4rem 2rem 1rem;
+    padding: 1.8rem 1.6rem 0;
     text-align: center;
   }
 
   .totalTitle {
+    position: relative;
+    margin: 0 0 0.8rem;
+    padding-top: 2rem;
     font-size: clamp(2rem, 1.5rem + 1vw, 2.8rem);
     font-weight: 600;
     color: #3d4a41;
-    margin-bottom: 0.8rem;
+
+    // small gold bar above the title
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5rem;
+      height: 0.4rem;
+      border-radius: 1rem;
+      background: $gold;
+
+      @include response(tab-port) {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+
+    @include response(phone) {
+      padding-top: 1.4rem;
+    }
+
+    @include response(tab-port) {
+      color: rgba(255, 255, 255, 0.92);
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+    }
   }
 
   .totalNumber,
-.number {
-  font-variant-numeric: tabular-nums;
-}
-
- .totalNumber {
-  font-size: clamp(3.5rem, 2rem + 3vw, 6rem);
-  line-height: 1.05;
-  font-weight: 800;
-  color: $green-dark;
-  margin-bottom: 0.8rem;
-  white-space: nowrap;
-
-  @include response(phone) {
-    font-size: clamp(3.5rem, 12vw, 5rem);
+  .number {
+    font-variant-numeric: tabular-nums;
   }
-}
+
+  .totalNumber {
+    margin: 0 0 0.8rem;
+    font-size: clamp(3.5rem, 2rem + 3vw, 6rem);
+    line-height: 1.05;
+    font-weight: 800;
+    color: $green-dark;
+    white-space: nowrap;
+
+    @include response(tab-port) {
+      color: #fff;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+    }
+
+    @include response(phone) {
+      font-size: clamp(3.5rem, 12vw, 5rem);
+    }
+  }
 
   .totalSub {
+    margin: 0;
     font-size: clamp(2rem, 1.5rem + 1vw, 2.8rem);
     font-weight: 600;
     color: #3d4a41;
+
+    @include response(tab-port) {
+      color: rgba(255, 255, 255, 0.92);
+      text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45);
+    }
+
+    @include response(phone) {
+      font-size: clamp(1.6rem, 4.6vw, 2rem);
+    }
   }
 }
 
 .list {
   list-style: none;
   margin: 0;
-  padding: 6rem 2rem;
+  padding: 4rem 2rem;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 3.5rem 2.5rem;
+  // 2 columns when there is room, 1 column when it gets narrow
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
   position: relative;
   z-index: 2;
 
   @include response(tab-port) {
     grid-area: list;
-    padding: 5rem 4rem 2rem 2rem;
-    gap: 2.5rem 1.5rem;
+    padding: 2rem 3rem 2rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
   }
 
   @include response(phone) {
     grid-area: list;
-    padding: 2rem 2rem;
-    gap: 2rem 1rem;
+    padding: 1rem 1.6rem 1.4rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
   }
 
+  // card
   .item {
     display: flex;
     align-items: center;
-    gap: 1.4rem;
-    min-width: 0; // text overflow prevent korar jonno
+    gap: 14px;
+    min-width: 0;
+    padding: 18px 20px;
+    border: 1px solid rgba(11, 97, 45, 0.1);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 10px 30px rgba(6, 64, 29, 0.07);
+    transition:
+      transform 0.4s ease,
+      box-shadow 0.4s ease,
+      border-color 0.3s ease,
+      background-color 0.3s ease;
+
+    // a lone last card spans the full row
+    &:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        transform: translateY(-4px);
+        border-color: rgba(195, 149, 61, 0.6);
+        box-shadow: 0 18px 40px rgba(6, 64, 29, 0.12);
+      }
+    }
+
+    @include response(tab-port) {
+      padding: 14px 16px;
+      gap: 12px;
+      border-radius: 18px;
+      // transparent glass effect (image stays visible behind)
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+      -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(3px);
+
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          background: rgba(255, 255, 255, 0.16);
+          border-color: rgba(255, 255, 255, 0.55);
+        }
+      }
+    }
 
     @include response(phone) {
-      gap: 1rem;
+      padding: 10px 12px;
+      gap: 8px;
+      border-radius: 16px;
+    }
+
+    // small phones (under 380px): icon on top so the number never overflows
+    @media (max-width: 379px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
     }
   }
 
+  // green rounded icon box
   .icon {
     flex: 0 0 auto;
-    display: flex;
-    font-size: 2.6rem;
-    color: $green;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    font-size: 22px;
+    color: #fff;
+    background: linear-gradient(135deg, $green, $green-dark);
 
     @include response(phone) {
-      font-size: 2.2rem;
+      width: 36px;
+      height: 36px;
+      font-size: 16px;
+      border-radius: 11px;
     }
   }
 
@@ -134,31 +250,70 @@ $green-dark: #174a2e;
   }
 
   .number {
-    font-size: clamp(1.8rem, 1.5rem + 0.5vw, 2.2rem);
-    font-weight: 700;
+    font-size: clamp(17px, 1.35vw, 22px);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    white-space: nowrap;
     color: $green-dark;
+
+    @include response(tab-port) {
+      color: #fff;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+    }
+
+    @include response(phone) {
+      font-size: clamp(15px, 4.3vw, 18px);
+    }
   }
 
   .title {
-    font-size: clamp(1.2rem, 1.1rem + 0.2vw, 1.3rem);
+    font-size: clamp(13px, 1vw, 15px);
     color: #4a5a4f;
     overflow-wrap: anywhere;
+
+    @include response(tab-port) {
+      color: rgba(255, 255, 255, 0.92);
+      text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45);
+    }
+
+    @include response(phone) {
+      font-size: 12px;
+      line-height: 1.3;
+    }
   }
 }
 
 .imageWrap {
   position: relative;
   align-self: stretch;
-  min-height: 60rem;
+  min-height: 44rem;
 
+  // tablet + phone: fills the whole section behind the content
   @include response(tab-port) {
-    grid-area: image;
-    min-height: 40rem;
-  }
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    min-height: 0;
 
-  @include response(phone) {
-    grid-area: image;
-    min-height: 30rem;
+    // soft green tint so the glass cards + white text stay readable
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(
+          80% 60% at 50% 0%,
+          rgba($green, 0.3) 0%,
+          transparent 70%
+        ),
+        linear-gradient(
+          180deg,
+          rgba($green-dark, 0.5) 0%,
+          rgba($green-dark, 0.3) 45%,
+          rgba(2, 24, 12, 0.55) 100%
+        );
+      pointer-events: none;
+    }
   }
 
   .img {
@@ -169,14 +324,15 @@ $green-dark: #174a2e;
     object-fit: cover;
     object-position: center top;
 
-    // image left side theke background e fade hobe
+    // image fades into the background from the left side
     -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 40%);
     mask-image: linear-gradient(to right, transparent 0%, #000 40%);
 
-    // tablet + phone e image niche, tai upor theke fade
+    // tablet + phone: full background, no fade, keep the face visible
     @include response(tab-port) {
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 35%);
-      mask-image: linear-gradient(to bottom, transparent 0%, #000 35%);
+      -webkit-mask-image: none;
+      mask-image: none;
+      object-position: center 20%;
     }
   }
 }

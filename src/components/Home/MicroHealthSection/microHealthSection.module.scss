@@ -11,7 +11,7 @@
   position: relative;
   width: 100%;
   height: clamp(40rem, 36vw, 52rem);
-  margin-top: 6rem;
+  // margin-top: 6rem;
   overflow: hidden;
   border-radius: 0; // changed: radius removed
   background: #eaf3ee;
@@ -21,7 +21,7 @@
     flex-direction: column;
     height: auto;
     min-height: 42rem;
-    margin-top: 3rem;
+    // margin-top: 3rem;
   }
 
   .bgContainer {
