@@ -19,22 +19,27 @@ $gold: #e8a523;
   min-height: 44rem;
   background: linear-gradient(90deg, #f4f7f2 0%, #eef3ec 60%, #e7efe4 100%);
 
-  // Tablet: left + list on top, image below full width
+  // Tablet + phone: image becomes the background, content sits on top
   @include response(tab-port) {
-    grid-template-columns: 1fr 1.2fr;
+    position: relative;
+    isolation: isolate;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      'left list'
-      'image image';
+      'left'
+      'list';
+    align-items: start;
     min-height: auto;
+    padding-bottom: 2.4rem;
+    background: $green-dark;
   }
 
   @include response(phone) {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
       'left'
-      'list'
-      'image';
+      'list';
     min-height: auto;
+    padding-bottom: 1.6rem;
   }
 }
 
@@ -44,7 +49,10 @@ $gold: #e8a523;
 
   @include response(tab-port) {
     grid-area: left;
-    padding: 3rem 2rem 1rem 4rem;
+    position: relative;
+    z-index: 2;
+    padding: 3rem 2rem 0;
+    text-align: center;
   }
 
   @include response(phone) {
@@ -65,6 +73,12 @@ $gold: #e8a523;
     font-weight: 800;
     color: $green-dark;
 
+    // on top of the background image: white text
+    @include response(tab-port) {
+      color: #fff;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+    }
+
     // small gold bar above the heading
     &::before {
       content: '';
@@ -76,7 +90,7 @@ $gold: #e8a523;
       border-radius: 1rem;
       background: $gold;
 
-      @include response(phone) {
+      @include response(tab-port) {
         left: 50%;
         transform: translateX(-50%);
       }
@@ -98,7 +112,9 @@ $gold: #e8a523;
 
   @include response(tab-port) {
     grid-area: list;
-    padding: 3rem 4rem 1.5rem 2rem;
+    padding: 2rem 3rem 2rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
   }
 
   @include response(phone) {
@@ -134,6 +150,27 @@ $gold: #e8a523;
         transform: translateY(-4px);
         border-color: rgba(195, 149, 61, 0.6);
         box-shadow: 0 18px 40px rgba(6, 64, 29, 0.12);
+      }
+    }
+
+    @include response(tab-port) {
+      padding: 14px 16px;
+      gap: 12px;
+      border-radius: 18px;
+      // transparent glass effect (image stays visible behind)
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+      -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(3px);
+    }
+
+    @include response(tab-port) {
+      @media (hover: hover) and (pointer: fine) {
+        &:hover {
+          background: rgba(255, 255, 255, 0.16);
+          border-color: rgba(255, 255, 255, 0.55);
+        }
       }
     }
 
@@ -186,6 +223,11 @@ $gold: #e8a523;
     white-space: nowrap;
     color: $green-dark;
 
+    @include response(tab-port) {
+      color: #fff;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+    }
+
     @include response(phone) {
       font-size: clamp(15px, 4.3vw, 18px);
     }
@@ -195,6 +237,11 @@ $gold: #e8a523;
     font-size: clamp(13px, 1vw, 15px);
     color: #4a5a4f;
     overflow-wrap: anywhere;
+
+    @include response(tab-port) {
+      color: rgba(255, 255, 255, 0.92);
+      text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45);
+    }
 
     @include response(phone) {
       font-size: 12px;
@@ -209,14 +256,32 @@ $gold: #e8a523;
   align-self: stretch;
   min-height: 44rem;
 
+  // tablet + phone: fills the whole section behind the content
   @include response(tab-port) {
-    grid-area: image;
-    min-height: 32rem;
-  }
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    min-height: 0;
 
-  @include response(phone) {
-    grid-area: image;
-    min-height: 20rem;
+    // dark green tint so the glass cards + white text stay readable
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(
+          80% 60% at 50% 0%,
+          rgba($green, 0.3) 0%,
+          transparent 70%
+        ),
+        linear-gradient(
+          180deg,
+          rgba($green-dark, 0.5) 0%,
+          rgba($green-dark, 0.3) 45%,
+          rgba(2, 24, 12, 0.55) 100%
+        );
+      pointer-events: none;
+    }
   }
 
   .img {
@@ -231,10 +296,11 @@ $gold: #e8a523;
     -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 40%);
     mask-image: linear-gradient(to right, transparent 0%, #000 40%);
 
-    // on tablet + phone the image is below, so fade from the top
+    // on tablet + phone the image is a full background: no fade, keep the face visible
     @include response(tab-port) {
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 35%);
-      mask-image: linear-gradient(to bottom, transparent 0%, #000 35%);
+      -webkit-mask-image: none;
+      mask-image: none;
+      object-position: center 20%;
     }
   }
 }

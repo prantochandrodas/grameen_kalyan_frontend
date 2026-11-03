@@ -143,35 +143,29 @@
   .heading {
     margin: 0;
     max-width: 100%;
-    // phones
-    font-size: clamp(28px, 8vw, 40px);
+    // phones: scales with screen width so it always stays on one line
+    // (card inner width = 100vw - ~72px, text is ~10.5em wide)
+    font-size: clamp(20px, 6.4vw, 30px);
     font-weight: 800;
-    line-height: 1.08;
+    line-height: 1.1;
     letter-spacing: -0.02em;
     color: #fff;
-    text-wrap: balance;
-    overflow-wrap: break-word;
+    white-space: nowrap;
 
     // tablets (panel is full width under the photo)
     @include ab-above(768px) {
-      font-size: clamp(36px, 5vw, 48px);
+      font-size: clamp(32px, 5vw, 44px);
     }
 
-    // laptops/desktops: single line "Let’s Work Together"
+    // laptops/desktops (panel is the narrow left column)
     @include ab-above(1025px) {
       font-size: clamp(24px, 2.5vw, 46px);
       line-height: 1.05;
-      white-space: nowrap;
     }
   }
 
   .highlight {
     color: $ab-gold-bright;
-
-    // phones + tablets: "Together" goes to the next line
-    @include ab-below(1025px) {
-      display: block;
-    }
   }
 
   .parag {
