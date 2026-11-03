@@ -2,10 +2,12 @@
 
 import React from 'react';
 
-import style from './detailSection.module.scss';
 import { Button } from '@/shared/components';
 
-const { detailSection, contentContainer, btnContainer } = style;
+import style from './detailSection.module.scss';
+
+const { detailSection, contentBox, cornerAccent, contentContainer, btnContainer } =
+  style;
 
 interface IDetailSectionProps {
   detail: string;
@@ -14,10 +16,16 @@ interface IDetailSectionProps {
 const DetailSection = ({ detail }: IDetailSectionProps) => {
   return (
     <div className={detailSection}>
-      <div
-        className={contentContainer}
-        dangerouslySetInnerHTML={{ __html: detail }}
-      ></div>
+      {detail ? (
+        <div className={contentBox}>
+          <span className={cornerAccent} />
+          <div
+            className={contentContainer}
+            dangerouslySetInnerHTML={{ __html: detail }}
+          />
+        </div>
+      ) : null}
+
       <div className={btnContainer}>
         <Button text="Back" url="/healthcare" btnSecondary />
       </div>

@@ -1,160 +1,150 @@
-@import '../../../style/utils/base';
+@import '../Shared/tokens';
 
 .annualSection {
   position: relative;
-  overflow: hidden;
   isolation: isolate;
-  display: flex;
-  aspect-ratio: 16 / 5;
-  margin-top: 10rem;
-
-  @include response(phone) {
-    margin-top: 6rem;
-  }
+  overflow: hidden;
+  color: #fff;
+  background: $ab-green-ink;
 
   .bgContainer {
     position: absolute;
     inset: 0;
     z-index: -2;
-
-    .img {
-      object-fit: cover;
-      object-position: center top;
-    }
+    background-color: $ab-green-ink;
   }
 
   .overlay {
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: linear-gradient(
-      180deg,
-      rgba($color-primary, 0.88) 0%,
-      rgba($color-primary, 0.6) 45%,
-      rgba(0, 0, 0, 0.72) 100%
-    );
+    background:
+      radial-gradient(
+        80% 60% at 50% 0%,
+        rgba($ab-green, 0.36) 0%,
+        transparent 70%
+      ),
+      linear-gradient(
+        180deg,
+        rgba($ab-green-deep, 0.62) 0%,
+        rgba($ab-green-deep, 0.44) 45%,
+        rgba(2, 24, 12, 0.72) 100%
+      );
   }
 
   .inner {
-    width: 100%;
-    max-width: 130rem;
-    margin: 0 auto;
-    padding: clamp(6rem, 9vw, 12rem) clamp(2rem, 5vw, 6rem)
-      clamp(4rem, 6vw, 8rem);
+    @include ab-container;
+    padding-top: clamp(44px, 5.5vw, 80px);
+    padding-bottom: 20px;
+  }
+
+  .header {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: clamp(80px, 11vw, 164px);
   }
 
   .heading {
-    text-align: center;
-    color: $color-text-light;
-    font-size: clamp(3.6rem, 5.5vw, 7rem);
+    margin: 0;
+    font-size: clamp(36px, 5.6vw, 84px);
     font-weight: 800;
-    line-height: 1.15;
+    line-height: 1.06;
+    letter-spacing: -0.03em;
+    color: #fff;
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  }
 
-    span {
-      display: block;
-    }
+  .subHeading {
+    margin: 14px 0 0;
+    font-size: clamp(17px, 1.7vw, 24px);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.88);
+  }
 
-    &::after {
-      content: '';
-      display: block;
-      width: 8rem;
-      height: 0.4rem;
-      margin: 2.4rem auto 0;
-      border-radius: 1rem;
-      background: $color-secondary;
-    }
+  .bar {
+    width: 88px;
+    height: 4px;
+    margin-top: 26px;
+    border-radius: 4px;
+    background: $ab-gold-bright;
+  }
 
-    .subHeading {
-      max-width: 70rem;
-      margin: 1.6rem auto 0;
-      font-size: clamp(1.8rem, 2vw, 2.4rem);
-      font-weight: 400;
-      line-height: 1.5;
-      color: rgba(255, 255, 255, 0.85);
+  /* ---------- glass statistic cards ---------- */
+  .gridContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+    gap: clamp(12px, 1.6vw, 20px);
+    max-width: 820px;
+    margin-inline: auto;
+
+    @include ab-below(768px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      max-width: 420px;
     }
   }
 
-  .gridContainer {
-    margin-top: auto;
-    padding-top: clamp(4rem, 6vw, 8rem);
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
-    gap: clamp(1.2rem, 2vw, 2.4rem);
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: clamp(14px, 1.6vw, 18px) 6px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
+    transition:
+      transform 0.5s $ab-ease-out,
+      background-color 0.4s ease,
+      border-color 0.4s ease;
 
-    @include response(phone) {
-      grid-template-columns: repeat(2, 1fr);
+    // gold tab on top
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 22%;
+      right: 22%;
+      height: 3px;
+      border-radius: 0 0 6px 6px;
+      background: $ab-gold-bright;
     }
 
-    .card {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      padding: clamp(2.4rem, 3vw, 3.6rem) 1.4rem;
-      text-align: center;
-      color: $color-text-light;
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      border-radius: 1.6rem;
-      background: rgba(255, 255, 255, 0.08);
-      -webkit-backdrop-filter: blur(14px);
-      backdrop-filter: blur(14px);
-      box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
-      transition: transform 0.3s ease, background 0.3s ease,
-        border-color 0.3s ease;
+    @include ab-hover {
+      transform: translateY(-8px);
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.55);
+    }
 
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 20%;
-        right: 20%;
-        height: 0.3rem;
-        border-radius: 0 0 1rem 1rem;
-        background: $color-secondary;
-      }
-
-      &:hover {
-        transform: translateY(-0.6rem);
-        background: rgba(255, 255, 255, 0.14);
-        border-color: rgba(255, 255, 255, 0.6);
-      }
-
-      @include response(phone) {
-        &:last-child:nth-child(odd) {
-          grid-column: 1 / -1;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        transition: none;
-        &:hover {
-          transform: none;
-        }
-      }
-
-      .number {
-        font-size: clamp(4.2rem, 4vw, 6.4rem);
-        font-weight: 800;
-        line-height: 1;
-        font-variant-numeric: tabular-nums;
-        color: $color-text-light;
-        background: linear-gradient(180deg, #fff 40%, $color-secondary 140%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-
-      .title {
-        font-size: clamp(1.8rem, 1.4vw, 2.1rem);
-        font-weight: 500;
-        letter-spacing: 0.02em;
-        line-height: 1.35;
-        color: rgba(255, 255, 255, 0.9);
+    @include ab-below(768px) {
+      &:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
       }
     }
+  }
+
+  .number {
+    font-size: clamp(26px, 2.8vw, 42px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    font-variant-numeric: tabular-nums;
+    color: #fff;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+  }
+
+  .title {
+    font-size: clamp(13px, 1vw, 15px);
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45);
   }
 }

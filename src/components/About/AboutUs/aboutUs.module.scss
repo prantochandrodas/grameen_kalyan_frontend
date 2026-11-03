@@ -1,100 +1,81 @@
-$green: #0f4a2c;
-$gold: #e8a523;
-$bg: #F7F5F2;
-$text: #5b6660;
+@import '../Shared/tokens';
 
 .aboutUs {
   position: relative;
-  padding: 7rem 6rem;
   overflow: hidden;
-  background: $bg;
+  overflow: clip;
+  padding: clamp(40px, 5vw, 72px) 0;
+  background: #fff;
 
-  @media (max-width: 1100px) {
-    padding: 5rem 1.5rem 4rem;
-  }
-
-  @media (max-width: 560px) {
-    padding: 4rem 1.4rem 3.4rem;
-  }
-
-  .layoutLeft {
-    height: 25rem;
-    position: absolute;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-
-    .img {
-      height: 100%;
-      width: 100%;
-      object-fit: contain;
-    }
-  }
-
-  /* JourneySection er "29+ Years" heading er moto same style */
-  .heading {
+  .container {
+    @include ab-container;
     position: relative;
-    z-index: 1;
-    text-align: center;
-    font-size: clamp(3rem, 3.4vw, 4.4rem);
-    line-height: 1.05;
-    font-weight: 800;
-    color: $green;
-    margin-bottom: 3rem;
-
-    span {
-      display: block;
-    }
-
-    .first {
-      color: $green;
-    }
-
-    .second {
-      color: $gold; // JourneySection e "29+" jemon gold
-    }
-
-    @media (max-width: 1100px) {
-      font-size: 3.6rem;
-    }
-
-    @media (max-width: 560px) {
-      font-size: 3.2rem;
-    }
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(20px, 2.4vw, 32px);
+    align-items: start;
   }
 
-  /* JourneySection er .para er moto same text style */
+  .intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .eyebrow {
+    @include ab-eyebrow;
+    margin-bottom: 20px;
+  }
+
+  .heading {
+    @include ab-h2;
+    font-size: clamp(28px, 3vw, 46px);
+    line-height: 1.04;
+    text-align: center;
+  }
+
+  .first {
+    color: $ab-green;
+  }
+
+  .second {
+    color: $ab-gold;
+  }
+
+  .accent {
+    width: 96px;
+    height: 5px;
+    margin: 20px auto 0;
+    border-radius: 5px;
+    background: linear-gradient(90deg, $ab-green 50%, $ab-gold 50%);
+  }
+
+  /* ---------- editorial body ---------- */
+  .body {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .description {
-    p {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      font-size: 2rem;
-      font-weight: 400;
-      line-height: 1.65;
-      color: $text;
-      max-width: 70%;
-      margin-left: auto;
-      margin-right: auto;
+    @include ab-body;
+    @include ab-rich-text-reset;
 
-      &:not(:last-of-type) {
-        margin-bottom: 2rem;
-      }
+    p,
+    li {
+      text-align: justify !important;
+      text-justify: inter-word;
+    }
 
-      @media (max-width: 1100px) {
-        font-size: 1.45rem;
-        max-width: 100%;
-      }
-
-      @media (max-width: 560px) {
-        font-size: 1.4rem;
+    @include ab-below(768px) {
+      p,
+      li {
+        text-align: left !important;
       }
     }
 
-    strong,
-    b {
-      color: $green;
-      font-weight: 800;
+    p:last-child {
+      margin-bottom: 0;
     }
   }
 }

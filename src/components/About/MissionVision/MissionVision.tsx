@@ -1,18 +1,27 @@
 import React from 'react';
 
+import { Reveal, RevealGroup, RevealItem, RevealText } from '../Motion';
+import { EyeIcon, TargetIcon } from '../Shared/icons';
+
 import style from './missionVision.module.scss';
 
 const {
   missionVision,
-  intro,
+  glow,
+  container,
+  header,
+  eyebrow,
   heading,
   subText,
   cards,
   card,
+  cardDark,
+  cardLight,
+  cardTop,
   iconWrap,
   cardTitle,
-  cardText,
   line,
+  cardText,
 } = style;
 
 interface IMissionVisionProps {
@@ -20,50 +29,58 @@ interface IMissionVisionProps {
   vision: string;
 }
 
-const EyeIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
-    <circle cx="12" cy="12" r="3" />
-  </svg>
-);
-
-const TargetIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="10" />
-    <circle cx="12" cy="12" r="6" />
-    <circle cx="12" cy="12" r="2" />
-  </svg>
-);
-
 const MissionVision = ({ mission, vision }: IMissionVisionProps) => {
+  const missionText = mission?.trim();
+  const visionText = vision?.trim();
+  const hasMission = Boolean(missionText);
+  const hasVision = Boolean(visionText);
+
+  if (!hasMission && !hasVision) return null;
+
   return (
-    <section className={missionVision}>
-      <div className={intro}>
-        <h2 className={heading}>Our Vision  &amp; Mission</h2>
-        <p className={subText}>
-          Our vision and mission drive everything we do –
-          from community health to sustainable development.
-        </p>
-      </div>
+    <section id="vision" className={missionVision}>
+      <span className={glow} aria-hidden="true" />
 
-      <div className={cards}>
-        <div className={card}>
-          <div className={iconWrap}>
-            <EyeIcon />
-          </div>
-          <h3 className={cardTitle}>Vision</h3>
-          <p className={cardText}>{vision}</p>
-          <span className={line} />
-        </div>
+      <div className={container}>
+        <header className={header}>
+          <RevealText
+            as="h2"
+            className={heading}
+            lines={[{ text: 'Our Mission & Vision' }]}
+          />
+          <Reveal as="p" className={subText} delay={0.15}>
+            Our mission and vision drive everything we do – from community
+            health to sustainable development.
+          </Reveal>
+        </header>
 
-        <div className={card}>
-          <div className={iconWrap}>
-            <TargetIcon />
-          </div>
-          <h3 className={cardTitle}>Mission</h3>
-          <p className={cardText}>{mission}</p>
-          <span className={line} />
-        </div>
+        <RevealGroup className={cards} stagger={0.18}>
+          {hasMission && (
+            <RevealItem className={`${card} ${cardLight}`}>
+              <div className={cardTop}>
+                <span className={iconWrap}>
+                  <TargetIcon />
+                </span>
+                <h3 className={cardTitle}>Mission</h3>
+              </div>
+              <span className={line} />
+                 <p className={cardText}>{missionText}</p>
+            </RevealItem>
+          )}
+
+          {hasVision && (
+            <RevealItem className={`${card} ${cardLight}`}>
+              <div className={cardTop}>
+                <span className={iconWrap}>
+                  <EyeIcon />
+                </span>
+                <h3 className={cardTitle}>Vision</h3>
+              </div>
+              <span className={line} />
+              <p className={cardText}>{visionText}</p>
+            </RevealItem>
+          )}
+        </RevealGroup>
       </div>
     </section>
   );

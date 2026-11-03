@@ -1,28 +1,63 @@
-'use client';
-
 import React from 'react';
-import Image from 'next/image';
 
-import layoutTL from '@/assets/layout/grid-top-leaf.svg';
+import { Reveal, RevealText } from '../Motion';
 
 import style from './empoweringSection.module.scss';
 import { IEmpoweringSectionProps } from './EmpoweringSection.types';
 
-const { empoweringSection, heading, layoutLeft, img, paragraphsContainer } =
-  style;
+const {
+  empoweringSection,
+  container,
+  intro,
+  eyebrow,
+  heading,
+  highlight,
+  accent,
+  body,
+  paragraphsContainer,
+} = style;
 
 const EmpoweringSection = ({ empoweringData }: IEmpoweringSectionProps) => {
+  const title = empoweringData?.title?.trim();
+  const details = empoweringData?.details?.trim();
+
+  if (!title && !details) return null;
+
+  // "… Since 1996" -> green first line + gold second line (falls back to one line)
+  const titleMatch = title?.match(/^(.*?)\s*(Since\s+\d{4})$/i);
+  const titleLines = titleMatch?.[1]
+    ? [
+        { text: titleMatch[1] },
+        { text: titleMatch[2], className: highlight },
+      ]
+    : [{ text: title ?? '' }];
+
   return (
-    <div className={empoweringSection}>
-      <div className={layoutLeft}>
-        <Image className={img} src={layoutTL} alt="layout" />
+    <section className={empoweringSection}>
+      <div className={container}>
+        <div className={intro}>
+          <RevealText
+            as="h2"
+            className={heading}
+            lines={titleLines}
+            stagger={0.05}
+          />
+          <Reveal
+            className={accent}
+            direction="right"
+            distance={40}
+            delay={0.3}
+          />
+        </div>
+
+        <Reveal className={body} delay={0.15} distance={44}>
+          <div
+            className={paragraphsContainer}
+            dangerouslySetInnerHTML={{ __html: details ?? '' }}
+          />
+        </Reveal>
       </div>
-      <h2 className={heading}>{empoweringData.title}</h2>
-      <div
-        className={paragraphsContainer}
-        dangerouslySetInnerHTML={{ __html: empoweringData.details }}
-      ></div>
-    </div>
+    </section>
   );
 };
 

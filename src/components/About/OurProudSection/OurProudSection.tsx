@@ -1,106 +1,79 @@
-'use client';
+import React from 'react';
 
-import React, { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
-import { motion, animate, useInView } from 'framer-motion';
-
-const bgImage =
-  'https://res.cloudinary.com/dboyf6lad/image/upload/v1692613875/proud-bg_bu0agc.jpg';
+import {
+  CountUp,
+  ParallaxImage,
+  Reveal,
+  RevealGroup,
+  RevealItem,
+  RevealText,
+} from '../Motion';
+import { asArray } from '../Shared/aboutHelpers';
 
 import style from './ourProudSection.module.scss';
 import { IOurProudSection } from './ourProudSection.type';
 
+const bgImage =
+  'https://res.cloudinary.com/dboyf6lad/image/upload/v1692613875/proud-bg_bu0agc.jpg';
+
 const {
   annualSection,
   bgContainer,
-  img,
   overlay,
   inner,
+  header,
   heading,
   subHeading,
+  bar,
   gridContainer,
   card,
   number,
   title,
 } = style;
 
-const CountUp = ({ value }: { value: string | number }) => {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-40px' });
-  const [count, setCount] = useState(0);
-
-  const raw = String(value);
-  const match = raw.match(/^(\D*)([\d,.]+)(.*)$/);
-  const prefix = match?.[1] ?? '';
-  const target = match ? parseFloat(match[2].replace(/,/g, '')) : NaN;
-  const suffix = match?.[3] ?? '';
-  const decimals = match?.[2].includes('.') ? match[2].split('.')[1].length : 0;
-  const isYear = target >= 1900 && target <= 2100 && !suffix;
-  const isStatic = Number.isNaN(target) || isYear;
-
-  useEffect(() => {
-    if (!inView || isStatic) return;
-    const controls = animate(0, target, {
-      duration: 1.8,
-      ease: 'easeOut',
-      onUpdate: (v) => setCount(v),
-    });
-    return () => controls.stop();
-  }, [inView, isStatic, target]);
-
-  return (
-    <span ref={ref}>
-      {isStatic
-        ? raw
-        : `${prefix}${count.toLocaleString('en-US', {
-            minimumFractionDigits: decimals,
-            maximumFractionDigits: decimals,
-          })}${suffix}`}
-    </span>
-  );
-};
-
 const OurProudSection = ({
   proudPresenceData,
   headingText,
   subHeadingText,
 }: IOurProudSection) => {
+  const stats =
+    asArray<IOurProudSection['proudPresenceData'][number]>(proudPresenceData);
+
   return (
     <section className={annualSection}>
-      <div className={bgContainer}>
-        <Image
-          className={img}
-          src={bgImage}
-          alt="Our proud presence background"
-          fill
-          sizes="100vw"
-        />
-      </div>
+      <ParallaxImage
+        className={bgContainer}
+        src={bgImage}
+        alt=""
+        depth={18}
+        position="center top"
+        sizes="100vw"
+      />
       <div className={overlay} />
 
       <div className={inner}>
-        <h1 className={heading}>
-          <span>{headingText}</span>
-          <span className={subHeading}>{subHeadingText}</span>
-        </h1>
+        <div className={header}>
+          <RevealText
+            as="h2"
+            className={heading}
+            lines={[{ text: headingText }]}
+          />
+          <Reveal as="p" className={subHeading} delay={0.2} distance={20}>
+            {subHeadingText}
+          </Reveal>
+          <Reveal className={bar} direction="none" delay={0.35} />
+        </div>
 
-        <div className={gridContainer}>
-          {proudPresenceData.map((data, index) => (
-            <motion.div
-              key={data.id}
-              className={card}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-30px' }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
+        <RevealGroup className={gridContainer} stagger={0.12} amount={0.2}>
+          {stats.map((data) => (
+            <RevealItem className={card} key={data.id} distance={44}>
               <span className={number}>
-                <CountUp value={data.value} />
+                <CountUp value={data.value} duration={1.8} />
               </span>
               <span className={title}>{data.title}</span>
-            </motion.div>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       </div>
     </section>
   );

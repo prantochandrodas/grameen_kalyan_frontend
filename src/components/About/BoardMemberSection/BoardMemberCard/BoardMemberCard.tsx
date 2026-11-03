@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import Image from 'next/image';
 
@@ -10,55 +8,43 @@ import style from './boardMemberCard.module.scss';
 
 const {
   boardMemberCard,
-  imageContainer,
+  cardFeatured,
+  frame,
   img,
+  nameplate,
   memberName,
   designation,
-  cardStyleOne,
-  cardStyleTwo,
-  cardStyleThree,
 } = style;
 
 interface IBoardMemberCardProps {
   data: IBoardMember;
-  typeOne?: boolean;
-  typeTwo?: boolean;
-  typeThree?: boolean;
+  /** larger presentation used for the Chairman */
+  featured?: boolean;
 }
 
-const BoardMemberCard = ({
-  data,
-  typeOne,
-  typeTwo,
-  typeThree,
-}: IBoardMemberCardProps) => {
+const BoardMemberCard = ({ data, featured }: IBoardMemberCardProps) => {
   const imgUrl = IMAGE_BASE_URL + data.profile_photo;
 
   return (
-    <div className={boardMemberCard}>
-      <div
-        className={
-          typeOne
-            ? `${imageContainer} ${cardStyleOne}`
-            : typeTwo
-              ? `${imageContainer} ${cardStyleTwo}`
-              : typeThree
-                ? `${imageContainer} ${cardStyleThree}`
-                : `${imageContainer}`
-        }
-      >
+    <div
+      className={
+        featured ? `${boardMemberCard} ${cardFeatured}` : boardMemberCard
+      }
+    >
+      <div className={frame}>
         <Image
           className={img}
           src={imgUrl}
-          alt="member"
+          alt={data.name ? `Portrait of ${data.name}` : 'Board member'}
           width={500}
-          height={500}
-          sizes="(max-width: 600px) 100vw, 340px"
-          priority
+          height={625}
+          sizes="(max-width: 640px) 88vw, (max-width: 1100px) 44vw, 300px"
         />
       </div>
-      <p className={memberName}>{data && data.name}</p>
-      <p className={designation}>{data && data.designation}</p>
+      <div className={nameplate}>
+        <h3 className={memberName}>{data.name}</h3>
+        <p className={designation}>{data.designation}</p>
+      </div>
     </div>
   );
 };

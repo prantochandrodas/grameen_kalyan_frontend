@@ -1,0 +1,10 @@
+export { default as MotionProvider } from './MotionProvider';
+export { default as RevealText } from './RevealText';
+export type { IRevealTextLine } from './RevealText';
+export { Reveal, RevealGroup, RevealItem } from './Reveal';
+export { default as ParallaxImage } from './ParallaxImage';
+export { default as ParallaxLayer } from './ParallaxLayer';
+export { default as ImageReveal } from './ImageReveal';
+export { default as CountUp } from './CountUp';
+export { useParallaxIntensity } from './useParallaxIntensity';
+export { EASE } from './motion.config';

@@ -1,55 +1,176 @@
-@import '../../../style/utils/base';
-
 .detailSection {
-  .contentContainer {
-    padding: 10rem 20rem;
+  width: 80%;
+  margin: 0 auto;
+  padding: 0 0 100px;
 
-    @include response(M-desktop) {
-      padding: 10rem 15rem;
-    }
-    @include response(tab-port) {
-      padding: 10rem 10rem;
-    }
-    @include response(phone) {
-      padding: 8rem 5rem;
-    }
-    @include response(s-phone) {
-      padding: 5rem 3rem;
-    }
+  @media (max-width: 768px) {
+    width: 92%;
+    padding-bottom: 60px;
+  }
 
-    h1 {
-      font-size: 5rem;
-    }
-    p,
-    div {
-      font-size: 2rem !important;
-      margin-bottom: 2rem;
+  table {
+    width: 100% !important;
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+.contentBox {
+  position: relative;
+  background: #fbfbfa;
+  padding: 28px 32px;
+  border-radius: 16px;
+  border-left: 3px solid #0b612d;
+  box-shadow: 0 8px 24px rgba(11, 97, 45, 0.06);
+
+  @media (max-width: 480px) {
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+}
+
+.cornerAccent {
+  position: absolute;
+  top: -20px;
+  left: -3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #f6c453;
+  box-shadow: 0 0 0 6px rgba(246, 196, 83, 0.25);
+}
+
+.contentContainer {
+  position: relative;
+  z-index: 1;
+  word-break: break-word;
+
+  p,
+  div,
+  span,
+  li {
+    font-family: inherit !important;
+    font-size: 16px !important;
+    line-height: 1.9 !important;
+    color: #3a3a3a !important;
+
+    @media (max-width: 480px) {
+      font-size: 15px !important;
+      line-height: 1.8 !important;
     }
   }
-  .imgContainer {
-    height: 100vh;
-    margin-top: 3rem;
 
-    .img {
-      height: 100%;
-      width: 100%;
-      object-fit: cover;
+  p {
+    margin: 0 0 18px !important;
+
+    &:last-child {
+      margin-bottom: 0 !important;
     }
   }
-  .btnContainer {
-    padding: 20rem 20rem;
 
-    @include response(M-desktop) {
-      padding: 10rem 15rem;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    position: relative;
+    color: #0b612d;
+    font-weight: 700;
+    line-height: 1.4;
+    margin: 32px 0 14px;
+    padding-left: 16px;
+
+    &:first-child {
+      margin-top: 0;
     }
-    @include response(tab-port) {
-      padding: 10rem 10rem;
-    }
-    @include response(phone) {
-      padding: 8rem 5rem;
-    }
-    @include response(s-phone) {
-      padding: 5rem 3rem;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 4px;
+      bottom: 4px;
+      width: 4px;
+      background: #f6c453;
+      border-radius: 2px;
     }
   }
+
+  strong {
+    color: #0b612d !important;
+    font-weight: 700;
+  }
+
+  ul,
+  ol {
+    margin: 0 0 20px 22px;
+
+    li {
+      margin-bottom: 10px;
+      padding-left: 4px;
+
+      &::marker {
+        color: #0b612d;
+        font-weight: 700;
+      }
+    }
+  }
+
+  a {
+    color: #0b612d !important;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 14px;
+    margin: 20px 0;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  blockquote {
+    border-left: 4px solid #f6c453;
+    background: rgba(246, 196, 83, 0.08);
+    padding: 14px 20px;
+    border-radius: 0 10px 10px 0;
+    font-style: italic;
+    margin: 22px 0;
+  }
+}
+
+/* ---- Second image: rounded, 16:9 ---- */
+.imageFrame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 5;
+  margin-top: 32px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #e8ece9;
+  box-shadow: 0 14px 34px rgba(11, 97, 45, 0.14);
+
+  // phones: 16:5 would be only ~100px tall, so use 16:9 here
+  @media (max-width: 640px) {
+    aspect-ratio: 16 / 9;
+    margin-top: 24px;
+    border-radius: 12px;
+  }
+
+  @supports not (aspect-ratio: 16 / 5) {
+    height: 0;
+    padding-top: 31.25%;
+  }
+
+  img {
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+.btnContainer {
+  margin-top: 32px;
 }

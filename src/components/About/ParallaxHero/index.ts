@@ -1,0 +1,1 @@
+export { default as ParallaxHero } from './ParallaxHero';

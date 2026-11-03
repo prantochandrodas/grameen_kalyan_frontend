@@ -1,26 +1,40 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import Image from 'next/image';
 
 import { IMAGE_BASE_URL } from '@/config';
+
+import { Reveal, RevealText } from '../Motion';
 
 import style from './achievementSection.module.scss';
 import { IAchievementSection } from './AchievementSection.types';
 
 const {
   achievementSection,
+  shell,
   journeyBlock,
   journeyHeader,
+  eyebrow,
   journeyTitle,
+  journeyHighlight,
   journeyAccent,
   trackScroller,
   rail,
+  railLine,
+  railProgress,
   hexItem,
   hexItemActive,
   hexOuter,
   hexInner,
   hexPeriod,
+  hexSubtitle,
   connector,
   connectorBox,
   sliderBlock,
@@ -34,10 +48,11 @@ const {
   details,
   controls,
   arrowBtn,
+  counter,
   dots,
   dot,
   dotActive,
-  journeyHighlight
+  srOnly,
 } = style;
 
 const AchievementSection = ({ achievementData }: IAchievementSection) => {
@@ -61,7 +76,7 @@ const AchievementSection = ({ achievementData }: IAchievementSection) => {
     [lastIndex]
   );
 
-  // active hexagon er majhkhane connector line boshabe (padding bad diye)
+  // place the connector line under the middle of the active hexagon (padding excluded)
   const updatePointer = useCallback(() => {
     const wrapper = wrapperRef.current;
     const hex = hexRefs.current[activeIndex];
@@ -75,11 +90,12 @@ const AchievementSection = ({ achievementData }: IAchievementSection) => {
   }, [activeIndex]);
 
   useEffect(() => {
-    // chhoto screen e active hexagon ke scroller er majhkhane anbe
+    // on small screens bring the active hexagon to the middle of the scroller
     const scroller = scrollerRef.current;
     const hex = hexRefs.current[activeIndex];
     if (scroller && hex && scroller.scrollWidth > scroller.clientWidth) {
-      const left = hex.offsetLeft - (scroller.clientWidth - hex.clientWidth) / 2;
+      const left =
+        hex.offsetLeft - (scroller.clientWidth - hex.clientWidth) / 2;
       scroller.scrollTo({ left, behavior: 'smooth' });
     }
     updatePointer();
@@ -108,133 +124,181 @@ const AchievementSection = ({ achievementData }: IAchievementSection) => {
     touchStartX.current = null;
   };
 
-  return (
-    <div className={achievementSection} ref={wrapperRef}>
-      {/* ================= Top: Our Journey (hexagon timeline) ================= */}
-      <div className={journeyBlock}>
-        <div className={journeyHeader}>
-          <h2 className={journeyTitle}>
-            Our <span className={journeyHighlight}>Journey</span>
-          </h2>
+  // keyboard: left / right arrows move between periods
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      goTo(activeIndex + 1);
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      goTo(activeIndex - 1);
+    }
+  };
 
-          <span className={journeyAccent} aria-hidden="true" />
+  const progress = lastIndex > 0 ? activeIndex / lastIndex : 1;
+  const pad = (n: number) => String(n).padStart(2, '0');
+
+  return (
+    <section className={achievementSection} aria-label="Our Journey">
+      <div
+        className={shell}
+        ref={wrapperRef}
+        onKeyDown={onKeyDown}
+        role="group"
+        aria-roledescription="carousel"
+      >
+        {/* ================= Top: Our Journey (hexagon timeline) ================= */}
+        <div className={journeyBlock}>
+          <div className={journeyHeader}>
+            <RevealText
+              as="h2"
+              className={journeyTitle}
+              lines={[
+                { text: 'Our' },
+                { text: 'Journey', className: journeyHighlight },
+              ]}
+            />
+            <span className={journeyAccent} aria-hidden="true" />
+          </div>
+
+          <div className={trackScroller} ref={scrollerRef}>
+            <div className={rail}>
+              {/* connecting line + progress up to the active milestone */}
+              <span className={railLine} aria-hidden="true">
+                <span
+                  className={railProgress}
+                  style={{ transform: `scaleX(${progress})` }}
+                />
+              </span>
+
+              {items.map((data, index) => (
+                <button
+                  key={data.id}
+                  type="button"
+                  ref={(el) => {
+                    hexRefs.current[index] = el;
+                  }}
+                  className={`${hexItem} ${index === activeIndex ? hexItemActive : ''}`}
+                  onMouseEnter={() => goTo(index)}
+                  onFocus={() => goTo(index)}
+                  onClick={() => goTo(index)}
+                  aria-label={data.title}
+                  aria-pressed={index === activeIndex}
+                >
+                  <span className={hexOuter}>
+                    <span className={hexInner}>
+                      <Image
+                        src={IMAGE_BASE_URL + data.thumb_image}
+                        alt={data.title}
+                        width={200}
+                        height={200}
+                      />
+                    </span>
+                  </span>
+                  <span className={hexPeriod}>{data.title}</span>
+                  {data.subtitle ? (
+                    <span className={hexSubtitle}>{data.subtitle}</span>
+                  ) : null}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className={trackScroller} ref={scrollerRef}>
-          <div className={rail}>
-            {items.map((data, index) => (
-              <button
-                key={data.id}
-                type="button"
-                ref={(el) => {
-                  hexRefs.current[index] = el;
-                }}
-                className={`${hexItem} ${index === activeIndex ? hexItemActive : ''}`}
-                onMouseEnter={() => goTo(index)}
-                onFocus={() => goTo(index)}
-                onClick={() => goTo(index)}
-                aria-label={data.title}
-                aria-pressed={index === activeIndex}
-              >
-                <span className={hexOuter}>
-                  <span className={hexInner}>
+        {/* ================= Connector: active hexagon -> slider ================= */}
+        {pointerX !== null && (
+          <div className={connector} style={{ left: pointerX }}>
+            <span className={connectorBox} />
+          </div>
+        )}
+
+        {/* ================= Bottom: Slider ================= */}
+        <div className={sliderBlock}>
+          <div
+            className={sliderViewport}
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+          >
+            <div
+              className={sliderTrack}
+              style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+            >
+              {items.map((data, index) => (
+                <div
+                  key={data.id}
+                  className={slide}
+                  data-active={index === activeIndex}
+                  aria-hidden={index !== activeIndex}
+                  role="group"
+                  aria-roledescription="slide"
+                >
+                  <div className={imageContainer}>
                     <Image
+                      className={img}
                       src={IMAGE_BASE_URL + data.thumb_image}
                       alt={data.title}
-                      width={200}
-                      height={200}
+                      width={500}
+                      height={500}
+                      priority={index === 0}
                     />
-                  </span>
-                </span>
-                <span className={hexPeriod}>{data.title}</span>
-                <span className={hexPeriod}>{data.subtitle}</span>
-              </button>
-            ))}
+                  </div>
+                  <div className={contentContainer}>
+                    <h3 className={heading}>{data.title}</h3>
+                    <div
+                      className={details}
+                      dangerouslySetInnerHTML={{ __html: data.details }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+
+          <div className={controls}>
+            <button
+              type="button"
+              className={arrowBtn}
+              onClick={() => goTo(activeIndex - 1)}
+              disabled={activeIndex === 0}
+              aria-label="Previous period"
+            >
+              &#8249;
+            </button>
+
+            <div className={dots}>
+              {items.map((data, index) => (
+                <button
+                  key={data.id}
+                  type="button"
+                  className={`${dot} ${index === activeIndex ? dotActive : ''}`}
+                  onClick={() => goTo(index)}
+                  aria-label={`Go to ${data.title}`}
+                  aria-current={index === activeIndex}
+                />
+              ))}
+            </div>
+
+            <span className={counter} aria-hidden="true">
+              {pad(activeIndex + 1)} / {pad(items.length)}
+            </span>
+
+            <button
+              type="button"
+              className={arrowBtn}
+              onClick={() => goTo(activeIndex + 1)}
+              disabled={activeIndex === lastIndex}
+              aria-label="Next period"
+            >
+              &#8250;
+            </button>
+          </div>
+
+          <p className={srOnly} aria-live="polite">
+            {`${items[activeIndex].title}, ${activeIndex + 1} of ${items.length}`}
+          </p>
         </div>
       </div>
-
-      {/* ================= Connector: active hexagon -> slider ================= */}
-      {pointerX !== null && (
-        <div className={connector} style={{ left: pointerX }}>
-          <span className={connectorBox} />
-        </div>
-      )}
-
-      {/* ================= Bottom: Slider ================= */}
-      <div className={sliderBlock}>
-        <div
-          className={sliderViewport}
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
-        >
-          <div
-            className={sliderTrack}
-            style={{ transform: `translateX(-${activeIndex * 100}%)` }}
-          >
-            {items.map((data, index) => (
-              <div
-                key={data.id}
-                className={slide}
-                aria-hidden={index !== activeIndex}
-              >
-                <div className={imageContainer}>
-                  <Image
-                    className={img}
-                    src={IMAGE_BASE_URL + data.thumb_image}
-                    alt={data.title}
-                    width={500}
-                    height={500}
-                    priority={index === 0}
-                  />
-                </div>
-                <div className={contentContainer}>
-                  <h3 className={heading}>{data.title}</h3>
-                  <div
-                    className={details}
-                    dangerouslySetInnerHTML={{ __html: data.details }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className={controls}>
-          <button
-            type="button"
-            className={arrowBtn}
-            onClick={() => goTo(activeIndex - 1)}
-            disabled={activeIndex === 0}
-            aria-label="Previous period"
-          >
-            &#8249;
-          </button>
-
-          <div className={dots}>
-            {items.map((data, index) => (
-              <button
-                key={data.id}
-                type="button"
-                className={`${dot} ${index === activeIndex ? dotActive : ''}`}
-                onClick={() => goTo(index)}
-                aria-label={`Go to ${data.title}`}
-              />
-            ))}
-          </div>
-
-          <button
-            type="button"
-            className={arrowBtn}
-            onClick={() => goTo(activeIndex + 1)}
-            disabled={activeIndex === lastIndex}
-            aria-label="Next period"
-          >
-            &#8250;
-          </button>
-        </div>
-      </div>
-    </div>
+    </section>
   );
 };
 

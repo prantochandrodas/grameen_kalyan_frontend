@@ -1,0 +1,14 @@
+.frame {
+  position: relative;
+  overflow: hidden;
+  // keeps rounded corners clipping correctly in Safari while children transform
+  isolation: isolate;
+  background-color: #dfe8e1;
+}
+
+.layer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  will-change: transform;
+}

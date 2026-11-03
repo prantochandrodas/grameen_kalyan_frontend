@@ -1,35 +1,41 @@
-@import '../../../style/utils/base';
+@import '../Shared/tokens';
 
 $hex-clip: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-$slide-min-height: 30rem; // beshi lagle barao, kom lagle komao
+$hex-w: 104px;
+$hex-h: 104px;
+$hex-item: 128px; // width of one timeline column
+$slide-radius: clamp(48px, 7vw, 100px);
+$slide-h: clamp(340px, 25.5vw, 400px); // fixed desktop slide height (matches design)
 
 .achievementSection {
   position: relative;
-  padding: 6rem 20rem;
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
+  padding: clamp(36px, 4.5vw, 64px) 0;
+  background: #fff;
 
-  @include response(s-desktop) {
-    padding: 6rem 10rem;
-  }
-  @include response(phone) {
-    padding: 6rem 5rem;
-  }
-  @include response(s-phone) {
-    padding: 4rem 3rem;
+  .shell {
+    @include ab-container;
+    --journey-pad: clamp(16px, 3vw, 48px);
+
+    box-sizing: border-box;
+    width: 100%;
+    max-width: calc(1504px + 2 * var(--journey-pad));
+    margin-inline: auto;
+    padding-inline: var(--journey-pad);
+    position: relative;
+    display: flex;
+    flex-direction: column;
   }
 
   /* ================= Top: Our Journey ================= */
   .journeyBlock {
     display: grid;
-    grid-template-columns: 24rem 1fr;
+    grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
     align-items: center;
-    gap: 3rem;
+    gap: clamp(24px, 3vw, 48px);
 
-    @include response(vp-800) {
-      grid-template-columns: 1fr;
-      gap: 2rem;
+    @include ab-below(900px) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
     }
   }
 
@@ -37,87 +43,135 @@ $slide-min-height: 30rem; // beshi lagle barao, kom lagle komao
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.4rem;
-    padding-right: 3rem;
-    border-right: 1px solid rgba(0, 0, 0, 0.12);
+    gap: 14px;
+    padding-right: clamp(16px, 3vw, 40px);
+    border-right: 1px solid $ab-line;
 
-    @include response(vp-800) {
+    @include ab-below(900px) {
       padding-right: 0;
       border-right: none;
     }
   }
 
+  .eyebrow {
+    @include ab-eyebrow;
+  }
+
   .journeyTitle {
     margin: 0;
-    font-size: 4.4rem;
-    font-weight: 900;
-    line-height: 1.1;
-    color: $color-primary;
-
-    @include response(vp-800) {
-      font-size: 3.6rem;
-    }
+    font-size: clamp(40px, 5vw, 68px);
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    color: $ab-green;
   }
 
   .journeyHighlight {
-    color: #C3953D;
+    color: $ab-gold;
   }
 
   .journeyAccent {
     display: block;
-    width: 7rem;
-    height: 0.5rem;
-    border-radius: 0.3rem;
-    background: linear-gradient(90deg, $color-primary 50%, #C3953D 50%);
+    width: 72px;
+    height: 5px;
+    border-radius: 5px;
+    background: linear-gradient(90deg, $ab-green 50%, $ab-gold 50%);
   }
 
   .trackScroller {
     min-width: 0;
     overflow-x: auto;
-    padding: 2rem 0;
+    padding: 28px 0 20px;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+
+    @include ab-below(900px) {
+      margin-inline: calc(var(--journey-pad) * -1);
+      padding-inline: var(--journey-pad);
+      scroll-padding-inline: var(--journey-pad);
+    }
 
     &::-webkit-scrollbar {
       display: none;
     }
   }
 
-  // hexagon gulor pichone horizontal line
-   .rail {
+  // hexagons sit on a horizontal line that fills up to the active one
+  .rail {
     position: relative;
     display: flex;
     justify-content: space-between;
-    gap: 2.5rem;
+    gap: 6px;
     min-width: max-content;
+  }
+
+  .railLine {
+    position: absolute;
+    top: calc(#{$hex-h} / 2);
+    left: calc(#{$hex-item} / 2);
+    right: calc(#{$hex-item} / 2);
+    height: 2px;
+    border-radius: 2px;
+    background: rgba($ab-gold, 0.35);
+    pointer-events: none;
+  }
+
+  .railProgress {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background: $ab-green;
+    transform-origin: left center;
+    transition: transform 0.7s $ab-ease-out;
   }
 
   .hexItem {
     position: relative;
     z-index: 1;
-    flex: 0 0 14rem;
+    flex: 0 0 $hex-item;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.2rem;
+    gap: 14px;
     padding: 0;
     border: none;
     background: none;
+    font-family: inherit;
     cursor: pointer;
-    opacity: 0.8;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0.78;
+    scroll-snap-align: center;
+    transition:
+      transform 0.45s $ab-ease-out,
+      opacity 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
 
-    &:hover {
+    @include ab-hover {
       opacity: 1;
+    }
+
+    &:focus-visible {
+      outline: none;
+
+      .hexOuter {
+        box-shadow:
+          0 0 0 3px #fff,
+          0 0 0 6px $ab-green;
+      }
     }
 
     .hexOuter {
       display: block;
-      width: 12rem;
-      height: 13.8rem;
-      padding: 0.4rem;
-      background-color: #C3953D;
-      clip-path: $hex-clip;
-      transition: background-color 0.3s ease;
+      width: $hex-w;
+      height: $hex-h;
+      padding: 4px;
+      border-radius: 50%;
+      background-color: $ab-gold;
+      box-shadow: 0 10px 24px rgba($ab-green-deep, 0.14);
+      transition:
+        background-color 0.3s ease,
+        box-shadow 0.3s ease;
     }
 
     .hexInner {
@@ -125,8 +179,8 @@ $slide-min-height: 30rem; // beshi lagle barao, kom lagle komao
       width: 100%;
       height: 100%;
       overflow: hidden;
+      border-radius: 50%;
       background-color: #fff;
-      clip-path: $hex-clip;
 
       img {
         width: 100%;
@@ -135,25 +189,39 @@ $slide-min-height: 30rem; // beshi lagle barao, kom lagle komao
       }
     }
 
-    .hexPeriod {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: $color-primary;
+    .hexPeriod,
+    .hexSubtitle {
+      padding: 0 8px;
       white-space: nowrap;
       background-color: #fff;
-      padding: 0 0.6rem;
+    }
+
+    .hexPeriod {
+      font-size: 16px;
+      font-weight: 800;
+      color: $ab-green;
+      transition: color 0.3s ease;
+    }
+
+    .hexSubtitle {
+      margin-top: -8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: $ab-muted;
     }
   }
 
   .hexItemActive {
     opacity: 1;
-    transform: translateY(-0.6rem) scale(1.1);
+    transform: translateY(-6px) scale(1.1);
 
     .hexOuter {
-      background-color: $color-primary;
+      background-color: $ab-green;
+      box-shadow: 0 14px 30px rgba($ab-green-deep, 0.3);
     }
+
     .hexPeriod {
-      color: #C3953D;
+      color: $ab-gold;
     }
   }
 
@@ -161,11 +229,11 @@ $slide-min-height: 30rem; // beshi lagle barao, kom lagle komao
   .connector {
     position: relative;
     width: 1px;
-    height: 4rem;
-    background-color: #C3953D;
-    transition: left 0.4s ease;
+    height: 36px;
+    background-color: $ab-gold;
+    transition: left 0.5s $ab-ease-out;
 
-    @include response(vp-800) {
+    @include ab-below(900px) {
       display: none;
     }
   }
@@ -173,57 +241,67 @@ $slide-min-height: 30rem; // beshi lagle barao, kom lagle komao
   .connectorBox {
     position: absolute;
     left: 50%;
-    bottom: -0.75rem;
-    width: 1.5rem;
-    height: 1.5rem;
-    transform: translateX(-50%);
-    background-color: #C3953D;
+    bottom: -7px;
+    width: 14px;
+    height: 14px;
+    transform: translateX(-50%) rotate(45deg);
+    background-color: $ab-gold;
   }
 
   /* ================= Bottom: Slider ================= */
   .sliderBlock {
-    margin-top: 1.5rem;
+    margin-top: 8px;
 
-    @include response(vp-800) {
-      margin-top: 3rem;
+    @include ab-below(900px) {
+      margin-top: 20px;
     }
   }
 
   .sliderViewport {
     overflow: hidden;
+    touch-action: pan-y;
+    border-radius: $slide-radius 0 $slide-radius 0;
+    box-shadow: 0 28px 70px rgba($ab-green-deep, 0.14);
   }
 
   .sliderTrack {
     display: flex;
-    transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+    transition: transform 0.8s $ab-ease-out;
+
+    @include ab-reduced-motion {
+      transition: none;
+    }
   }
 
-  // height ta shudhu card er content theke ashe, image oi height e fill hoy
+  // card height comes from the content; the image fills it
   .slide {
     flex: 0 0 100%;
     min-width: 0;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
     align-items: stretch;
-    min-height: $slide-min-height;
-    gap: 0;
+    height: $slide-h;
+    min-height: 0;
 
-    @include response(vp-800) {
-      grid-template-columns: 1fr;
-      grid-template-rows: 25rem auto;
-      min-height: 0;
+    @include ab-below(900px) {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto 1fr;
+      height: auto;
     }
   }
 
   .imageContainer {
     position: relative;
-    min-height: 25rem;
-    border-radius: 10rem 0 0 0;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
     overflow: hidden;
-    background-color: $color-text-grey;
+    background-color: $ab-muted;
 
-    @include response(vp-800) {
-      border-radius: 6rem 0 0 0;
+    @include ab-below(900px) {
+      height: auto;
+      aspect-ratio: 16 / 10;
     }
 
     .img {
@@ -232,30 +310,101 @@ $slide-min-height: 30rem; // beshi lagle barao, kom lagle komao
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transform: scale(1.14);
+      transition: transform 1.6s $ab-ease-out;
+
+      @include ab-reduced-motion {
+        transition: none;
+        transform: none;
+      }
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        transparent 60%,
+        rgba($ab-green-ink, 0.35) 100%
+      );
+      pointer-events: none;
     }
   }
 
- .contentContainer {
-    color: #222;                       // bullet text color
-    background-color: #F1F7F2;            // image 2 er moto white background
-    padding: 3rem 4rem;
-    border-radius: 0 0 10rem 0;
-    border: 1px solid rgba(0, 0, 0, 0.08); // white section e card ta jeno mishe na jay
+  .slide[data-active='true'] .img {
+    transform: scale(1);
+  }
 
-    @include response(vp-800) {
-      padding: 2.5rem 3rem;
-      border-radius: 0 0 6rem 0;
+  .contentContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 0;
+    padding: clamp(20px, 3vw, 44px) clamp(24px, 4vw, 56px);
+    color: $ab-ink;
+    background-color: #f1f7f2;
+
+    // desktop: panel height = fixed slide height, long text scrolls inside
+    @include ab-above(900px) {
+      position: relative;
+      height: 100%;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+      scrollbar-color: rgba($ab-green, 0.35) transparent;
+
+      // `safe` keeps the top of the text reachable when it is taller than the panel
+      justify-content: safe center;
+    }
+
+    // phones: the panel grows with its text below the image
+    @include ab-below(900px) {
+      min-height: 240px; // all slides keep a similar height while swiping
+      padding: 22px 20px 28px;
+      justify-content: flex-start;
+    }
+
+    // staggered text entrance for the active milestone
+    .heading,
+    .details {
+      opacity: 0;
+      transform: translateY(18px);
+      transition:
+        opacity 0.6s ease,
+        transform 0.8s $ab-ease-out;
+
+      @include ab-reduced-motion {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
     }
 
     .heading {
-      font-size: 3rem;
-      font-weight: 900;
-      margin-bottom: 1.5rem;
-      color: $color-primary;           // dark green heading
+      margin: 0 0 clamp(12px, 1.4vw, 18px);
+      font-size: clamp(26px, 2.6vw, 40px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: $ab-green;
+
+      &::after {
+        content: '';
+        display: block;
+        width: 56px;
+        height: 4px;
+        margin-top: 14px;
+        border-radius: 4px;
+        background: $ab-gold;
+      }
     }
 
-    // admin editor er messy HTML (nested table, inline align/font) normalize kora
+    // admin editor messy HTML (nested table, inline align/font) normalised
     .details {
+      font-size: clamp(14px, 1.1vw, 17px);
+      line-height: 1.5;
+
       table,
       tbody,
       tr,
@@ -269,36 +418,37 @@ $slide-min-height: 30rem; // beshi lagle barao, kom lagle komao
       }
 
       tr {
-        margin-bottom: 0.8rem !important;
+        margin-bottom: 6px !important;
       }
 
-      // shudhu leaf td (jar bhitore arekta table nai) e bullet, underline nai
+      // only leaf cells (no nested table) get a bullet, no underline
       td:not(:has(table)) {
         position: relative;
         width: 100% !important;
-        padding-left: 2rem !important;
+        padding-left: 24px !important;
         border-bottom: none !important;
 
         &::before {
           content: '';
           position: absolute;
-          left: 0.4rem;
-          top: 0.8em;
-          width: 0.6rem;
-          height: 0.6rem;
+          left: 4px;
+          top: 0.7em;
+          width: 8px;
+          height: 8px;
           border-radius: 50%;
-          background-color: #222;       // bullet dot
+          background-color: $ab-gold;
         }
       }
 
-      // jodi editor theke ul/li ashe
+      // when the editor outputs ul / li
       ul {
         margin: 0;
-        padding-left: 2rem;
+        padding-left: 24px;
         list-style: disc;
       }
+
       li {
-        margin-bottom: 0.8rem;
+        margin-bottom: 6px;
       }
 
       p {
@@ -308,12 +458,25 @@ $slide-min-height: 30rem; // beshi lagle barao, kom lagle komao
 
       p,
       span,
-      li {
-        font-size: 1.6rem !important;
+      li,
+      td {
+        font-size: clamp(14px, 1.1vw, 17px) !important;
         font-family: inherit !important;
         line-height: 1.5 !important;
-        color: inherit !important;     // #222 inherit korbe
+        color: inherit !important;
       }
+    }
+  }
+
+  .slide[data-active='true'] .contentContainer {
+    .heading,
+    .details {
+      opacity: 1;
+      transform: none;
+    }
+
+    .details {
+      transition-delay: 0.15s;
     }
   }
 
@@ -322,26 +485,43 @@ $slide-min-height: 30rem; // beshi lagle barao, kom lagle komao
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
-    margin-top: 2.5rem;
+    gap: clamp(14px, 2vw, 28px);
+    margin-top: 32px;
   }
 
   .arrowBtn {
-    width: 4.2rem;
-    height: 4.2rem;
-    border: 1px solid $color-primary;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 0 0 4px;
+    border: 1.5px solid $ab-green;
     border-radius: 50%;
     background-color: transparent;
-    color: $color-primary;
-    font-size: 2.8rem;
+    color: $ab-green;
+    font-family: inherit;
+    font-size: 28px;
     line-height: 1;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease,
+      transform 0.25s ease;
+
+    &:focus-visible {
+      outline: 3px solid $ab-gold;
+      outline-offset: 3px;
+    }
 
     &:hover:not(:disabled) {
-      background-color: $color-primary;
+      background-color: $ab-green;
       color: #fff;
     }
+
+    &:active:not(:disabled) {
+      transform: scale(0.94);
+    }
+
     &:disabled {
       opacity: 0.3;
       cursor: not-allowed;
@@ -350,23 +530,73 @@ $slide-min-height: 30rem; // beshi lagle barao, kom lagle komao
 
   .dots {
     display: flex;
-    gap: 1rem;
+    align-items: center;
+    gap: 6px;
   }
 
+  // 24px tap target around a small visual dot
   .dot {
-    width: 1rem;
-    height: 1rem;
+    position: relative;
+    width: 24px;
+    height: 24px;
     padding: 0;
     border: none;
-    border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.2);
+    background: none;
     cursor: pointer;
-    transition: all 0.3s ease;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      border-radius: 10px;
+      background-color: rgba(0, 0, 0, 0.2);
+      transform: translate(-50%, -50%);
+      transition:
+        width 0.35s $ab-ease-out,
+        background-color 0.3s ease;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $ab-gold;
+      border-radius: 8px;
+    }
   }
 
   .dotActive {
-    width: 3rem;
-    border-radius: 1rem;
-    background-color: $color-primary;
+    width: 38px;
+
+    &::before {
+      width: 30px;
+      background-color: $ab-green;
+    }
+  }
+
+  .counter {
+    min-width: 62px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    color: $ab-muted;
+
+    @include ab-below(480px) {
+      display: none;
+    }
+  }
+
+  .srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 }

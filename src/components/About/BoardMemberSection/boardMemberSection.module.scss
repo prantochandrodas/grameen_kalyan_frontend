@@ -1,103 +1,119 @@
-@import '../../../style/utils/base';
+@import '../Shared/tokens';
+
+$r-big: clamp(72px, 9vw, 120px);
+$r-soft: 22px;
 
 .boardMemberSection {
-  padding: 10rem 14rem;
+  position: relative;
+  padding: clamp(40px, 5vw, 72px) 0;
+  background: linear-gradient(180deg, $ab-mint 0%, #e4efe6 100%);
 
-  @include response(lg-desktop) {
-    padding: 10rem 15rem;
+  .container {
+    @include ab-container;
   }
-  @include response(desktop) {
-    padding: 10rem;
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: clamp(24px, 3.5vw, 44px);
   }
-  @include response(phone) {
-    padding: 10rem 5rem;
-  }
-  @include response(s-phone) {
-    padding: 5rem 3rem;
+
+  .eyebrow {
+    @include ab-eyebrow;
+    margin-bottom: 16px;
   }
 
   .heading {
-    font-size: clamp(
-      2.49rem + 18px,
-      calc(0.32rem + 10.86vw + 18px),
-      13.35rem + 18px
-    );
-    text-align: center;
-    font-weight: 900;
-    color: rgba($color: $color-background-green, $alpha: 0.3);
-
-    @include response(desktop) {
-      font-size: clamp(
-        2.49rem + 10px,
-        calc(0.32rem + 10.86vw + 10px),
-        13.35rem + 10px
-      );
-    }
-    @include response(s-desktop) {
-      font-size: clamp(
-        2.49rem - 10px,
-        calc(0.32rem + 10.86vw - 10px),
-        13.35rem - 10px
-      );
-    }
-    @include response(phone) {
-      font-size: clamp(
-        2.49rem - 6px,
-        calc(0.32rem + 10.86vw - 6px),
-        13.35rem - 6px
-      );
-    }
+    @include ab-h2;
+    font-size: clamp(38px, 5.4vw, 80px);
+    color: $ab-green-deep;
   }
 
-  .cardContainer {
-    margin-top: 5rem;
+  .chairmanRow {
     display: flex;
     justify-content: center;
+    padding: 0 14px 14px 0; // room for the offset gold frame
   }
 
   .gridContainer {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
-    margin-top: 2rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(20px, 2.4vw, 36px);
+    margin-top: 8px;
 
-    @include response(s-desktop) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    @include response(phone) {
-      grid-template-columns: 1fr;
+    @include ab-below(1100px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .cardContainer {
-      justify-self: center;
-      margin-top: 0;
+    @include ab-below(641px) {
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .layout {
       grid-column: 1 / -1;
 
-      @include response(phone) {
+      @include ab-below(641px) {
         display: none;
       }
     }
   }
+
   .link {
     display: block;
+    border-radius: 24px;
+    color: inherit;
     text-decoration: none;
-    color: $color-text-darkGrey;
-    transition:
-      transform 0.3s ease,
-      filter 0.3s ease;
+    --shape-radius: #{$r-soft};
+    -webkit-tap-highlight-color: transparent;
 
-    &:hover,
+    transition: transform 0.5s $ab-ease-out;
+
     &:focus-visible {
-      transform: translateY(-0.6rem);
-      filter: drop-shadow(0 1rem 1.5rem rgba(0, 0, 0, 0.12));
+      outline: 3px solid $ab-gold;
+      outline-offset: 6px;
     }
 
-    &:focus-visible {
-      outline: 2px solid $color-secondary;
-      outline-offset: 4px;
+    @include ab-hover {
+      transform: translateY(-8px);
+    }
+  }
+
+  // Chairman keeps the signature top-right leaf corner
+  .chairmanRow .link {
+    --shape-radius: 0 #{$r-big} 0 0;
+  }
+
+  // signature leaf-shaped corners: first column top-left, last column bottom-right
+  @include ab-above(1101px) {
+    .gridContainer .link[data-col='0'] {
+      --shape-radius: #{$r-big} #{$r-soft} #{$r-soft} #{$r-soft};
+    }
+
+    .gridContainer .link[data-col='3'] {
+      --shape-radius: #{$r-soft} #{$r-soft} #{$r-big} #{$r-soft};
+    }
+  }
+
+  // two columns: left column top-left leaf, right column bottom-right leaf
+  @media (min-width: 641px) and (max-width: 1100px) {
+    .gridContainer .link:nth-of-type(odd) {
+      --shape-radius: #{$r-big} #{$r-soft} #{$r-soft} #{$r-soft};
+    }
+
+    .gridContainer .link:nth-of-type(even) {
+      --shape-radius: #{$r-soft} #{$r-soft} #{$r-big} #{$r-soft};
+    }
+  }
+
+  @include ab-reduced-motion {
+    .link {
+      transition: none;
+
+      &:hover {
+        transform: none;
+      }
     }
   }
 }

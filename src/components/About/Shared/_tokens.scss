@@ -1,0 +1,118 @@
+// ============================================================
+// About page design tokens + mixins
+// Self-contained (px / clamp based) so the layout does not depend on the
+// root font-size scaling used elsewhere in the project.
+// ============================================================
+
+$ab-green: #0b612d;
+$ab-green-deep: #06401d;
+$ab-green-ink: #04301a;
+$ab-gold: #c3953d;
+$ab-gold-bright: #e0b457;
+$ab-cream: #f7f5f0;
+$ab-mint: #eef5ef;
+$ab-ink: #25332a;
+$ab-muted: #55645a;
+$ab-line: rgba(11, 97, 45, 0.14);
+
+$ab-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+// Space the "overlap" card pulls up over the previous dark section
+$ab-overlap: clamp(48px, 7vw, 112px);
+
+@mixin ab-below($width) {
+  @media (max-width: #{$width - 1px}) {
+    @content;
+  }
+}
+
+@mixin ab-above($width) {
+  @media (min-width: $width) {
+    @content;
+  }
+}
+
+// hover only on real pointer devices (no sticky hover on touch)
+@mixin ab-hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @content;
+    }
+  }
+}
+
+@mixin ab-reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+@mixin ab-container {
+  width: 100%;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 72px);
+}
+
+@mixin ab-eyebrow($color: $ab-gold) {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: $color;
+
+  &::before {
+    content: '';
+    width: 32px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+  }
+}
+
+@mixin ab-h2($color: $ab-green) {
+  margin: 0;
+  font-size: clamp(32px, 4.2vw, 56px);
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: $color;
+}
+
+@mixin ab-body {
+  font-size: clamp(16px, 0.5vw + 12px, 19px);
+  line-height: 1.75;
+  font-weight: 400;
+  color: $ab-muted;
+}
+
+// Normalises messy admin-editor HTML (inline fonts / colours / alignment)
+@mixin ab-rich-text-reset {
+  p {
+    margin: 0 0 1.25em;
+    text-align: left !important;
+  }
+
+  span,
+  font {
+    font-family: inherit !important;
+    font-size: inherit !important;
+    color: inherit !important;
+    line-height: inherit !important;
+  }
+
+  strong,
+  b {
+    font-weight: 700;
+    color: $ab-green;
+  }
+
+  a {
+    color: $ab-green;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}

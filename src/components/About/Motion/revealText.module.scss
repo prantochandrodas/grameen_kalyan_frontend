@@ -1,0 +1,17 @@
+.line {
+  display: block;
+}
+
+// overflow mask that clips each word while it slides up
+.mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0.12em 0.04em 0.22em;
+  margin: -0.12em -0.04em -0.22em;
+}
+
+.word {
+  display: inline-block;
+  will-change: transform;
+}

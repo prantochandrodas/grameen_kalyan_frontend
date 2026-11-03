@@ -5,3 +5,7 @@ export * from './OurProudSection';
 export * from './AboutGrameenKalyan';
 export * from './AchievementSection';
 export * from './BoardMemberSection';
+export * from './ParallaxHero';
+export * from './ImpactAreas';
+export * from './ParallaxCta';
+export * from './Motion';

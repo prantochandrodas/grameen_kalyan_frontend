@@ -108,6 +108,7 @@ const Navbar = ({
     {
       label: 'publication',
       children: [
+        { label: 'notes', href: '/notes' },
         { label: 'stories', href: '/stories' },
         { label: 'newsletter', href: '/newsletter' },
       ],

@@ -1,0 +1,396 @@
+@import '../Shared/tokens';
+
+.impact {
+  position: relative;
+  --gutter: clamp(14px, 2.5vw, 47px);
+  overflow: hidden;
+  padding: clamp(24px, 4vw, 56px) 0 clamp(28px, 4.4vw, 64px);
+  background: linear-gradient(180deg, $ab-mint 0%, #dcebe0 100%);
+
+  /* ---------- soft decoration ---------- */
+  .decor {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .glow {
+    position: absolute;
+    left: -280px;
+    top: 50%;
+    width: 760px;
+    height: 760px;
+    transform: translateY(-50%);
+    background: radial-gradient(
+      circle,
+      rgba($ab-green, 0.09) 0%,
+      rgba($ab-green, 0.04) 40%,
+      transparent 70%
+    );
+  }
+
+  /* ---------- layout ---------- */
+  .container {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding-inline: var(--gutter);
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(280px, 1fr) 2.4fr;
+    align-items: center;
+    gap: clamp(32px, 4vw, 64px);
+
+    @include ab-below(1100px) {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+  }
+
+  /* ---------- left column ---------- */
+  .intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+
+    @include ab-below(1100px) {
+      align-items: center;
+      text-align: center;
+      gap: 14px;
+    }
+  }
+
+  .eyebrow {
+    @include ab-eyebrow;
+    margin: 0;
+  }
+
+  .statement {
+    margin: 0;
+    font-size: clamp(24px, 2vw, 38px);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: $ab-green;
+
+    @include ab-below(1100px) {
+      max-width: 28ch;
+      font-size: clamp(21px, 4.4vw, 34px);
+    }
+  }
+
+  .highlight {
+    color: $ab-gold;
+  }
+
+  .moreLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 46px;
+    padding: 0 22px;
+    border: 1.5px solid $ab-green;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    color: $ab-green;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+
+    svg {
+      width: 18px;
+      height: 18px;
+      transition: transform 0.35s $ab-ease-out;
+    }
+
+    &:focus-visible {
+      outline: 3px solid $ab-gold;
+      outline-offset: 3px;
+    }
+
+    @include ab-hover {
+      color: #fff;
+      background-color: $ab-green;
+
+      svg {
+        transform: translateX(4px);
+      }
+    }
+  }
+
+  /* ---------- cards grid ---------- */
+  .list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(14px, 1.6vw, 24px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include ab-below(1100px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    // phones: all 4 cards visible (2 x 2), tighter gap
+    @include ab-below(640px) {
+      gap: 10px;
+    }
+  }
+
+  .item {
+    min-width: 0;
+  }
+
+  /* ---------- card ---------- */
+  .card {
+    --tone: #1a9a5b;
+    --tone-deep: #0f6b3e;
+    --tint: #dff4e6;
+    --glow: rgba(26, 154, 91, 0.28);
+    --shadow: rgba(26, 154, 91, 0.16);
+
+    display: block;
+    height: 100%;
+    border-radius: 28px;
+    text-decoration: none;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, var(--tint) 100%);
+    border: 1.5px solid rgba(255, 255, 255, 0.9);
+    box-shadow:
+      0 14px 34px var(--shadow),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+    transition:
+      transform 0.4s $ab-ease-out,
+      box-shadow 0.4s $ab-ease-out;
+
+    &[data-tone='gold'] {
+      --tone: #{$ab-gold};
+      --tone-deep: #8f6a22;
+      --tint: #f6ecd8;
+      --glow: #{rgba($ab-gold, 0.32)};
+      --shadow: #{rgba($ab-gold, 0.2)};
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--tone);
+      outline-offset: 4px;
+    }
+
+    &:active {
+      transform: scale(0.985);
+    }
+
+    @include ab-below(640px) {
+      border-radius: 20px;
+    }
+
+    @include ab-hover {
+      transform: translateY(-8px);
+      box-shadow: 0 22px 46px var(--glow);
+
+      .photo img {
+        transform: scale(1.08);
+      }
+
+      .arrow {
+        transform: translateX(4px);
+      }
+    }
+  }
+
+  .inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 9px 9px 18px;
+    overflow: hidden;
+    border-radius: inherit;
+
+    @include ab-below(1100px) {
+      padding: 8px 8px 14px;
+    }
+
+    @include ab-below(640px) {
+      padding: 6px 6px 10px;
+    }
+
+    // soft leaf accent, bottom-left
+    &::after {
+      content: '';
+      position: absolute;
+      left: -16px;
+      bottom: -16px;
+      width: 92px;
+      height: 92px;
+      background: var(--tone);
+      opacity: 0.12;
+      border-radius: 0 100% 0 100%;
+      transform: rotate(-10deg);
+      pointer-events: none;
+    }
+  }
+
+  .photo {
+    position: relative;
+    flex-shrink: 0;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 22px 22px 32px 22px;
+    background: linear-gradient(135deg, #cedfd5, #efe0bf);
+
+    // tablet: shorter picture so the section is not so tall
+    @include ab-below(1100px) {
+      aspect-ratio: 16 / 9;
+    }
+
+    // phones: 4 / 3 so the picture fits a narrow card
+    @include ab-below(640px) {
+      aspect-ratio: 16 / 9;
+      border-radius: 16px 16px 22px 16px;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(
+        180deg,
+        rgba($ab-green-deep, 0) 55%,
+        rgba($ab-green-deep, 0.22) 100%
+      );
+    }
+
+    img {
+      transition: transform 0.8s $ab-ease-out;
+    }
+  }
+
+  .placeholder {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #cedfd5, #efe0bf);
+  }
+
+  .badge {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    margin: -22px 0 0 14px;
+    border: 4px solid #fff;
+    border-radius: 50%;
+    color: #fff;
+    background: linear-gradient(
+      135deg,
+      var(--tone) 0%,
+      color-mix(in srgb, var(--tone) 78%, #000) 100%
+    );
+    box-shadow: 0 8px 18px var(--glow);
+
+    @include ab-below(640px) {
+      width: 42px;
+      height: 42px;
+      margin: -17px 0 0 8px;
+      border-width: 3px;
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+
+      @include ab-below(640px) {
+        width: 19px;
+        height: 19px;
+      }
+    }
+  }
+
+  .foot {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    margin-top: 10px;
+    padding: 0 10px 0 14px;
+
+    @include ab-below(1100px) {
+      gap: 8px;
+    }
+
+    @include ab-below(640px) {
+      gap: 6px;
+      margin-top: 6px;
+      padding: 0 4px 0 8px;
+    }
+  }
+
+  .title {
+    min-width: 0;
+    // reserve 2 lines so every arrow lines up across cards
+    min-height: calc(1.15em * 2);
+    font-size: clamp(19px, 1.6vw, 24px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: $ab-green;
+    overflow-wrap: break-word;
+
+    @include ab-below(640px) {
+      font-size: 15px;
+    }
+  }
+
+  .arrow {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    align-self: flex-end;
+    margin-top: auto;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    color: #fff;
+    background: var(--tone);
+    box-shadow: 0 6px 14px var(--glow);
+    transition: transform 0.35s $ab-ease-out;
+
+    @include ab-below(640px) {
+      width: 32px;
+      height: 32px;
+    }
+
+    svg {
+      width: 17px;
+      height: 17px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card,
+    .photo img,
+    .arrow {
+      transition: none;
+    }
+
+    .card:hover {
+      transform: none;
+    }
+  }
+}
