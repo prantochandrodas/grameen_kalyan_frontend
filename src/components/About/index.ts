@@ -7,5 +7,5 @@ export * from './AchievementSection';
 export * from './BoardMemberSection';
 export * from './ParallaxHero';
 export * from './ImpactAreas';
-export * from './ParallaxCta';
+// export * from './ParallaxCta';
 export * from './Motion';

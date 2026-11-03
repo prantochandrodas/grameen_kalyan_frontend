@@ -9,7 +9,7 @@ import { AchievementSection } from '@/components/About/AchievementSection';
 import { BoardMemberSection } from '@/components/About/BoardMemberSection';
 import { ParallaxHero } from '@/components/About/ParallaxHero';
 import { ImpactAreas } from '@/components/About/ImpactAreas';
-import { ParallaxCta } from '@/components/About/ParallaxCta';
+import WorkTogether from '@/shared/components/WorkTogether/WorkTogether';
 import MotionProvider from '@/components/About/Motion/MotionProvider';
 import { StoryOfInceptionSection } from '@/components/About/StoryOfInceptionSection';
 import { asArray } from '@/components/About/Shared/aboutHelpers';
@@ -89,7 +89,7 @@ const About = async () => {
         <AboutGrameenKalyan aboutGkData={aboutGrameenKalyanSectionData} />
         <AchievementSection achievementData={achievementData?.data} />
         <BoardMemberSection boardMembersData={boardMemberData?.data} />
-        <ParallaxCta image={workTogetherImage} />
+        <WorkTogether image={workTogetherImage} />
       </main>
     </MotionProvider>
   );
