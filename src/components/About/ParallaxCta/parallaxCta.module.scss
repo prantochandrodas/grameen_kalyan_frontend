@@ -49,44 +49,45 @@
   /* ---------- photo ---------- */
   .media {
     position: relative;
-    grid-column: 5 / 13;
+    grid-column: 1;
     grid-row: 1;
     overflow: hidden;
-    aspect-ratio: 16 / 6;
+    line-height: 0;
     border-radius: clamp(24px, 3vw, 40px);
     box-shadow: 0 12px 32px rgba($ab-green-deep, 0.12);
 
-    // laptop + desktop: image height always equals the green card height
+    // locks the 16:6 ratio (minimum height) on every screen
+    &::before {
+      content: '';
+      display: block;
+      padding-top: 37.5%; // 6 / 16
+    }
+
+    // laptop + desktop: photo fills its columns fully, and its height
+    // always follows the green card (grows / shrinks with the card)
     @include ab-above(1025px) {
-      aspect-ratio: auto;
-      height: 100%;
+      grid-column: 5 / 13;
       align-self: stretch;
-      min-height: clamp(280px, 20vw, 380px);
+      min-height: 260px;
+
+      // ratio lock off: the card decides the height here
+      &::before {
+        display: none;
+      }
     }
 
-    @include ab-below(1025px) {
-      grid-column: 1;
-    }
-
-    // small phones: taller photo so people stay clearly visible
-    @include ab-below(600px) {
-      aspect-ratio: 4 / 3;
-    }
-
-    // image wrapper fills the card (fixes the empty white card)
+    // image + tint fill the whole box
     > * {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
     }
+  }
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-    }
+  .photo {
+    object-fit: cover;
+    object-position: center 35%; // keeps faces visible when the height changes
   }
 
   .mediaTint {
@@ -156,15 +157,21 @@
       font-size: clamp(36px, 5vw, 48px);
     }
 
-    // laptops/desktops (panel is the narrow left column)
+    // laptops/desktops: single line "Let’s Work Together"
     @include ab-above(1025px) {
-      font-size: clamp(30px, 2.9vw, 52px);
+      font-size: clamp(24px, 2.5vw, 46px);
       line-height: 1.05;
+      white-space: nowrap;
     }
   }
 
   .highlight {
     color: $ab-gold-bright;
+
+    // phones + tablets: "Together" goes to the next line
+    @include ab-below(1025px) {
+      display: block;
+    }
   }
 
   .parag {
