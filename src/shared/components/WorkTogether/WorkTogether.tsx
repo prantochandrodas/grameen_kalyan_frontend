@@ -2,21 +2,24 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 import testImage from '@/assets/images/lets-work.jpeg';
-import { Button } from '../Button';
 import style from './workTogether.module.scss';
 
 const {
   workTogether,
-  imgContainer,
-  img,
-  contentContainer,
+  shell,
+  media,
+  photo,
+  mediaTint,
+  panel,
   heading,
   highlight,
   parag,
   actions,
+  button,
 } = style;
 
 const BASE_URL = 'https://admin.grameenkalyan.com';
@@ -40,35 +43,50 @@ interface IWorkTogetherProps {
 
 const WorkTogether = ({ image }: IWorkTogetherProps) => (
   <section className={workTogether}>
-    <motion.div {...fadeUp(0)} className={imgContainer}>
-      <Image
-        className={img}
-        src={getImageSrc(image)}
-        alt="Our team and partners working together"
-        width={1600}
-        height={1000}
-        sizes="(max-width: 900px) 100vw, 62vw"
-      />
-    </motion.div>
+    <div className={shell}>
+      <motion.div {...fadeUp(0)} className={media}>
+        <Image
+          className={photo}
+          src={getImageSrc(image)}
+          alt="Our team and partners working together"
+          fill
+          sizes="(max-width: 1024px) 100vw, 68vw"
+        />
+        <span className={mediaTint} />
+      </motion.div>
 
-    <div className={contentContainer}>
-      <motion.h3 {...fadeUp(0.15)} className={heading}>
-        Let&apos;s Work <span className={highlight}>Together</span>
-      </motion.h3>
+      <motion.div {...fadeUp(0.15)} className={panel}>
+        <h3 className={heading}>
+          Let&rsquo;s Work <span className={highlight}>Together</span>
+        </h3>
 
-      <motion.p {...fadeUp(0.2)} className={parag}>
-        Our promise is that everyone at the Bottom of the Pyramid will have
-        equal access to standard healthcare. We welcome partnerships and
-        collaboration to build a better future together.
-      </motion.p>
+        <p className={parag}>
+          Our promise is that everyone at the Bottom of the Pyramid will have
+          equal access to standard healthcare. We welcome partnerships and
+          collaboration to build a better future together.
+        </p>
 
-      <motion.p {...fadeUp(0.3)} className={parag}>
-        Reach out to learn more about partnership and collaboration
-        opportunities.
-      </motion.p>
+        <p className={parag}>
+          Reach out to learn more about partnership and collaboration
+          opportunities.
+        </p>
 
-      <motion.div {...fadeUp(0.4)} className={actions}>
-        <Button text="Join Us" url="/join-us" />
+        <div className={actions}>
+          <Link href="/join-us" className={button}>
+            Join Us
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </Link>
+        </div>
       </motion.div>
     </div>
   </section>

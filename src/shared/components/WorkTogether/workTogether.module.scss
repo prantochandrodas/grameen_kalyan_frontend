@@ -1,101 +1,196 @@
 @import '../../../style/utils/base';
 
+$wt-green: #1f5c3a;
+$wt-green-deep: #06401d;
+$wt-gold: #e3b155;
+$wt-gold-hover: #f0c870;
+$wt-ink: #0b2a14;
+
 .workTogether {
-  padding: 10rem 15rem 10rem 15rem;
-  padding-right: 4rem; // right side space onek komano holo
-  display: flex;
-  flex-direction: row-reverse; // image on the right
-  align-items: center;
-  gap: 6rem;
-  background: linear-gradient(180deg, #eef5ef, #f6faf7 55%, #fbfdfb);
-  ;
+  position: relative;
+  overflow: hidden;
+  padding: clamp(36px, 4.5vw, 64px) 0;
+  background: #fff;
 
-  @include response(s-desktop) {
-    padding: 8rem 10rem;
-    padding-right: 3rem;
+  .shell {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: stretch;
+    gap: clamp(16px, 2vw, 32px);
+    width: 100%;
+    padding-inline: clamp(16px, 2.2vw, 40px);
+
+    @media (max-width: 1024px) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    > * {
+      min-width: 0;
+    }
   }
 
-  @include response(tab-port) {
-    flex-direction: column;
-    gap: 4rem;
-    padding: 8rem 5rem;
-  }
-
-  @include response(phone) {
-    padding: 5rem;
-  }
-
-  @include response(s-phone) {
-    padding: 5rem 3rem;
-  }
-
-  .imgContainer {
-    flex: 1 1 70%; // aro boro image
-    aspect-ratio: 16 / 5;
-    border-radius: 2rem;
+  /* ---------- photo ---------- */
+  .media {
+    position: relative;
+    grid-column: 1;
+    grid-row: 1;
     overflow: hidden;
-    box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.12);
+    line-height: 0;
+    border-radius: clamp(24px, 3vw, 40px);
+    box-shadow: 0 12px 32px rgba($wt-green-deep, 0.12);
 
-    @include response(tab-port) {
-      flex: none;
-      width: 100%;
-    }
-
-    @include response(phone) {
-      border-radius: 1.5rem;
-    }
-
-    .img {
+    // tablet + phone: 16:6 ratio
+    &::before {
+      content: '';
       display: block;
+      padding-top: 37.5%; // 6 / 16
+    }
+    
+    // laptop + desktop: height always follows the green card
+    @media (min-width: 1025px) {
+      grid-column: 5 / 13;
+      align-self: stretch;
+      min-height: 260px;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    > * {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      object-position: center 65%;
     }
   }
 
-  .contentContainer {
-    flex: 0 1 30%; // text column chhoto
+  .photo {
+    object-fit: cover;
+    object-position: center 35%;
+  }
+
+  .mediaTint {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba($wt-green-deep, 0.28) 0%,
+      transparent 55%
+    );
+    pointer-events: none;
+  }
+
+  /* ---------- text panel ---------- */
+  .panel {
+    position: relative;
+    z-index: 2;
+    grid-column: 1 / 5;
+    grid-row: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 2rem;
+    justify-content: center;
+    gap: 10px;
+    padding: clamp(14px, 1.3vw, 22px) clamp(22px, 1.8vw, 30px);
+    border-radius: clamp(24px, 3vw, 36px);
+    color: #fff;
+    background:
+      radial-gradient(
+        120% 80% at 100% 0%,
+        rgba(255, 255, 255, 0.1) 0%,
+        transparent 60%
+      ),
+      linear-gradient(150deg, $wt-green 0%, $wt-green-deep 100%);
+    box-shadow: 0 14px 34px rgba($wt-green-deep, 0.2);
 
-    @include response(tab-port) {
-      width: 100%;
-      flex: none;
+    @media (max-width: 1024px) {
+      grid-column: 1;
+      grid-row: 2;
     }
 
-    .eyebrow {
-      font-size: 1.3rem;
-      font-weight: 600;
-      letter-spacing: 0.25rem;
-      text-transform: uppercase;
-      color: $color-primary;
+    @media (max-width: 479px) {
+      gap: 14px;
+      padding: 24px 20px;
+      border-radius: 22px;
+    }
+  }
+
+  .heading {
+    margin: 0;
+    max-width: 100%;
+    // phones: scales with screen width, always one line
+    font-size: clamp(20px, 6.4vw, 30px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #fff;
+    white-space: nowrap;
+
+    @media (min-width: 768px) {
+      font-size: clamp(32px, 5vw, 44px);
     }
 
-    .heading {
-      margin: 0;
-      line-height: 1.15;
-      font-weight: 800;
-      font-size: clamp(3rem, 3.5vw, 4.8rem);
-      color: $color-primary;
+    @media (min-width: 1025px) {
+      font-size: clamp(24px, 2.5vw, 46px);
+      line-height: 1.05;
+    }
+  }
+
+  .highlight {
+    color: $wt-gold;
+  }
+
+  .parag {
+    margin: 0;
+    font-size: clamp(16px, 1.15vw, 19px);
+    font-weight: 400;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .actions {
+    margin-top: 4px;
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 52px;
+    padding: 0 30px;
+    border-radius: 999px;
+    font-size: 17px;
+    font-weight: 700;
+    color: $wt-ink;
+    text-decoration: none;
+    background: $wt-gold;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.25);
+    transition:
+      transform 0.35s ease,
+      background-color 0.3s ease;
+
+    svg {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.35s ease;
     }
 
-    .highlight {
-      color: $color-secondary-goldenrod;
+    &:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 3px;
     }
 
-    .parag {
-      margin: 0;
-      font-size: 2rem;
-      font-weight: 400;
-      line-height: 1.5;
-      color: #666;
-    }
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        transform: translateY(-3px);
+        background: $wt-gold-hover;
 
-    .actions {
-      margin-top: 1.5rem;
+        svg {
+          transform: translateX(4px);
+        }
+      }
     }
   }
 }
