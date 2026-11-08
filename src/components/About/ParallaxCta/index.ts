@@ -1,1 +1,1 @@
-export { default as ParallaxCta } from './ParallaxCta';
+// export { default as ParallaxCta } from './ParallaxCta';
