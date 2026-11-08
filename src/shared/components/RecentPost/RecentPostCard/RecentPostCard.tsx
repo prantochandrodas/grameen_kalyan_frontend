@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { IStories } from '@/shared/types/stories';
 import { IMAGE_BASE_URL } from '@/config';
@@ -23,22 +24,23 @@ interface IRecentPostCardProps {
 
 const RecentPostCard = ({ data }: IRecentPostCardProps) => {
   return (
-    <div className={recentPostCard}>
+    <Link href={`/stories/${data.id}/${data.id}`} className={recentPostCard}>
       <div className={container}>
         <div className={imgContainer}>
           <Image
             className={img}
             src={IMAGE_BASE_URL + data.thumb_image}
-            alt="card img"
-            width={2000}
-            height={2000}
+            alt={data.title}
+            width={1600}
+            height={500}
+            sizes="(max-width: 768px) 100vw, 33vw"
           />
         </div>
       </div>
       <div className={contentContainer}>
         <h3 className={title}>{data.title}</h3>
       </div>
-    </div>
+    </Link>
   );
 };
 

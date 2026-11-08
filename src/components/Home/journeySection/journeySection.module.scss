@@ -157,12 +157,22 @@ $text: #5b6660;
 
   a,
   button {
-    padding: 0.6rem 1.6rem !important;
-    font-size: 1.3rem !important;
-    line-height: 1.4 !important;
-    min-height: 0 !important;
-    height: auto !important;
-    border-radius: 0.6rem !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  background: #0b612d;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.2s ease;
+
+    &:hover {
+      background: darken(#0b612d, 6%);
+    }
   }
 }
 

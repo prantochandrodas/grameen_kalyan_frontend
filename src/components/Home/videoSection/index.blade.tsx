@@ -122,7 +122,7 @@ const VideoSection = () => {
         preserveAspectRatio="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path d="M300,200 L300,60 C220,20 120,140 0,200 Z" fill="#e0a132" />
+        <path d="M300,200 L300,60 C220,20 120,140 0,200 Z" fill="#c3953d" />
       </svg>
 
       <div className={wrapper}>

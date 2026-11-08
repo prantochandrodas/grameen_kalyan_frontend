@@ -7,15 +7,17 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
 import React, { useState, useEffect, KeyboardEvent, useRef } from 'react';
-import { FaLocationDot, FaPhone } from 'react-icons/fa6';
-import Image from 'next/image';
-
 import {
-  getDataByDivisionId,
-  getDataByKeyword,
-  getDataByHealthCenterId,
-} from './mapSection.helper';
+  FaLocationDot,
+  FaPhone,
+  FaMagnifyingGlass,
+  FaXmark,
+  FaExpand,
+} from 'react-icons/fa6';
 
+import { getDataByDivisionId, getDataByKeyword } from './mapSection.helper';
+
+import Image from 'next/image';
 import { IMAGE_BASE_URL } from '@/config';
 import { IHealthCenter } from '@/shared/types/healthCenter';
 
@@ -26,16 +28,46 @@ const {
   contentContainer,
   mapContainer,
   content,
+  divisionHeader,
+  divisionBadge,
+  divisionName,
+  searchWrap,
+  searchBox,
+  searchIcon,
   search,
+  spinner,
+  clearBtn,
+  suggestionList,
+  suggestionItem,
+  suggestionActive,
+  suggestionIcon,
+  suggestionName,
+  suggestionMeta,
+  suggestionState,
   imageContainer,
+  imageBg,
+  imageLink,
+  imageHint,
+  imagePlaceholder,
+  skeleton,
+  emptyState,
+  emptyIcon,
+  emptyTitle,
+  emptyText,
   healthCenterName,
   locationContact,
+  infoCard,
+  iconWrap,
+  infoText,
   address,
   contact,
-  listOfHospital,
-  heading,
-  divisionName,
   icon,
+  listHeader,
+  countBadge,
+  listOfHospital,
+  listItem,
+  listActive,
+  heading,
   rangpur,
   rajshahi,
   khulna,
@@ -48,8 +80,11 @@ const {
   active,
 } = style;
 
+const MIN_CHARS = 2;
+const MAX_SUGGESTIONS = 8;
+
 const MapSection = () => {
-  const [divisionId, setDivisionId] = useState<string | number>(30);
+  const [divisionId] = useState<string | number>(30);
   const [data, setData] = useState<any[] | undefined>();
   const [mapActive, setMapActive] = useState<number>(20);
   const [healthCenterData, setHealthCenterData] = useState<
@@ -58,65 +93,170 @@ const MapSection = () => {
   const [activeHealthCenter, setActiveHealthCenter] = useState<boolean>(false);
   const [centerDivision, setCenterDivision] = useState<string | null>();
 
+  // ---- search state ----
+  const [query, setQuery] = useState<string>('');
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [highlighted, setHighlighted] = useState<number>(-1);
+  const searchRef = useRef<HTMLDivElement>(null);
+  const requestId = useRef<number>(0);
+  const skipSearch = useRef<boolean>(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const firstLoad = useRef<boolean>(true);
 
-  const loadDivisionData = async (key: number | string) => {
+  const loadDivisionData = async (
+    key: number | string,
+    resetSelection = true
+  ) => {
+    const res = await getDataByDivisionId(key);
+    setData(res?.data ?? []);
+    setCenterDivision(res?.division_name);
 
-    const dataByDivisionId = await getDataByDivisionId(key);
-    setData(dataByDivisionId.data);
-    setCenterDivision(dataByDivisionId.division_name);
+    if (resetSelection) {
+      setActiveHealthCenter(false);
+      setHealthCenterData(undefined);
+    }
 
-    dataByDivisionId?.data?.map(
-      (item: IHealthCenter, index: number) =>
-        index === 0 && setMapActive(item.division_id)
-    );
-  };
+    const first = res?.data?.[0];
+    setMapActive(first ? first.division_id : Number(key));
 
-  const loadHealthCenterData = async (key: number) => {
-    const dataByHealthCenterId = await getDataByHealthCenterId(key);
-    dataByHealthCenterId?.data?.forEach((element: IHealthCenter) => {
-      setHealthCenterData(element);
-      loadDivisionData(element.division_id);
-    });
-    setActiveHealthCenter(true);
-  };
-  const healthCenterImage = healthCenterData?.banner_image;
-
-  const loadHealthCenterDataBySearch = async (key: string) => {
-    const dataByHealthCenterId = await getDataByKeyword(key);
-    dataByHealthCenterId?.data?.forEach((element: IHealthCenter) => {
-      setHealthCenterData(element);
-      loadDivisionData(element.division_id);
-    });
-    setActiveHealthCenter(true);
-  };
-
-  const handleSearch = async (e: KeyboardEvent<HTMLInputElement>) => {
-    const value = (e.target as HTMLInputElement).value;
-    if (e.code === 'Enter') {
-      if ((e.target as HTMLInputElement).value.length <= 3) {
-        alert('Please enter more than 3 characters');
-      }
-      if ((e.target as HTMLInputElement).value.length >= 3) {
-        loadHealthCenterDataBySearch(value);
-      }
+    // phones: bring the details into view after a map tap (not on first load)
+    if (firstLoad.current) {
+      firstLoad.current = false;
+    } else if (
+      resetSelection &&
+      typeof window !== 'undefined' &&
+      window.matchMedia('(max-width: 810px)').matches
+    ) {
+      contentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
+  // pick a center from the search dropdown
+  const selectFromSearch = (center: any) => {
+    skipSearch.current = center.name !== query;
+    setQuery(center.name);
+    setSuggestions([]);
+    setIsOpen(false);
+    setHighlighted(-1);
+    setHealthCenterData(center);
+    setActiveHealthCenter(true);
+    loadDivisionData(center.division_id, false);
+  };
 
+  // pick a center from the list under the card
+  const selectFromList = (center: any) => {
+    setHealthCenterData(center);
+    setActiveHealthCenter(true);
+  };
+
+  const clearSearch = () => {
+    setQuery('');
+    setSuggestions([]);
+    setHighlighted(-1);
+    setIsOpen(false);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setIsOpen(true);
+      setHighlighted((p) => (p < suggestions.length - 1 ? p + 1 : 0));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setIsOpen(true);
+      setHighlighted((p) => (p > 0 ? p - 1 : suggestions.length - 1));
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const picked = suggestions[highlighted] ?? suggestions[0];
+      if (picked) selectFromSearch(picked);
+    } else if (e.key === 'Escape') {
+      setIsOpen(false);
+    }
+  };
+
+  // default division on first load
   useEffect(() => {
     loadDivisionData(divisionId);
   }, [divisionId]);
 
-  const firstData = data && data[0];
-  const centerImage = firstData?.banner_image;
-  const centerName = firstData?.name;
-  const centerAddress = firstData?.address;
-  const centerPhone = firstData?.contact_info;
+  // debounced suggestion search
+  useEffect(() => {
+    if (skipSearch.current) {
+      skipSearch.current = false;
+      return undefined;
+    }
+
+    const term = query.trim();
+    if (term.length < MIN_CHARS) {
+      setSuggestions([]);
+      setIsSearching(false);
+      return undefined;
+    }
+
+    requestId.current += 1;
+    const id = requestId.current;
+    setIsSearching(true);
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await getDataByKeyword(term);
+        if (id === requestId.current) {
+          setSuggestions((res?.data ?? []).slice(0, MAX_SUGGESTIONS));
+          setHighlighted(-1);
+        }
+      } catch {
+        if (id === requestId.current) setSuggestions([]);
+      } finally {
+        if (id === requestId.current) setIsSearching(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  // close dropdown on outside click
+  useEffect(() => {
+    const onOutside = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', onOutside);
+    return () => document.removeEventListener('mousedown', onOutside);
+  }, []);
+
+  // keep highlighted suggestion visible while using arrow keys
+  useEffect(() => {
+    if (highlighted < 0) return;
+    document
+      .getElementById(`gk-sugg-${highlighted}`)
+      ?.scrollIntoView({ block: 'nearest' });
+  }, [highlighted]);
+
+  const current: any = activeHealthCenter ? healthCenterData : data?.[0];
+  const imageUrl = current?.banner_image
+    ? IMAGE_BASE_URL + current.banner_image
+    : '';
+  const isLoading = data === undefined;
+  const trimmed = query.trim();
+  const showSuggestions = isOpen && trimmed.length > 0;
+  const firstPhone = current?.contact_info
+    ? String(current.contact_info)
+        .split(/[,/;]/)[0]
+        .replace(/[^\d+]/g, '')
+    : '';
+  const phoneHref = firstPhone
+    ? `tel:${/^01\d{9}$/.test(firstPhone) ? `+88${firstPhone}` : firstPhone}`
+    : undefined;
 
   return (
     <div className={mapSection} id="healthcareMap">
-      <h2 className={heading}>Our Health Centers</h2>
       <div className={contentContainer}>
+        {/* ---------- Section title (above the map) ---------- */}
+        <h2 className={heading}>Our Health Centers</h2>
+
         <div className={mapContainer}>
           {/* <BangladeshMap/> */}
           <svg
@@ -273,68 +413,225 @@ const MapSection = () => {
             </g>
           </svg>
         </div>
-        <div className={content} id="healthcareMap">
-          <h4 className={divisionName}>{centerDivision} Division</h4>
-          <input
-            className={search}
-            type="text"
-            onKeyUp={handleSearch}
-            placeholder="type your location.."
-          />
-          <div className={imageContainer}>
-            <Image
-              className={img}
-              src={
-                IMAGE_BASE_URL +
-                (activeHealthCenter ? healthCenterImage : centerImage)
-              }
-              alt=""
-              width={500}
-              height={500}
-              loader={() =>
-                IMAGE_BASE_URL +
-                (activeHealthCenter ? healthCenterImage : centerImage)
-              }
-            />
+        <div className={content} ref={contentRef}>
+          <div className={divisionHeader} aria-live="polite">
+            <span className={divisionBadge}>Selected Division</span>
+            <h3 className={divisionName}>
+              {centerDivision ? `${centerDivision} Division` : 'Loading...'}
+            </h3>
           </div>
-          <h3 className={healthCenterName}>
-            {activeHealthCenter ? healthCenterData?.name : centerName}
-          </h3>
-          <div className={locationContact}>
-            <div className={address} >
 
-              <a
-                href={activeHealthCenter ? healthCenterData?.map_location : firstData?.map_location}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: 'none', color: 'inherit', display: 'flex', gap: '2rem' }}
-              >
-                <FaLocationDot className={icon} />
-                <p>
-                  {activeHealthCenter ? healthCenterData?.address : centerAddress}
-                  ,{' '}
-                  {activeHealthCenter
-                    ? healthCenterData?.division_name
-                    : centerDivision}
-                </p>
-              </a>
+          {/* ---------- Search with suggestions ---------- */}
+          <div className={searchWrap} ref={searchRef}>
+            <div className={searchBox}>
+              <FaMagnifyingGlass className={searchIcon} />
+              <input
+                className={search}
+                type="text"
+                value={query}
+                role="combobox"
+                aria-expanded={showSuggestions}
+                aria-controls="gk-suggestions"
+                aria-autocomplete="list"
+                autoComplete="off"
+                placeholder="Search health center, upazila or district"
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setIsOpen(true);
+                }}
+                onFocus={() => setIsOpen(true)}
+                onKeyDown={handleKeyDown}
+              />
+              {isSearching && <span className={spinner} />}
+              {query && (
+                <button
+                  type="button"
+                  className={clearBtn}
+                  onClick={clearSearch}
+                  aria-label="Clear search"
+                >
+                  <FaXmark />
+                </button>
+              )}
             </div>
-            <div className={contact}>
-              <FaPhone className={icon} />
-              <p>
-                {activeHealthCenter
-                  ? healthCenterData?.contact_info
-                  : centerPhone}
+
+            {showSuggestions && (
+              <ul className={suggestionList} id="gk-suggestions" role="listbox">
+                {trimmed.length < MIN_CHARS && (
+                  <li className={suggestionState}>
+                    Type at least {MIN_CHARS} characters to search
+                  </li>
+                )}
+
+                {trimmed.length >= MIN_CHARS &&
+                  isSearching &&
+                  suggestions.length === 0 && (
+                    <li className={suggestionState}>Searching...</li>
+                  )}
+
+                {trimmed.length >= MIN_CHARS &&
+                  !isSearching &&
+                  suggestions.length === 0 && (
+                    <li className={suggestionState}>
+                      No health center found for &ldquo;{trimmed}&rdquo;
+                    </li>
+                  )}
+
+                {suggestions.map((item, index) => (
+                  <li
+                    key={item.id}
+                    id={`gk-sugg-${index}`}
+                    role="option"
+                    aria-selected={index === highlighted}
+                    className={`${suggestionItem} ${
+                      index === highlighted ? suggestionActive : ''
+                    }`}
+                    onMouseEnter={() => setHighlighted(index)}
+                    onClick={() => selectFromSearch(item)}
+                  >
+                    <FaLocationDot className={suggestionIcon} />
+                    <div>
+                      <strong className={suggestionName}>{item.name}</strong>
+                      <span className={suggestionMeta}>
+                        {[item.upazilla_name, item.district_name, item.division_name]
+                          .filter(Boolean)
+                          .join(', ')}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          {/* ---------- Loading ---------- */}
+          {isLoading && <div className={skeleton} />}
+
+          {/* ---------- Empty division ---------- */}
+          {!isLoading && !current && (
+            <div className={emptyState}>
+              <span className={emptyIcon}>
+                <FaLocationDot />
+              </span>
+              <h3 className={emptyTitle}>
+                No health center in {centerDivision} yet
+              </h3>
+              <p className={emptyText}>
+                We are expanding. Please pick another division on the map or
+                search by name.
               </p>
             </div>
-          </div>
-          <div className={listOfHospital}>
-            {data?.map((item) => (
-              <p key={item.id} onClick={() => loadHealthCenterData(item.id)}>
-                {item.name}, {item.upazilla_name}, {item.district_name}
-              </p>
-            ))}
-          </div>
+          )}
+
+          {/* ---------- Selected center ---------- */}
+          {current && (
+            <>
+              <div className={imageContainer}>
+                {imageUrl ? (
+                  <>
+                    <div
+                      className={imageBg}
+                      style={{ backgroundImage: `url("${imageUrl}")` }}
+                      aria-hidden="true"
+                    />
+                    <a
+                      className={imageLink}
+                      href={imageUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="View full image"
+                    >
+                      <Image
+                        key={imageUrl}
+                        className={img}
+                        src={imageUrl}
+                        alt={current?.name || 'Health center'}
+                        fill
+                        sizes="(max-width: 810px) 100vw, 50vw"
+                        loader={() => imageUrl}
+                      />
+                      <span className={imageHint}>
+                        <FaExpand /> View full image
+                      </span>
+                    </a>
+                  </>
+                ) : (
+                  <div className={imagePlaceholder}>No image available</div>
+                )}
+              </div>
+
+              <h3 className={healthCenterName}>{current?.name}</h3>
+
+              <div className={locationContact}>
+                {current?.address && (
+                  <a
+                    className={`${infoCard} ${address}`}
+                    href={current?.map_location || undefined}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className={iconWrap}>
+                      <FaLocationDot className={icon} />
+                    </span>
+                    <span className={infoText}>
+                      <strong>
+                        {current.address}
+                        {(current?.division_name || centerDivision) &&
+                          `, ${current?.division_name || centerDivision}`}
+                      </strong>
+                    </span>
+                  </a>
+                )}
+
+                {current?.contact_info && (
+                  <a
+                    className={`${infoCard} ${contact}`}
+                    href={phoneHref}
+                    aria-label={`Call ${current.contact_info}`}
+                  >
+                    <span className={iconWrap}>
+                      <FaPhone className={icon} />
+                    </span>
+                    <span className={infoText}>
+                      <strong>{current.contact_info}</strong>
+                    </span>
+                  </a>
+                )}
+              </div>
+            </>
+          )}
+
+          {/* ---------- List (only when the division has centers) ---------- */}
+          {(data?.length ?? 0) > 0 && (
+            <>
+              <div className={listHeader}>
+                <span>Health centers in {centerDivision}</span>
+                <span className={countBadge}>{data?.length ?? 0}</span>
+              </div>
+              <div className={listOfHospital}>
+                {data?.map((item) => (
+                  <button
+                    type="button"
+                    key={item.id}
+                    className={`${listItem} ${
+                      current?.id === item.id ? listActive : ''
+                    }`}
+                    onClick={() => selectFromList(item)}
+                  >
+                    <FaLocationDot />
+                    <span>
+                      <strong>{item.name}</strong>
+                      <small>
+                        {[item.upazilla_name, item.district_name]
+                          .filter(Boolean)
+                          .join(', ')}
+                      </small>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div >

@@ -1,6 +1,6 @@
 @import '../../../style/utils/base';
 
-$gold: #c9a13b;
+$gold: #c3953d;
 
 .sevenPrinciple {
   position: relative;
@@ -77,9 +77,10 @@ $gold: #c9a13b;
   }
 
   .heading {
-    font-size: clamp(2.8rem, calc(1rem + 3vw), 5rem);
-    line-height: 1.2;
     color: $color-primary;
+    line-height: 1.15;
+    font-weight: 900;
+    font-size: min(5.2rem, 5.4vw);
   }
 
   .highlight {

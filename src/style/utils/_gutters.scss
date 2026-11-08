@@ -1,0 +1,16 @@
+@mixin gutters {
+  padding-inline: 20rem;
+
+  @include response(M-desktop) {
+    padding-inline: 15rem;
+  }
+  @include response(tab-port) {
+    padding-inline: 10rem;
+  }
+  @include response(phone) {
+    padding-inline: 5rem;
+  }
+  @include response(s-phone) {
+    padding-inline: 3rem;
+  }
+}

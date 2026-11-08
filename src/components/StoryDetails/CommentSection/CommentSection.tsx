@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 import { getAllComments } from './commentSection.helper';
 import CommentCard from './CommentCard/CommentCard';
 
 import { BASE_URL } from '@/config';
-import { FormErrorMessage, SuccessMessage } from '@/shared/components';
+import { SuccessMessage } from '@/shared/components';
 
 interface IformInputs {
   fullName: string;
@@ -24,197 +24,217 @@ const {
   lineLeft,
   box,
   lineRight,
-  formContainer,
-  commentContainer,
+  formCard,
+  formTitle,
   form,
-  fullNameBox,
-  emailBox,
-  commentBox,
+  row,
+  field,
+  label,
   required,
+  inputField,
+  textareaField,
+  hint,
+  errorText,
+  fieldFooter,
+  counter,
+  alertBox,
   submitBtn,
+  commentContainer,
+  commentCount,
   cardContainer,
-  fullNameInput,
-  commentInput,
-  emailInput,
 } = style;
 
 const CommentSection = ({ storyId }: { storyId: number }) => {
   const [submissionSuccessful, setSubmissionSuccessful] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [commentData, setCommentData] = useState<any[] | undefined>();
+  const [commentData, setCommentData] = useState<any[]>([]);
 
   const {
     register,
     handleSubmit,
+    reset,
+    watch,
     formState: { errors, isSubmitting },
-  } = useForm<IformInputs>();
+  } = useForm<IformInputs>({ mode: 'onTouched' });
 
-  const onSubmit: SubmitHandler<IformInputs> = async (data) => {
-    const userFormData = new FormData();
-    const commentFormData = new FormData();
+  const commentLength = watch('comment')?.length ?? 0;
 
-    // User Form Submit
+  const loadCommentData = useCallback(async () => {
     try {
-      userFormData.append('name', data.fullName);
-      userFormData.append('email', data.email);
-
-      const responseUser = await fetch(BASE_URL + '/anonymous-user', {
-        method: 'POST',
-        body: userFormData,
-      });
-
-      if (!responseUser.ok) {
-        throw new Error('Request fail');
-      }
-    } catch (error: unknown) {
-      const errorInstance = error instanceof Error;
-      const errMessage = errorInstance ? error.message : 'Something went wrong';
-      setErrorMessage(errMessage);
+      const res = await getAllComments(storyId);
+      setCommentData(Array.isArray(res?.data) ? res.data : []);
+    } catch {
+      setCommentData([]);
     }
-
-    // Get user
-    const anonymousUser = async () => {
-      try {
-        const responseUserData = await fetch(
-          BASE_URL + `/anonymous-user?email=${data.email}`
-        );
-
-        if (!responseUserData.ok) {
-          throw new Error('Failed to fetch data');
-        }
-
-        return responseUserData.json();
-      } catch (error: unknown) {
-        const errorInstance = error instanceof Error;
-        const errMessage = errorInstance
-          ? error.message
-          : 'Something went wrong';
-        return errMessage;
-      }
-    };
-    const userId = await anonymousUser();
-
-    // Comment Form Submit
-    try {
-      commentFormData.append('user_id', userId.user_id);
-      commentFormData.append('comment', data.comment);
-      commentFormData.append('content_id', storyId.toString());
-
-      const responseComment = await fetch(BASE_URL + '/comments', {
-        method: 'POST',
-        body: commentFormData,
-      });
-
-      if (!responseComment.ok) {
-        throw new Error('Request fail');
-      }
-      setSubmissionSuccessful(true);
-    } catch (error: unknown) {
-      const errorInstance = error instanceof Error;
-      const errMessage = errorInstance ? error.message : 'Something went wrong';
-      setErrorMessage(errMessage);
-    }
-  };
-
-  const loadCommentData = async () => {
-    const commentsData = await getAllComments(storyId);
-
-    setCommentData(commentsData.data);
-  };
+  }, [storyId]);
 
   useEffect(() => {
     loadCommentData();
-  }, []);
+  }, [loadCommentData]);
+
+  const onSubmit: SubmitHandler<IformInputs> = async (data) => {
+    setErrorMessage(null);
+    const name = data.fullName.trim();
+    const email = data.email.trim();
+
+    try {
+      // 1) create anonymous user (API may reject an existing email - that is fine,
+      //    the existing user is fetched in step 2)
+      const userFormData = new FormData();
+      userFormData.append('name', name);
+      userFormData.append('email', email);
+      await fetch(`${BASE_URL}/anonymous-user`, {
+        method: 'POST',
+        body: userFormData,
+      }).catch(() => null);
+
+      // 2) get the user id
+      const userRes = await fetch(
+        `${BASE_URL}/anonymous-user?email=${encodeURIComponent(email)}`
+      );
+      if (!userRes.ok) throw new Error('We could not verify your details. Please try again.');
+      const user = await userRes.json();
+      if (!user?.user_id) throw new Error('We could not verify your details. Please try again.');
+
+      // 3) post the comment
+      const commentFormData = new FormData();
+      commentFormData.append('user_id', String(user.user_id));
+      commentFormData.append('comment', data.comment.trim());
+      commentFormData.append('content_id', storyId.toString());
+
+      const commentRes = await fetch(`${BASE_URL}/comments`, {
+        method: 'POST',
+        body: commentFormData,
+      });
+      if (!commentRes.ok) throw new Error('We could not post your comment. Please try again.');
+
+      reset();
+      setSubmissionSuccessful(true);
+      loadCommentData();
+    } catch (error: unknown) {
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Something went wrong. Please try again.'
+      );
+    }
+  };
 
   const handleModal = () => {
     setSubmissionSuccessful(false);
   };
 
   return (
-    <div className={commentSection}>
-      <h2 className={heading}>Comments</h2>
+    <section className={commentSection} aria-labelledby="comments-heading">
+      <h2 id="comments-heading" className={heading}>
+        Comments
+      </h2>
       <div className={divider}>
         <div className={lineLeft} />
         <div className={box} />
         <div className={lineRight} />
       </div>
 
-      <div className={formContainer}>
-        <form
-          className={form}
-          onSubmit={handleSubmit(onSubmit)}
-          encType="multipart/form-data"
-        >
-          <div className={`${fullNameBox} ${box}`}>
-            <label htmlFor="fullName">
-              Full Name<span className={required}>*</span>:
-            </label>
-            <div className={fullNameInput}>
+      <div className={formCard}>
+        <h3 className={formTitle}>Leave a comment</h3>
+
+        <form className={form} onSubmit={handleSubmit(onSubmit)} noValidate>
+          <div className={row}>
+            <div className={field}>
+              <label className={label} htmlFor="fullName">
+                Full Name<span className={required}>*</span>
+              </label>
               <input
                 id="fullName"
                 type="text"
-                {...register('fullName', { required: true })}
-              />
-              {errors.fullName?.type === 'required' && (
-                <div>
-                  <FormErrorMessage message="Please enter your full-name" />
-                </div>
-              )}
-            </div>
-            <p>Must be 3-20 characters long.</p>
-          </div>
-          <div className={`${emailBox} ${box}`}>
-            <label htmlFor="email">
-              Email ID<span className={required}>*</span>:
-            </label>
-            <div className={emailInput}>
-              <input
-                id="email"
-                type="text"
-                {...register('email', {
-                  required: true,
-                  pattern:
-                    /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/i,
+                autoComplete="name"
+                placeholder="Your name"
+                className={inputField}
+                aria-invalid={!!errors.fullName}
+                {...register('fullName', {
+                  required: 'Please enter your full name',
+                  validate: (v) =>
+                    (v.trim().length >= 3 && v.trim().length <= 20) ||
+                    'Name must be 3-20 characters long',
                 })}
               />
-              {errors.email?.type === 'required' && (
-                <div>
-                  <FormErrorMessage message="Please an email" />
-                </div>
-              )}
-              {errors.email?.type === 'pattern' && (
-                <div>
-                  <FormErrorMessage message="Please Provide a valid email address" />
-                </div>
+              {errors.fullName ? (
+                <p className={errorText} role="alert">
+                  {errors.fullName.message}
+                </p>
+              ) : (
+                <p className={hint}>Must be 3-20 characters long.</p>
               )}
             </div>
-            <p>Email should be valid email.</p>
-          </div>
-          <div className={`${commentBox} ${box}`}>
-            <label htmlFor="comment">
-              Comment<span className={required}>*</span>:
-            </label>
-            <div className={commentInput}>
-              <textarea
-                id="comment"
-                rows={6}
-                {...register('comment', { required: true })}
+
+            <div className={field}>
+              <label className={label} htmlFor="email">
+                Email ID<span className={required}>*</span>
+              </label>
+              <input
+                id="email"
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                placeholder="you@example.com"
+                className={inputField}
+                aria-invalid={!!errors.email}
+                {...register('email', {
+                  required: 'Please enter your email',
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: 'Please provide a valid email address',
+                  },
+                })}
               />
-              {errors.comment?.type === 'required' && (
-                <div>
-                  <FormErrorMessage message="Please enter a comment" />
-                </div>
+              {errors.email ? (
+                <p className={errorText} role="alert">
+                  {errors.email.message}
+                </p>
+              ) : (
+                <p className={hint}>Your email will not be published.</p>
               )}
             </div>
-            <p>Must be 3-100 characters long.</p>
           </div>
-          <input
-            className={submitBtn}
-            type="submit"
-            value="Post Comment"
-            disabled={isSubmitting}
-          />
+
+          <div className={field}>
+            <label className={label} htmlFor="comment">
+              Comment<span className={required}>*</span>
+            </label>
+            <textarea
+              id="comment"
+              rows={5}
+              placeholder="Share your thoughts..."
+              className={textareaField}
+              aria-invalid={!!errors.comment}
+              {...register('comment', {
+                required: 'Please enter a comment',
+                validate: (v) =>
+                  (v.trim().length >= 3 && v.trim().length <= 100) ||
+                  'Comment must be 3-100 characters long',
+              })}
+            />
+            <div className={fieldFooter}>
+              {errors.comment ? (
+                <p className={errorText} role="alert">
+                  {errors.comment.message}
+                </p>
+              ) : (
+                <p className={hint}>Must be 3-100 characters long.</p>
+              )}
+              <span className={counter}>{commentLength}/100</span>
+            </div>
+          </div>
+
+          {errorMessage && (
+            <p className={alertBox} role="alert">
+              {errorMessage}
+            </p>
+          )}
+
+          <button type="submit" className={submitBtn} disabled={isSubmitting}>
+            {isSubmitting ? 'Posting…' : 'Post Comment'}
+          </button>
         </form>
+
         {submissionSuccessful && (
           <SuccessMessage
             textMessage="Comment submitted successfully!"
@@ -225,13 +245,18 @@ const CommentSection = ({ storyId }: { storyId: number }) => {
       </div>
 
       <div className={commentContainer}>
-        {commentData?.map((data) => (
+        <h3 className={commentCount}>
+          {commentData.length > 0
+            ? `${commentData.length} Comment${commentData.length > 1 ? 's' : ''}`
+            : 'No comments yet. Be the first to share your thoughts.'}
+        </h3>
+        {commentData.map((data) => (
           <div key={data.id} className={cardContainer}>
             <CommentCard commentData={data} />
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

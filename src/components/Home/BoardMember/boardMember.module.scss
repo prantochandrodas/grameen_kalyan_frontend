@@ -1,62 +1,107 @@
+// @import '../../../style/utils/base';
+// .boardMember {
+//   position: relative;
+//   padding: 6rem 7rem;
+//   @include response(s-desktop) {
+//     padding: 5rem 4rem;
+//   }
+//   @include response(phone) {
+//     padding: 3rem 2rem;
+//   }
+//   @include response(s-phone) {
+//     padding: 2.5rem 1.6rem;
+//   }
+//   .layoutRight {
+//     height: 75rem;
+//     position: absolute;
+//     top: 0;
+//     right: 0;
+//     @include response(phone) {
+//       height: 50rem;
+//     }
+//     .img {
+//       height: 100%;
+//       width: 100%;
+//       object-fit: contain;
+//     }
+//   }
+//   .layoutLeft {
+//     position: absolute;
+//     left: 0;
+//     bottom: 0;
+//     height: 70%;
+//     transform: rotateY(180deg);
+//     @include response(phone) {
+//       height: 40%;
+//     }
+//     .img {
+//       height: 100%;
+//       width: 100%;
+//       object-fit: contain;
+//     }
+//   }
+//   .memberCardContainer {
+//     position: relative;
+//     z-index: 1;
+//     &:not(:last-child) {
+//       margin-bottom: 6rem;
+//       @include response(s-desktop) {
+//         margin-bottom: 4rem;
+//       }
+//       @include response(phone) {
+//         margin-bottom: 3rem;
+//       }
+//     }
+//   }
+// }
 @import '../../../style/utils/base';
-
 .boardMember {
-  position: relative;
-  // padding: 20rem 15rem;
-     padding: 15rem 7rem;
-
-  @include response(s-desktop) {
-    padding: 10rem;
-  }
-  @include response(phone) {
-    padding: 5rem;
-  }
-  @include response(s-phone) {
-    padding: 3rem;
-  }
-
-  .layoutRight {
-    height: 75rem;
-    position: absolute;
-    top: 0;
-    right: 0;
-
-    @include response(phone) {
-      height: 50rem;
-    }
-
-    .img {
-      height: 100%;
-      width: 100%;
-      object-fit: contain;
-    }
-  }
-
-  .layoutLeft {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-
-    height: 70%;
-    transform: rotateY(180deg);
-
-    @include response(phone) {
-      height: 40%;
-    }
-
-    .img {
-      height: 100%;
-      width: 100%;
-      object-fit: contain;
-    }
-  }
-
-  .memberCardContainer {
     position: relative;
-    z-index: 1;
-
-    &:not(:last-child) {
-      margin-bottom: 15rem;
+    // padding: 20rem 15rem;
+    padding: 15rem 7rem;
+    @include response(s-desktop) {
+        padding: 10rem;
     }
-  }
+    @include response(phone) {
+        padding: 5rem;
+    }
+    @include response(s-phone) {
+        padding: 3rem;
+    }
+    .layoutRight {
+        height: 75rem;
+        position: absolute;
+        top: 0;
+        right: 0;
+        @include response(phone) {
+            height: 50rem;
+        }
+        .img {
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+        }
+    }
+    .layoutLeft {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 70%;
+        transform: rotateY(180deg);
+        @include response(phone) {
+            height: 40%;
+        }
+        .img {
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+        }
+    }
+    .memberCardContainer {
+        position: relative;
+        z-index: 1;
+        &:not(:last-child) {
+            margin-bottom: 15rem;
+        }
+    }
 }

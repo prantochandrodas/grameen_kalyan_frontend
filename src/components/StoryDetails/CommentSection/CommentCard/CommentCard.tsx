@@ -3,39 +3,43 @@ import React from 'react';
 import { IComment } from '@/shared/types/comment';
 import style from './commentCard.module.scss';
 
-const { commentCard, header, userName, commentDate, comment } = style;
+const { commentCard, avatar, body, header, userName, commentDate, comment } =
+  style;
 
 interface ICommentCard {
   commentData: IComment;
 }
 
 const CommentCard = ({ commentData }: ICommentCard) => {
-  const originalTimestamp = commentData.created_at;
+  const date = new Date(commentData.created_at);
+  const formattedDate = Number.isNaN(date.getTime())
+    ? ''
+    : date.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        timeZone: 'Asia/Dhaka',
+      });
 
-  // Parse the original timestamp string into a Date object
-  const originalDate = new Date(originalTimestamp);
-
-  // Extract individual components
-  const year = originalDate.getFullYear();
-  const month = (originalDate.getMonth() + 1).toString().padStart(2, '0'); // Adding 1 because months are 0-indexed
-  const day = originalDate.getDate().toString().padStart(2, '0');
-  const hours = originalDate.getUTCHours().toString().padStart(2, '0');
-  const minutes = originalDate.getUTCMinutes().toString().padStart(2, '0');
-  const seconds = originalDate.getUTCSeconds().toString().padStart(2, '0');
-
-  // Create the formatted date string
-  const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  const initial = commentData.user_name?.trim().charAt(0).toUpperCase() || '?';
 
   return (
-    <div className={commentCard}>
-      <div className={header}>
-        <p className={userName}>{commentData.user_name}</p>
-        <p className={commentDate}>{formattedDate}</p>
+    <article className={commentCard}>
+      <span className={avatar} aria-hidden="true">
+        {initial}
+      </span>
+      <div className={body}>
+        <div className={header}>
+          <h3 className={userName}>{commentData.user_name}</h3>
+          {formattedDate && (
+            <time className={commentDate} dateTime={commentData.created_at}>
+              {formattedDate}
+            </time>
+          )}
+        </div>
+        <p className={comment}>{commentData.comment}</p>
       </div>
-      <div className={comment}>
-        <p>{commentData.comment}</p>
-      </div>
-    </div>
+    </article>
   );
 };
 

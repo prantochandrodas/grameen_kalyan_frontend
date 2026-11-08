@@ -1,118 +1,205 @@
-// @import '../../../style/utils/base';
-
-// .detailSection {
-//   padding: 10rem 20rem;
-
-//   @include response(M-desktop) {
-//     padding: 10rem 15rem;
-//   }
-//   @include response(tab-port) {
-//     padding: 10rem 10rem;
-//   }
-//   @include response(phone) {
-//     padding: 5rem;
-//   }
-//   @include response(s-phone) {
-//     padding: 5rem 3rem;
-//   }
-
-//   .contentContainer {
-//     h1 {
-//       font-size: 5rem;
-//     }
-//     p,
-//     div,
-//     table {
-//       font-size: 2rem !important;
-
-//       margin-bottom: 2rem;
-//     }
-//   }
-//   .btnContainer {
-//     margin-top: 10rem;
-//     padding: 10rem 0;
-//   }
-// }
-
 @import '../../../style/utils/base';
-.title {
-  font-size: 3.2rem;
-  margin-bottom: 3rem;
-  font-weight: 700;
-}
+@import '../../../style/utils/gutters';
+
 .detailSection {
-  padding: 10rem 20rem;
+  @include gutters;
+  padding-block: 0 clamp(48px, 7vw, 100px);
+}
 
-  @include response(M-desktop) {
-    padding: 10rem 15rem;
-  }
-
-  @include response(tab-port) {
-    padding: 10rem 10rem;
-  }
+.contentBox {
+  position: relative;
+  padding: 28px 32px;
+  border-radius: 16px;
+  border-left: 3px solid #0b612d;
+  background: #fbfbfa;
+  box-shadow: 0 8px 24px rgba(11, 97, 45, 0.06);
 
   @include response(phone) {
-    padding: 5rem;
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+}
+
+.cornerAccent {
+  position: absolute;
+  top: -20px;
+  left: -3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #f6c453;
+  box-shadow: 0 0 0 6px rgba(246, 196, 83, 0.25);
+}
+
+.empty {
+  padding: 24px 0;
+  font-size: 16px;
+  text-align: center;
+  color: #6b6b6b;
+}
+
+.contentContainer {
+  position: relative;
+  z-index: 1;
+  overflow-wrap: anywhere;
+
+  p,
+  li,
+  span,
+  div {
+    font-family: inherit !important;
   }
 
-  @include response(s-phone) {
-    padding: 5rem 3rem;
-  }
+  p,
+  li {
+    margin: 0 0 18px !important;
+    font-size: 16px !important;
+    line-height: 1.9 !important;
+    color: #3a3a3a !important;
+    text-align: left !important;
 
-  .contentContainer {
-       text-align: justify;
-    // headings
-    h1 {
-      font-size: 5rem;
-    }
-
-    h2, h3, h4, h5, h6 {
-      margin-bottom: 2rem;
-    }
-
-    // text
-    p,
-    div,
-    table {
-      font-size: 2rem !important;
-      margin-bottom: 2rem;
-      line-height: 1.6;
-    }
-
-    // ✅ FIX: bold not working issue
-    strong,
-    b {
-      font-size: 2rem !important;
-      font-weight: 700 !important;
-    }
-
-    // TinyMCE sometimes uses span
-    span[style*="bold"],
-    span[style*="700"] {
-     font-size: 2rem !important;
-      font-weight: 700 !important;
-    }
-
-    ul,
-    ol {
-      font-size: 2rem;
-      margin-left: 3rem;
-      margin-bottom: 2rem;
-    }
-
-    a {
-      color: blue;
-      text-decoration: underline;
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
+    @include response(phone) {
+      font-size: 15px !important;
+      line-height: 1.8 !important;
     }
   }
 
-  .btnContainer {
-    margin-top: 10rem;
-    padding: 10rem 0;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    position: relative;
+    margin: 32px 0 14px;
+    padding-left: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #0b612d;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 4px;
+      bottom: 4px;
+      width: 4px;
+      border-radius: 2px;
+      background: #f6c453;
+    }
   }
+
+  strong {
+    font-weight: 700;
+    color: #0b612d;
+  }
+
+  ul,
+  ol {
+    margin: 0 0 20px 22px;
+
+    li {
+      margin-bottom: 10px !important;
+      padding-left: 4px;
+
+      &::marker {
+        color: #0b612d;
+        font-weight: 700;
+      }
+    }
+  }
+
+  a {
+    font-weight: 600;
+    color: #0b612d;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    margin: 20px 0;
+    border-radius: 14px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  /* ---------- editor tables (Incidents / People Served / Relief Amount) ---------- */
+  :global(.gk-table-wrap) {
+    margin: 26px 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid #dbe7df;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(11, 97, 45, 0.06);
+  }
+
+  table {
+    width: 100% !important;
+    min-width: 520px;
+    border: 0 !important;
+    border-collapse: collapse !important;
+  }
+
+  th,
+  td {
+    padding: 14px 18px !important;
+    border: 0 !important;
+    border-bottom: 1px solid #e6efe9 !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    text-align: left !important;
+    vertical-align: middle;
+    color: #2f3b33 !important;
+
+    @include response(phone) {
+      padding: 12px 14px !important;
+      font-size: 14px !important;
+    }
+  }
+
+  td p {
+    margin: 0 !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+  }
+
+  tr:first-child th,
+  tr:first-child td {
+    background: #0b612d !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em;
+    color: #fff !important;
+  }
+
+  tr:first-child strong,
+  tr:first-child span {
+    color: inherit !important;
+  }
+
+  tr:nth-child(even) td {
+    background: #f4f9f6;
+  }
+
+  tr:last-child td {
+    border-bottom: 0 !important;
+  }
+
+  blockquote {
+    margin: 22px 0;
+    padding: 14px 20px;
+    border-left: 4px solid #f6c453;
+    border-radius: 0 10px 10px 0;
+    background: rgba(246, 196, 83, 0.08);
+    font-style: italic;
+  }
+}
+
+.btnContainer {
+  margin-top: 32px;
 }

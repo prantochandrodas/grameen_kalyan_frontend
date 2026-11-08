@@ -1,50 +1,117 @@
 @import '../../../style/utils/base';
 
+$gk-green: #0b612d;
+
 .mapSection {
-  padding-top: 15rem;
+  padding-top: 0;
 
   .heading {
-    font-size: 8rem;
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0 0 1.2rem;
+    padding: 0;
+    line-height: 1.15;
     font-weight: 900;
+    font-size: min(5.2rem, 5.4vw);
     color: $color-secondary-goldenrod;
-    padding-left: 20rem;
 
     @include response(vp-800) {
-      padding-left: 0;
+      grid-row: auto;
       text-align: center;
     }
     @include response(phone) {
-      font-size: 5.5rem;
+      font-size: 4.4rem;
     }
     @include response(s-phone) {
-      font-size: 4.5rem;
+      font-size: 3.8rem;
     }
   }
   .contentContainer {
-    background-color: $color-background-paleYellow;
-    padding: 10rem 20rem;
-
+    background-color: $color-background-white;
+    padding: 5rem max(12rem, calc((100% - 140rem) / 2));
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 4rem;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    align-items: start;
+    grid-template-rows: auto 1fr;
+    column-gap: 4rem;
+    row-gap: 0;
 
     @include response(M-desktop) {
-      padding: 10rem 15rem;
+      padding: 5rem 10rem;
+      column-gap: 3.6rem;
     }
     @include response(tab-port) {
-      padding: 10rem;
+      padding: 4.5rem 6rem;
+      column-gap: 3rem;
     }
     @include response(vp-800) {
       grid-template-columns: 1fr;
+      grid-template-rows: none;
+      padding: 3rem;
+      row-gap: 1.4rem;
     }
     @include response(phone) {
-      padding: 8rem 5rem;
+      padding: 2.4rem 1.6rem;
     }
     @include response(s-phone) {
-      padding: 8rem 3rem;
+      padding: 2rem 1.2rem;
     }
+    /* ---------- Selected division header (sits above the map) ---------- */
+    .divisionHeader {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.4rem;
+      margin-bottom: 1.2rem;
+
+      @include response(vp-800) {
+        align-items: center;
+        text-align: center;
+      }
+    }
+    .divisionBadge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: $color-secondary-goldenrod;
+
+    }
+    .divisionName {
+      margin: 0;
+      font-size: clamp(2.8rem, 3vw, 4rem);
+      font-weight: 800;
+      line-height: .6;
+      color: $color-text-darkGrey;
+    }
+
     .mapContainer {
+      width: 100%;
+      max-width: 48rem;
+      margin: 0 auto;
+      position: sticky;
+      top: 2rem;
+      align-self: start;
+      grid-column: 1;
+      grid-row: 2;
+
+      @include response(vp-800) {
+        position: static;
+        grid-row: auto;
+      }
+
+      @include response(phone) {
+        max-width: 40rem;
+      }
+
       svg {
+        display: block;
+        width: 100%;
+        height: auto;
+
         g {
           .chattogram,
           .barisal {
@@ -124,88 +191,495 @@
       }
     }
     .content {
-      .divisionName {
-        font-size: 4rem;
-        font-weight: 900;
-        color: $color-text-darkGrey;
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      min-width: 0;
+      max-width: 60rem;
+      width: 100%;
+      justify-self: end;
+
+      @include response(vp-800) {
+        grid-column: 1;
+        grid-row: auto;
+        max-width: 100%;
+        justify-self: stretch;
+      }
+      scroll-margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+
+      /* ---------- search ---------- */
+      .searchWrap {
+        position: relative;
+        z-index: 5;
+        margin-bottom: 1rem;
+      }
+      .searchBox {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: #fff;
+        border: 1.5px solid rgba($gk-green, 0.35);
+        border-radius: 1.2rem;
+        box-shadow: 0 0.8rem 2rem rgba($gk-green, 0.08);
+        transition: border-color 0.25s, box-shadow 0.25s;
+
+        &:focus-within {
+          border-color: $gk-green;
+          box-shadow: 0 0 0 0.4rem rgba($gk-green, 0.14),
+            0 0.8rem 2rem rgba($gk-green, 0.12);
+        }
+      }
+      .searchIcon {
+        position: absolute;
+        left: 1.6rem;
+        font-size: 1.8rem;
+        color: $gk-green;
+        pointer-events: none;
       }
       .search {
-        background-color: transparent;
+        flex: 1;
         width: 100%;
-        padding: 10px 16px;
+        min-width: 0;
+        margin: 0;
+        padding: 1.5rem 5.2rem 1.5rem 4.8rem;
+        border: 0;
         outline: 0;
-        border: 1px solid #0b612d;
-        border-radius: 10px;
-        font-size: 2rem;
-        margin-bottom: 2rem;
-      }
-      .imageContainer {
-        height: 50rem;
-        margin-bottom: 2rem;
-        background-color: $color-text-grey;
-
-        @include response(tab-port) {
-          height: 40rem;
-        }
-
-        .img {
-          height: 100%;
-          width: 100%;
-          object-fit: cover;
-        }
-      }
-      .healthCenterName {
-        font-size: 5rem;
-        font-weight: 900;
+        border-radius: 1.2rem;
+        background: transparent;
+        font-size: 1.7rem;
         color: $color-text-darkGrey;
-        margin-bottom: 3rem;
 
-        @include response(tab-port) {
-          font-size: 4rem;
+        &::placeholder {
+          color: #7a7a7a;
+        }
+
+        @include response(phone) {
+          font-size: 16px;
+          padding: 1.3rem 5rem 1.3rem 4.4rem;
         }
       }
-      .locationContact {
+      .spinner {
+        position: absolute;
+        right: 5rem;
+        width: 1.8rem;
+        height: 1.8rem;
+        border: 0.2rem solid rgba($gk-green, 0.2);
+        border-top-color: $gk-green;
+        border-radius: 50%;
+        animation: gkSpin 0.7s linear infinite;
+      }
+      .clearBtn {
+        position: absolute;
+        right: 1rem;
+        display: grid;
+        place-items: center;
+        width: 3.2rem;
+        height: 3.2rem;
+        border: 0;
+        border-radius: 50%;
+        background: rgba($gk-green, 0.1);
+        color: $gk-green;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: background 0.2s;
+
+        &:hover {
+          background: rgba($gk-green, 0.2);
+        }
+      }
+
+      /* ---------- suggestions dropdown ---------- */
+      .suggestionList {
+        position: absolute;
+        top: calc(100% + 0.8rem);
+        left: 0;
+        right: 0;
+        max-height: 27rem;
+        margin: 0;
+        padding: 0.4rem;
+        list-style: none;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        background: #fff;
+        border: 1px solid rgba($gk-green, 0.15);
+        border-radius: 1.2rem;
+        box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.18);
+        animation: gkDrop 0.18s ease-out;
+
+        @include response(phone) {
+          max-height: 26rem;
+        }
+      }
+      .suggestionItem {
         display: flex;
-        gap: 3rem;
+        align-items: center;
+        gap: 0.9rem;
+        padding: 0.7rem 1rem;
+        border-radius: 0.9rem;
+        cursor: pointer;
+        transition: background 0.15s;
 
-        margin-bottom: 3rem;
+        &.suggestionActive,
+        &:hover {
+          background: #e6f2ea;
+        }
+      }
+      .suggestionIcon {
+        flex-shrink: 0;
+        font-size: 1.5rem;
+        color: $color-secondary-goldenrod;
+      }
+      .suggestionItem > div {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: 0.8rem;
+        row-gap: 0.1rem;
+        min-width: 0;
+      }
+      .suggestionName {
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 1.3;
+        color: $color-text-darkGrey;
+      }
+      .suggestionMeta {
+        font-size: 1.25rem;
+        line-height: 1.3;
+        color: #6b6b6b;
+      }
+      .suggestionState {
+        padding: 1.6rem;
+        text-align: center;
+        font-size: 1.5rem;
+        color: #6b6b6b;
+      }
 
-        .address,
-        .contact {
-          flex: 1;
+      /* ---------- image ---------- */
+      .imageContainer {
+        position: relative;
+        isolation: isolate;
+        aspect-ratio: 2 / 1;
+        margin-bottom: 0.6rem;
+        overflow: hidden;
+        border-radius: 1.6rem;
+        background: rgba($gk-green, 0.08);
+        box-shadow: 0 1.2rem 3rem rgba(0, 0, 0, 0.12);
 
-          display: flex;
-          gap: 2rem;
+        /* soft blurred copy of the same image fills any empty side space */
+        .imageBg {
+          position: absolute;
+          inset: -2rem;
+          z-index: 0;
+          background-size: cover;
+          background-position: center;
+          filter: blur(2.4rem) saturate(1.1);
+          transform: scale(1.1);
+          opacity: 0.85;
+        }
 
-          font-size: 2rem;
-          font-weight: 600;
+        .imageLink {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          display: block;
+          cursor: zoom-in;
 
-          @include response(tab-port) {
-            font-size: 1.8rem;
-          }
-
-          .icon {
-            font-size: 2.5rem;
-            color: $color-secondary-goldenrod;
+          &:hover .imageHint,
+          &:focus-visible .imageHint {
+            opacity: 1;
+            transform: translateY(0);
           }
         }
+
+        /* the full image is always visible, never cropped */
+        .img {
+          object-fit: contain;
+          object-position: center;
+          animation: gkFade 0.5s ease;
+        }
+
+        .imageHint {
+          position: absolute;
+          right: 1rem;
+          bottom: 1rem;
+          z-index: 2;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.6rem;
+          padding: 0.6rem 1.2rem;
+          border-radius: 2rem;
+          font-size: 1.2rem;
+          font-weight: 600;
+          line-height: 1;
+          color: #fff;
+          background: rgba($gk-green, 0.88);
+          backdrop-filter: blur(4px);
+          pointer-events: none;
+          opacity: 0;
+          transform: translateY(0.4rem);
+          transition: opacity 0.25s, transform 0.25s;
+
+          /* touch screens have no hover, so always show it */
+          @media (hover: none) {
+            opacity: 1;
+            transform: none;
+          }
+
+          @include response(phone) {
+            right: 0.6rem;
+            bottom: 0.6rem;
+            padding: 0.5rem 0.9rem;
+            font-size: 1.1rem;
+          }
+        }
+      }
+      .imagePlaceholder {
+        display: grid;
+        place-items: center;
+        width: 100%;
+        height: 100%;
+        font-size: 1.5rem;
+        color: #6b6b6b;
+      }
+
+      /* ---------- loading skeleton ---------- */
+      .skeleton {
+        aspect-ratio: 2 / 1;
+        margin-bottom: 1.4rem;
+        border-radius: 1.6rem;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.35) 25%,
+          rgba(255, 255, 255, 0.7) 50%,
+          rgba(255, 255, 255, 0.35) 75%
+        );
+        background-size: 200% 100%;
+        animation: gkShimmer 1.2s linear infinite;
+      }
+
+      /* ---------- empty division ---------- */
+      .emptyState {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 4rem 2rem;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.6);
+        border: 1.5px dashed rgba($gk-green, 0.35);
+        border-radius: 1.6rem;
+
+        @include response(phone) {
+          padding: 3rem 1.6rem;
+        }
+      }
+      .emptyIcon {
+        display: grid;
+        place-items: center;
+        width: 5.6rem;
+        height: 5.6rem;
+        border-radius: 50%;
+        font-size: 2.4rem;
+        color: $gk-green;
+        background: rgba($gk-green, 0.1);
+      }
+      .emptyTitle {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 800;
+        color: $color-text-darkGrey;
+      }
+      .emptyText {
+        max-width: 36rem;
+        font-size: 1.5rem;
+        line-height: 1.5;
+        color: #6b6b6b;
+      }
+
+      .healthCenterName {
+        margin: 0 0 0.4rem;
+        font-size: clamp(1.7rem, 1.6vw, 2.4rem);
+        font-weight: 700;
+        line-height: 1.2;
+        color: $color-primary;
+      }
+
+      /* ---------- address + phone ---------- */
+      .locationContact {
+        display: grid;
+        grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+        gap: 0.6rem;
+        margin-bottom: 0.8rem;
+
+        @include response(phone) {
+          grid-template-columns: 1fr;
+        }
+      }
+      .infoCard {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        min-width: 0;
+        padding: 0.7rem 1rem;
+        text-decoration: none;
+        color: inherit;
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px solid rgba($gk-green, 0.12);
+        border-radius: 1.2rem;
+        transition: transform 0.25s, box-shadow 0.25s;
+
+        &[href]:hover {
+          transform: translateY(-0.2rem);
+          box-shadow: 0 1rem 2.4rem rgba($gk-green, 0.15);
+        }
+      }
+      .infoCard:only-child {
+        grid-column: 1 / -1;
+      }
+      .contact {
+        cursor: pointer;
+
+        strong {
+          white-space: nowrap;
+        }
+
+        &:hover .iconWrap {
+          transform: scale(1.08);
+        }
+      }
+      .iconWrap {
+        transition: transform 0.25s;
+        display: grid;
+        flex-shrink: 0;
+        place-items: center;
+        width: 3.4rem;
+        height: 3.4rem;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #d9aa4a, $color-secondary-goldenrod);
+      }
+      .icon {
+        font-size: 1.5rem;
+        color: #fff;
+      }
+      .infoText {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+
+        small {
+          font-size: 1rem;
+          font-weight: 500;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #7a7a7a;
+        }
+        strong {
+          font-size: 1.4rem;
+          font-weight: 600;
+          line-height: 1.1;
+          word-break: break-word;
+          color: $color-text-darkGrey;
+        }
+      }
+
+      /* ---------- list ---------- */
+      .listHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 0.6rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: $color-text-darkGrey;
+      }
+      .countBadge {
+        min-width: 3rem;
+        padding: 0.2rem 1rem;
+        border-radius: 2rem;
+        text-align: center;
+        font-size: 1.3rem;
+        color: #fff;
+        background: $gk-green;
       }
       .listOfHospital {
-        background-color: #e2bc6a;
-        height: 15rem;
-        overflow-y: scroll;
+        --row-h: 3rem;
+        --row-gap: 0.4rem;
+        --list-pad: 0.3rem;
+        display: flex;
+        flex-direction: column;
+        gap: var(--row-gap);
+        max-height: calc(
+          (var(--row-h) * 5) + (var(--row-gap) * 4) + (var(--list-pad) * 2) + 2px
+        );
+        padding: var(--list-pad);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        background: rgba(255, 255, 255, 0.55);
+        border: 1px solid rgba($gk-green, 0.12);
+        border-radius: 1.2rem;
+        scrollbar-width: thin;
+        scrollbar-color: $gk-green transparent;
+      }
+      .listItem {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        width: 100%;
+        height: var(--row-h);
+        flex-shrink: 0;
+        padding: 0 1rem;
+        text-align: left;
+        cursor: pointer;
+        font-family: inherit;
+        color: $color-text-darkGrey;
+        background: #fff;
+        border: 0;
+        border-left: 0.4rem solid transparent;
+        border-radius: 0.9rem;
+        transition: background 0.2s, color 0.2s, border-color 0.2s;
 
-        p {
-          font-size: 1.8rem;
-          padding: 5px 10px;
-          cursor: pointer;
+        svg {
+          flex-shrink: 0;
+          font-size: 1.5rem;
+          color: $color-secondary-goldenrod;
+        }
+        > span {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: baseline;
+          column-gap: 0.8rem;
+          row-gap: 0.1rem;
+          min-width: 0;
+        }
+        strong {
+          font-size: 1.5rem;
+          font-weight: 700;
+          line-height: 1.35;
+        }
+        small {
+          margin: 0;
+          font-size: 1.3rem;
+          line-height: 1.35;
+          color: #6b6b6b;
+        }
 
-          &:nth-of-type(even) {
-            background-color: #eed9aa;
+        &:hover {
+          background: #e6f2ea;
+        }
+
+        &.listActive {
+          background: $gk-green;
+          border-left-color: $color-secondary-goldenrod;
+          color: #fff;
+
+          small {
+            color: rgba(255, 255, 255, 0.8);
           }
-
-          &:active {
-            background-color: orangered;
+          svg {
+            color: #fff;
           }
         }
       }
@@ -215,4 +689,39 @@
 
 .main-division {
   fill: #ccc !important;
+}
+
+@keyframes gkSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes gkDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-0.6rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gkFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes gkShimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
 }

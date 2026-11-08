@@ -50,15 +50,11 @@
   }
 
   .heading {
-    @include ab-h2;
+    line-height: 1.15;
+    font-weight: 900;
+    font-size: min(5.2rem, 5.4vw);
     margin-bottom: 12px;
-
-    @include ab-below(768px) {
-      margin-bottom: 8px;
-      font-size: clamp(24px, 7vw, 32px);
-      line-height: 1.15;
-      text-wrap: balance;
-    }
+    color: $ab-green;
   }
 
   .subText {

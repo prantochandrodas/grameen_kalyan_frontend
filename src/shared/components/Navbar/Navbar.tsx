@@ -170,6 +170,8 @@ const Navbar = ({
               <span
                 role="button"
                 tabIndex={0}
+                aria-haspopup="true"
+                aria-expanded={openDropdown === m.label}
                 className={`${style.link} ${m.children.some((c) => isActive(c.href)) ? style.active : ''
                   }`}
                 onClick={() =>
@@ -181,7 +183,8 @@ const Navbar = ({
                   }
                 }}
               >
-                {m.label} <BiSolidDownArrow />
+                <span>{m.label}</span>
+                <BiSolidDownArrow className={style.chevron} />
               </span>
               <ul className={style.dropdown}>
                 {m.children.map((c) => (
@@ -210,8 +213,21 @@ const Navbar = ({
           )
         )}
 
-        {/* badge: shown only inside the mobile menu */}
-        <li className={style.badgeItem}>
+        {/* mobile menu footer: socials + badge (hidden on desktop) */}
+        <li className={style.mobileFooter}>
+          <div className={style.mobileSocial}>
+            {socials.map(({ icon: Icon, href }) => (
+              <Link
+                key={href}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={style.mobileSocialIcon}
+              >
+                <Icon />
+              </Link>
+            ))}
+          </div>
           <Image
             className={style.badge}
             src={badgeSrc}

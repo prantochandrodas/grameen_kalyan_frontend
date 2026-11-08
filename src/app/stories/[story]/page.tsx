@@ -27,8 +27,8 @@ const Story = async ({ params }: { params: { story: number } }) => {
     description: story?.desc,
     image: story?.thumb_image,
   };
-  const recentPostData = stories?.data?.slice(
-    (data: IStories) => data.id === id
+  const recentPostData = stories?.data?.filter(
+    (data: IStories) => data.id !== id
   );
   const homePageContentData = await useFetch({ url: '/home-contents' });
   const workTogetherImage = homePageContentData?.work_together_image;

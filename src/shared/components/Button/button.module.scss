@@ -1,26 +1,40 @@
 @import '../../../style/utils/base';
-
+@import '../../../components/About/Shared/_tokens';
 .btn {
-  padding: 1rem 2.5rem;
-  font-size: 1.8rem;
-  font-weight: 600;
-  text-transform: capitalize;
-  text-decoration: none;
-  color: $color-primary;
-  background-color: transparent;
-  border-radius: 1rem;
-  border: 2px solid $color-primary;
-  transition: all 200ms;
-
-  &:hover {
-    background-color: $color-primary;
-    color: $color-secondary;
-  }
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 46px;
+    padding: 0 22px;
+    border: 1.5px solid $ab-green;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    color: $ab-green;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    svg {
+        width: 18px;
+        height: 18px;
+        transition: transform 0.35s $ab-ease-out;
+    }
+    &:focus-visible {
+        outline: 3px solid $ab-gold;
+        outline-offset: 3px;
+    }
+    @include ab-hover {
+        color: #fff;
+        background-color: $ab-green;
+        svg {
+            transform: translateX(4px);
+        }
+    }
 }
-.btnSecond {
-  border: 2px solid $color-secondary;
 
-  &:hover {
-    border: 2px solid $color-primary;
-  }
+.btnSecond {
+    border: 2px solid $color-secondary;
+    &:hover {
+        border: 2px solid $color-primary;
+    }
 }

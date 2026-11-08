@@ -1,32 +1,52 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
+
+import { Button } from '@/shared/components';
 
 import style from './detailSection.module.scss';
-import { Button } from '@/shared/components';
 import { IDetailSectionData } from './DetailSection.types';
 
-const { detailSection, contentContainer, btnContainer, title } = style;
+const {
+  detailSection,
+  contentBox,
+  cornerAccent,
+  contentContainer,
+  empty,
+  btnContainer,
+} = style;
 
 interface IDetailSectionProps {
   data: IDetailSectionData;
 }
 
+// wrap every editor <table> so wide tables scroll sideways on phones
+const wrapTables = (html = '') =>
+  html
+    .replace(/<table/gi, '<div class="gk-table-wrap"><table')
+    .replace(/<\/table>/gi, '</table></div>');
+
 const DetailSection = ({ data }: IDetailSectionProps) => {
+  const html = useMemo(() => wrapTables(data?.description), [data?.description]);
 
   return (
-    <div className={detailSection}>
-      <h1 className={title}>
-        {data.title || 'No Title Found'}
-      </h1>
-      <div
-        className={contentContainer}
-        dangerouslySetInnerHTML={{ __html: data.description }}
-      ></div>
+    <section className={detailSection}>
+      {html ? (
+        <div className={contentBox}>
+          <span className={cornerAccent} />
+          <div
+            className={contentContainer}
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
+        </div>
+      ) : (
+        <p className={empty}>Details will be available soon.</p>
+      )}
+
       <div className={btnContainer}>
         <Button text="Back" url={`/stories/${data.id}`} btnSecondary />
       </div>
-    </div>
+    </section>
   );
 };
 

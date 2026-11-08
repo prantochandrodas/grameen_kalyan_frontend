@@ -27,7 +27,9 @@ $r-soft: 22px;
 
   .heading {
     @include ab-h2;
-    font-size: clamp(38px, 5.4vw, 80px);
+    line-height: 1.15;
+    font-weight: 900;
+    font-size: min(5.2rem, 5.4vw);
     color: $ab-green-deep;
   }
 

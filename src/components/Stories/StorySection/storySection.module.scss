@@ -65,11 +65,9 @@ $story-gold: #c4961c;
   /* serif, bold, deep green; second line ends in gold */
   .heading {
     margin: 0 0 2.4rem;
-    font-family: 'Playfair Display', 'DM Serif Display', Georgia, 'Times New Roman',
-      serif;
-    font-size: clamp(3.2rem, 4.4vw, 6rem);
-    font-weight: 800;
     line-height: 1.15;
+    font-weight: 900;
+    font-size: min(5.2rem, 5.4vw);
     color: $color-primary;
 
     > span {

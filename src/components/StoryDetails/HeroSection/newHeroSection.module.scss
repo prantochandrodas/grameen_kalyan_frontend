@@ -1,0 +1,108 @@
+@import '../../../style/utils/base';
+@import '../../../style/utils/gutters';
+.hero {
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+}
+
+.breadcrumbWrap {
+    @include gutters;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 20px 0 16px;
+    font-size: 13px;
+    color: #6b6b6b;
+    a {
+        color: #0b612d;
+        font-weight: 600;
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    svg {
+        font-size: 10px;
+        color: #b8b8b8;
+    }
+    span {
+        color: #0b612d;
+        font-weight: 600;
+    }
+}
+
+.banner {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 5;
+    margin-bottom: 40px;
+    overflow: hidden;
+    background: #e8ece9;
+    @include response(phone) {
+        aspect-ratio: 16 / 9;
+        margin-bottom: 28px;
+    }
+    img {
+        object-fit: cover;
+        object-position: center 30%;
+        transition: transform 0.6s ease;
+    }
+    @media (hover: hover) and (pointer: fine) {
+        &:hover img {
+            transform: scale(1.05);
+        }
+    }
+}
+
+.bannerOverlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient( to top, rgba(11, 97, 45, 0.55) 0%, rgba(11, 97, 45, 0.1) 40%, rgba(11, 97, 45, 0) 70%);
+}
+
+.headerWrap {
+    @include gutters;
+    margin-bottom: 28px;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding: 7px 16px 7px 12px;
+    border-radius: 30px;
+    background: linear-gradient(90deg, #f6c453, #e8a93a);
+    box-shadow: 0 6px 14px rgba(232, 169, 58, 0.35);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    color: #0b612d;
+    svg {
+        font-size: 14px;
+    }
+}
+
+.title {
+    margin: 0 0 8px;
+    line-height: 1.15;
+    font-weight: 900;
+    font-size: min(5.2rem, 5.4vw);
+    color: #0b612d;
+    overflow-wrap: anywhere;
+}
+
+.subTitle {
+    margin: 0;
+    font-size: clamp(15px, 1.4vw, 18px);
+    font-weight: 500;
+    line-height: 1.5;
+    color: #5a5a5a;
+}

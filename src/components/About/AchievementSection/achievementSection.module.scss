@@ -59,10 +59,9 @@ $slide-h: clamp(340px, 25.5vw, 400px); // fixed desktop slide height (matches de
 
   .journeyTitle {
     margin: 0;
-    font-size: clamp(40px, 5vw, 68px);
-    font-weight: 800;
-    line-height: 1.04;
-    letter-spacing: -0.03em;
+    line-height: 1.15;
+    font-weight: 900;
+    font-size: min(5.2rem, 5.4vw);
     color: $ab-green;
   }
 

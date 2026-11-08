@@ -1,112 +1,128 @@
 @import '../../../style/utils/base';
-
+@import '../../../style/utils/gutters';
 .storyDetail {
-  padding: 20rem;
+    @include gutters;
+    padding-block: clamp(40px, 6vw, 96px);
+}
 
-  display: grid;
-  grid-template-columns: 1fr min-content 1fr;
-  grid-template-rows: min-content;
-  gap: 4rem;
-
-  @include response(M-desktop) {
-    padding: 20rem 15rem;
-  }
-  @include response(tab-port) {
-    padding: 15rem 10rem;
-  }
-  @include response(phone) {
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(3, min-content);
-    padding: 10rem 5rem 10rem 5rem;
-  }
-
-  .imageContainer {
-    height: 35rem;
-    border-radius: 2rem;
-    overflow: hidden;
-
-    @include response(tab-port) {
-      height: 100%;
-    }
-
-    .img {
-      height: 100%;
-      width: 100%;
-      object-fit: cover;
-    }
-  }
-
-  .divider {
+.card {
     display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr min-content 2fr;
-    gap: 2rem;
+    grid-template-columns: minmax(0, 1.15fr) 2px minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(24px, 3.4vw, 56px);
+    @include response(tab-port) {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+    }
+}
 
+.imageContainer {
+    position: relative;
+    aspect-ratio: 16 / 7;
+    overflow: hidden;
+    border-radius: 28px;
+    background: $color-background-paleAqua;
+    box-shadow: 0 24px 60px rgba(11, 97, 45, 0.18);
     @include response(phone) {
-      grid-template-columns: 2fr min-content 1fr;
-      grid-template-rows: min-content;
+        aspect-ratio: 16 / 7;
+        border-radius: 20px;
     }
-
-    .lineOne,
-    .lineTwo {
-      height: 100%;
-      width: 2px;
-      background-color: $color-primary;
-      justify-self: center;
-
-      @include response(phone) {
-        height: 2px;
-        width: 100%;
-        align-self: center;
-      }
+    .img {
+        object-fit: cover;
+        object-position: center 30%;
+        transition: transform 0.8s ease;
     }
-
-    .lineOne {
-      height: 100%;
-      width: 2px;
-
-      @include response(phone) {
-        height: 2px;
-        width: 100%;
-      }
+    @media (hover: hover) and (pointer: fine) {
+        &:hover .img {
+            transform: scale(1.05);
+        }
     }
-    .box {
-      height: 2rem;
-      width: 2rem;
-      background-color: $color-primary;
-    }
-    .lineTwo {
-      height: 100%;
-      width: 2px;
+}
 
-      @include response(phone) {
-        height: 2px;
-        width: 100%;
-      }
+.divider {
+    position: relative;
+    align-self: stretch;
+    width: 2px;
+    background: $color-primary;
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 14px;
+        height: 14px;
+        transform: translate(-50%, -50%);
+        background: $color-primary;
     }
-  }
+    @include response(tab-port) {
+        display: none;
+    }
+}
 
-  .contentContainer {
+.contentContainer {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: flex-start;
+    min-width: 0;
+}
 
-    .heading {
-      font-size: 4.5rem;
-      font-weight: 900;
-      margin-bottom: 3rem;
-      color: $color-text-darkGrey;
+.badge {
+    padding: 6px 14px;
+    border-radius: 30px;
+    background: linear-gradient(90deg, #f6c453, #e8a93a);
+    box-shadow: 0 6px 14px rgba(232, 169, 58, 0.35);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    color: #0b612d;
+}
+
+.heading {
+    margin: 14px 0 16px;
+    line-height: 1.15;
+    font-weight: 900;
+    font-size: min(5.2rem, 5.4vw);
+    color: $color-primary;
+    overflow-wrap: anywhere;
+}
+
+.shortDesc {
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: clamp(15px, 1.25vw, 18px);
+    font-weight: 400;
+    line-height: 1.75;
+    color: #3a3a3a;
+}
+
+.btnContainer {
+    margin-top: 24px;
+}
+
+
+/* Read more button choto */
+
+.btnWrap {
+    a,
+    button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        width: fit-content;
+        background: #0b612d;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 14px;
+        text-decoration: none;
+        transition: background 0.2s ease;
+        &:hover {
+            background: darken(#0b612d, 6%);
+        }
     }
-    .shortDesc {
-        display: -webkit-box;
-  -webkit-line-clamp: 5; // কত লাইন দেখাবে
-  -webkit-box-orient: vertical;
-  overflow: hidden; 
-      font-size: 2rem;
-      font-weight: 400;
-    }
-    .btnContainer {
-      padding: 3rem 0;
-    }
-  }
 }

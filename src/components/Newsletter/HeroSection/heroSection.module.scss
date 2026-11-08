@@ -40,9 +40,9 @@
     }
 
     .heading {
-      font-size: clamp(1.2rem, calc(0.35rem + 4.27vw), 5.47rem);
+      line-height: 1.15;
       font-weight: 900;
-      line-height: 1.2;
+      font-size: min(5.2rem, 5.4vw);
       color: $color-background-white;
       padding-left: 10rem;
 

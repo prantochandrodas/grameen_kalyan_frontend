@@ -184,11 +184,11 @@
 }
 
 .title {
-  font-size: 32px;
-  font-weight: 800;
+  line-height: 1.15;
+  font-weight: 900;
+  font-size: min(5.2rem, 5.4vw);
   color: #0b612d;
   margin-bottom: 8px;
-  line-height: 1.25;
 
   @media (max-width: 480px) {
     font-size: 24px;
