@@ -18,7 +18,7 @@ const {
   highlight,
   parag,
   divider,
-  dividerLine,
+  // dividerLine,
   dividerIcon,
   showcaseWrap,
   layoutLeft,
@@ -63,11 +63,11 @@ const MedicalCare = ({ medicalCareCategory }: IMedicalCareProps) => {
           medical care lays on these areas, for patients to choose from
         </p>
 
-        <div className={divider} aria-hidden="true">
+        {/* <div className={divider} aria-hidden="true">
           <span className={dividerLine} />
           <FaLeaf className={dividerIcon} />
           <span className={dividerLine} />
-        </div>
+        </div> */}
       </div>
 
     </div>

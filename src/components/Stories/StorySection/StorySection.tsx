@@ -17,7 +17,7 @@ const {
   highlight,
   parag,
   divider,
-  dividerLine,
+  // dividerLine,
   dividerIcon,
   storyDisplay,
   img,
@@ -75,11 +75,11 @@ const StorySection = ({ stroyCategories }: IStorySectionProps) => {
           Since 1996, Grameen Kalyan has delivered affordable and quality primary healthcare to minimize health inequalities and economic setbacks. Our effort touched millions of people across the country and became a part of their journey of well-being.
         </p>
 
-        <div className={divider} aria-hidden="true">
+        {/* <div className={divider} aria-hidden="true">
           <span className={dividerLine} />
           <FaLeaf className={dividerIcon} />
           <span className={dividerLine} />
-        </div>
+        </div> */}
       </div>
 
       <div className={storyDisplay}>
