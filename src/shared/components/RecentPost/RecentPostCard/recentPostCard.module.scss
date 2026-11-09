@@ -8,16 +8,16 @@ $rp-gold: #C3953D;
     display: flex;
     flex-direction: column;
     height: 100%;
-    padding: 1rem 1.5rem 2.4rem;
+    padding: 1.6rem 1.5rem 3.6rem;
     text-decoration: none;
     @include response(phone) {
-        padding: 0.6rem 0.8rem 1.8rem;
+        padding: 1rem 0.8rem 2.6rem;
     }
     &:hover .card {
-        transform: translateY(-0.8rem);
-        box-shadow: 0 2rem 4.5rem rgba(26, 154, 91, 0.28);
+        transform: translateY(-0.6rem);
+        box-shadow: 0 1.2rem 2.4rem rgba(26, 154, 91, 0.18);
         .img {
-            transform: scale(1.22);
+            transform: scale(1.12);
         }
     }
 }
@@ -35,7 +35,7 @@ $rp-gold: #C3953D;
     border-radius: 1rem;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, #dff4e6 100%);
     border: 1.5px solid rgba(255, 255, 255, 0.9);
-    box-shadow: 0 1.4rem 3.4rem rgba(20, 60, 50, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0.6rem 1.6rem rgba(20, 60, 50, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
     transition: transform 0.35s ease, box-shadow 0.35s ease;
     /* soft leaf decoration */
     &::after {
