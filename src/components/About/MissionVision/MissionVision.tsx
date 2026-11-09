@@ -25,13 +25,22 @@ const {
 } = style;
 
 interface IMissionVisionProps {
+  title?: string;
+  subtitle?: string;
   mission: string;
   vision: string;
 }
 
-const MissionVision = ({ mission, vision }: IMissionVisionProps) => {
+const MissionVision = ({
+  title,
+  subtitle,
+  mission,
+  vision,
+}: IMissionVisionProps) => {
   const missionText = mission?.trim();
   const visionText = vision?.trim();
+  const titleText = title?.trim();
+  const subtitleText = subtitle?.trim();
   const hasMission = Boolean(missionText);
   const hasVision = Boolean(visionText);
 
@@ -43,15 +52,18 @@ const MissionVision = ({ mission, vision }: IMissionVisionProps) => {
 
       <div className={container}>
         <header className={header}>
-          <RevealText
-            as="h2"
-            className={heading}
-            lines={[{ text: 'Our Mission & Vision' }]}
-          />
-          <Reveal as="p" className={subText} delay={0.15}>
-            Our mission and vision drive everything we do – from community
-            health to sustainable development.
-          </Reveal>
+          {titleText && (
+            <RevealText
+              as="h2"
+              className={heading}
+              lines={[{ text: titleText }]}
+            />
+          )}
+          {subtitleText && (
+            <Reveal as="p" className={subText} delay={0.15}>
+              {subtitleText}
+            </Reveal>
+          )}
         </header>
 
         <RevealGroup className={cards} stagger={0.18}>
@@ -64,7 +76,7 @@ const MissionVision = ({ mission, vision }: IMissionVisionProps) => {
                 <h3 className={cardTitle}>Mission</h3>
               </div>
               <span className={line} />
-                 <p className={cardText}>{missionText}</p>
+              <p className={cardText}>{missionText}</p>
             </RevealItem>
           )}
 

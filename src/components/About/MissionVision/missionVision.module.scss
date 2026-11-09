@@ -1,228 +1,191 @@
 @import '../Shared/tokens';
-
 .missionVision {
-  position: relative;
-  overflow: hidden;
-  padding: clamp(32px, 4vw, 56px) 0;
-  background: #fff;
-  scroll-margin-top: 90px;
-
-  // soft green glow in the corner
-  .glow {
-    position: absolute;
-    top: -200px;
-    left: -180px;
-    width: 560px;
-    height: 560px;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle,
-      rgba($ab-green, 0.09) 0%,
-      transparent 70%
-    );
-    pointer-events: none;
-
-    @include ab-below(768px) {
-      top: -120px;
-      left: -110px;
-      width: 320px;
-      height: 320px;
-    }
-  }
-
-  .container {
-    @include ab-container;
-    max-width: 1560px;
     position: relative;
-  }
-
-  .header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    margin-bottom: clamp(20px, 2.4vw, 32px);
-  }
-
-  .eyebrow {
-    @include ab-eyebrow;
-    margin-bottom: 12px;
-  }
-
-  .heading {
-    line-height: 1.15;
-    font-weight: 900;
-    font-size: min(5.2rem, 5.4vw);
-    margin-bottom: 12px;
-    color: $ab-green;
-  }
-
-  .subText {
-    margin: 0;
-    max-width: 64ch;
-    @include ab-body;
-
-    @include ab-below(768px) {
-      padding-inline: 4px;
-      font-size: 14px;
-      line-height: 1.65;
-    }
-  }
-
-  /* ---------- cards ---------- */
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(14px, 2vw, 28px);
-
-    @include ab-below(768px) {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    // only one of Mission/Vision exists: full width, centered
-    > :only-child {
-      grid-column: 1 / -1;
-      justify-self: center;
-      width: 100%;
-      max-width: 760px;
-    }
-  }
-
-  .card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
     overflow: hidden;
-    padding: clamp(22px, 2.8vw, 44px);
-    border-radius: clamp(20px, 2.2vw, 28px);
-    transition:
-      transform 0.5s $ab-ease-out,
-      box-shadow 0.5s $ab-ease-out;
-
-    @include ab-hover {
-      transform: translateY(-8px);
+    padding: clamp(32px, 4vw, 56px) 0;
+    background: #fff;
+    scroll-margin-top: 90px;
+    // soft green glow in the corner
+    .glow {
+        position: absolute;
+        top: -200px;
+        left: -180px;
+        width: 560px;
+        height: 560px;
+        border-radius: 50%;
+        background: radial-gradient( circle, rgba($ab-green, 0.09) 0%, transparent 70%);
+        pointer-events: none;
+        @include ab-below(768px) {
+            top: -120px;
+            left: -110px;
+            width: 320px;
+            height: 320px;
+        }
     }
-
-    @include ab-below(480px) {
-      gap: 12px;
-      padding: 18px 16px;
-      border-radius: 18px;
+    .container {
+        @include ab-container;
+        max-width: 1560px;
+        position: relative;
     }
-  }
-
-  .cardDark {
-    color: #fff;
-    background:
-      radial-gradient(
-        120% 90% at 100% 0%,
-        rgba(255, 255, 255, 0.1) 0%,
-        transparent 55%
-      ),
-      linear-gradient(145deg, $ab-green 0%, $ab-green-deep 100%);
-    box-shadow: 0 30px 70px rgba($ab-green-deep, 0.3);
-
+    .header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: clamp(20px, 2.4vw, 32px);
+    }
+    .eyebrow {
+        @include ab-eyebrow;
+        margin-bottom: 12px;
+    }
+    .heading {
+        line-height: 1.15;
+        font-weight: 900;
+        font-size: clamp(2.4rem, 5.4vw, 5.2rem);
+        margin-bottom: 12px;
+        color: $ab-green;
+        text-wrap: balance;
+        overflow-wrap: break-word;
+        max-width: 100%;
+        @include ab-below(480px) {
+            font-size: clamp(2.2rem, 8.5vw, 2.8rem);
+            line-height: 1.2;
+        }
+    }
+    .subText {
+        margin: 0;
+        max-width: 64ch;
+        text-wrap: balance;
+        overflow-wrap: break-word;
+        @include ab-body;
+        @include ab-below(768px) {
+            padding-inline: 4px;
+            font-size: 14px;
+            line-height: 1.65;
+        }
+    }
+    /* ---------- cards ---------- */
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: clamp(14px, 2vw, 28px);
+        @include ab-below(768px) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+        // only one of Mission/Vision exists: full width, centered
+        > :only-child {
+            grid-column: 1 / -1;
+            justify-self: center;
+            width: 100%;
+            max-width: 760px;
+        }
+    }
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        overflow: hidden;
+        padding: clamp(22px, 2.8vw, 44px);
+        border-radius: clamp(20px, 2.2vw, 28px);
+        transition: transform 0.5s $ab-ease-out, box-shadow 0.5s $ab-ease-out;
+        @include ab-hover {
+            transform: translateY(-8px);
+        }
+        @include ab-below(480px) {
+            gap: 12px;
+            padding: 18px 16px;
+            border-radius: 18px;
+        }
+    }
+    .cardDark {
+        color: #fff;
+        background: radial-gradient( 120% 90% at 100% 0%, rgba(255, 255, 255, 0.1) 0%, transparent 55%), linear-gradient(145deg, $ab-green 0%, $ab-green-deep 100%);
+        box-shadow: 0 30px 70px rgba($ab-green-deep, 0.3);
+        .iconWrap {
+            color: $ab-green-deep;
+            background: $ab-gold-bright;
+        }
+        .cardTitle {
+            color: #fff;
+        }
+        .cardText {
+            color: rgba(255, 255, 255, 0.92);
+        }
+    }
+    .cardLight {
+        color: $ab-ink;
+        background: linear-gradient(160deg, #fff 0%, $ab-cream 100%);
+        border: 1px solid rgba($ab-gold, 0.35);
+        box-shadow: 0 24px 60px rgba($ab-gold, 0.16);
+        .iconWrap {
+            color: #fff;
+            background: linear-gradient(135deg, $ab-green, $ab-green-deep);
+        }
+        .cardTitle {
+            color: $ab-green;
+        }
+        .cardText {
+            color: $ab-ink;
+        }
+    }
+    .cardTop {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        @include ab-below(480px) {
+            gap: 12px;
+        }
+    }
     .iconWrap {
-      color: $ab-green-deep;
-      background: $ab-gold-bright;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: clamp(46px, 4vw, 60px);
+        height: clamp(46px, 4vw, 60px);
+        border-radius: 16px;
+        svg {
+            width: clamp(22px, 2vw, 28px);
+            height: clamp(22px, 2vw, 28px);
+        }
+        @include ab-below(480px) {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            svg {
+                width: 20px;
+                height: 20px;
+            }
+        }
     }
-
     .cardTitle {
-      color: #fff;
+        margin: 0;
+        font-size: clamp(22px, 2.6vw, 38px);
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
     }
-
+    .line {
+        display: block;
+        width: 64px;
+        height: 4px;
+        border-radius: 4px;
+        background: $ab-gold;
+        @include ab-below(480px) {
+            width: 48px;
+            height: 3px;
+        }
+    }
     .cardText {
-      color: rgba(255, 255, 255, 0.92);
+        position: relative;
+        margin: 0;
+        font-size: clamp(15px, 1.45vw, 23px);
+        font-weight: 600;
+        line-height: 1.6;
+        overflow-wrap: break-word;
+        @include ab-below(480px) {
+            font-weight: 500;
+            line-height: 1.65;
+        }
     }
-  }
-
-  .cardLight {
-    color: $ab-ink;
-    background: linear-gradient(160deg, #fff 0%, $ab-cream 100%);
-    border: 1px solid rgba($ab-gold, 0.35);
-    box-shadow: 0 24px 60px rgba($ab-gold, 0.16);
-
-    .iconWrap {
-      color: #fff;
-      background: linear-gradient(135deg, $ab-green, $ab-green-deep);
-    }
-
-    .cardTitle {
-      color: $ab-green;
-    }
-
-    .cardText {
-      color: $ab-ink;
-    }
-  }
-
-  .cardTop {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-
-    @include ab-below(480px) {
-      gap: 12px;
-    }
-  }
-
-  .iconWrap {
-    display: grid;
-    place-items: center;
-    flex-shrink: 0;
-    width: clamp(46px, 4vw, 60px);
-    height: clamp(46px, 4vw, 60px);
-    border-radius: 16px;
-
-    svg {
-      width: clamp(22px, 2vw, 28px);
-      height: clamp(22px, 2vw, 28px);
-    }
-
-    @include ab-below(480px) {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-
-      svg {
-        width: 20px;
-        height: 20px;
-      }
-    }
-  }
-
-  .cardTitle {
-    margin: 0;
-    font-size: clamp(22px, 2.6vw, 38px);
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-  }
-
-  .line {
-    display: block;
-    width: 64px;
-    height: 4px;
-    border-radius: 4px;
-    background: $ab-gold;
-
-    @include ab-below(480px) {
-      width: 48px;
-      height: 3px;
-    }
-  }
-
-  .cardText {
-    position: relative;
-    margin: 0;
-    font-size: clamp(15px, 1.45vw, 23px);
-    font-weight: 600;
-    line-height: 1.6;
-    overflow-wrap: break-word;
-
-    @include ab-below(480px) {
-      font-weight: 500;
-      line-height: 1.65;
-    }
-  }
 }

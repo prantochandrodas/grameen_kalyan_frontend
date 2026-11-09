@@ -42,6 +42,8 @@ const About = async () => {
 
   const mission = aboutUsData?.mission;
   const vision = aboutUsData?.vision;
+  const missionVisionTitle = aboutUsData?.mission_vision_title;
+  const missionVisionSubtitle = aboutUsData?.mission_vision_subtitle;
 
   const aboutSectionData = {
     heading: aboutUsData?.company_intro_title,
@@ -72,7 +74,12 @@ const About = async () => {
           titleThree="We Serve Together"
           backgroundImage={bannerData?.data?.banner}
         />
-        <MissionVision mission={mission} vision={vision} />
+        <MissionVision
+          title={missionVisionTitle}
+          subtitle={missionVisionSubtitle}
+          mission={mission}
+          vision={vision}
+        />
         <ImpactAreas serviceData={serviceContent?.data} />
         <AboutUs data={aboutSectionData} />
         <StoryOfInceptionSection
