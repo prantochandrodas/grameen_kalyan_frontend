@@ -83,6 +83,18 @@ const {
 const MIN_CHARS = 2;
 const MAX_SUGGESTIONS = 8;
 
+/* division pins: id = division id, x/y = position inside the map's SVG */
+const DIVISION_PINS = [
+  { id: 55, name: 'Rangpur', x: 120, y: 120 },
+  { id: 50, name: 'Rajshahi', x: 105, y: 280 },
+  { id: 35, name: 'Mymensingh', x: 300, y: 215 },
+  { id: 60, name: 'Sylhet', x: 500, y: 290 },
+  { id: 30, name: 'Dhaka', x: 268, y: 395 },
+  { id: 40, name: 'Khulna', x: 170, y: 540 },
+  { id: 10, name: 'Barisal', x: 350, y: 590 },
+  { id: 20, name: 'Chattogram', x: 500, y: 600 },
+];
+
 const MapSection = () => {
   const [divisionId] = useState<string | number>(30);
   const [data, setData] = useState<any[] | undefined>();
@@ -410,6 +422,43 @@ const MapSection = () => {
                 strokeMiterlimit="10"
                 strokeWidth="2.542"
               />
+              {/* ---------- Division name pins ---------- */}
+              <g aria-hidden="true" pointerEvents="none">
+                {DIVISION_PINS.map((pin) => {
+                  const isActive = mapActive === pin.id;
+                  return (
+                    <g key={pin.id} transform={`translate(${pin.x} ${pin.y})`}>
+                      <path
+                        d="M0,0 C-6,-8 -10,-12 -10,-18 A10,10 0 1 1 10,-18 C10,-12 6,-8 0,0Z"
+                        fill={isActive ? '#ffffff' : '#c3953d'}
+                        stroke={isActive ? '#c3953d' : '#ffffff'}
+                        strokeWidth="2"
+                      />
+                      <circle
+                        cx="0"
+                        cy="-18"
+                        r="3.6"
+                        fill={isActive ? '#0b612d' : '#ffffff'}
+                      />
+                      <text
+                        x="0"
+                        y="20"
+                        textAnchor="middle"
+                        fontSize="18"
+                        fontWeight="600"
+                        fontFamily="inherit"
+                        fill="#0b612d"
+                        stroke="#ffffff"
+                        strokeWidth="5"
+                        strokeLinejoin="round"
+                        paintOrder="stroke"
+                      >
+                        {pin.name}
+                      </text>
+                    </g>
+                  );
+                })}
+              </g>
             </g>
           </svg>
         </div>

@@ -11,7 +11,7 @@ import style from './recentPostCard.module.scss';
 
 const {
   recentPostCard,
-  container,
+  card,
   imgContainer,
   contentContainer,
   title,
@@ -25,20 +25,21 @@ interface IRecentPostCardProps {
 const RecentPostCard = ({ data }: IRecentPostCardProps) => {
   return (
     <Link href={`/stories/${data.id}/${data.id}`} className={recentPostCard}>
-      <div className={container}>
+      <div className={card}>
         <div className={imgContainer}>
           <Image
             className={img}
             src={IMAGE_BASE_URL + data.thumb_image}
-            alt={data.title}
-            width={1600}
+            alt={data.title || 'recent post'}
+            width={800}
             height={500}
             sizes="(max-width: 768px) 100vw, 33vw"
           />
         </div>
-      </div>
-      <div className={contentContainer}>
-        <h3 className={title}>{data.title}</h3>
+
+        <div className={contentContainer}>
+          <h3 className={title}>{data.title}</h3>
+        </div>
       </div>
     </Link>
   );
