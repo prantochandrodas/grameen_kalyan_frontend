@@ -1,11 +1,18 @@
 'use client';
 
-import React, { useState, KeyboardEvent } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  FormEvent,
+} from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { BiSolidPhoneCall } from 'react-icons/bi';
 import { IoIosMail } from 'react-icons/io';
 import { RxCross2 } from 'react-icons/rx';
+import { IoSearch } from 'react-icons/io5';
 
 import style from './sidebarSticky.module.scss';
 import ContactForm from './ContactForm/ContactForm';
@@ -13,8 +20,11 @@ import ContactForm from './ContactForm/ContactForm';
 const {
   sidebarSticky,
   iconBox,
+  iconActive,
   divider,
   numberContainer,
+  phoneLabel,
+  phoneLink,
   container,
   positionContainer,
   visibleNumber,
@@ -22,6 +32,9 @@ const {
   visibleForm,
   exit,
   searchContainer,
+  searchForm,
+  searchBtn,
+  errorText,
   visibleSearch,
 } = style;
 
@@ -76,118 +89,202 @@ const SidebarSticky = () => {
   const [openPhone, setOpenPhone] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
   const [openContactForm, setOpenContactForm] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const [searchError, setSearchError] = useState('');
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const pathname = usePathname();
   const router = useRouter();
+
+  const closeAll = useCallback(() => {
+    setOpenPhone(false);
+    setOpenSearch(false);
+    setOpenContactForm(false);
+    setSearchError('');
+  }, []);
+
+  // Esc key + outside click closes any open panel
+  useEffect(() => {
+    if (!openPhone && !openSearch && !openContactForm) return undefined;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeAll();
+    };
+    const onOutsideClick = (e: MouseEvent | TouchEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(e.target as Node)
+      ) {
+        closeAll();
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('mousedown', onOutsideClick);
+    document.addEventListener('touchstart', onOutsideClick);
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('mousedown', onOutsideClick);
+      document.removeEventListener('touchstart', onOutsideClick);
+    };
+  }, [openPhone, openSearch, openContactForm, closeAll]);
+
+  // Auto focus the search box when it opens
+  useEffect(() => {
+    if (!openSearch) return undefined;
+    const timer = setTimeout(() => searchInputRef.current?.focus(), 300);
+    return () => clearTimeout(timer);
+  }, [openSearch]);
 
   if (pathname !== '/') return null;
 
   const handlePhoneToggle = () => {
-    setOpenPhone(!openPhone);
+    setOpenPhone((prev) => !prev);
     setOpenSearch(false);
     setOpenContactForm(false);
   };
   const handleSearchToggle = () => {
-    setOpenSearch(!openSearch);
+    setOpenSearch((prev) => !prev);
     setOpenPhone(false);
     setOpenContactForm(false);
+    setSearchError('');
   };
   const handleContactFormToggle = () => {
-    setOpenContactForm(!openContactForm);
+    setOpenContactForm((prev) => !prev);
     setOpenPhone(false);
     setOpenSearch(false);
   };
 
-  const handleSearch = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.code !== 'Enter') return;
+  const resetSearch = () => {
+    setSearchValue('');
+    setSearchError('');
+    setOpenSearch(false);
+  };
 
-    const input = e.target as HTMLInputElement;
-    const value = input.value.trim();
+  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const value = searchValue.trim();
 
-    if (!value) return;
+    if (!value) {
+      setSearchError('Please type something to search');
+      return;
+    }
 
     // Age website er page er sathe match koro
     const matchedPage = findPage(value);
     if (matchedPage) {
       router.push(matchedPage.path);
-      input.value = '';
-      setOpenSearch(false);
+      resetSearch();
       return;
     }
 
-    // Page na pele ager moto general search
+    // Page na pele general search
     if (value.length <= 3) {
-      alert('Please enter more than 3 characters');
+      setSearchError('Please enter more than 3 characters');
       return;
     }
 
     router.push(`/search/${encodeURIComponent(value)}`);
-    input.value = '';
-    setOpenSearch(false);
+    resetSearch();
   };
 
   return (
-    <div className={container}>
+    <div className={container} ref={wrapperRef}>
       <div className={positionContainer}>
         <div className={sidebarSticky}>
-          <div className={iconBox} onClick={() => handleSearchToggle()}>
-            <img
-              src="/images/search.png"
-              alt="search"
-              style={{
-                width: '25px',
-                height: '25px',
-                marginRight: '5px',
-                objectFit: 'contain',
-              }}
-            />
-          </div>
+          <button
+            type="button"
+            className={`${iconBox} ${openSearch ? iconActive : ''}`}
+            onClick={handleSearchToggle}
+            aria-label="Search"
+            aria-expanded={openSearch}
+          >
+            <img src="/images/search.png" alt="" />
+          </button>
           <div className={divider} />
-          <div className={iconBox} onClick={() => handlePhoneToggle()}>
+          <button
+            type="button"
+            className={`${iconBox} ${openPhone ? iconActive : ''}`}
+            onClick={handlePhoneToggle}
+            aria-label="Phone numbers"
+            aria-expanded={openPhone}
+          >
             <BiSolidPhoneCall />
-          </div>
+          </button>
           <div className={divider} />
-          <div className={iconBox} onClick={() => handleContactFormToggle()}>
+          <button
+            type="button"
+            className={`${iconBox} ${openContactForm ? iconActive : ''}`}
+            onClick={handleContactFormToggle}
+            aria-label="Contact form"
+            aria-expanded={openContactForm}
+          >
             <IoIosMail style={{ color: '#F7A220' }} />
-          </div>
+          </button>
         </div>
 
-        {/* Search Input form */}
+        {/* Search */}
         <div
-          className={
-            openSearch
-              ? `${searchContainer} ${visibleSearch}`
-              : `${searchContainer}`
-          }
+          className={`${searchContainer} ${openSearch ? visibleSearch : ''}`}
         >
-          <div className={exit} onClick={() => handleSearchToggle()}>
-            <RxCross2 />
-          </div>
-          <input type="text" placeholder="Search..." onKeyUp={handleSearch} />
+          <form className={searchForm} onSubmit={handleSearch} role="search">
+            <input
+              ref={searchInputRef}
+              type="search"
+              value={searchValue}
+              onChange={(e) => {
+                setSearchValue(e.target.value);
+                if (searchError) setSearchError('');
+              }}
+              placeholder="Search pages or topics..."
+              aria-label="Search"
+            />
+            <button type="submit" className={searchBtn} aria-label="Search">
+              <IoSearch />
+            </button>
+            <button
+              type="button"
+              className={exit}
+              onClick={closeAll}
+              aria-label="Close search"
+            >
+              <RxCross2 />
+            </button>
+          </form>
+          {searchError && (
+            <p className={errorText} role="alert">
+              {searchError}
+            </p>
+          )}
         </div>
 
-        {/* Phone Number */}
+        {/* Phone Numbers */}
         <div
-          className={
-            openPhone
-              ? `${numberContainer} ${visibleNumber}`
-              : `${numberContainer}`
-          }
+          className={`${numberContainer} ${openPhone ? visibleNumber : ''}`}
         >
-          <p>+880244802111, +8809642115500</p>
+          <span className={phoneLabel}>Call Us</span>
+          <a className={phoneLink} href="tel:+880244802111">
+            +880244802111
+          </a>
+          <a className={phoneLink} href="tel:+8809642115500">
+            +8809642115500
+          </a>
         </div>
 
         {/* Contact Form */}
         <div
-          className={
-            openContactForm
-              ? `${formContainer} ${visibleForm}`
-              : `${formContainer}`
-          }
+          className={`${formContainer} ${openContactForm ? visibleForm : ''}`}
         >
-          <div className={exit} onClick={() => handleContactFormToggle()}>
+          <button
+            type="button"
+            className={exit}
+            onClick={closeAll}
+            aria-label="Close contact form"
+          >
             <RxCross2 />
-          </div>
-          <ContactForm closeSidebar={handleContactFormToggle} />
+          </button>
+          <ContactForm closeSidebar={closeAll} />
         </div>
       </div>
     </div>

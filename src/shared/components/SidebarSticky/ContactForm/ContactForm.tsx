@@ -19,8 +19,13 @@ import style from './contactForm.module.scss';
 
 const {
   contactForm,
+  header,
+  eyebrow,
+  headingBar,
+  subtitle,
   form,
   box,
+  row,
   nameBox,
   errorContainer,
   subjectBox,
@@ -29,6 +34,7 @@ const {
   submitBtn,
   heading,
   btnContainer,
+  apiError,
 } = style;
 
 const ContactForm: React.FC<ContactFormProps> = ({ closeSidebar }) => {
@@ -62,12 +68,15 @@ const ContactForm: React.FC<ContactFormProps> = ({ closeSidebar }) => {
         throw new Error('Request fail');
       }
 
+      setErrorMessage(null);
       setSubmissionSuccessful(true);
       reset();
-      // ✅ Close the sidebar automatically like the exit button
-      if (closeSidebar) closeSidebar();
 
-      setTimeout(() => setSubmissionSuccessful(false), 1000);
+      // show the success message first, then close the panel
+      setTimeout(() => {
+        setSubmissionSuccessful(false);
+        closeSidebar?.();
+      }, 1800);
     } catch (error: unknown) {
       const errorInstance = error instanceof Error;
       const errMessage = errorInstance ? error.message : 'Something went wrong';
@@ -77,21 +86,34 @@ const ContactForm: React.FC<ContactFormProps> = ({ closeSidebar }) => {
 
   const handleModal = () => {
     setSubmissionSuccessful(false);
+    closeSidebar?.();
   };
 
   return (
     <div className={contactForm}>
-      <h3 className={heading}>CONTACT US</h3>
+      <div className={header}>
+        <span className={eyebrow}>Get In Touch</span>
+        <h3 className={heading}>Contact Us</h3>
+        <span className={headingBar} />
+        <p className={subtitle}>
+          Send us a message and our team will get back to you soon.
+        </p>
+      </div>
+
       <form
         className={form}
         onSubmit={handleSubmit(onSubmit)}
         encType="multipart/form-data"
+        noValidate
       >
         <div className={`${nameBox} ${box}`}>
-          <label htmlFor="userName">Your Name:</label>
+          <label htmlFor="userName">Your Name</label>
           <input
             id="userName"
             type="text"
+            autoComplete="name"
+            placeholder="Enter your full name"
+            aria-invalid={!!errors.name}
             {...register('name', { required: true })}
           />
           {errors.name?.type === 'required' && (
@@ -100,24 +122,32 @@ const ContactForm: React.FC<ContactFormProps> = ({ closeSidebar }) => {
             </div>
           )}
         </div>
+
         <div className={`${subjectBox} ${box}`}>
-          <label htmlFor="userSubject">Your Subject:</label>
+          <label htmlFor="userSubject">Your Subject</label>
           <input
             id="userSubject"
             type="text"
+            placeholder="What is this about?"
+            aria-invalid={!!errors.subject}
             {...register('subject', { required: true })}
           />
           {errors.subject?.type === 'required' && (
             <div className={errorContainer}>
-              <FormErrorMessage message="Email is Required" />
+              <FormErrorMessage message="Subject is Required" />
             </div>
           )}
         </div>
+
         <div className={`${emailBox} ${box}`}>
-          <label htmlFor="userEmail">Your Email:</label>
+          <label htmlFor="userEmail">Your Email</label>
           <input
             id="userEmail"
-            type="text"
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            placeholder="name@example.com"
+            aria-invalid={!!errors.email}
             {...register('email', {
               required: true,
               pattern:
@@ -135,54 +165,57 @@ const ContactForm: React.FC<ContactFormProps> = ({ closeSidebar }) => {
             </div>
           )}
         </div>
-        <div className={box}>
-          <label htmlFor="userPhone">Your Phone:</label>
-          <input
-            id="userPhone"
-            type="tel"
-            {...register('phone')}
-          />
 
-        </div>
-        <div className={box}>
-          <label htmlFor="userDate">Date:</label>
-          <input
-            id="userDate"
-            type="date"
-            {...register('date')}
-          />
-          {errors.date?.type === 'required' && (
-            <div className={errorContainer}>
-              <FormErrorMessage message="Date is Required" />
-            </div>
-          )}
+        <div className={row}>
+          <div className={box}>
+            <label htmlFor="userPhone">Phone (optional)</label>
+            <input
+              id="userPhone"
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              placeholder="01XXXXXXXXX"
+              {...register('phone')}
+            />
+          </div>
+          <div className={box}>
+            <label htmlFor="userDate">Date (optional)</label>
+            <input id="userDate" type="date" {...register('date')} />
+          </div>
         </div>
 
         <div className={`${messageBox} ${box}`}>
-          <label htmlFor="userMessage">Your Message:</label>
+          <label htmlFor="userMessage">Your Message</label>
           <textarea
             id="userMessage"
-            rows={5}
+            rows={4}
+            placeholder="Write your message here..."
+            aria-invalid={!!errors.message}
             {...register('message', { required: true })}
           />
-          {errors.subject?.type === 'required' && (
+          {errors.message?.type === 'required' && (
             <div className={errorContainer}>
-              <FormErrorMessage message="Email is Required" />
+              <FormErrorMessage message="Message is Required" />
             </div>
           )}
         </div>
+
+        {errorMessage && (
+          <p className={apiError} role="alert">
+            Something went wrong. Please check your connection and try again.
+          </p>
+        )}
+
         <div className={btnContainer}>
-          <input
-            className={submitBtn}
-            type="submit"
-            value="Send"
-            disabled={isSubmitting}
-          />
+          <button className={submitBtn} type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Sending...' : 'Send Message'}
+          </button>
         </div>
       </form>
+
       {submissionSuccessful && (
         <SuccessMessage
-          textMessage="Application submitted successfully!"
+          textMessage="Message sent successfully!"
           url="/"
           closeModal={handleModal}
         />

@@ -27,15 +27,20 @@
 // }
 @import '../../../style/utils/base';
 .albumContainer {
-    padding: 5rem 20rem 10rem 20rem;
-    @include response(s-desktop) {
-        padding: 12rem;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding-block: 6rem 7rem; // same top-bottom space as Video section
+    padding-inline: 4.5rem; // same as header logo left space
+    @media (max-width: 1200px) {
+        padding-inline: 3.2rem;
     }
-    @include response(phone) {
-        padding: 5rem;
+    @media (max-width: 900px) {
+        padding-inline: 2.4rem;
     }
-    @include response(s-phone) {
-        padding: 3rem;
+    @media (max-width: 560px) {
+        padding-block: 3.6rem 4.6rem;
+        padding-inline: 1.6rem;
     }
     .albumGrid {
         display: grid;

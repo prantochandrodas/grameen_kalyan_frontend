@@ -36,11 +36,11 @@ const Gallery = ({ data }: IGalleryProps) => {
           <span className={eyebrow}>Photo Gallery</span>
           {albumTitle && <h2 className={heading}>{albumTitle}</h2>}
           <span className={headingBar} />
-          {photos.length > 0 && (
+          {/* {photos.length > 0 && (
             <p className={count}>
               {photos.length} {photos.length === 1 ? 'Photo' : 'Photos'}
             </p>
-          )}
+          )} */}
         </div>
 
         <div className={galleryGrid}>
