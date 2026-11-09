@@ -3,6 +3,11 @@
 .recentPostCard {
   padding: 0 1.5rem;
   height: 100%;
+  text-decoration: none;
+
+  &:hover .title {
+    color: $color-secondary-goldenrod;
+  }
 
   @include response(phone) {
     padding: 0 0.8rem;

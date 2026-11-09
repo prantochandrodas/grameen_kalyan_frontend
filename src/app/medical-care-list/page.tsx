@@ -1,9 +1,7 @@
 import React from 'react';
 
-import {
-  HeroSection,
-  MedicalCareListSection,
-} from '@/components/MedicalCareList';
+import { MedicalCareListSection } from '@/components/MedicalCareList';
+import { HeroSection } from '@/components/Story';
 import { WorkTogether } from '@/shared/components';
 import { useFetch } from '@/shared/hook';
 

@@ -1,13 +1,14 @@
 import React from 'react';
 
-import { HeroSection, StoryListSection } from '@/components/StoryList';
+import { StoryListSection } from '@/components/StoryList';
+import { HeroSection } from '@/components/Story';
 import { useFetch } from '@/shared/hook';
 import { WorkTogether } from '@/shared/components';
 
 const heroData = {
   image:
     'https://res.cloudinary.com/dboyf6lad/image/upload/v1692591523/1659420758_3-min_s2cdxp.jpg',
-  title: 'More stories',
+  title: 'More Stories',
 };
 
 const StoryList = async () => {
@@ -17,7 +18,7 @@ const StoryList = async () => {
   return (
     <>
       <HeroSection data={heroData} />
-      <StoryListSection data={stories.data} />
+      <StoryListSection data={stories?.data} />
       <WorkTogether image={workTogetherImage} />
     </>
   );

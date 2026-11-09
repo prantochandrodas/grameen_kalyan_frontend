@@ -58,7 +58,13 @@ const HeroSection = ({ data }: IHeroSectionProps) => {
     [1, intensity ? 0 : 1]
   );
 
-  const src = data?.image ? IMAGE_BASE_URL + data.image : null;
+  // admin images need the base url, "More stories" uses a full https url
+  const isAbsolute = !!data?.image?.startsWith('http');
+  const src = data?.image
+    ? isAbsolute
+      ? data.image
+      : IMAGE_BASE_URL + data.image
+    : null;
 
   // last word of the title gets the gold accent
   const words = (data?.title ?? '').trim().split(/\s+/).filter(Boolean);
@@ -80,6 +86,7 @@ const HeroSection = ({ data }: IHeroSectionProps) => {
               fill
               priority
               sizes="100vw"
+              unoptimized={isAbsolute}
             />
           ) : null}
         </motion.div>
