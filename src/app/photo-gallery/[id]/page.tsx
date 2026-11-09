@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 
 import Gallery from '@/components/PhotoGallery/Gallery/Gallery';

@@ -1,55 +1,136 @@
 @import '../../../style/utils/base';
-
+$gl-green: #0f4a2c;
+$gl-title-green: #0b6b4f;
+$gl-gold: #C3953D;
 .galleryContainer {
-  padding: 5rem 20rem;
-
-  @include response(s-desktop) {
-    padding: 12rem;
-  }
-  @include response(phone) {
-    padding: 5rem;
-  }
-  @include response(s-phone) {
-    padding: 3rem;
-  }
-
-  .galleryGrid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2.5rem;
-
-    @include response(phone) {
-      grid-template-columns: 1fr;
+    padding: 5rem 20rem 8rem;
+    @include response(s-desktop) {
+        padding: 8rem 12rem 8rem;
     }
-  }
-
-  h2 {
-    font-size: 5.6rem;
-    color: #0b612d;
-    font-weight: 900;
-
-    @include response(phone) {
-      font-size: 3.5rem;
-      line-height: 1.2;
-      margin-bottom: 2rem;
+    @include response(tab-port) {
+        padding: 6rem 6rem 6rem;
     }
-  }
+    @include response(phone) {
+        padding: 4rem 2rem 5rem;
+    }
+    @include response(s-phone) {
+        padding: 3rem 1.6rem 4rem;
+    }
 }
 
-.backButton {
-  padding-top: 5rem;
-  a {
-    font-size: 2rem;
-    color: #0b612d;
-    text-decoration: none;
-    border: 1px solid #0b612d;
-    padding: 1rem 2rem;
-    transition: 0.3s all ease-in-out;
-    border-radius: 4px;
 
-    &:hover {
-      background: #0b612d;
-      color: #fff;
+/* ---------- Header ---------- */
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 4.4rem;
+    @include response(phone) {
+        margin-bottom: 3rem;
     }
-  }
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $gl-gold;
+    &::before,
+    &::after {
+        content: '';
+        width: 1.6rem;
+        height: 0.2rem;
+        background: $gl-gold;
+    }
+}
+
+.heading {
+    margin: 0;
+    max-width: 90rem;
+    font-size: clamp(2.8rem, 4vw, 4.8rem);
+    font-weight: 900;
+    line-height: 1.2;
+    color: $gl-title-green;
+    text-wrap: balance;
+}
+
+.headingBar {
+    display: block;
+    width: 6rem;
+    height: 0.4rem;
+    margin-top: 1.4rem;
+    border-radius: 1rem;
+    background: $gl-gold;
+}
+
+.count {
+    margin: 1.4rem 0 0;
+    padding: 0.5rem 1.4rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: $gl-green;
+    background: rgba(26, 154, 91, 0.1);
+    border-radius: 10rem;
+}
+
+
+/* ---------- Grid ---------- */
+
+.galleryGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.4rem;
+    padding-top: 0.8rem; // space for hover lift
+    @include response(tab-port) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    @include response(phone) {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2rem;
+    }
+}
+
+
+/* ---------- Back button ---------- */
+
+.backButton {
+    display: flex;
+    justify-content: center;
+    padding-top: 5rem;
+    a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 4.8rem;
+        padding: 1rem 2.8rem;
+        font-size: 1.7rem;
+        font-weight: 600;
+        color: $gl-green;
+        text-decoration: none;
+        background: #fff;
+        border: 1.5px solid $gl-green;
+        border-radius: 10rem;
+        transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        &:hover {
+            color: #fff;
+            background: $gl-green;
+            transform: translateY(-0.3rem);
+            box-shadow: 0 1rem 2rem rgba(15, 74, 44, 0.22);
+        }
+        &:focus-visible {
+            outline: 3px solid $gl-gold;
+            outline-offset: 4px;
+        }
+        @include response(phone) {
+            width: 100%;
+            font-size: 1.8rem;
+        }
+    }
 }

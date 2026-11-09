@@ -1,8 +1,6 @@
 // @import '../../../style/utils/base';
-
 // .albumContainer {
 //   padding: 5rem 20rem 10rem 20rem;
-
 //   @include response(s-desktop) {
 //     padding: 12rem;
 //   }
@@ -12,57 +10,53 @@
 //   @include response(s-phone) {
 //     padding: 3rem;
 //   }
-
 //   .albumGrid {
 //     display: grid;
 //     grid-template-columns: repeat(3, 1fr);
 //     gap: 2.5rem;
-
 //     @include response(tab-port) {
 //       grid-template-columns: repeat(2, 1fr);
 //     }
-
 //     @include response(phone) {
 //       grid-template-columns: repeat(1, 1fr);
 //     }
-
 //     .link {
 //       text-decoration: none;
 //     }
 //   }
 // }
-
 @import '../../../style/utils/base';
-
 .albumContainer {
-  padding: 5rem 20rem 10rem 20rem;
-
-  @include response(s-desktop) {
-    padding: 12rem;
-  }
-  @include response(phone) {
-    padding: 5rem;
-  }
-  @include response(s-phone) {
-    padding: 3rem;
-  }
-
-  .albumGrid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2.5rem;
-
-    @include response(tab-port) {
-      grid-template-columns: repeat(2, 1fr);
+    padding: 5rem 20rem 10rem 20rem;
+    @include response(s-desktop) {
+        padding: 12rem;
     }
-
     @include response(phone) {
-      grid-template-columns: repeat(1, 1fr);
+        padding: 5rem;
     }
-
-    .link {
-      text-decoration: none;
+    @include response(s-phone) {
+        padding: 3rem;
     }
-  }
+    .albumGrid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 2.4rem;
+        padding-top: 0.8rem;
+        @include response(tab-port) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        @include response(phone) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+        .link {
+            display: block;
+            height: 100%;
+            text-decoration: none;
+            border-radius: 1rem;
+            &:focus-visible {
+                outline: 3px solid #C3953D;
+                outline-offset: 4px;
+            }
+        }
+    }
 }
-

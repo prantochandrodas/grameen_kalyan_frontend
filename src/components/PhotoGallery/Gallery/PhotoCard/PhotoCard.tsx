@@ -27,26 +27,29 @@ const PhotoCard = ({ data }: IPhotoCardProps) => {
     <PhotoView src={IMAGE_BASE_URL + fullImage}>
       <div className={photoCard}>
         <div className={imgContainer}>
-          {/* Blur করা background layer */}
+          {/* Blurred backdrop layer */}
           <Image
             className={imgBg}
             src={IMAGE_BASE_URL + data.thumb_image}
             alt=""
             fill
+            sizes="(max-width: 640px) 100vw, (max-width: 962px) 50vw, 33vw"
             aria-hidden="true"
           />
-          {/* আসল ছবি — সম্পূর্ণ, uncropped */}
+          {/* Full photo, uncropped */}
           <Image
             className={img}
             src={IMAGE_BASE_URL + data.thumb_image}
             alt={data.title || 'gallery image'}
             fill
-            sizes="(max-width: 768px) 100vw, 50vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 962px) 50vw, 33vw"
           />
         </div>
-        <div className={title}>
-          <h4>{data.title}</h4>
-        </div>
+        {data.title && (
+          <div className={title}>
+            <h4>{data.title}</h4>
+          </div>
+        )}
       </div>
     </PhotoView>
   );
