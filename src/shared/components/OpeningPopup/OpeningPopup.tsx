@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 import popupOne from '@/assets/images/popup/01.jpg';
-import popupTwo from '@/assets/images/popup/02.jpg';
+// import popupTwo from '@/assets/images/popup/02.jpg';
 // import popupThree from '@/assets/images/popup/03.gif';
 // import popupFour from '@/assets/images/popup/04.gif';
 // import popupFive from '@/assets/images/popup/05.png';
