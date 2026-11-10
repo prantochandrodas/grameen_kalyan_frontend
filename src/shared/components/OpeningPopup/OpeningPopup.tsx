@@ -10,7 +10,7 @@ import {
   X,
 } from 'lucide-react';
 
-import popupOne from '@/assets/images/popup/01.jpg';
+import popupOne from '@/assets/images/popup/04.jpg';
 // import popupTwo from '@/assets/images/popup/02.jpg';
 // import popupThree from '@/assets/images/popup/03.gif';
 // import popupFour from '@/assets/images/popup/04.gif';
