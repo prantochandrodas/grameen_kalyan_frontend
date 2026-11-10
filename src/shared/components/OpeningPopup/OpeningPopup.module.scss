@@ -5,17 +5,23 @@
     display: grid;
     place-items: center;
     overflow-y: auto;
-    padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
-        max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
-    background: rgba(15, 20, 32, 0.68);
-    backdrop-filter: blur(5px);
+    padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
+        max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    background: rgba(15, 20, 32, 0.7);
+    backdrop-filter: blur(7px);
     animation: fadeIn 180ms ease-out;
 }
 
 .dialog {
     position: relative;
-    width: min(900px, 100%);
-    max-height: calc(100dvh - 24px);
+    width: min(760px, 100%);
+    max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 24px 80px rgba(8, 24, 38, 0.3);
     outline: none;
     animation: liftIn 220ms ease-out;
 }
@@ -24,9 +30,11 @@
     position: relative;
     display: grid;
     width: 100%;
-    max-height: calc(100dvh - 24px);
+    max-height: calc(100vh - 100px);
+    max-height: calc(100dvh - 100px);
     overflow: hidden;
     place-items: center;
+    background: #fff;
 }
 
 .promotionImage {
@@ -34,7 +42,8 @@
     width: 100%;
     height: auto;
     max-width: 100%;
-    max-height: calc(100dvh - 24px);
+    max-height: calc(100vh - 100px);
+    max-height: calc(100dvh - 100px);
     object-fit: contain;
 }
 
@@ -44,12 +53,12 @@
     height: 42px;
     flex: 0 0 auto;
     place-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 50%;
     color: #fff;
-    background: rgba(25, 30, 43, 0.38);
+    background: rgba(18, 30, 39, 0.58);
     backdrop-filter: blur(8px);
-    opacity: 0.76;
+    opacity: 0.92;
     cursor: pointer;
     transition: background-color 160ms ease, transform 160ms ease, box-shadow 160ms ease,
         opacity 160ms ease;
@@ -73,11 +82,13 @@
 .closeButton {
     position: absolute;
     z-index: 1;
-    top: clamp(16px, 2.2vw, 26px);
-    right: clamp(16px, 2.2vw, 26px);
-    width: 40px;
-    height: 40px;
-    background: rgba(20, 25, 35, 0.36);
+    top: 14px;
+    right: 14px;
+    width: 38px;
+    height: 38px;
+    border-color: rgba(255, 255, 255, 0.72);
+    background: rgba(11, 97, 45, 0.92);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
 .previousButton,
@@ -100,11 +111,11 @@
 
 .controls {
     display: flex;
-    min-height: 42px;
+    min-height: 48px;
     align-items: center;
     justify-content: center;
-    gap: 16px;
-    padding-top: 10px;
+    gap: 14px;
+    padding: 6px 16px 10px;
 }
 
 .playButton {
@@ -180,18 +191,22 @@
 
 @media (max-width: 600px) {
     .backdrop {
-        padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right))
-            max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+        padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
+            max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
     }
     .dialog {
         width: 100%;
-        max-height: calc(100dvh - 20px);
+        max-height: calc(100vh - 24px);
+        max-height: calc(100dvh - 24px);
+        border-radius: 14px;
     }
     .imageFrame {
-        max-height: calc(100dvh - 20px);
+        max-height: calc(100vh - 92px);
+        max-height: calc(100dvh - 92px);
     }
     .promotionImage {
-        max-height: calc(100dvh - 20px);
+        max-height: calc(100vh - 92px);
+        max-height: calc(100dvh - 92px);
     }
     .iconButton {
         width: 40px;
@@ -200,6 +215,8 @@
     .closeButton {
         top: 10px;
         right: 10px;
+        width: 36px;
+        height: 36px;
     }
     .previousButton {
         left: 8px;
@@ -208,9 +225,9 @@
         right: 8px;
     }
     .controls {
-        min-height: 38px;
+        min-height: 46px;
         gap: 12px;
-        padding-top: 8px;
+        padding: 4px 12px 8px;
     }
 }
 
