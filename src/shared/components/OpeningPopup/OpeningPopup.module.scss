@@ -1,0 +1,226 @@
+.backdrop {
+    position: fixed;
+    z-index: 2000;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    overflow-y: auto;
+    padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
+        max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+    background: rgba(15, 20, 32, 0.68);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 180ms ease-out;
+}
+
+.dialog {
+    position: relative;
+    width: min(900px, 100%);
+    max-height: calc(100dvh - 24px);
+    outline: none;
+    animation: liftIn 220ms ease-out;
+}
+
+.imageFrame {
+    position: relative;
+    display: grid;
+    width: 100%;
+    max-height: calc(100dvh - 24px);
+    overflow: hidden;
+    place-items: center;
+}
+
+.promotionImage {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: calc(100dvh - 24px);
+    object-fit: contain;
+}
+
+.iconButton {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 50%;
+    color: #fff;
+    background: rgba(25, 30, 43, 0.38);
+    backdrop-filter: blur(8px);
+    opacity: 0.76;
+    cursor: pointer;
+    transition: background-color 160ms ease, transform 160ms ease, box-shadow 160ms ease,
+        opacity 160ms ease;
+    svg {
+        width: 20px;
+        height: 20px;
+        stroke-width: 2.2;
+    }
+    &:hover {
+        transform: scale(1.06);
+        background: #0b612d;
+        opacity: 1;
+    }
+    &:focus-visible {
+        outline: 3px solid #fff;
+        outline-offset: 3px;
+        box-shadow: 0 0 0 6px rgba(8, 145, 61, 0.7);
+    }
+}
+
+.closeButton {
+    position: absolute;
+    z-index: 1;
+    top: clamp(16px, 2.2vw, 26px);
+    right: clamp(16px, 2.2vw, 26px);
+    width: 40px;
+    height: 40px;
+    background: rgba(20, 25, 35, 0.36);
+}
+
+.previousButton,
+.nextButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    &:hover {
+        transform: translateY(-50%) scale(1.06);
+    }
+}
+
+.previousButton {
+    left: clamp(10px, 2vw, 20px);
+}
+
+.nextButton {
+    right: clamp(10px, 2vw, 20px);
+}
+
+.controls {
+    display: flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding-top: 10px;
+}
+
+.playButton {
+    width: 34px;
+    height: 34px;
+    border-color: #d6dee6;
+    color: #304050;
+    background: #fff;
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+    &:hover {
+        color: #fff;
+    }
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #bdc6d1;
+    cursor: pointer;
+    transition: width 180ms ease, background-color 180ms ease;
+    &:focus-visible {
+        outline: 2px solid #087c91;
+        outline-offset: 4px;
+    }
+}
+
+.activeDot {
+    width: 23px;
+    border-radius: 8px;
+    background: #087c91;
+}
+
+.slideCount {
+    min-width: 36px;
+    color: #667383;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes liftIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.985);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 600px) {
+    .backdrop {
+        padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right))
+            max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+    }
+    .dialog {
+        width: 100%;
+        max-height: calc(100dvh - 20px);
+    }
+    .imageFrame {
+        max-height: calc(100dvh - 20px);
+    }
+    .promotionImage {
+        max-height: calc(100dvh - 20px);
+    }
+    .iconButton {
+        width: 40px;
+        height: 40px;
+    }
+    .closeButton {
+        top: 10px;
+        right: 10px;
+    }
+    .previousButton {
+        left: 8px;
+    }
+    .nextButton {
+        right: 8px;
+    }
+    .controls {
+        min-height: 38px;
+        gap: 12px;
+        padding-top: 8px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .backdrop,
+    .dialog {
+        animation: none;
+    }
+    .iconButton,
+    .dot {
+        transition-duration: 0.01ms !important;
+    }
+}

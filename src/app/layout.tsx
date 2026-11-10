@@ -8,6 +8,7 @@ import {
   SidebarSticky,
   ButtonScrollTop,
 } from '@/shared/components';
+import OpeningPopup from '@/shared/components/OpeningPopup/OpeningPopup';
 import { useFetch } from '@/shared/hook';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
@@ -70,6 +71,7 @@ export default async function RootLayout({
         <SidebarSticky />
         <Footer />
         <ButtonScrollTop />
+        <OpeningPopup />
       </body>
     </html>
   );
