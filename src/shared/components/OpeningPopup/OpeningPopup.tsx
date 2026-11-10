@@ -20,7 +20,7 @@ import styles from './OpeningPopup.module.scss';
 
 const promotions: StaticImageData[] = [
   popupOne,
-  popupTwo,
+  // popupTwo,
   // popupThree,
   // popupFour,
   // popupFive,
