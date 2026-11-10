@@ -32,8 +32,8 @@ $sb-mint: #dff4e6;
     width: max-content;
     padding: 2.4rem 1.2rem calc(2.4rem + env(safe-area-inset-bottom, 0px));
     border-radius: 1.4rem 0 0 0;
-    background: linear-gradient(180deg, $color-primary 0%, #08481f 100%);
-    box-shadow: -0.4rem 0 2rem rgba(0, 0, 0, 0.18);
+    // background: linear-gradient(180deg, $color-primary 0%, #08481f 100%);
+    // box-shadow: -0.4rem 0 2rem rgba(0, 0, 0, 0.18);
     @media (max-width: 560px) {
         gap: 1rem;
         padding: 1.6rem 0.8rem calc(1.6rem + env(safe-area-inset-bottom, 0px));
