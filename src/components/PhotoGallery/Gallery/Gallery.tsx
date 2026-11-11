@@ -19,13 +19,20 @@ const {
   count,
   galleryGrid,
   backButton,
+  empty,
 } = style;
 
 interface IGalleryProps {
   data: IGalleryData[];
+  backHref?: string;
+  backLabel?: string;
 }
 
-const Gallery = ({ data }: IGalleryProps) => {
+const Gallery = ({
+  data,
+  backHref = '/photo-gallery',
+  backLabel = 'Back to Albums',
+}: IGalleryProps) => {
   const photos = Array.isArray(data) ? data : [];
   const albumTitle = photos[0]?.album_title;
 
@@ -43,14 +50,18 @@ const Gallery = ({ data }: IGalleryProps) => {
           )} */}
         </div>
 
-        <div className={galleryGrid}>
-          {photos.map((item) => (
-            <PhotoCard key={item.id} data={item} />
-          ))}
-        </div>
+        {photos.length > 0 ? (
+          <div className={galleryGrid}>
+            {photos.map((item) => (
+              <PhotoCard key={item.id} data={item} />
+            ))}
+          </div>
+        ) : (
+          <p className={empty}>No photos available in this album yet.</p>
+        )}
 
         <div className={backButton}>
-          <Link href="/photo-gallery">&larr; Back to Albums</Link>
+          <Link href={backHref}>&larr; {backLabel}</Link>
         </div>
       </section>
     </PhotoProvider>

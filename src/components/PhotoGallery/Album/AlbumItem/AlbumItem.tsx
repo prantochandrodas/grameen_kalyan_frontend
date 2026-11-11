@@ -8,12 +8,13 @@ import Image from 'next/image';
 
 import style from './albumItem.module.scss';
 import { IMAGE_BASE_URL } from '@/config';
-import { IPhotoAlbums } from '@/shared/types/photoAlbums';
-
 const { albumItem, textContainer, imgContainer, img, title } = style;
 
 interface IAlbumItemProps {
-  data: IPhotoAlbums;
+  data: {
+    title: string;
+    album_photo: string;
+  };
 }
 
 const AlbumItem = ({ data }: IAlbumItemProps) => {

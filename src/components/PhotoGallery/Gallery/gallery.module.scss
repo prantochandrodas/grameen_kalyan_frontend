@@ -100,6 +100,23 @@ $gl-gold: #C3953D;
 }
 
 
+/* ---------- Child albums grid (same as main Albums: 4 per row) ---------- */
+
+.subAlbumGrid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2.4rem;
+    padding-top: 0.8rem; // space for hover lift
+    @include response(tab-port) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    @include response(phone) {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2rem;
+    }
+}
+
+
 /* ---------- Back button ---------- */
 
 .backButton {
@@ -134,5 +151,37 @@ $gl-gold: #C3953D;
             width: 100%;
             font-size: 1.8rem;
         }
+    }
+}
+
+
+/* ---------- Child album link ---------- */
+
+.subLink {
+    display: block;
+    height: 100%;
+    text-decoration: none;
+    border-radius: 1rem;
+    &:focus-visible {
+        outline: 3px solid $gl-gold;
+        outline-offset: 4px;
+    }
+}
+
+
+/* ---------- Empty state ---------- */
+
+.empty {
+    margin: 0;
+    padding: 4rem 2rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-align: center;
+    color: $gl-green;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, #dff4e6 100%);
+    border-radius: 1rem;
+    @include response(phone) {
+        padding: 3rem 1.6rem;
+        font-size: 1.7rem;
     }
 }
