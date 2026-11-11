@@ -1,6 +1,5 @@
 'use client';
 
-import Image, { StaticImageData } from 'next/image';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -11,29 +10,29 @@ import {
   X,
 } from 'lucide-react';
 
-import popupOne from '@/assets/images/popup/04.jpg';
-// import popupTwo from '@/assets/images/popup/02.jpg';
-// import popupThree from '@/assets/images/popup/03.gif';
-// import popupFour from '@/assets/images/popup/04.gif';
-// import popupFive from '@/assets/images/popup/05.png';
-
 import styles from './OpeningPopup.module.scss';
 
-const promotions: StaticImageData[] = [
-  popupOne,
-  // popupTwo,
-  // popupThree,
-  // popupFour,
-  // popupFive,
-];
+type Promotion = {
+  id: number;
+  image: string;
+};
 
-const hasMultiplePromotions = promotions.length > 1;
+type PopupApiItem = {
+  id: number;
+  serial_no?: string | number;
+  image?: string;
+};
+
+const POPUP_API_URL = 'https://admin.grameenkalyan.com/api/popup-images';
 const dismissalStorageKey = 'opening-popup-dismissed';
 
 const OpeningPopup = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [promotions, setPromotions] = useState<Promotion[]>([]);
+  const hasMultiplePromotions = promotions.length > 1;
+  const touchStartX = useRef<number | null>(null);
   const pathname = usePathname();
   const dialogRef = useRef<HTMLElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -44,8 +43,46 @@ const OpeningPopup = () => {
       return undefined;
     }
 
-    const timeout = window.setTimeout(() => setIsOpen(true), 1500);
-    return () => window.clearTimeout(timeout);
+    const controller = new AbortController();
+    const preloader = new window.Image();
+    let timeout: number | undefined;
+
+    const loadPromotions = async () => {
+      try {
+        const response = await fetch(POPUP_API_URL, { signal: controller.signal });
+        if (!response.ok) return;
+
+        const result = await response.json();
+        const items: Promotion[] = (Array.isArray(result?.data) ? (result.data as PopupApiItem[]) : [])
+          .filter((item) => Boolean(item?.image))
+          .sort((a, b) => Number(a.serial_no ?? 0) - Number(b.serial_no ?? 0))
+          .map((item) => ({ id: item.id, image: item.image as string }));
+
+        if (!items.length) return;
+
+        // Open only after the first image is fully loaded (no blank popup)
+        preloader.onload = () => {
+          setPromotions(items);
+          setActiveSlide(0);
+          items.slice(1).forEach((item) => {
+            const img = new window.Image();
+            img.src = item.image;
+          });
+          timeout = window.setTimeout(() => setIsOpen(true), 800);
+        };
+        preloader.src = items[0].image;
+      } catch {
+        // API error or aborted: popup stays hidden
+      }
+    };
+
+    loadPromotions();
+
+    return () => {
+      controller.abort();
+      preloader.onload = null;
+      if (timeout) window.clearTimeout(timeout);
+    };
   }, [pathname]);
 
   useEffect(() => {
@@ -80,9 +117,9 @@ const OpeningPopup = () => {
     }, 5500);
 
     return () => window.clearInterval(interval);
-  }, [isOpen, isPaused]);
+  }, [isOpen, isPaused, hasMultiplePromotions, promotions.length]);
 
-  if (!isOpen) return null;
+  if (!isOpen || promotions.length === 0) return null;
 
   const closePopup = () => {
     window.sessionStorage.setItem(dismissalStorageKey, 'true');
@@ -99,6 +136,24 @@ const OpeningPopup = () => {
     if (!hasMultiplePromotions) return;
     setActiveSlide((currentSlide) => (currentSlide + 1) % promotions.length);
     setIsPaused(true);
+  };
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    touchStartX.current = event.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (touchStartX.current === null || !hasMultiplePromotions) return;
+
+    const distance = event.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (Math.abs(distance) < 40) return;
+
+    if (distance > 0) {
+      showPreviousSlide();
+    } else {
+      showNextSlide();
+    }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
@@ -164,15 +219,23 @@ const OpeningPopup = () => {
           <X aria-hidden="true" />
         </button>
 
-        <div className={styles.imageFrame}>
-          <Image
+        <div
+          className={styles.imageFrame}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            key={promotions[activeSlide].id}
             className={styles.promotionImage}
-            src={promotions[activeSlide]}
+            src={promotions[activeSlide].image}
             alt={`Featured health promotion ${activeSlide + 1} of ${promotions.length}`}
-            width={promotions[activeSlide].width}
-            height={promotions[activeSlide].height}
-            priority
-            unoptimized
+            draggable={false}
+            decoding="async"
+            onError={() => {
+              setPromotions((current) => current.filter((_, index) => index !== activeSlide));
+              setActiveSlide(0);
+            }}
           />
 
           {hasMultiplePromotions && (
