@@ -1,6 +1,7 @@
 'use client';
 
 import Image, { StaticImageData } from 'next/image';
+import { usePathname } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   ChevronLeft,
@@ -27,13 +28,25 @@ const promotions: StaticImageData[] = [
 ];
 
 const hasMultiplePromotions = promotions.length > 1;
+const dismissalStorageKey = 'opening-popup-dismissed';
 
 const OpeningPopup = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const pathname = usePathname();
   const dialogRef = useRef<HTMLElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    setIsOpen(false);
+    if (pathname !== '/' || window.sessionStorage.getItem(dismissalStorageKey)) {
+      return undefined;
+    }
+
+    const timeout = window.setTimeout(() => setIsOpen(true), 1500);
+    return () => window.clearTimeout(timeout);
+  }, [pathname]);
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -71,6 +84,11 @@ const OpeningPopup = () => {
 
   if (!isOpen) return null;
 
+  const closePopup = () => {
+    window.sessionStorage.setItem(dismissalStorageKey, 'true');
+    setIsOpen(false);
+  };
+
   const showPreviousSlide = () => {
     if (!hasMultiplePromotions) return;
     setActiveSlide((currentSlide) => (currentSlide - 1 + promotions.length) % promotions.length);
@@ -85,7 +103,7 @@ const OpeningPopup = () => {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key === 'Escape') {
-      setIsOpen(false);
+      closePopup();
       return;
     }
 
@@ -124,7 +142,7 @@ const OpeningPopup = () => {
     <div
       className={styles.backdrop}
       onMouseDown={(event) => {
-        if (event.target === event.currentTarget) setIsOpen(false);
+        if (event.target === event.currentTarget) closePopup();
       }}
     >
       <section
@@ -140,7 +158,7 @@ const OpeningPopup = () => {
           ref={closeButtonRef}
           type="button"
           className={`${styles.iconButton} ${styles.closeButton}`}
-          onClick={() => setIsOpen(false)}
+          onClick={closePopup}
           aria-label="Close promotions"
         >
           <X aria-hidden="true" />
