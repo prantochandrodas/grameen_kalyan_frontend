@@ -1,142 +1,106 @@
-@import '../../../../style/utils/base';
-$pc-green: #0f4a2c;
-
-/* ---------- Card (same look as Our Services card) ---------- */
-
 .photoCard {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
     overflow: hidden;
-    isolation: isolate;
     cursor: pointer;
-    border-radius: 1rem;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, #dff4e6 100%);
-    border: 1.5px solid rgba(255, 255, 255, 0.9);
-    box-shadow: 0 0.6rem 1.6rem rgba(20, 60, 50, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+    background: #e6f2ea;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(7, 69, 31, 0.1);
     transition: transform 0.35s ease, box-shadow 0.35s ease;
-    /* soft leaf decoration */
-    &::after {
-        content: '';
-        position: absolute;
-        left: -1.5rem;
-        bottom: -1.5rem;
-        width: 9rem;
-        height: 9rem;
-        background: #1a9a5b;
-        opacity: 0.12;
-        border-radius: 0 100% 0 100%;
-        transform: rotate(-10deg);
-        pointer-events: none;
+    -webkit-tap-highlight-color: transparent;
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 36px rgba(7, 69, 31, 0.22);
     }
     &:active {
-        transform: scale(0.985);
+        transform: scale(0.98);
     }
-    @media (hover: hover) and (pointer: fine) {
-        &:hover {
-            transform: translateY(-0.6rem);
-            box-shadow: 0 1.2rem 2.4rem rgba(26, 154, 91, 0.18);
-            .img,
-            .imgBg {
-                transform: scale(1.06);
-            }
-            .imgContainer::after {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
+    &:focus-visible {
+        outline: 3px solid #c3922e;
+        outline-offset: 3px;
     }
     @media (prefers-reduced-motion: reduce) {
-        &,
-        .img,
-        .imgBg {
-            transition: none;
+        transition: none;
+        &:hover,
+        &:active {
+            transform: none;
         }
     }
 }
-
-
-/* ---------- Image (full photo visible, no crop) ---------- */
 
 .imgContainer {
     position: relative;
     width: 100%;
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 4 / 3;
     overflow: hidden;
-    isolation: isolate;
-    border-radius: 1rem 1rem 0 0;
-    background: #dff4e6;
-    /* zoom hint badge (desktop hover only) */
+    border-radius: inherit;
+    // Soft dark gradient on hover so the badge stays readable
     &::after {
-        content: '+';
+        content: '';
         position: absolute;
-        top: 1.2rem;
-        right: 1.2rem;
-        z-index: 3;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 3.6rem;
-        height: 3.6rem;
-        font-size: 2.4rem;
-        line-height: 1;
-        color: $pc-green;
-        background: rgba(255, 255, 255, 0.92);
-        border-radius: 50%;
-        box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.18);
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(180deg, transparent 55%, rgba(7, 69, 31, 0.45) 100%);
         opacity: 0;
-        transform: scale(0.8);
-        transition: opacity 0.3s ease, transform 0.3s ease;
+        transition: opacity 0.35s ease;
         pointer-events: none;
     }
 }
 
+.photoCard:hover .imgContainer::after {
+    opacity: 1;
+}
 
-/* soft blurred backdrop (fills any empty space around the photo) */
-
+// Blurred backdrop fills the empty sides of portrait photos
 .imgBg {
     object-fit: cover;
-    filter: blur(2rem) saturate(1.2) brightness(0.95);
-    transform: scale(1.3);
-    transition: transform 1.9s cubic-bezier(0.22, 1, 0.36, 1);
+    filter: blur(18px) saturate(1.1);
+    transform: scale(1.15);
+    opacity: 0.9;
 }
 
+// Full photo, never cropped
 .img {
-    z-index: 1;
+    z-index: 0;
     object-fit: contain;
-    transform: scale(1);
-    transform-origin: center;
-    will-change: transform;
-    transition: transform 1.9s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 0.5s ease;
 }
 
+.photoCard:hover .img {
+    transform: scale(1.04);
+}
 
-/* ---------- Caption (only rendered when title exists) ---------- */
-
-.title {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 6.4rem;
-    padding: 1.2rem 1.4rem;
-    h4 {
-        margin: 0;
-        font-size: 1.55rem;
-        font-weight: 600;
-        line-height: 1.3;
-        text-align: center;
-        color: $pc-green;
-        text-wrap: balance;
-        word-break: break-word;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        @include response(phone) {
-            font-size: 1.9rem;
-        }
+.zoomBadge {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    color: #0b612d;
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+    // Desktop: show on hover / keyboard focus
+    .photoCard:hover &,
+    .photoCard:focus-visible & {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    // Touch screens have no hover, so keep the badge visible
+    @media (hover: none) {
+        opacity: 1;
+        transform: none;
+        width: 32px;
+        height: 32px;
     }
 }
