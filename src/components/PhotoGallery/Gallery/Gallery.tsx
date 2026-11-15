@@ -24,17 +24,19 @@ const {
 
 interface IGalleryProps {
   data: IGalleryData[];
+  title?: string;
   backHref?: string;
   backLabel?: string;
 }
 
 const Gallery = ({
   data,
+  title,
   backHref = '/photo-gallery',
   backLabel = 'Back to Albums',
 }: IGalleryProps) => {
   const photos = Array.isArray(data) ? data : [];
-  const albumTitle = photos[0]?.album_title;
+  const albumTitle = title || photos[0]?.album_title;
 
   return (
     <PhotoProvider maskOpacity={0.9}>
