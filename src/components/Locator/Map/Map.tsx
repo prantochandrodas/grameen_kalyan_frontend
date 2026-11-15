@@ -2,7 +2,7 @@
 
 /* eslint-disable comma-dangle */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -31,7 +31,18 @@ const {
   taglineFooter,
 } = style;
 
-const schedules = [
+type Schedule = {
+  id: string | number;
+  tabLabel: string;
+  title: string;
+  days: string;
+  time: string;
+};
+
+const SCHEDULES_API = 'https://admin.grameenkalyan.com/api/schedules';
+
+// Shown only until the API responds (or if it fails)
+const fallbackSchedules: Schedule[] = [
   {
     id: 'head',
     tabLabel: 'Head Office',
@@ -41,24 +52,64 @@ const schedules = [
   },
   {
     id: 'regional',
-    tabLabel: 'Regional · Sat-Wed',
+    tabLabel: 'Regional Sat-Wed',
     title: 'Regional Office And Health Centers',
     days: 'Saturday - Wednesday',
     time: '9:00 AM - 5:00 PM',
   },
   {
     id: 'regionalThu',
-    tabLabel: 'Regional · Thu',
+    tabLabel: 'Regional Thu',
     title: 'Regional Office And Health Centers',
     days: 'Thursday',
     time: '9:00 AM - 2:00 PM',
   },
 ];
 
+// "Regional Sat-Wed" -> { main: 'Regional', sub: 'Sat-Wed' }
+// "Head Office"      -> { main: 'Head Office', sub: '' }
+const splitLabel = (label: string) => {
+  if (label.includes(' · ')) {
+    const [main, sub] = label.split(' · ');
+    return { main, sub };
+  }
+  const match = label.match(/^(Regional)\s+(.+)$/);
+  return match
+    ? { main: match[1], sub: match[2] }
+    : { main: label, sub: '' };
+};
+
 const Map = () => {
-  const [activeId, setActiveId] = useState(schedules[0].id);
+  const [schedules, setSchedules] = useState<Schedule[]>(fallbackSchedules);
+  const [activeId, setActiveId] = useState<string | number>(
+    fallbackSchedules[0].id
+  );
   const activeSchedule =
     schedules.find((item) => item.id === activeId) ?? schedules[0];
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    fetch(SCHEDULES_API, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((json) => {
+        const list = Array.isArray(json) ? json : json?.data;
+        if (Array.isArray(list) && list.length) {
+          setSchedules(list);
+          setActiveId(list[0].id);
+        }
+      })
+      .catch((err) => {
+        if (err.name !== 'AbortError') {
+          console.error('Failed to load schedules:', err);
+        }
+      });
+
+    return () => controller.abort();
+  }, []);
 
   const handleTabKeyDown = (
     e: React.KeyboardEvent<HTMLButtonElement>,
@@ -130,9 +181,9 @@ const Map = () => {
               }
               onClick={() => setActiveId(item.id)}
             >
-              {item.tabLabel.split(' · ')[0]}
-              {item.tabLabel.includes(' · ') && (
-                <small>{item.tabLabel.split(' · ')[1]}</small>
+              {splitLabel(item.tabLabel).main}
+              {splitLabel(item.tabLabel).sub && (
+                <small>{splitLabel(item.tabLabel).sub}</small>
               )}
             </button>
           ))}
