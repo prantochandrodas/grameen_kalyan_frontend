@@ -40,7 +40,8 @@ $gk-text: #1c1c1c;
         }
         @include response(vp-800) {
             grid-template-columns: 1fr;
-            padding: 5rem 2.5rem 1rem;
+            row-gap: 1.2rem;
+            padding: 4.5rem 2.5rem 0;
         }
     }
     .logoContainer {
@@ -68,6 +69,9 @@ $gk-text: #1c1c1c;
             border-left: 0;
             border-top: 2px solid $gk-divider;
         }
+        @include response(vp-800) {
+            padding: 1.4rem 0 0;
+        }
     }
     .socialmedia {
         @include response(tab-port) {
@@ -82,7 +86,7 @@ $gk-text: #1c1c1c;
         margin-bottom: 1.4rem;
         @include response(vp-800) {
             font-size: 3rem;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1rem;
         }
     }
     .row {
@@ -187,7 +191,7 @@ $gk-text: #1c1c1c;
         margin-top: -1px;
         padding-top: 9rem;
         @include response(vp-800) {
-            padding-top: 6.5rem;
+            padding-top: 5rem;
         }
         .wave {
             position: absolute;
@@ -196,7 +200,7 @@ $gk-text: #1c1c1c;
             height: 100%;
             @include response(vp-800) {
                 inset: 0 0 auto 0;
-                height: 6.5rem;
+                height: 5rem;
             }
         }
         .waveLight {
@@ -223,8 +227,9 @@ $gk-text: #1c1c1c;
         @include response(vp-800) {
             flex-direction: column;
             text-align: center;
-            gap: 1.2rem;
-            padding: 1.6rem 2rem 5.5rem;
+            gap: 1rem;
+            margin-top: -1px;
+            padding: 1rem 2rem 3.6rem;
             font-size: 1.5rem;
             line-height: 1.5;
             background: $color-primary;
