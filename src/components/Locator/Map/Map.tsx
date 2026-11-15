@@ -224,13 +224,12 @@ const Map = () => {
         <div className={layoutContainer}>
           <Image className={layoutImage} src={layoutImg} alt="layout" />
         </div>
-        <div className={taglineFooter}>
+        {/* <div className={taglineFooter}>
           <Link href="#regional-locations">
-            {/* sf */}
             <Image src={arrowIcon} alt="" />
             See our regional locations on the map
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );
