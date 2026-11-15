@@ -14,10 +14,10 @@ $gk-text: #1c1c1c;
         top: 0;
         left: 0;
         width: 100%;
-        height: 10rem;
+        height: 7rem;
         border-top: 1px solid $color-primary;
         border-left: 1px solid $color-primary;
-        border-top-left-radius: 10rem;
+        border-top-left-radius: 7rem;
         pointer-events: none;
         @include response(vp-800) {
             height: 6rem;
@@ -30,9 +30,9 @@ $gk-text: #1c1c1c;
         display: grid;
         grid-template-columns: 1fr 1.05fr 1.15fr 0.9fr;
         align-items: stretch;
-        padding: 3.5rem 6rem 1rem 4rem;
+        padding: 2.4rem 5rem 0.6rem 4rem;
         @include response(s-desktop) {
-            padding: 3.5rem 3rem 1rem;
+            padding: 2.4rem 3rem 0.6rem;
         }
         @include response(tab-port) {
             grid-template-columns: 1fr 1fr;
@@ -54,15 +54,18 @@ $gk-text: #1c1c1c;
         }
         .logo {
             width: 100%;
-            max-width: 30rem;
+            max-width: 24rem;
             height: auto;
             object-fit: contain;
+            @include response(vp-800) {
+                max-width: 30rem;
+            }
         }
     }
     .address,
     .contact,
     .socialmedia {
-        padding: 0 0 0 3rem;
+        padding: 0 0 0 2.4rem;
         border-left: 2px solid $gk-divider;
         @include response(tab-port) {
             padding: 2rem 0 0;
@@ -79,11 +82,11 @@ $gk-text: #1c1c1c;
         }
     }
     .title {
-        font-size: 3.8rem;
+        font-size: 3rem;
         font-weight: 700;
         line-height: 1.1;
         color: $color-primary;
-        margin-bottom: 1.4rem;
+        margin-bottom: 1rem;
         @include response(vp-800) {
             font-size: 3rem;
             margin-bottom: 1rem;
@@ -92,31 +95,40 @@ $gk-text: #1c1c1c;
     .row {
         display: flex;
         align-items: flex-start;
-        gap: 1.6rem;
-        margin-bottom: 1.2rem;
+        gap: 1.2rem;
+        margin-bottom: 0.8rem;
+        @include response(vp-800) {
+            gap: 1.6rem;
+            margin-bottom: 1.2rem;
+        }
         &:last-child {
             margin-bottom: 0;
         }
     }
     .iconCircle {
         flex-shrink: 0;
-        width: 4.4rem;
-        height: 4.4rem;
+        width: 3.6rem;
+        height: 3.6rem;
         border-radius: 50%;
         background: $color-primary;
         color: $color-text-light;
-        font-size: 2rem;
+        font-size: 1.6rem;
         display: flex;
         align-items: center;
         justify-content: center;
         box-shadow: 0 0.4rem 1rem rgba(11, 97, 45, 0.25);
+        @include response(vp-800) {
+            width: 4.4rem;
+            height: 4.4rem;
+            font-size: 2rem;
+        }
     }
     .text {
         display: flex;
         flex-direction: column;
-        font-size: 2.2rem;
+        font-size: 1.7rem;
         font-weight: 400;
-        line-height: 1.45;
+        line-height: 1.4;
         color: $gk-text;
         text-decoration: none;
         word-break: break-word;
@@ -166,19 +178,28 @@ $gk-text: #1c1c1c;
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 1.6rem;
+        gap: 1.2rem;
+        @include response(vp-800) {
+            gap: 1.6rem;
+        }
         .link {
-            width: 5.2rem;
-            height: 5.2rem;
+            width: 4.2rem;
+            height: 4.2rem;
             border-radius: 50%;
             background: $color-primary;
             color: $color-text-light;
-            font-size: 2.6rem;
+            font-size: 2.1rem;
+            @include response(vp-800) {
+                width: 5.2rem;
+                height: 5.2rem;
+                font-size: 2.6rem;
+            }
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 0.4rem 1rem rgba(11, 97, 45, 0.3);
-            transition: transform 300ms, background 300ms;
+            transition: transform 300ms,
+            background 300ms;
             &:hover {
                 transform: translateY(-0.4rem);
                 background: $gk-wave-light;
@@ -189,7 +210,7 @@ $gk-text: #1c1c1c;
     .bottomBar {
         position: relative;
         margin-top: -1px;
-        padding-top: 9rem;
+        padding-top: 6rem;
         @include response(vp-800) {
             padding-top: 5rem;
         }
@@ -217,9 +238,9 @@ $gk-text: #1c1c1c;
         align-items: center;
         justify-content: space-between;
         gap: 2rem;
-        padding: 0 8rem 1rem;
+        padding: 0 8rem 0.8rem;
         color: $color-text-light;
-        font-size: 2rem;
+        font-size: 1.6rem;
         font-weight: 500;
         @include response(tab-port) {
             padding: 0 9rem 2rem;
@@ -315,8 +336,8 @@ $gk-text: #1c1c1c;
         }
         .leaf {
             flex-shrink: 0;
-            width: 3rem;
-            height: 3rem;
+            width: 2.4rem;
+            height: 2.4rem;
             object-fit: contain;
             @include response(vp-800) {
                 width: 3rem;
@@ -325,8 +346,11 @@ $gk-text: #1c1c1c;
         }
         .taglineDivider {
             width: 1px;
-            height: 3rem;
+            height: 2.4rem;
             background: rgba(255, 255, 255, 0.85);
+            @include response(vp-800) {
+                height: 3rem;
+            }
         }
     }
 }
