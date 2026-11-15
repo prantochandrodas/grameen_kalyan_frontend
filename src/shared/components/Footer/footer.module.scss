@@ -1,190 +1,337 @@
 @import '../../../style/utils/base';
-
+$gk-wave-light: #c3953d;
+$gk-divider: #c3953d;
+$gk-text: #1c1c1c;
 .footer {
-  position: relative; // for absolute copyright
-  padding-left: 10rem;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 5rem;
-
-  
-.topbarothericon{
-    //  height: 4.5rem;
-    padding: 6px;
- border-radius: 50%;
-  border: 1px solid white;
-      display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-
-
-  @include response(s-desktop) {
-    flex-direction: column;
-    align-items: normal;
-    gap: 2rem;
-    padding-left: 0;
-  }
-
-  .logoContainer {
-    flex: 1;
-    padding: 3rem;
-    height: 20rem;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    @include response(s-desktop) {
-      flex: auto;
-      height: 15rem;
+    position: relative;
+    width: 100%;
+    background: #fff;
+    overflow: hidden;
+    // curved top-left line
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 10rem;
+        border-top: 1px solid $color-primary;
+        border-left: 1px solid $color-primary;
+        border-top-left-radius: 10rem;
+        pointer-events: none;
+        @include response(vp-800) {
+            height: 6rem;
+            border-top-left-radius: 6rem;
+        }
     }
-
-    .logo {
-      height: 100%;
-      width: 120%;
-      object-fit: contain;
+    .contentContainer {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr 1.05fr 1.15fr 0.9fr;
+        align-items: stretch;
+        padding: 3.5rem 6rem 1rem 4rem;
+        @include response(s-desktop) {
+            padding: 3.5rem 3rem 1rem;
+        }
+        @include response(tab-port) {
+            grid-template-columns: 1fr 1fr;
+            row-gap: 2rem;
+        }
+        @include response(vp-800) {
+            grid-template-columns: 1fr;
+            padding: 5rem 2.5rem 1rem;
+        }
     }
-  }
-
-  .contentContainer {
-    flex: 3;
-    background-color: $color-primary;
-    // padding: 10rem 20rem;
-     padding: 10rem 10rem 10rem 20rem;
-    border-radius: 50rem 0 0 0;
-
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-
-    @include response(M-desktop) {
-      padding: 10rem 10rem 10rem 20rem;
+    .logoContainer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 3rem;
+        @include response(tab-port) {
+            grid-column: 1 / -1;
+        }
+        .logo {
+            width: 100%;
+            max-width: 30rem;
+            height: auto;
+            object-fit: contain;
+        }
     }
-    @include response(s-desktop) {
-      padding: 10rem 5rem 10rem 15rem;
-    }
-    @include response(vp-800) {
-      flex: auto;
-      flex-direction: column;
-      align-items: center;
-      gap: 5rem;
-      border-radius: 20rem 0 0 0;
-      padding: 10rem 5rem;
-    }
-
     .address,
     .contact,
     .socialmedia {
-      font-size: 2rem;
-      color: $color-text-light;
+        padding: 0 0 0 3rem;
+        border-left: 2px solid $gk-divider;
+        @include response(tab-port) {
+            padding: 2rem 0 0;
+            border-left: 0;
+            border-top: 2px solid $gk-divider;
+        }
     }
-
-    .address {
-      display: flex;
-      gap: 2rem;
-
-      .addressTitle {
-        font-weight: 600;
-        color: #F7A220;
-      }
-    }
-
-    .contact {
-      display: grid;
-      grid-template-columns: repeat(2, [col-start] max-content [col-end]);
-      grid-template-rows: repeat(2, [row-start] max-content [row-end]);
-      column-gap: 2rem;
-
-      .phoneTitle,
-      .emailTitle {
-        font-weight: 600;
-        color: #F7A220;
-      }
-
-      .phoneTitle {
-        grid-column: col-start 1 / col-end 1;
-        grid-row: row-start 1 / row-end 1;
-      }
-      .phoneData {
-        grid-column: col-start 2 / col-end 2;
-        grid-row: row-start 1 / row-end 1;
-      }
-      .emailTitle {
-        grid-column: col-start 1 / col-end 1;
-        grid-row: row-start 2 / row-end 2;
-      }
-      .emailData {
-        grid-column: col-start 2 / col-end 2;
-        grid-row: row-start 2 / row-end 2;
-      }
-    }
-
     .socialmedia {
-      .container {
+        @include response(tab-port) {
+            grid-column: 1 / -1;
+        }
+    }
+    .title {
+        font-size: 3.8rem;
+        font-weight: 700;
+        line-height: 1.1;
+        color: $color-primary;
+        margin-bottom: 1.4rem;
+        @include response(vp-800) {
+            font-size: 3rem;
+            margin-bottom: 1.2rem;
+        }
+    }
+    .row {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.6rem;
+        margin-bottom: 1.2rem;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+    .iconCircle {
+        flex-shrink: 0;
+        width: 4.4rem;
+        height: 4.4rem;
+        border-radius: 50%;
+        background: $color-primary;
+        color: $color-text-light;
+        font-size: 2rem;
         display: flex;
         align-items: center;
-        gap: 2rem;
-
+        justify-content: center;
+        box-shadow: 0 0.4rem 1rem rgba(11, 97, 45, 0.25);
+    }
+    .text {
+        display: flex;
+        flex-direction: column;
+        font-size: 2.2rem;
+        font-weight: 400;
+        line-height: 1.45;
+        color: $gk-text;
+        text-decoration: none;
+        word-break: break-word;
         @include response(vp-800) {
-          justify-content: center;
+            font-size: 2.1rem;
         }
-
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 300ms;
+            &:hover {
+                color: $color-primary;
+            }
+        }
+    }
+    a.text:hover {
+        color: $color-primary;
+    }
+    // address -> Google Maps link
+    .mapLink {
+        color: inherit;
+        text-decoration: none;
+        cursor: pointer;
+        .iconCircle {
+            transition: transform 300ms, background 300ms;
+        }
+        .text {
+            transition: color 300ms;
+        }
+        &:hover,
+        &:focus-visible {
+            .iconCircle {
+                background: $gk-wave-light;
+                transform: scale(1.08);
+            }
+            .text {
+                color: $color-primary;
+            }
+        }
+        &:focus-visible {
+            outline: 2px solid $color-primary;
+            outline-offset: 0.6rem;
+            border-radius: 0.8rem;
+        }
+    }
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1.6rem;
         .link {
-          height: 4.5rem;
-          aspect-ratio: 1;
-          border-radius: 50%;
-
-          // background-color: $color-secondary;
-          margin-bottom: 1rem;
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          .icon {
-            font-size: 2.8rem;
-            color: $color-primary;
-            transition: all 500ms;
-          }
-
-          .linkdinIcon {
-            color: #ffffff !important;
-          }
-
-          .youtubeIcon {
-            color: #ffffff !important;
-          }
-
-          .instagramIcon {
-            color: #ffffff !important;
-          }
-
-          .facebookIcon {
-            color: #ffffff !important;
-          }
+            width: 5.2rem;
+            height: 5.2rem;
+            border-radius: 50%;
+            background: $color-primary;
+            color: $color-text-light;
+            font-size: 2.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0.4rem 1rem rgba(11, 97, 45, 0.3);
+            transition: transform 300ms, background 300ms;
+            &:hover {
+                transform: translateY(-0.4rem);
+                background: $gk-wave-light;
+            }
         }
-      }
     }
-  }
-
-  /* COPYRIGHT */
-  .copywrite {
-    position: absolute;
-    bottom: 2rem;
-    right: 8.5rem;
-    font-size: 1.6rem;
-    color: $color-text-light;
-
-    @include response(s-desktop) {
-    
-      right: auto;           // reset right
-      width: 100%;           // full width
-      text-align: center;    // center horizontally
-      margin-top: 2rem;      // spacing below content
+    // ---------- bottom wavy bar ----------
+    .bottomBar {
+        position: relative;
+        margin-top: -1px;
+        padding-top: 9rem;
+        @include response(vp-800) {
+            padding-top: 5.5rem;
+        }
+        .wave {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .waveLight {
+            fill: $gk-wave-light;
+        }
+        .waveDark {
+            fill: $color-primary;
+        }
     }
-  }
+    .bottomContent {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+        padding: 0 8rem 1rem;
+        color: $color-text-light;
+        font-size: 2rem;
+        font-weight: 500;
+        @include response(tab-port) {
+            padding: 0 9rem 2rem;
+        }
+        @include response(vp-800) {
+            flex-direction: column;
+            text-align: center;
+            gap: 1.4rem;
+            padding: 0 2rem 2rem;
+            font-size: 1.9rem;
+        }
+        .copywrite {
+            margin: 0;
+        }
+        .tagline {
+            display: flex;
+            align-items: center;
+            gap: 1.4rem;
+            margin: 0;
+            @include response(vp-800) {
+                justify-content: center;
+            }
+            // typing text
+            .taglineText {
+                display: inline-grid;
+                min-width: 0;
+                @include response(s-phone) {
+                    font-size: 1.7rem;
+                }
+            }
+            .taglineGhost,
+            .taglineTyped {
+                grid-area: 1 / 1;
+                white-space: pre;
+            }
+            // invisible copy: reserves the full width, still readable by screen readers
+            .taglineGhost {
+                opacity: 0;
+                pointer-events: none;
+                user-select: none;
+            }
+            .cursor {
+                display: inline-block;
+                width: 2px;
+                height: 1.1em;
+                margin-left: 0.3rem;
+                vertical-align: text-bottom;
+                background: $color-text-light;
+                animation: cursorBlink 800ms steps(1) infinite;
+            }
+            // icon
+            .leaf {
+                opacity: 0;
+                transform: scale(0.6);
+                transition: opacity 500ms ease, transform 500ms ease;
+            }
+            // divider
+            .taglineDivider {
+                transform: scaleY(0);
+                transition: transform 500ms ease 0.15s;
+            }
+            // when footer comes into view
+            &.visible {
+                .leaf {
+                    opacity: 1;
+                    transform: scale(1);
+                    animation: leafFloat 3s ease-in-out 1.4s infinite;
+                }
+                .taglineDivider {
+                    transform: scaleY(1);
+                }
+            }
+            // accessibility: no motion
+            @media (prefers-reduced-motion: reduce) {
+                .cursor,
+                .leaf,
+                .taglineDivider {
+                    opacity: 1 !important;
+                    transform: none !important;
+                    filter: none !important;
+                    transition: none !important;
+                    animation: none !important;
+                }
+            }
+        }
+        .leaf {
+            flex-shrink: 0;
+            width: 3rem;
+            height: 3rem;
+            object-fit: contain;
+            @include response(vp-800) {
+                width: 3rem;
+                height: 3rem;
+            }
+        }
+        .taglineDivider {
+            width: 1px;
+            height: 3rem;
+            background: rgba(255, 255, 255, 0.85);
+        }
+    }
+}
+
+@keyframes leafFloat {
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-0.4rem) scale(1.06);
+    }
+}
+
+@keyframes cursorBlink {
+    0%,
+    49% {
+        opacity: 1;
+    }
+    50%,
+    100% {
+        opacity: 0;
+    }
 }

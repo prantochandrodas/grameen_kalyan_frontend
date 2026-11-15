@@ -69,7 +69,7 @@ export default async function RootLayout({
         />
         {children}
         <SidebarSticky />
-        <Footer />
+        <Footer logoImage={logoImage} />
         <ButtonScrollTop />
         <OpeningPopup />
       </body>

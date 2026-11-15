@@ -1,0 +1,157 @@
+// @import '../../../style/utils/base';
+// .footer {
+//   position: relative; // for absolute copyright
+//   padding-left: 10rem;
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   gap: 5rem;
+// .topbarothericon{
+//     //  height: 4.5rem;
+//     padding: 6px;
+//  border-radius: 50%;
+//   border: 1px solid white;
+//       display: flex;
+//     align-items: center;
+//     justify-content: center;
+// }
+//   @include response(s-desktop) {
+//     flex-direction: column;
+//     align-items: normal;
+//     gap: 2rem;
+//     padding-left: 0;
+//   }
+//   .logoContainer {
+//     flex: 1;
+//     padding: 3rem;
+//     height: 20rem;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     @include response(s-desktop) {
+//       flex: auto;
+//       height: 15rem;
+//     }
+//     .logo {
+//       height: 100%;
+//       width: 120%;
+//       object-fit: contain;
+//     }
+//   }
+//   .contentContainer {
+//     flex: 3;
+//     background-color: $color-primary;
+//     // padding: 10rem 20rem;
+//      padding: 10rem 10rem 10rem 20rem;
+//     border-radius: 50rem 0 0 0;
+//     display: flex;
+//     justify-content: space-between;
+//     gap: 2rem;
+//     @include response(M-desktop) {
+//       padding: 10rem 10rem 10rem 20rem;
+//     }
+//     @include response(s-desktop) {
+//       padding: 10rem 5rem 10rem 15rem;
+//     }
+//     @include response(vp-800) {
+//       flex: auto;
+//       flex-direction: column;
+//       align-items: center;
+//       gap: 5rem;
+//       border-radius: 20rem 0 0 0;
+//       padding: 10rem 5rem;
+//     }
+//     .address,
+//     .contact,
+//     .socialmedia {
+//       font-size: 2rem;
+//       color: $color-text-light;
+//     }
+//     .address {
+//       display: flex;
+//       gap: 2rem;
+//       .addressTitle {
+//         font-weight: 600;
+//         color: #F7A220;
+//       }
+//     }
+//     .contact {
+//       display: grid;
+//       grid-template-columns: repeat(2, [col-start] max-content [col-end]);
+//       grid-template-rows: repeat(2, [row-start] max-content [row-end]);
+//       column-gap: 2rem;
+//       .phoneTitle,
+//       .emailTitle {
+//         font-weight: 600;
+//         color: #F7A220;
+//       }
+//       .phoneTitle {
+//         grid-column: col-start 1 / col-end 1;
+//         grid-row: row-start 1 / row-end 1;
+//       }
+//       .phoneData {
+//         grid-column: col-start 2 / col-end 2;
+//         grid-row: row-start 1 / row-end 1;
+//       }
+//       .emailTitle {
+//         grid-column: col-start 1 / col-end 1;
+//         grid-row: row-start 2 / row-end 2;
+//       }
+//       .emailData {
+//         grid-column: col-start 2 / col-end 2;
+//         grid-row: row-start 2 / row-end 2;
+//       }
+//     }
+//     .socialmedia {
+//       .container {
+//         display: flex;
+//         align-items: center;
+//         gap: 2rem;
+//         @include response(vp-800) {
+//           justify-content: center;
+//         }
+//         .link {
+//           height: 4.5rem;
+//           aspect-ratio: 1;
+//           border-radius: 50%;
+//           // background-color: $color-secondary;
+//           margin-bottom: 1rem;
+//           display: flex;
+//           align-items: center;
+//           justify-content: center;
+//           .icon {
+//             font-size: 2.8rem;
+//             color: $color-primary;
+//             transition: all 500ms;
+//           }
+//           .linkdinIcon {
+//             color: #ffffff !important;
+//           }
+//           .youtubeIcon {
+//             color: #ffffff !important;
+//           }
+//           .instagramIcon {
+//             color: #ffffff !important;
+//           }
+//           .facebookIcon {
+//             color: #ffffff !important;
+//           }
+//         }
+//       }
+//     }
+//   }
+//   /* COPYRIGHT */
+//   .copywrite {
+//     position: absolute;
+//     bottom: 2rem;
+//     right: 8.5rem;
+//     font-size: 1.6rem;
+//     color: $color-text-light;
+//     @include response(s-desktop) {
+//       right: auto;           // reset right
+//       width: 100%;           // full width
+//       text-align: center;    // center horizontally
+//       margin-top: 2rem;      // spacing below content
+//     }
+//   }
+// }
