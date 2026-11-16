@@ -25,6 +25,7 @@ type PopupApiItem = {
 
 const POPUP_API_URL = 'https://admin.grameenkalyan.com/api/popup-images';
 const dismissalStorageKey = 'opening-popup-dismissed';
+const AUTO_CLOSE_DELAY = 3000; // 3 seconds
 
 const OpeningPopup = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -95,6 +96,18 @@ const OpeningPopup = () => {
     return () => {
       document.body.style.overflow = previousOverflow;
     };
+  }, [isOpen]);
+
+  // Auto close popup after 3 seconds if user does not close it manually
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const autoCloseTimer = window.setTimeout(() => {
+      window.sessionStorage.setItem(dismissalStorageKey, 'true');
+      setIsOpen(false);
+    }, AUTO_CLOSE_DELAY);
+
+    return () => window.clearTimeout(autoCloseTimer);
   }, [isOpen]);
 
   useEffect(() => {
