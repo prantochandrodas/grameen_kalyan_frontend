@@ -5,8 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 
-import fallbackBackground from '@/assets/images/about/about-bg.webp';
-
 import { Reveal, RevealText, useParallaxIntensity } from '../Motion';
 import { toAbsoluteImageUrl } from '../Shared/aboutHelpers';
 import { ArrowRightIcon } from '../Shared/icons';
@@ -40,8 +38,8 @@ interface IParallaxHeroProps {
 
 const ParallaxHero = ({
   backgroundImage,
-  title = 'With Joy We Grow Together We Serve Together',
-  subtitle = 'Millions of People at Bottom of the Pyramid are Served with Empathy and Care',
+  title,
+  subtitle,
 }: IParallaxHeroProps) => {
   const ref = useRef<HTMLElement>(null);
   const intensity = useParallaxIntensity();
@@ -67,7 +65,7 @@ const ParallaxHero = ({
     [1, intensity ? 0 : 1]
   );
 
-  const imageSrc = toAbsoluteImageUrl(backgroundImage) ?? fallbackBackground;
+  const imageSrc = toAbsoluteImageUrl(backgroundImage);
 
   return (
     <section ref={ref} className={hero} aria-label="About Grameen Kalyan">
@@ -76,14 +74,16 @@ const ParallaxHero = ({
           className={mediaInner}
           style={{ y: bgY, top: '-12%', bottom: '-12%' }}
         >
-          <Image
-            className={bgImage}
-            src={imageSrc}
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-          />
+          {imageSrc && (
+            <Image
+              className={bgImage}
+              src={imageSrc}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+            />
+          )}
         </motion.div>
         <div className={veil} />
       </div>
@@ -93,17 +93,21 @@ const ParallaxHero = ({
         style={{ y: copyY, opacity: copyOpacity }}
       >
         <div className={panel}>
-          <RevealText
-            as="h1"
-            className={headline}
-            delay={0.25}
-            stagger={0.09}
-            lines={[{ text: title }]}
-          />
+          {title && (
+            <RevealText
+              as="h1"
+              className={headline}
+              delay={0.25}
+              stagger={0.09}
+              lines={[{ text: title }]}
+            />
+          )}
 
-          <Reveal as="p" className={lead} delay={0.9} distance={20}>
-            {subtitle}
-          </Reveal>
+          {subtitle && (
+            <Reveal as="p" className={lead} delay={0.9} distance={20}>
+              {subtitle}
+            </Reveal>
+          )}
 
           <Reveal className={actions} delay={1.05} distance={20}>
             <Link href="#vision" className={primaryCta}>

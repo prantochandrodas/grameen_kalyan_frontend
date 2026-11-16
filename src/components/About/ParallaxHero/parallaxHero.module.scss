@@ -44,8 +44,8 @@
         .veil {
             position: absolute;
             inset: 0;
-            // very light: only a soft shade at the bottom, image stays clear
-            background: linear-gradient( 0deg, rgba(0, 0, 0, 0.28) 0%, rgba(0, 0, 0, 0.1) 35%, rgba(0, 0, 0, 0) 60%);
+            // soft shade only at the bottom so centered text stays readable, image stays clear
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.22) 28%, rgba(0, 0, 0, 0) 55%);
         }
         /* ---------- foreground copy ---------- */
         
@@ -53,44 +53,21 @@
             @include ab-container;
             position: relative;
             z-index: 2;
-            padding-top: clamp(8px, 2.6cqw, 56px);
-            padding-bottom: clamp(8px, 2.2cqw, 44px);
+            padding-top: 0;
+            padding-bottom: clamp(6px, 1.3cqw, 26px);
+            text-align: center;
             will-change: transform, opacity;
         }
         /* ---------- frosted glass card (keeps the image visible) ---------- */
         
         .panel {
-            position: relative;
-            width: fit-content;
-            max-width: min(100%, 44cqw);
-            padding: clamp(10px, 1.4cqw, 26px) clamp(14px, 2cqw, 36px) clamp(10px, 1.4cqw, 26px) clamp(18px, 2.4cqw, 42px);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            border-radius: clamp(12px, 1.4cqw, 24px);
-            background: linear-gradient( 135deg, rgba(8, 40, 24, 0.62) 0%, rgba(8, 40, 24, 0.36) 100%);
-            -webkit-backdrop-filter: blur(14px) saturate(140%);
-            backdrop-filter: blur(14px) saturate(140%);
-            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
-            // gold accent bar
-            &::before {
-                content: '';
-                position: absolute;
-                top: 16%;
-                bottom: 16%;
-                left: clamp(7px, 1cqw, 16px);
-                width: 3px;
-                border-radius: 3px;
-                background: $ab-gold-bright;
-            }
-            // phones: slim strip, title only
-            @include ab-below(768px) {
-                max-width: 100%;
-                padding: 6px 10px 6px 16px;
-                border-radius: 10px;
-                &::before {
-                    left: 7px;
-                    width: 2px;
-                }
-            }
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 100%;
+            padding: 0;
+            text-align: center;
         }
         
         .eyebrow {
@@ -104,17 +81,19 @@
         }
         
         .headline {
-            margin: 0 0 clamp(2px, 0.7cqw, 12px);
+            max-width: 100%;
+            margin: 0 0 clamp(1px, 0.3cqw, 6px);
             // phones
-            font-size: clamp(12px, 3.8cqw, 20px);
+            font-size: clamp(11px, 3.4cqw, 20px);
             font-weight: 700;
             line-height: 1.2;
             letter-spacing: -0.015em;
-            text-wrap: balance;
-            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+            white-space: nowrap;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.45), 0 4px 22px rgba(0, 0, 0, 0.5);
             // tablet, laptop, desktop
             @include ab-above(768px) {
-                font-size: clamp(16px, 2.1cqw, 40px);
+                font-size: clamp(16px, 1.9cqw, 38px);
                 line-height: 1.18;
             }
         }
@@ -124,27 +103,26 @@
         }
         
         .lead {
-            margin: 0 0 clamp(8px, 1.2cqw, 20px);
+            margin: 0 0 clamp(4px, 0.8cqw, 14px);
             max-width: 100%;
-            font-size: clamp(10px, 0.95cqw, 16px);
+            // phones
+            font-size: clamp(8px, 2.3cqw, 14px);
             font-weight: 400;
-            line-height: 1.5;
-            color: rgba(255, 255, 255, 0.88);
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            text-wrap: balance;
-            // tablet + desktop: wraps inside the card
+            line-height: 1.4;
+            color: rgba(255, 255, 255, 0.95);
+            white-space: nowrap;
+            text-align: center;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 2px 14px rgba(0, 0, 0, 0.45);
+            // tablet, laptop, desktop
             @include ab-above(768px) {
-                white-space: normal;
-            }
-            // phones: no room in a 16:5 banner
-            @include ab-below(768px) {
-                display: none;
+                font-size: clamp(11px, 1cqw, 18px);
             }
         }
         
         .actions {
             display: flex;
             flex-wrap: wrap;
+            justify-content: center;
             gap: clamp(6px, 0.9cqw, 12px);
             // mobile: both buttons (Explore Our Story + Join Us) are hidden
             @include ab-below(768px) {
