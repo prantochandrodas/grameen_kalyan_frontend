@@ -68,9 +68,8 @@ const About = async () => {
     <MotionProvider>
       <main>
         <ParallaxHero
-          titleOne="With Joy"
-          titleTwo="We Grow Together"
-          titleThree="We Serve Together"
+          title={bannerData?.data?.title}
+          subtitle={bannerData?.data?.subtitle}
           backgroundImage={bannerData?.data?.banner}
         />
         <MissionVision

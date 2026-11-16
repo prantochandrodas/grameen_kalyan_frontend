@@ -20,9 +20,9 @@ const {
   bgImage,
   veil,
   content,
+  panel,
   eyebrow,
   headline,
-  lineAccent,
   lead,
   actions,
   primaryCta,
@@ -34,16 +34,14 @@ const {
 
 interface IParallaxHeroProps {
   backgroundImage?: string;
-  titleOne?: string;
-  titleTwo?: string;
-  titleThree?: string;
+  title?: string;
+  subtitle?: string;
 }
 
 const ParallaxHero = ({
   backgroundImage,
-  titleOne = 'With Joy',
-  titleTwo = 'We Grow Together',
-  titleThree = 'We Serve Together',
+  title = 'With Joy We Grow Together We Serve Together',
+  subtitle = 'Millions of People at Bottom of the Pyramid are Served with Empathy and Care',
 }: IParallaxHeroProps) => {
   const ref = useRef<HTMLElement>(null);
   const intensity = useParallaxIntensity();
@@ -94,33 +92,29 @@ const ParallaxHero = ({
         className={content}
         style={{ y: copyY, opacity: copyOpacity }}
       >
+        <div className={panel}>
+          <RevealText
+            as="h1"
+            className={headline}
+            delay={0.25}
+            stagger={0.09}
+            lines={[{ text: title }]}
+          />
 
-        <RevealText
-          as="h1"
-          className={headline}
-          delay={0.25}
-          stagger={0.09}
-          lines={[
-            { text: titleOne, className: lineAccent },
-            { text: titleTwo },
-            { text: titleThree },
-          ]}
-        />
+          <Reveal as="p" className={lead} delay={0.9} distance={20}>
+            {subtitle}
+          </Reveal>
 
-        <Reveal as="p" className={lead} delay={0.9} distance={20}>
-          Millions of People at Bottom of the Pyramid are Served with Empathy
-          and Care
-        </Reveal>
-
-        <Reveal className={actions} delay={1.05} distance={20}>
-          <Link href="#vision" className={primaryCta}>
-            Explore Our Story
-            <ArrowRightIcon />
-          </Link>
-          <Link href="/join-us" className={ghostCta}>
-            Join Us
-          </Link>
-        </Reveal>
+          <Reveal className={actions} delay={1.05} distance={20}>
+            <Link href="#vision" className={primaryCta}>
+              Explore Our Story
+              <ArrowRightIcon />
+            </Link>
+            <Link href="/join-us" className={ghostCta}>
+              Join Us
+            </Link>
+          </Reveal>
+        </div>
       </motion.div>
     </section>
   );
