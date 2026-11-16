@@ -18,7 +18,7 @@ import { reverseFilterDataByKey } from '@/shared/utils/pageHelpers/filterData.he
 import { IAnnuallyServe } from '@/shared/types/annuallyServe';
 
 const About = async () => {
-  // all endpoints are independent -> fetch them in parallel
+  // all endpoints are independent -> fetch them in parallelsssss
   const [
     bannerData,
     aboutUsData,
