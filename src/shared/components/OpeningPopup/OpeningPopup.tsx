@@ -25,7 +25,7 @@ type PopupApiItem = {
 
 const POPUP_API_URL = 'https://admin.grameenkalyan.com/api/popup-images';
 const dismissalStorageKey = 'opening-popup-dismissed';
-const AUTO_CLOSE_DELAY = 3000; // 3 seconds
+const AUTO_CLOSE_DELAY = 5000; // 5 seconds
 
 const OpeningPopup = () => {
   const [isOpen, setIsOpen] = useState(false);
