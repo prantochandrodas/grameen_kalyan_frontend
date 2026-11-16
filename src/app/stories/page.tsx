@@ -2,7 +2,6 @@ import React from 'react';
 
 import { HeroSection, WorkTogether } from '@/shared/components';
 import { StorySection } from '@/components/Stories';
-import { useFetch } from '@/shared/hook';
 import { ICategory } from '@/shared/types/category';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
@@ -12,8 +11,8 @@ const bgHero =
 
 const Stories = async () => {
   const bannerData = await useFetchLaravelData({ url: '/banners/stories' });
-  const storyCategories = await useFetch({ url: '/story-categories' });
-  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const storyCategories = await useFetchLaravelData({ url: '/story-categories' });
+  const homePageContentData = await useFetchLaravelData({ url: '/home-contents' });
 
   const storyCategoriesData = storyCategories?.data?.map((data: ICategory) => ({
     id: data.id,

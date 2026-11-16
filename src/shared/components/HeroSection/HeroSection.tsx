@@ -18,8 +18,7 @@ const {
   juHeading,
   juContent,
   healthcareContent,
-  healthcareSubHeading,
-  healthcareHeading,
+  healthcareText,
   storyHeading,
   storyContent,
 } = style;
@@ -135,33 +134,42 @@ const HeroContent = ({
     );
   }
   if (isHealthcare) {
+    const hasTitle = Boolean(title?.trim());
+    const hasSubtitle = Boolean(subtitle?.trim());
+
     return (
       <div className={heroSection}>
         <HeroBackground src={backgroundImage} position={imagePosition} />
-        <div className={`${content} ${healthcareContent}`}>
-          <motion.h1
-            style={{ position: 'relative' }}
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.65, ease: 'easeOut' }}
-            className={healthcareSubHeading}
-          >
-            <span>Serving People with</span>
-            <span>Empathy</span>
-          </motion.h1>
-          <motion.div
-            style={{ position: 'relative' }}
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.65, ease: 'easeOut' }}
-            className={healthcareHeading}
-          >
-            <span>Quality &</span>
-            <span>Trust</span>
-          </motion.div>
-        </div>
+        {(hasTitle || hasSubtitle) && (
+          <div className={`${content} ${healthcareContent}`}>
+            {hasTitle && (
+              <motion.h1
+                style={{ position: 'relative' }}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.65, ease: 'easeOut' }}
+                className={heading}
+              >
+                {splitIntoLines(title as string, 28).map((line, i) => (
+                  <span key={`${i}-${line}`}>{line}</span>
+                ))}
+              </motion.h1>
+            )}
+            {hasSubtitle && (
+              <motion.p
+                style={{ position: 'relative' }}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.65, ease: 'easeOut', delay: 0.15 }}
+                className={healthcareText}
+              >
+                {subtitle}
+              </motion.p>
+            )}
+          </div>
+        )}
       </div>
     );
   }

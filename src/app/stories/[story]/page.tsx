@@ -9,9 +9,9 @@ import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 const Story = async ({ params }: { params: { story: number } }) => {
   const id = parseInt(params.story.toString());
 
-  const story = await useFetch({ url: `/stories?category_id=${id}` });
-  const stories = await useFetch({ url: '/stories' });
-  const storyCategory = await useFetch({ url: '/story-categories' });
+  const story = await useFetchLaravelData({ url: `/stories?category_id=${id}` });
+  const stories = await useFetchLaravelData({ url: '/stories' });
+  const storyCategory = await useFetchLaravelData({ url: '/story-categories' });
 
   const matchedCategory = storyCategory?.data?.find(
     (item: any) => item.id === id
@@ -30,7 +30,7 @@ const Story = async ({ params }: { params: { story: number } }) => {
   const recentPostData = stories?.data?.filter(
     (data: IStories) => data.id !== id
   );
-  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const homePageContentData = await useFetchLaravelData({ url: '/home-contents' });
   const workTogetherImage = homePageContentData?.work_together_image;
   return (
     <>

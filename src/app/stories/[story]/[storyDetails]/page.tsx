@@ -7,6 +7,7 @@ import { useFetch } from '@/shared/hook';
 import { IStories } from '@/shared/types/stories';
 import NewHeroSection from '@/components/StoryDetails/HeroSection/NewHeroSection';
 
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 const StoryDetails = async ({
   params,
 }: {
@@ -16,9 +17,9 @@ const StoryDetails = async ({
 
   // independent requests -> fetch in parallel
   const [story, stories, homePageContentData] = await Promise.all([
-    useFetch({ url: `/stories?category_id=${id}` }),
-    useFetch({ url: '/stories' }),
-    useFetch({ url: '/home-contents' }),
+    useFetchLaravelData({ url: `/stories?category_id=${id}` }),
+    useFetchLaravelData({ url: '/stories' }),
+    useFetchLaravelData({ url: '/home-contents' }),
   ]);
 
   if (!story || (!story.title && !story.desc)) notFound();

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { HeroSection, NewsletterSection } from '@/components/Newsletter';
 import { WorkTogether } from '@/shared/components';
-import { useFetch } from '@/shared/hook';
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const heroData = {
   image:
@@ -11,8 +11,8 @@ const heroData = {
 };
 
 const Newsletter = async () => {
-  const newsletters = await useFetch({ url: '/newsletter' });
-  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const newsletters = await useFetchLaravelData({ url: '/newsletter' });
+  const homePageContentData = await useFetchLaravelData({ url: '/home-contents' });
   const workTogetherImage = homePageContentData?.work_together_image;
   return (
     <>

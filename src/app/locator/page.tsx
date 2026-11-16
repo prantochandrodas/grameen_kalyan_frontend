@@ -5,9 +5,10 @@ import OfficeLocations from '@/components/Locator/OfficeLocations/OfficeLocation
 import { WorkTogether } from '@/shared/components';
 import { useFetch } from '@/shared/hook';
 
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 const LocatorPage = async () => {
-  const locators = await useFetch({ url: '/locators' });
-  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const locators = await useFetchLaravelData({ url: '/locators' });
+  const homePageContentData = await useFetchLaravelData({ url: '/home-contents' });
   const workTogetherImage = homePageContentData?.work_together_image;
   return (
     <>
