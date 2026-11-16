@@ -66,6 +66,7 @@ const ParallaxHero = ({
   );
 
   const imageSrc = toAbsoluteImageUrl(backgroundImage);
+  const hasText = Boolean(title?.trim() || subtitle?.trim());
 
   return (
     <section ref={ref} className={hero} aria-label="About Grameen Kalyan">
@@ -93,7 +94,7 @@ const ParallaxHero = ({
         style={{ y: copyY, opacity: copyOpacity }}
       >
         <div className={panel}>
-          {title && (
+          {title?.trim() && (
             <RevealText
               as="h1"
               className={headline}
@@ -103,21 +104,23 @@ const ParallaxHero = ({
             />
           )}
 
-          {subtitle && (
+          {subtitle?.trim() && (
             <Reveal as="p" className={lead} delay={0.9} distance={20}>
               {subtitle}
             </Reveal>
           )}
 
-          <Reveal className={actions} delay={1.05} distance={20}>
-            <Link href="#vision" className={primaryCta}>
-              Explore Our Story
-              <ArrowRightIcon />
-            </Link>
-            <Link href="/join-us" className={ghostCta}>
-              Join Us
-            </Link>
-          </Reveal>
+          {hasText && (
+            <Reveal className={actions} delay={1.05} distance={20}>
+              <Link href="#vision" className={primaryCta}>
+                Explore Our Story
+                <ArrowRightIcon />
+              </Link>
+              <Link href="/join-us" className={ghostCta}>
+                Join Us
+              </Link>
+            </Reveal>
+          )}
         </div>
       </motion.div>
     </section>
