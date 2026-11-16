@@ -7,14 +7,13 @@ import {
   WorkTogether,
 } from '@/shared/components';
 import { PeopleCulture } from '@/components/Corporate';
-import { useFetch } from '@/shared/hook';
 import { filterDataByDepartment } from '@/shared/utils/pageHelpers/filterData.helper';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const Corporate = async () => {
   const bannerData = await useFetchLaravelData({ url: '/banners/corporate' });
   const corporate = await useFetchLaravelData({ url: '/peoples' });
-  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const homePageContentData = await useFetchLaravelData({ url: '/home-contents' });
 
   const filterManagementData = filterDataByDepartment(
     corporate?.data,

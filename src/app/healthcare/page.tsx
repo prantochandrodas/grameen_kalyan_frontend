@@ -7,15 +7,14 @@ import {
   MedicalCare,
   MedicalCareList,
 } from '@/components/Healthcare';
-import { useFetch } from '@/shared/hook';
 import { IMedicalCare } from '@/shared/types/medicalCare';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const Healthcare = async () => {
   const bannerData = await useFetchLaravelData({ url: '/banners/healthcare' });
-  const healthcareService = await useFetch({ url: '/healthcare-services' });
-  const medicalCare = await useFetch({ url: '/disease-specific-medicare' });
-  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const healthcareService = await useFetchLaravelData({ url: '/healthcare-services' });
+  const medicalCare = await useFetchLaravelData({ url: '/disease-specific-medicare' });
+  const homePageContentData = await useFetchLaravelData({ url: '/home-contents' });
 
   const medicalCareCategoryData = medicalCare?.data?.map(
     (data: IMedicalCare) => ({

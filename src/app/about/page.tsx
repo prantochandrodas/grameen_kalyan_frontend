@@ -13,7 +13,6 @@ import WorkTogether from '@/shared/components/WorkTogether/WorkTogether';
 import MotionProvider from '@/components/About/Motion/MotionProvider';
 import { StoryOfInceptionSection } from '@/components/About/StoryOfInceptionSection';
 import { asArray } from '@/components/About/Shared/aboutHelpers';
-import { useFetch } from '@/shared/hook';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 import { reverseFilterDataByKey } from '@/shared/utils/pageHelpers/filterData.helper';
 import { IAnnuallyServe } from '@/shared/types/annuallyServe';
@@ -31,13 +30,13 @@ const About = async () => {
     homePageContentData,
   ] = await Promise.all([
     useFetchLaravelData({ url: '/banners/about' }),
-    useFetch({ url: '/about-us-contents' }),
-    useFetch({ url: '/summary-report-settings/basic' }),
-    useFetch({ url: '/summary-report-settings/healthcare' }),
-    useFetch({ url: '/timeline' }),
-    useFetch({ url: '/members' }),
-    useFetch({ url: '/service-contents/home' }),
-    useFetch({ url: '/home-contents' }),
+    useFetchLaravelData({ url: '/about-us-contents' }),
+    useFetchLaravelData({ url: '/summary-report-settings/basic' }),
+    useFetchLaravelData({ url: '/summary-report-settings/healthcare' }),
+    useFetchLaravelData({ url: '/timeline' }),
+    useFetchLaravelData({ url: '/members' }),
+    useFetchLaravelData({ url: '/service-contents/home' }),
+    useFetchLaravelData({ url: '/home-contents' }),
   ]);
 
   const mission = aboutUsData?.mission;
