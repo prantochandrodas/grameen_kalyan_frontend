@@ -28,7 +28,7 @@ const regionalManagersImg =
 const HealthForce = async () => {
   const bannerData = await useFetchLaravelData({ url: '/banners/health-force' });
   const corporate = await useFetchLaravelData({ url: '/peoples' });
-  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const homePageContentData = await useFetchLaravelData({ url: '/home-contents' });
 
   const filterRegionalManagersData = filterDataByDepartment(
     corporate?.data,

@@ -11,8 +11,8 @@ const bgImage =
 
 const JoinUs = async () => {
   const bannerData = await useFetchLaravelData({ url: '/banners/join-us' });
-  const departmentsData = await useFetch({ url: '/departments' });
-  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const departmentsData = await useFetchLaravelData({ url: '/departments' });
+  const homePageContentData = await useFetchLaravelData({ url: '/home-contents' });
 
   const departments = departmentsData?.data;
   const workTogetherImage = homePageContentData?.work_together_image;
