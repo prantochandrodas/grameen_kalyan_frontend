@@ -28,17 +28,17 @@ import JourneySection from '@/components/Home/journeySection/JourneySection';
 import AnnualImpactSection from '@/components/Home/AnnualImpactSection/AnnualImpactSection';
 
 const Home = async () => {
-  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const homePageContentData = await useFetchLaravelData({ url: '/home-contents' });
   const homeNewPageContentData = await useFetchLaravelData({ url: '/home-contents' });
 
-  const summeryReportData = await useFetch({
+  const summeryReportData = await useFetchLaravelData({
     url: '/summary-report-settings/basic',
   });
   // const sliderImages = await useFetch({ url: '/home-slider-content' });
   const sliderImages = await useFetchLaravelData({ url: '/home-slider-contents' });
 
-  const storyCategory = await useFetch({ url: '/story-categories' });
-  const serviceContent = await useFetch({ url: '/service-contents/home' });
+  const storyCategory = await useFetchLaravelData({ url: '/story-categories' });
+  const serviceContent = await useFetchLaravelData({ url: '/service-contents/home' });
 
   const heroSliderImages = sliderImages?.data;
   const badgeImage = homePageContentData?.badge_image;
