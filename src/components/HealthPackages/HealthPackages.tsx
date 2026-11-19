@@ -127,13 +127,11 @@ const PackageCard = ({
             <li key={item.name}>
               <span>{item.name}</span>
               <span className={style.rate}>
+                {item.rate > item.price && <s>{formatBDT(item.rate)}</s>}
                 {item.price === 0 ? (
-                  <>
-                    <s>{formatBDT(item.rate)}</s>
-                    <em className={style.free}>FREE</em>
-                  </>
+                  <em className={style.free}>FREE</em>
                 ) : (
-                  formatBDT(item.rate)
+                  <b className={style.ratePrice}>{formatBDT(item.price)}</b>
                 )}
               </span>
             </li>

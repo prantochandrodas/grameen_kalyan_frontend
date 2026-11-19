@@ -485,6 +485,21 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     }
 }
 
+.ratePrice {
+    font-weight: 800;
+    color: $color-primary;
+}
+
+// very small phones: regular price above, discounted price below, so long test names keep their space
+@media (max-width: 360px) {
+    .tests li .rate {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0;
+        line-height: 1.25;
+    }
+}
+
 .free {
     padding: 2px 9px;
     border-radius: 999px;
