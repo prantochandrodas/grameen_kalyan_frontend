@@ -1501,9 +1501,31 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
         color: $hp-green;
     }
     @media (max-width: 640px) {
+        position: relative;
         align-items: flex-start;
-        gap: 10px;
-        padding: 12px 14px;
+        gap: 12px;
+        padding: 16px 14px 14px 18px;
+        border-radius: 1.4rem;
+        overflow: hidden;
+        // gold accent bar on the left edge
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #dad565, $hp-gold);
+        }
+        strong {
+            font-size: 15px;
+            line-height: 1.35;
+        }
+        p {
+            margin-top: 6px;
+            font-size: 12.5px;
+            line-height: 1.6;
+        }
     }
 }
 
@@ -1598,10 +1620,26 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     color: #fff;
     box-shadow: 0 1.2rem 2.8rem rgba(26, 154, 91, 0.25);
     @media (max-width: 640px) {
+        position: relative;
         flex-direction: column;
         align-items: stretch;
-        padding: 16px 14px;
-        text-align: center;
+        gap: 14px;
+        padding: 16px 14px 14px;
+        border-radius: 1.4rem;
+        text-align: left;
+        overflow: hidden;
+        // soft decorative glow (top right)
+        &::after {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, transparent 70%);
+            pointer-events: none;
+        }
     }
 }
 
@@ -1625,8 +1663,16 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
         opacity: 0.92;
     }
     @media (max-width: 640px) {
-        flex-direction: column;
-        gap: 8px;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        strong {
+            font-size: 16px;
+        }
+        p {
+            font-size: 12.5px;
+            line-height: 1.5;
+        }
     }
 }
 
@@ -1640,6 +1686,11 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     background: rgba(255, 255, 255, 0.18);
     border: 1px solid rgba(255, 255, 255, 0.3);
     font-size: 18px;
+    @media (max-width: 640px) {
+        width: 44px;
+        height: 44px;
+        font-size: 17px;
+    }
 }
 
 .customCtaBtn {
@@ -1652,6 +1703,18 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
     &:hover {
         transform: translateY(-2px);
+    }
+    @media (max-width: 640px) {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        min-height: 50px;
+        border-radius: 12px;
+        font-size: 14.5px;
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        &:active {
+            transform: scale(0.98);
+        }
     }
 }
 
