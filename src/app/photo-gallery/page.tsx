@@ -2,7 +2,6 @@
 
 import React from 'react';
 
-import { useFetch } from '@/shared/hook';
 import Album from '@/components/PhotoGallery/Album/Album';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 

@@ -17,6 +17,10 @@ export interface IInvoiceData {
   issuedAt: string;
   customer: {
     name: string;
+    patientName: string;
+    gender: string;
+    age: string;
+    bloodGroup: string;
     phone: string;
     email: string;
     preferredDate?: string;
@@ -279,7 +283,14 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
   const c = data.customer;
   const billed = expand(
     [
-      { text: c.name, size: 11.5, bold: true },
+      { text: c.patientName, size: 11.5, bold: true },
+      {
+        text: `Gender: ${c.gender}   |   Age: ${c.age} yrs`,
+        size: 9,
+        color: GREY,
+      },
+      { text: `Blood Group: ${c.bloodGroup}`, size: 9, color: GREY },
+      { text: `Booked by: ${c.name}`, size: 9, color: GREY },
       { text: `Phone: ${c.phone}`, size: 9, color: GREY },
       { text: `Email: ${c.email}`, size: 9, color: GREY },
       c.preferredDate

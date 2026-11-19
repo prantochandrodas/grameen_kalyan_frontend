@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { useFetch } from '@/shared/hook';
 import {
   filterDataByKey,
   reverseFilterDataByKey,

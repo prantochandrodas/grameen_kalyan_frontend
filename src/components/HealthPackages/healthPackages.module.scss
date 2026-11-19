@@ -847,9 +847,13 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
 
 .fieldRow {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
     @media (max-width: 480px) {
+        gap: 10px;
+    }
+    // only very small phones stack to one column
+    @media (max-width: 340px) {
         grid-template-columns: 1fr;
     }
 }
@@ -1247,5 +1251,179 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
         width: 100%;
         min-width: 0;
         margin: 0;
+    }
+}
+
+
+/* ================= Patient age + blood group ================= */
+
+.fieldLabel {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: $hp-green;
+}
+
+// hide number spinners (cleaner on mobile + desktop)
+.field input[type='number'] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+}
+
+.bloodGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.field .bloodOption {
+    position: relative;
+    display: block;
+    font-size: inherit;
+    cursor: pointer;
+    // real radio stays on top (invisible) so tap + keyboard + validation still work
+    input {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        opacity: 0;
+        border: 0;
+        box-shadow: none;
+        cursor: pointer;
+    }
+    span {
+        display: grid;
+        place-items: center;
+        min-height: 44px;
+        border-radius: 10px;
+        border: 1.5px solid rgba($color-primary, 0.2);
+        background: #fff;
+        color: $hp-green;
+        font-size: 14px;
+        font-weight: 800;
+        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    &:hover span {
+        border-color: $color-primary;
+        transform: translateY(-1px);
+    }
+    input:checked+span {
+        background: $hp-gradient;
+        border-color: transparent;
+        color: #fff;
+        box-shadow: 0 6px 14px rgba(26, 154, 91, 0.3);
+    }
+    input:focus-visible+span {
+        outline: 2px solid $hp-gold;
+        outline-offset: 2px;
+    }
+}
+
+
+/* ================= Select + date + optional label ================= */
+
+.field label {
+    line-height: 1.3;
+}
+
+.optional {
+    font-weight: 400;
+    color: #7a8a81;
+}
+
+.field select {
+    width: 100%;
+    min-height: 46px;
+    padding: 11px 38px 11px 13px;
+    border-radius: 10px;
+    border: 1.5px solid rgba($color-primary, 0.2);
+    background: #fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5l5 5 5-5' fill='none' stroke='%230b6b4f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat right 14px center / 12px;
+    -webkit-appearance: none;
+    appearance: none;
+    font-family: inherit;
+    font-size: 16px; // stops iOS zoom on focus
+    font-weight: 400;
+    color: #1c2a22;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    &:invalid {
+        color: #9aa59f; // placeholder look until a value is picked
+    }
+    option {
+        color: #1c2a22;
+    }
+    &:focus {
+        outline: none;
+        border-color: $color-primary;
+        box-shadow: 0 0 0 3px rgba($color-primary, 0.14);
+    }
+    &[aria-invalid='true'] {
+        border-color: $color-error;
+    }
+}
+
+// date input: same height as the others, no iOS native stretching
+.field input[type='date'] {
+    min-height: 46px;
+    -webkit-appearance: none;
+    appearance: none;
+    text-align: left;
+}
+
+
+/* ================= Invoice preview: package names ================= */
+
+.invoicePackages {
+    display: grid;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 400;
+    >span {
+        color: #5b6b62;
+    }
+    ul {
+        list-style: none;
+        display: grid;
+        gap: 6px;
+        max-height: 148px; // scrolls when many packages are booked
+        margin: 0;
+        padding: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+    li {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 10px;
+        border-left: 3px solid $hp-gold;
+        background: rgba($hp-gold, 0.12);
+    }
+    b {
+        min-width: 0;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.35;
+        text-align: left;
+        word-break: break-word;
+        color: $hp-green;
+    }
+    em {
+        flex: none;
+        font-size: 12.5px;
+        font-style: normal;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        color: $color-primary;
     }
 }

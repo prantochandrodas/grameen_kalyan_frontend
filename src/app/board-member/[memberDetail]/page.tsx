@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { BoardMemberDetail } from '@/components/BoardMember';
-import { useFetch } from '@/shared/hook';
 import { IBoardMember } from '@/shared/types/boardMember';
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const BoardMemberDetails = async ({
   params,
@@ -10,7 +10,7 @@ const BoardMemberDetails = async ({
   params: { memberDetail: number };
 }) => {
   const id = parseInt(params.memberDetail.toString());
-  const boardMember = await useFetch({ url: '/members' });
+  const boardMember = await useFetchLaravelData({ url: '/members' });
   const detailData = boardMember?.data?.find(
     (data: IBoardMember) => data.id === id
   );

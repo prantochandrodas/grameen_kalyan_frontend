@@ -1,10 +1,10 @@
 /* eslint-disable quotes */
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import { useFetch } from '@/shared/hook';
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 export async function getDataByDivisionId(divisionId: string | number) {
-  const data = await useFetch({
+  const data = await useFetchLaravelData({
     url: `/get-health-centers?division_id=${divisionId}`,
   });
 
@@ -12,7 +12,7 @@ export async function getDataByDivisionId(divisionId: string | number) {
 }
 
 export async function getDataByKeyword(keyword: string | null) {
-  const data = await useFetch({
+  const data = await useFetchLaravelData({
     url: `/get-health-centers?keyword=${keyword}`,
   });
 
@@ -22,7 +22,7 @@ export async function getDataByKeyword(keyword: string | null) {
 export async function getDataByHealthCenterId(
   healthCenterId: number | string | null
 ) {
-  const data = await useFetch({
+  const data = await useFetchLaravelData({
     url: `/get-health-centers?health_center_id=${healthCenterId}`,
   });
 

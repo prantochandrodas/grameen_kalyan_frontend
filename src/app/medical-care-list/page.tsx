@@ -3,7 +3,7 @@ import React from 'react';
 import { MedicalCareListSection } from '@/components/MedicalCareList';
 import { HeroSection } from '@/components/Story';
 import { WorkTogether } from '@/shared/components';
-import { useFetch } from '@/shared/hook';
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const heroData = {
   image:
@@ -12,8 +12,8 @@ const heroData = {
 };
 
 const MedicalCareList = async () => {
-  const medicalCare = await useFetch({ url: '/disease-specific-medicare' });
-  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const medicalCare = await useFetchLaravelData({ url: '/disease-specific-medicare' });
+  const homePageContentData = await useFetchLaravelData({ url: '/home-contents' });
   const workTogetherImage = homePageContentData?.work_together_image;
   return (
     <>

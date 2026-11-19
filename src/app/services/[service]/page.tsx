@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { useFetch } from '@/shared/hook';
 
 import { HeroSection, DetailSection } from '@/components/ServiceDetail';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';

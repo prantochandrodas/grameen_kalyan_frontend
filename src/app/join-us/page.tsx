@@ -2,7 +2,6 @@ import React from 'react';
 
 import { HeroSection, WorkTogether } from '@/shared/components';
 import { CareerForm, CulturalPriorities } from '@/components/JoinUs';
-import { useFetch } from '@/shared/hook';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 // API te banner na thakle ei fallback image dekhabe

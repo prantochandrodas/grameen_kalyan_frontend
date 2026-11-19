@@ -1,13 +1,13 @@
 /* eslint-disable comma-dangle */
 import React from 'react';
 
-import { useFetch } from '@/shared/hook';
 
 import {
   HeroSection,
   DetailSection,
 } from '@/components/HealthcareServiceDetail';
 import { IHealthcareService } from '@/shared/types/healthcareService';
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const ServiceDetails = async ({
   params,
@@ -16,7 +16,7 @@ const ServiceDetails = async ({
 }) => {
   const id = parseInt(params.healthcareService.toString());
 
-  const services = await useFetch({ url: '/healthcare-services' });
+  const services = await useFetchLaravelData({ url: '/healthcare-services' });
 
   const detailData = services?.data?.find(
     (data: IHealthcareService) => data.id === id

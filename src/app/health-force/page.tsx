@@ -2,7 +2,6 @@
 /* eslint-disable operator-linebreak */
 import React from 'react';
 
-import { useFetch } from '@/shared/hook';
 import { AboutSection } from '@/components/HealthForce';
 import {
   HeroSection,

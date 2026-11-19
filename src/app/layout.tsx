@@ -9,7 +9,6 @@ import {
   ButtonScrollTop,
 } from '@/shared/components';
 import OpeningPopup from '@/shared/components/OpeningPopup/OpeningPopup';
-import { useFetch } from '@/shared/hook';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 // const inter = Inter({ subsets: ['latin'] });
@@ -25,7 +24,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const navbarData = await useFetch({
+  const navbarData = await useFetchLaravelData({
     url: '/home-contents',
     revalidateIn: 86400,
   });
@@ -35,7 +34,7 @@ export default async function RootLayout({
   // });
 
   // services list for navbar dropdown (same API as services page)
-  const servicesRes = await useFetch({
+  const servicesRes = await useFetchLaravelData({
     url: '/service-contents/services',
     revalidateIn: 86400,
   });

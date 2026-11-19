@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BiSolidDownArrow } from 'react-icons/bi';
+import { FaShoppingCart } from 'react-icons/fa';
 import {
   FaFacebookF,
   FaYoutube,
@@ -13,6 +14,10 @@ import {
 } from 'react-icons/fa';
 
 import { IMAGE_BASE_URL } from '@/config';
+import {
+  getHealthPackageCartCount,
+  HEALTH_PACKAGE_CART_EVENT,
+} from '@/shared/utils/healthPackageCart';
 import style from './mainNavbar.module.scss';
 import LanguageSwitcher from './LanguageSwitcher';
 
@@ -63,6 +68,7 @@ const Navbar = ({
   const [toggle, setToggle] = useState(false);
   // which dropdown is open on mobile (tap to open/close)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [cartCount, setCartCount] = useState(0);
 
   const safeDonates = Array.isArray(donates) ? donates : [];
   const safeServices = Array.isArray(services) ? services : [];
@@ -87,7 +93,7 @@ const Navbar = ({
     {
       label: 'services',
       children: [
-        { label: 'health package', href: '/health-packages' },
+        { label: 'healthcare Packages', href: '/health-packages' },
         { label: 'healthcare', href: '/healthcare' },
         ...safeServices
           .filter((s) => s.title !== 'Healthcare') // avoid duplicate healthcare
@@ -136,6 +142,18 @@ const Navbar = ({
     setToggle(false);
     setOpenDropdown(null);
   }, [pathName]);
+
+  useEffect(() => {
+    const syncCartCount = () => setCartCount(getHealthPackageCartCount());
+
+    syncCartCount();
+    window.addEventListener(HEALTH_PACKAGE_CART_EVENT, syncCartCount);
+    window.addEventListener('storage', syncCartCount);
+    return () => {
+      window.removeEventListener(HEALTH_PACKAGE_CART_EVENT, syncCartCount);
+      window.removeEventListener('storage', syncCartCount);
+    };
+  }, []);
 
   // stop the page behind from scrolling while the mobile menu is open
   useEffect(() => {
@@ -241,6 +259,22 @@ const Navbar = ({
 
       <div className={style.navRight}>
         {/* <LanguageSwitcher /> */}
+
+        <Link
+          href="/cart"
+          className={style.cartLink}
+          aria-label={`Health package cart, ${cartCount} ${
+            cartCount === 1 ? 'package' : 'packages'
+          }`}
+          title="View health package cart"
+        >
+          <FaShoppingCart aria-hidden="true" />
+          {cartCount > 0 && (
+            <span className={style.cartBadge} aria-hidden="true">
+              {cartCount > 99 ? '99+' : cartCount}
+            </span>
+          )}
+        </Link>
 
         <div className={style.social}>
           {socials.map(({ icon: Icon, href }) => (

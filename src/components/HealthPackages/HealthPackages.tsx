@@ -29,11 +29,13 @@ import {
   formatBDT,
   getPackageTotals,
 } from '@/data/healthPackages';
+import {
+  getHealthPackageCart,
+  saveHealthPackageCart,
+} from '@/shared/utils/healthPackageCart';
 
 import BookingModal from './BookingModal';
 import style from './healthPackages.module.scss';
-
-const CART_KEY = 'gk-health-package-cart';
 
 const ICONS: Record<PackageIconKey, IconType> = {
   baby: FaBaby,
@@ -191,14 +193,8 @@ const HealthPackages = () => {
   // load the saved cart once
   useEffect(() => {
     try {
-      const saved = JSON.parse(window.localStorage.getItem(CART_KEY) || '[]');
-      if (Array.isArray(saved)) {
-        setCart(
-          saved.filter((id: string) =>
-            HEALTH_PACKAGES.some((pkg) => pkg.id === id)
-          )
-        );
-      }
+      const saved = getHealthPackageCart();
+      setCart(saved.filter((id) => HEALTH_PACKAGES.some((pkg) => pkg.id === id)));
     } catch (e) {
       // storage blocked or corrupted - start with an empty cart
     }
@@ -209,7 +205,7 @@ const HealthPackages = () => {
   useEffect(() => {
     if (!cartReady) return;
     try {
-      window.localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      saveHealthPackageCart(cart);
     } catch (e) {
       // ignore storage errors
     }
@@ -270,7 +266,7 @@ const HealthPackages = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <span className={style.eyebrow}>Affordable Checkups</span>
+            <span className={style.eyebrow}>Affordable Checkups for your loved ones</span>
             <h2 className={style.title}>
               Our Health <span>Packages</span>
             </h2>

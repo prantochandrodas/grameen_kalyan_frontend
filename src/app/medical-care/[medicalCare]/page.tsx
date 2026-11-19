@@ -1,13 +1,13 @@
 import React from 'react';
 
 import { HeroSection, DetailSection } from '@/components/MedicalCare';
-import { useFetch } from '@/shared/hook';
 import { IMedicalCare } from '@/shared/types/medicalCare';
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const MedicalCare = async ({ params }: { params: { medicalCare: number } }) => {
   const id = parseInt(params.medicalCare.toString());
 
-  const services = await useFetch({ url: '/disease-specific-medicare' });
+  const services = await useFetchLaravelData({ url: '/disease-specific-medicare' });
 
   const detailData = services?.data?.find(
     (data: IMedicalCare) => data.id === id

@@ -2,7 +2,6 @@ import React from 'react';
 
 import { HeroSection, StoryShortDetail } from '@/components/Story';
 import { RecentPost, WorkTogether } from '@/shared/components';
-import { useFetch } from '@/shared/hook';
 import { IStories } from '@/shared/types/stories';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 

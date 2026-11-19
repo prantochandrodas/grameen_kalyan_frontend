@@ -2,8 +2,8 @@ import React from 'react';
 
 import { StoryListSection } from '@/components/StoryList';
 import { HeroSection } from '@/components/Story';
-import { useFetch } from '@/shared/hook';
 import { WorkTogether } from '@/shared/components';
+import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const heroData = {
   image:
@@ -12,8 +12,8 @@ const heroData = {
 };
 
 const StoryList = async () => {
-  const stories = await useFetch({ url: '/stories' });
-  const homePageContentData = await useFetch({ url: '/home-contents' });
+  const stories = await useFetchLaravelData({ url: '/stories' });
+  const homePageContentData = await useFetchLaravelData({ url: '/home-contents' });
   const workTogetherImage = homePageContentData?.work_together_image;
   return (
     <>

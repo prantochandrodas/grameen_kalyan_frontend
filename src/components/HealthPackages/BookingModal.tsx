@@ -19,6 +19,10 @@ import style from './healthPackages.module.scss';
 
 interface IBookingInputs {
   name: string;
+  patientName: string;
+  gender: string;
+  age: string;
+  bloodGroup: string;
   phone: string;
   email: string;
   date: string;
@@ -33,6 +37,8 @@ interface IBookingModalProps {
 
 const PHONE_REGEX = /^(?:\+?88)?01[3-9]\d{8}$/;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+const GENDERS = ['Male', 'Female', 'Other'];
 
 const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
   const [done, setDone] = useState(false);
@@ -113,7 +119,13 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
       'Health package booking request',
       `Invoice No: ${number}`,
       '',
-      `Health Center: ${center.name}`,
+      `Booked By: ${data.name.trim()}`,
+      `Patient Name: ${data.patientName.trim()}`,
+      `Gender: ${data.gender}`,
+      `Age: ${data.age.trim()}`,
+      `Blood Group: ${data.bloodGroup}`,
+      '',
+      `Social Business Health Center: ${center.name}`,
       center.address ? `Address: ${center.address}` : '',
       center.contact_info ? `Contact: ${center.contact_info}` : '',
       '',
@@ -148,6 +160,10 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
         issuedAt: now.toLocaleDateString('en-GB', dateFormat),
         customer: {
           name: data.name.trim(),
+          patientName: data.patientName.trim(),
+          gender: data.gender,
+          age: data.age.trim(),
+          bloodGroup: data.bloodGroup,
           phone: data.phone.trim(),
           email: data.email.trim(),
           preferredDate: data.date
@@ -252,16 +268,38 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
                   <b>{invoice.issuedAt}</b>
                 </div>
                 <div className={style.invoiceRow}>
-                  <span>Name</span>
+                  <span>Booked By</span>
                   <b>{invoice.customer.name}</b>
                 </div>
                 <div className={style.invoiceRow}>
-                  <span>Health Center</span>
-                  <b>{invoice.center.name}</b>
+                  <span>Patient Name</span>
+                  <b>{invoice.customer.patientName}</b>
                 </div>
                 <div className={style.invoiceRow}>
-                  <span>Packages</span>
-                  <b>{invoice.items.length}</b>
+                  <span>Gender / Age / Blood</span>
+                  <b>
+                    {invoice.customer.gender} · {invoice.customer.age} yrs ·{' '}
+                    {invoice.customer.bloodGroup}
+                  </b>
+                </div>
+                <div className={style.invoiceRow}>
+                  <span>Social Business Health Center</span>
+                  <b>{invoice.center.name}</b>
+                </div>
+                <div className={style.invoicePackages}>
+                  <span>
+                    {invoice.items.length === 1
+                      ? 'Package'
+                      : `Packages (${invoice.items.length})`}
+                  </span>
+                  <ul>
+                    {invoice.items.map((item) => (
+                      <li key={item.name}>
+                        <b>{item.name}</b>
+                        <em>{formatBDT(item.price)}</em>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
                 <div className={`${style.invoiceRow} ${style.invoiceTotal}`}>
                   <span>Total Amount</span>
@@ -298,7 +336,7 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
         ) : (
           <>
             <div className={style.modalHead}>
-              <span className={style.eyebrow}>Book Your Checkup</span>
+              <span className={style.eyebrow}>Book Your Grameen Kalyan Checkup</span>
               <h3 id="hp-modal-title">Confirm Your Package</h3>
             </div>
 
@@ -332,7 +370,8 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
                 }}
               />
 
-              <div className={style.field}>
+
+                            <div className={style.field}>
                 <label htmlFor="hpName">Your Name</label>
                 <input
                   id="hpName"
@@ -346,7 +385,94 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
                     firstField.current = el;
                   }}
                 />
-                {errors.name && <small>Name is required</small>}
+                {errors.name && <small>Your name is required</small>}
+              </div>
+
+              <div className={style.fieldRow}>
+                <div className={style.field}>
+                  <label htmlFor="hpPatient">Patient Name</label>
+                  <input
+                    id="hpPatient"
+                    type="text"
+                    autoComplete="off"
+                    placeholder="Patient full name"
+                    aria-invalid={!!errors.patientName}
+                    {...register('patientName', {
+                      required: 'Patient name is required',
+                    })}
+                  />
+                  {errors.patientName && (
+                    <small>{errors.patientName.message}</small>
+                  )}
+                </div>
+
+                <div className={style.field}>
+                  <label htmlFor="hpGender">Patient Gender</label>
+                  <select
+                    id="hpGender"
+                    defaultValue=""
+                    aria-invalid={!!errors.gender}
+                    {...register('gender', {
+                      required: 'Select gender',
+                    })}
+                  >
+                    <option value="" disabled>
+                      Select
+                    </option>
+                    {GENDERS.map((g) => (
+                      <option key={g} value={g}>
+                        {g}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.gender && <small>{errors.gender.message}</small>}
+                </div>
+              </div>
+
+              <div className={style.fieldRow}>
+                <div className={style.field}>
+                  <label htmlFor="hpAge">Patient Age</label>
+                  <input
+                    id="hpAge"
+                    type="number"
+                    inputMode="numeric"
+                    min={0}
+                    max={120}
+                    placeholder="e.g. 32"
+                    aria-invalid={!!errors.age}
+                    {...register('age', {
+                      required: 'Age is required',
+                      validate: (v) =>
+                        (Number(v) >= 0 && Number(v) <= 120) ||
+                        'Enter a valid age (0-120)',
+                    })}
+                  />
+                  {errors.age && <small>{errors.age.message}</small>}
+                </div>
+
+                <div className={style.field}>
+                  <label htmlFor="hpBlood">Patient Blood Group</label>
+                  <select
+                    id="hpBlood"
+                    defaultValue=""
+                    aria-invalid={!!errors.bloodGroup}
+                    {...register('bloodGroup', {
+                      required: 'Select blood group',
+                    })}
+                  >
+                    <option value="" disabled>
+                      Select
+                    </option>
+                    {BLOOD_GROUPS.map((group) => (
+                      <option key={group} value={group}>
+                        {group}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.bloodGroup && (
+                    <small>{errors.bloodGroup.message}</small>
+                  )}
+                </div>
               </div>
 
               <div className={style.fieldRow}>
@@ -371,7 +497,9 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
                 </div>
 
                 <div className={style.field}>
-                  <label htmlFor="hpDate">Preferred Date (optional)</label>
+                  <label htmlFor="hpDate">
+                    Preferred Date <span className={style.optional}>(optional)</span>
+                  </label>
                   <input
                     id="hpDate"
                     type="date"

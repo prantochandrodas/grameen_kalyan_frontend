@@ -122,8 +122,12 @@ const MapSection = () => {
     resetSelection = true
   ) => {
     const res = await getDataByDivisionId(key);
-    setData(res?.data ?? []);
-    setCenterDivision(res?.division_name);
+    const list = res?.data ?? [];
+    const pinName = DIVISION_PINS.find((p) => p.id === Number(key))?.name;
+    setData(list);
+    setCenterDivision(
+      res?.division_name ?? list[0]?.division_name ?? pinName ?? null
+    );
 
     if (resetSelection) {
       setActiveHealthCenter(false);
@@ -131,6 +135,7 @@ const MapSection = () => {
     }
 
     const first = res?.data?.[0];
+
     setMapActive(first ? first.division_id : Number(key));
 
     // phones: bring the details into view after a map tap (not on first load)
@@ -256,8 +261,8 @@ const MapSection = () => {
   const showSuggestions = isOpen && trimmed.length > 0;
   const firstPhone = current?.contact_info
     ? String(current.contact_info)
-        .split(/[,/;]/)[0]
-        .replace(/[^\d+]/g, '')
+      .split(/[,/;]/)[0]
+      .replace(/[^\d+]/g, '')
     : '';
   const phoneHref = firstPhone
     ? `tel:${/^01\d{9}$/.test(firstPhone) ? `+88${firstPhone}` : firstPhone}`
@@ -532,9 +537,8 @@ const MapSection = () => {
                     id={`gk-sugg-${index}`}
                     role="option"
                     aria-selected={index === highlighted}
-                    className={`${suggestionItem} ${
-                      index === highlighted ? suggestionActive : ''
-                    }`}
+                    className={`${suggestionItem} ${index === highlighted ? suggestionActive : ''
+                      }`}
                     onMouseEnter={() => setHighlighted(index)}
                     onClick={() => selectFromSearch(item)}
                   >
@@ -662,9 +666,8 @@ const MapSection = () => {
                   <button
                     type="button"
                     key={item.id}
-                    className={`${listItem} ${
-                      current?.id === item.id ? listActive : ''
-                    }`}
+                    className={`${listItem} ${current?.id === item.id ? listActive : ''
+                      }`}
                     onClick={() => selectFromList(item)}
                   >
                     <FaLocationDot />

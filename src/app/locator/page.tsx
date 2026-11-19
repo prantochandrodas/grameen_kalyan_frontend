@@ -3,7 +3,6 @@ import React from 'react';
 import Map from '@/components/Locator/Map/Map';
 import OfficeLocations from '@/components/Locator/OfficeLocations/OfficeLocations';
 import { WorkTogether } from '@/shared/components';
-import { useFetch } from '@/shared/hook';
 
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 const LocatorPage = async () => {

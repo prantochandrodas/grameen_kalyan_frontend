@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 
 import { DetailSection, CommentSection } from '@/components/StoryDetails';
 import { RecentPost, WorkTogether } from '@/shared/components';
-import { useFetch } from '@/shared/hook';
 import { IStories } from '@/shared/types/stories';
 import NewHeroSection from '@/components/StoryDetails/HeroSection/NewHeroSection';
 
