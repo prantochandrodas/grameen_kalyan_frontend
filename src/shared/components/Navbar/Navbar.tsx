@@ -87,6 +87,7 @@ const Navbar = ({
     {
       label: 'services',
       children: [
+        { label: 'health package', href: '/health-packages' },
         { label: 'healthcare', href: '/healthcare' },
         ...safeServices
           .filter((s) => s.title !== 'Healthcare') // avoid duplicate healthcare
