@@ -1353,7 +1353,8 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     color: #1c2a22;
     cursor: pointer;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    &:invalid {
+    &:invalid,
+    &:has(option[value='']: checked) {
         color: #9aa59f; // placeholder look until a value is picked
     }
     option {
@@ -1425,5 +1426,26 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
         font-variant-numeric: tabular-nums;
         white-space: nowrap;
         color: $color-primary;
+    }
+}
+
+
+/* ================= Required marker ================= */
+
+.req {
+    margin-left: 2px;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1;
+    color: $color-error;
+}
+
+.reqNote {
+    margin: -2px 0 0;
+    font-size: 12px;
+    font-weight: 400;
+    color: #6b7a72;
+    .req {
+        font-size: 13px;
     }
 }

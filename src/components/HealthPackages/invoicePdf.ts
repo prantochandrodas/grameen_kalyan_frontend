@@ -45,7 +45,7 @@ const LEAF: RGB = [150, 214, 165]; // light green used for the logo leaves on th
 // company details (header tagline + footer contact lines)
 const COMPANY = {
   name: 'Grameen Kalyan',
-  tagline: 'Health Package Booking',
+  tagline: 'Healthcare Package Booking',
   hotlines: ['+8801334944640', '+880244802111', '+8809642115500'],
   email: 'contact@grameenkalyan.com',
   website: 'www.grameenkalyan.com',
@@ -289,10 +289,12 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
         size: 9,
         color: GREY,
       },
-      { text: `Blood Group: ${c.bloodGroup}`, size: 9, color: GREY },
+      c.bloodGroup
+        ? { text: `Blood Group: ${c.bloodGroup}`, size: 9, color: GREY }
+        : null,
       { text: `Booked by: ${c.name}`, size: 9, color: GREY },
       { text: `Phone: ${c.phone}`, size: 9, color: GREY },
-      { text: `Email: ${c.email}`, size: 9, color: GREY },
+      c.email ? { text: `Email: ${c.email}`, size: 9, color: GREY } : null,
       c.preferredDate
         ? { text: `Preferred date: ${c.preferredDate}`, size: 9, color: GREY }
         : null,
@@ -332,7 +334,7 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
 
   let y = headerH + 12;
   drawBox(M, y, 'BILLED TO', billed);
-  drawBox(M + boxW + gap, y, 'HEALTH CENTER', center);
+  drawBox(M + boxW + gap, y, 'Social business primary healthcare center', center);
   y += boxH + 9;
 
   /* ---------- package table ---------- */
@@ -478,7 +480,7 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
   draw('NEXT STEP', M, y + 4, { size: 7.5, bold: true, color: GOLD });
   let iy = y + 9.5;
   wrap(
-    'This invoice confirms your booking request. Our team will contact you shortly. Please carry this invoice to the selected health center.',
+    'This invoice confirms your booking request. Our team will contact you shortly. Please carry this invoice to the selected Social business healthcare center.',
     infoW,
     9,
     false

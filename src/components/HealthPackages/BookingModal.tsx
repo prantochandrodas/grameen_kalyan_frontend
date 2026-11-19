@@ -123,7 +123,7 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
       `Patient Name: ${data.patientName.trim()}`,
       `Gender: ${data.gender}`,
       `Age: ${data.age.trim()}`,
-      `Blood Group: ${data.bloodGroup}`,
+      data.bloodGroup ? `Blood Group: ${data.bloodGroup}` : '',
       '',
       `Social Business Health Center: ${center.name}`,
       center.address ? `Address: ${center.address}` : '',
@@ -278,8 +278,10 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
                 <div className={style.invoiceRow}>
                   <span>Gender / Age / Blood</span>
                   <b>
-                    {invoice.customer.gender} · {invoice.customer.age} yrs ·{' '}
-                    {invoice.customer.bloodGroup}
+                    {invoice.customer.gender} · {invoice.customer.age} yrs
+                    {invoice.customer.bloodGroup
+                      ? ` · ${invoice.customer.bloodGroup}`
+                      : ''}
                   </b>
                 </div>
                 <div className={style.invoiceRow}>
@@ -371,8 +373,10 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
               />
 
 
-                            <div className={style.field}>
-                <label htmlFor="hpName">Your Name</label>
+              <div className={style.field}>
+                <label htmlFor="hpName">
+                  Your Name <span className={style.req} aria-hidden="true">*</span>
+                </label>
                 <input
                   id="hpName"
                   type="text"
@@ -390,7 +394,9 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
 
               <div className={style.fieldRow}>
                 <div className={style.field}>
-                  <label htmlFor="hpPatient">Patient Name</label>
+                  <label htmlFor="hpPatient">
+                    Patient Name <span className={style.req} aria-hidden="true">*</span>
+                  </label>
                   <input
                     id="hpPatient"
                     type="text"
@@ -407,7 +413,9 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
                 </div>
 
                 <div className={style.field}>
-                  <label htmlFor="hpGender">Patient Gender</label>
+                  <label htmlFor="hpGender">
+                    Patient Gender <span className={style.req} aria-hidden="true">*</span>
+                  </label>
                   <select
                     id="hpGender"
                     defaultValue=""
@@ -431,7 +439,9 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
 
               <div className={style.fieldRow}>
                 <div className={style.field}>
-                  <label htmlFor="hpAge">Patient Age</label>
+                  <label htmlFor="hpAge">
+                    Patient Age <span className={style.req} aria-hidden="true">*</span>
+                  </label>
                   <input
                     id="hpAge"
                     type="number"
@@ -451,18 +461,16 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
                 </div>
 
                 <div className={style.field}>
-                  <label htmlFor="hpBlood">Patient Blood Group</label>
+                  <label htmlFor="hpBlood">
+                    Patient Blood Group <span className={style.optional}>(optional)</span>
+                  </label>
                   <select
                     id="hpBlood"
                     defaultValue=""
                     aria-invalid={!!errors.bloodGroup}
-                    {...register('bloodGroup', {
-                      required: 'Select blood group',
-                    })}
+                    {...register('bloodGroup')}
                   >
-                    <option value="" disabled>
-                      Select
-                    </option>
+                    <option value="">Select</option>
                     {BLOOD_GROUPS.map((group) => (
                       <option key={group} value={group}>
                         {group}
@@ -477,7 +485,9 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
 
               <div className={style.fieldRow}>
                 <div className={style.field}>
-                  <label htmlFor="hpPhone">Phone</label>
+                  <label htmlFor="hpPhone">
+                    Phone <span className={style.req} aria-hidden="true">*</span>
+                  </label>
                   <input
                     id="hpPhone"
                     type="tel"
@@ -510,7 +520,9 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
               </div>
 
               <div className={style.field}>
-                <label htmlFor="hpEmail">Email</label>
+                <label htmlFor="hpEmail">
+                  Email <span className={style.optional}>(optional)</span>
+                </label>
                 <input
                   id="hpEmail"
                   type="email"
@@ -519,7 +531,6 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
                   placeholder="name@example.com"
                   aria-invalid={!!errors.email}
                   {...register('email', {
-                    required: 'Email is required',
                     pattern: {
                       value: EMAIL_REGEX,
                       message: 'Please provide a valid email address',
@@ -538,6 +549,11 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
                   {...register('note')}
                 />
               </div>
+
+              <p className={style.reqNote}>
+                <span className={style.req} aria-hidden="true">*</span> Required
+                fields
+              </p>
 
               {apiError && (
                 <p className={style.apiError} role="alert">

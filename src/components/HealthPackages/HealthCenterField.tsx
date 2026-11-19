@@ -175,7 +175,10 @@ const HealthCenterField = ({
 
   return (
     <div className={style.field} ref={wrapRef}>
-      <label htmlFor="hpCenter">Social Business Health Center</label>
+      <label htmlFor="hpCenter">
+        Social Business Health Center{' '}
+        <span className={style.req} aria-hidden="true">*</span>
+      </label>
 
       <div className={style.centerInputWrap}>
         <FaSearch className={style.centerIcon} aria-hidden="true" />
@@ -191,6 +194,7 @@ const HealthCenterField = ({
           aria-controls="hp-center-list"
           aria-autocomplete="list"
           aria-activedescendant={active >= 0 ? `hp-center-${active}` : undefined}
+          aria-required="true"
           aria-invalid={!!error && !value}
           value={query}
           onChange={handleInput}
