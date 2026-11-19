@@ -109,7 +109,7 @@ const HealthPackageCart = () => {
             <p className={style.eyebrow}>Your health, thoughtfully planned</p>
             <h1>Your Cart</h1>
             <p className={style.headingDescription}>
-              Review your selected health packages before booking.
+              Review your selected healthcare packages before booking.
             </p>
           </div>
           <span className={style.itemCount}>
@@ -135,7 +135,7 @@ const HealthPackageCart = () => {
               and choose the care that fits your family.
             </p>
             <Link href="/health-packages" className={style.primaryButton}>
-              Browse health packages
+              Browse healthcare packages
               <FaArrowRight aria-hidden="true" />
             </Link>
           </section>

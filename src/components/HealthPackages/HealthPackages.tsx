@@ -48,7 +48,7 @@ const ICONS: Record<PackageIconKey, IconType> = {
 };
 
 const FEATURES = [
-  { icon: FaIdCard, text: 'Health Card for up to 6 family members' },
+  { icon: FaIdCard, text: 'Healthcare Card for up to 6 family members' },
   { icon: FaUserMd, text: 'Doctor consultation with every package' },
   { icon: FaPercent, text: 'Special discounted diagnostic rates' },
 ];
@@ -268,7 +268,7 @@ const HealthPackages = () => {
           >
             <span className={style.eyebrow}>Affordable Checkups for your loved ones</span>
             <h2 className={style.title}>
-              Our Health <span>Packages</span>
+              Our Healthcare <span>Packages</span>
             </h2>
             <span className={style.titleBar} />
             <p className={style.lead}>

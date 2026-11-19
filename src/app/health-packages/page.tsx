@@ -24,7 +24,7 @@ const HealthPackagesPage = async () => {
         heroFor="healthcare"
         backgroundImage={heroImg.src}
         imagePosition="center 28%"
-        title="Health Packages"
+        title="Healthcare Packages"
         subtitle="Affordable checkups for you and your family"
       />
       <HealthPackages />

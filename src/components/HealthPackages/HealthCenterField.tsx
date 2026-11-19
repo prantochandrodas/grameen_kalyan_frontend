@@ -175,7 +175,7 @@ const HealthCenterField = ({
 
   return (
     <div className={style.field} ref={wrapRef}>
-      <label htmlFor="hpCenter">Health Center</label>
+      <label htmlFor="hpCenter">Social Business Health Center</label>
 
       <div className={style.centerInputWrap}>
         <FaSearch className={style.centerIcon} aria-hidden="true" />
@@ -185,7 +185,7 @@ const HealthCenterField = ({
           className={style.centerInput}
           type="text"
           autoComplete="off"
-          placeholder="Search health center, upazila or district"
+          placeholder="Search your nearest health center, upazila or district"
           role="combobox"
           aria-expanded={showList}
           aria-controls="hp-center-list"
