@@ -27,12 +27,18 @@ import {
   IHealthPackage,
   PackageIconKey,
   formatBDT,
-  getPackageTotals,
 } from '@/data/healthPackages';
 import {
   getHealthPackageCart,
   saveHealthPackageCart,
 } from '@/shared/utils/healthPackageCart';
+import {
+  CARD_VALIDITY_MONTHS,
+  getCardFee,
+  getCardFeeAmount,
+  getCartTotals,
+  getPackageCore,
+} from '@/shared/utils/healthPackagePricing';
 
 import BookingModal from './BookingModal';
 import style from './healthPackages.module.scss';
@@ -53,6 +59,7 @@ const FEATURES = [
   { icon: FaPercent, text: 'Special discounted diagnostic rates' },
 ];
 
+const CARD_FEE = getCardFeeAmount();
 /* ---------------------------- Package card ---------------------------- */
 interface IPackageCardProps {
   pkg: IHealthPackage;
@@ -70,7 +77,8 @@ const PackageCard = ({
   onBuy,
 }: IPackageCardProps) => {
   const Icon = ICONS[pkg.icon];
-  const { rate, price, save, percent, testCount } = getPackageTotals(pkg);
+  const { tests, rate, price, save, percent, testCount } = getPackageCore(pkg);
+  const cardFee = getCardFee(pkg);
 
   return (
     <article className={style.card}>
@@ -123,7 +131,7 @@ const PackageCard = ({
 
         {/* tests */}
         <ul className={style.tests}>
-          {pkg.tests.map((item) => (
+          {tests.map((item) => (
             <li key={item.name}>
               <span>{item.name}</span>
               <span className={style.rate}>
@@ -152,6 +160,16 @@ const PackageCard = ({
             <span className={style.saveNote}>
               You save {formatBDT(save)} ({percent}%)
             </span>
+          )}
+
+          {cardFee && (
+            <p className={style.cardNote}>
+              <FaIdCard aria-hidden="true" />
+              <span>
+                + {formatBDT(cardFee.price)} one-time Health Card fee, paid only
+                once for all your packages ({CARD_VALIDITY_MONTHS} months)
+              </span>
+            </p>
           )}
 
           <div className={style.actions}>
@@ -225,10 +243,7 @@ const HealthPackages = () => {
     [cart]
   );
 
-  const cartTotal = cartItems.reduce(
-    (sum, pkg) => sum + getPackageTotals(pkg).price,
-    0
-  );
+  const cartTotals = useMemo(() => getCartTotals(cartItems), [cartItems]);
 
   const toggleCart = (id: string) =>
     setCart((prev) =>
@@ -286,6 +301,24 @@ const HealthPackages = () => {
               </li>
             ))}
           </ul>
+
+          {/* ---------- One-time card fee notice ---------- */}
+          <div className={style.cardFeeNotice} role="note">
+            <span className={style.cardFeeIcon} aria-hidden="true">
+              <FaIdCard />
+            </span>
+            <div>
+              <strong>
+                One-time Health Card fee: {formatBDT(CARD_FEE)}
+              </strong>
+              <p>
+                Pay it <b>only once</b> and book as many packages as you need
+                within {CARD_VALIDITY_MONTHS} months. Package prices below do
+                not include the card fee, and it is added to your total just
+                one time.
+              </p>
+            </div>
+          </div>
 
           {/* ---------- Filters ---------- */}
           <div className={style.filters} role="tablist" aria-label="Packages">
@@ -352,7 +385,11 @@ const HealthPackages = () => {
                     {cartItems.length}{' '}
                     {cartItems.length === 1 ? 'package' : 'packages'} selected
                   </strong>
-                  <span>Total: {formatBDT(cartTotal)}</span>
+                  <span>
+                    Total: {formatBDT(cartTotals.total)}
+                    {cartTotals.cardFee > 0 &&
+                      ` (incl. ${formatBDT(cartTotals.cardFee)} card fee, once)`}
+                  </span>
                 </div>
                 <button
                   type="button"

@@ -1,6 +1,7 @@
 // ================= START: invoicePdf.ts =================
 import logoImg from '@/assets/images/logo.png';
 import { formatBDT } from '@/data/healthPackages';
+import { CARD_VALIDITY_MONTHS } from '@/shared/utils/healthPackagePricing';
 
 type RGB = [number, number, number];
 
@@ -28,6 +29,7 @@ export interface IInvoiceData {
   };
   center: { name: string; address: string; contact: string };
   items: IInvoiceItem[];
+  cardFee: number;
   totalRate: number;
   total: number;
   saved: number;
@@ -138,6 +140,27 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
     return (probe.measureText(text).width / S) * PT;
   };
 
+  // splits one very long word (no spaces) into pieces that fit maxW
+  const breakWord = (
+    word: string,
+    maxW: number,
+    size: number,
+    bold: boolean
+  ) => {
+    const pieces: string[] = [];
+    let chunk = '';
+    Array.from(word).forEach((ch) => {
+      if (chunk && measure(chunk + ch, size, bold) > maxW) {
+        pieces.push(chunk);
+        chunk = ch;
+      } else {
+        chunk += ch;
+      }
+    });
+    if (chunk) pieces.push(chunk);
+    return pieces;
+  };
+
   const wrap = (text: string, maxW: number, size: number, bold: boolean) => {
     const out: string[] = [];
     String(text || '')
@@ -149,11 +172,24 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
           .filter(Boolean)
           .forEach((word) => {
             const next = line ? `${line} ${word}` : word;
-            if (line && measure(next, size, bold) > maxW) {
-              out.push(line);
-              line = word;
-            } else {
+            if (measure(next, size, bold) <= maxW) {
               line = next;
+              return;
+            }
+
+            // current line is full -> push it and start a new one
+            if (line) {
+              out.push(line);
+              line = '';
+            }
+
+            // the word alone is too wide -> break it into pieces
+            if (measure(word, size, bold) > maxW) {
+              const pieces = breakWord(word, maxW, size, bold);
+              line = pieces.pop() || '';
+              out.push(...pieces);
+            } else {
+              line = word;
             }
           });
         out.push(line);
@@ -434,6 +470,56 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
     doc.line(M, y, W - M, y);
   });
 
+  /* ---------- one-time card fee row ---------- */
+  if (data.cardFee > 0) {
+    const n = data.items.length;
+    const feeName = wrap(
+      'Health Card Registration (one-time fee)',
+      NAME_W,
+      10.5,
+      true
+    );
+    const feeNote = wrap(
+      `Charged only once for all packages booked within ${CARD_VALIDITY_MONTHS} months.`,
+      NAME_W,
+      7.5,
+      false
+    );
+    const feeH =
+      4 + feeName.length * lineH(10.5) + feeNote.length * lineH(7.5) + 2.5;
+
+    if (y + feeH > H - 32) {
+      doc.addPage();
+      y = tableHeader(18);
+    }
+    if (n % 2 === 0) {
+      fill(TINT);
+      doc.rect(M, y, CW, feeH, 'F');
+    }
+
+    let fy = y + 6.5;
+    draw(String(n + 1), COL_NUM, fy, { size: 9.5, bold: true, color: GOLD });
+    feeName.forEach((l) => {
+      draw(l, COL_NAME, fy, { size: 10.5, bold: true, color: GREEN });
+      fy += lineH(10.5);
+    });
+    feeNote.forEach((l) => {
+      draw(l, COL_NAME, fy - 0.8, { size: 7.5, color: GREY });
+      fy += lineH(7.5);
+    });
+    draw('-', COL_TESTS, y + 6.5, { size: 9.5, align: 'center' });
+    draw(formatBDT(data.cardFee), COL_AMOUNT, y + 6.5, {
+      size: 10,
+      bold: true,
+      align: 'right',
+    });
+
+    y += feeH;
+    stroke(LINE);
+    doc.setLineWidth(0.2);
+    doc.line(M, y, W - M, y);
+  }
+
   /* ---------- totals ---------- */
   y += 8;
   if (y + 52 > H - 32) {
@@ -498,11 +584,17 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
 
   /* ---------- note ---------- */
   if (c.note) {
-    const noteLines = wrap(c.note, CW - 12, 9, false);
-    const noteH = 13 + noteLines.length * lineH(9);
+    const noteLines = wrap(c.note, CW - 14, 9, false);
+    const noteH = 15 + noteLines.length * lineH(9);
     if (y + noteH > H - 40) {
       doc.addPage();
       y = 20;
+    }
+    // very long note: keep it inside the page (limit to what fits)
+    const maxNoteLines = Math.floor((H - 40 - y - 15) / lineH(9));
+    if (noteLines.length > maxNoteLines && maxNoteLines > 0) {
+      noteLines.length = maxNoteLines;
+      noteLines[maxNoteLines - 1] = `${noteLines[maxNoteLines - 1].slice(0, -3)}...`;
     }
     fill(TINT);
     stroke(LINE);

@@ -8,6 +8,7 @@ import {
   FaArrowRight,
   FaCheckCircle,
   FaClipboardCheck,
+  FaIdCard,
   FaShoppingCart,
   FaTrashAlt,
 } from 'react-icons/fa';
@@ -16,8 +17,12 @@ import {
   HEALTH_PACKAGES,
   IHealthPackage,
   formatBDT,
-  getPackageTotals,
 } from '@/data/healthPackages';
+import {
+  CARD_VALIDITY_MONTHS,
+  getCartTotals,
+  getPackageCore,
+} from '@/shared/utils/healthPackagePricing';
 import {
   HEALTH_PACKAGE_CART_EVENT,
   getHealthPackageCart,
@@ -58,14 +63,12 @@ const HealthPackageCart = () => {
       .filter((pkg): pkg is IHealthPackage => pkg !== undefined),
     [cartIds]
   );
-  const total = items.reduce(
-    (sum, pkg) => sum + getPackageTotals(pkg).price,
-    0
-  );
-  const savings = items.reduce(
-    (sum, pkg) => sum + getPackageTotals(pkg).save,
-    0
-  );
+  const {
+    packagesRate,
+    cardFee,
+    total,
+    saved: savings,
+  } = useMemo(() => getCartTotals(items), [items]);
 
   const updateCart = (nextIds: string[]) => {
     const validIds = nextIds
@@ -159,7 +162,7 @@ const HealthPackageCart = () => {
 
               <ul className={style.itemList}>
                 {items.map((pkg) => {
-                  const { price, testCount, save } = getPackageTotals(pkg);
+                  const { price, testCount, save } = getPackageCore(pkg);
                   return (
                     <li className={style.packageCard} key={pkg.id}>
                       <div className={style.packageImage}>
@@ -208,6 +211,23 @@ const HealthPackageCart = () => {
                   );
                 })}
               </ul>
+
+              {cardFee > 0 && (
+                <div className={style.cardFeeBox}>
+                  <FaIdCard aria-hidden="true" />
+                  <div>
+                    <strong>
+                      One-time Health Card fee: {formatBDT(cardFee)}
+                    </strong>
+                    <p>
+                      Package prices above do not include the card fee. You pay
+                      it only once for all {items.length}{' '}
+                      {items.length === 1 ? 'package' : 'packages'}, and it
+                      stays valid for {CARD_VALIDITY_MONTHS} months.
+                    </p>
+                  </div>
+                </div>
+              )}
             </section>
 
             <aside className={style.summary} aria-label="Order summary">
@@ -217,17 +237,33 @@ const HealthPackageCart = () => {
                 <strong>{items.length}</strong>
               </div>
               <div className={style.summaryLine}>
+                <span>Packages total cost</span>
+                <strong>{formatBDT(packagesRate)}</strong>
+              </div>
+              <div className={style.summaryLine}>
                 <span>Discounts & savings</span>
                 <strong className={style.savingAmount}>
                   {savings > 0 ? `− ${formatBDT(savings)}` : formatBDT(0)}
                 </strong>
               </div>
+              {cardFee > 0 && (
+                <div className={style.summaryLine}>
+                  <span>
+                    Health Card fee
+                    <small className={style.feeNote}>
+                      One-time · valid {CARD_VALIDITY_MONTHS} months
+                    </small>
+                  </span>
+                  <strong>{formatBDT(cardFee)}</strong>
+                </div>
+              )}
               <div className={style.totalLine}>
                 <span>Estimated total</span>
                 <strong>{formatBDT(total)}</strong>
               </div>
               <p className={style.priceNote}>
-                Final details will be confirmed by our care team.
+                The Health Card fee is charged only once, even with multiple
+                packages. Final details will be confirmed by our care team.
               </p>
               <button
                 type="button"

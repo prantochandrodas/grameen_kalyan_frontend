@@ -6,11 +6,12 @@ import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { FaCheck, FaFilePdf, FaPhoneAlt, FaTimes } from 'react-icons/fa';
 
+import { IHealthPackage, formatBDT } from '@/data/healthPackages';
 import {
-  IHealthPackage,
-  formatBDT,
-  getPackageTotals,
-} from '@/data/healthPackages';
+  CARD_VALIDITY_MONTHS,
+  getCartTotals,
+  getPackageCore,
+} from '@/shared/utils/healthPackagePricing';
 import { IHealthCenter } from '@/shared/types/healthCenter';
 
 import HealthCenterField from './HealthCenterField';
@@ -62,8 +63,8 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
   const { ref: nameRef, ...nameProps } = register('name', { required: true });
   const bloodValue = watch('bloodGroup');
 
-  const total = items.reduce((sum, pkg) => sum + getPackageTotals(pkg).price, 0);
-  const saved = items.reduce((sum, pkg) => sum + getPackageTotals(pkg).save, 0);
+  const cartTotals = getCartTotals(items);
+  const { total, saved, cardFee } = cartTotals;
 
   // close on Esc, lock page scroll, focus the first field
   useEffect(() => {
@@ -115,7 +116,7 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
 
     const lines = items.map(
       (pkg, i) =>
-        `${i + 1}. ${pkg.name} - ${formatBDT(getPackageTotals(pkg).price)}`
+        `${i + 1}. ${pkg.name} - ${formatBDT(getPackageCore(pkg).price)}`
     );
     const message = [
       'Health package booking request',
@@ -132,6 +133,9 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
       center.contact_info ? `Contact: ${center.contact_info}` : '',
       '',
       ...lines,
+      cardFee > 0
+        ? `Health Card registration (one-time, ${CARD_VALIDITY_MONTHS} months) - ${formatBDT(cardFee)}`
+        : '',
       '',
       `Total: ${formatBDT(total)}`,
       data.note ? `\nNote: ${data.note}` : '',
@@ -182,19 +186,17 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
           contact: center.contact_info || '',
         },
         items: items.map((pkg) => {
-          const totals = getPackageTotals(pkg);
+          const core = getPackageCore(pkg);
           return {
             name: pkg.name,
-            testCount: totals.testCount,
-            rate: totals.rate,
-            price: totals.price,
-            tests: pkg.tests.map((test) => test.name),
+            testCount: core.testCount,
+            rate: core.rate,
+            price: core.price,
+            tests: core.tests.map((test) => test.name),
           };
         }),
-        totalRate: items.reduce(
-          (sum, pkg) => sum + getPackageTotals(pkg).rate,
-          0
-        ),
+        cardFee,
+        totalRate: cartTotals.totalRate,
         total,
         saved,
       });
@@ -303,6 +305,12 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
                         <em>{formatBDT(item.price)}</em>
                       </li>
                     ))}
+                    {invoice.cardFee > 0 && (
+                      <li>
+                        <b>Health Card registration (one-time)</b>
+                        <em>{formatBDT(invoice.cardFee)}</em>
+                      </li>
+                    )}
                   </ul>
                 </div>
                 <div className={`${style.invoiceRow} ${style.invoiceTotal}`}>
@@ -348,9 +356,20 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
               {items.map((pkg) => (
                 <li key={pkg.id}>
                   <span>{pkg.name}</span>
-                  <b>{formatBDT(getPackageTotals(pkg).price)}</b>
+                  <b>{formatBDT(getPackageCore(pkg).price)}</b>
                 </li>
               ))}
+              {cardFee > 0 && (
+                <li className={style.summaryFee}>
+                  <span>
+                    Health Card registration
+                    <em>
+                      One-time fee · valid {CARD_VALIDITY_MONTHS} months
+                    </em>
+                  </span>
+                  <b>{formatBDT(cardFee)}</b>
+                </li>
+              )}
               <li className={style.summaryTotal}>
                 <span>
                   Total
@@ -359,6 +378,15 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
                 <b>{formatBDT(total)}</b>
               </li>
             </ul>
+
+            {cardFee > 0 && items.length > 1 && (
+              <p className={`${style.cardNote} ${style.summaryNote}`}>
+                <FaCheck aria-hidden="true" />
+                <span>
+                  Card fee is charged only once for all {items.length} packages.
+                </span>
+              </p>
+            )}
 
             <form
               className={style.form}
@@ -548,6 +576,7 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
                 <textarea
                   id="hpNote"
                   rows={2}
+                  maxLength={300}
                   placeholder="Anything we should know?"
                   {...register('note')}
                 />

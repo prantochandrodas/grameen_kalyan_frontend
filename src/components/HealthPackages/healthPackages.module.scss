@@ -1467,3 +1467,98 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
 .field select.selectEmpty {
     color: #9aa59f;
 }
+
+
+/* ================= One-time Health Card fee ================= */
+
+.cardFeeNotice {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    max-width: 110rem;
+    margin: 0 auto 2.2rem;
+    padding: 14px 18px;
+    border-radius: 1.2rem;
+    background: linear-gradient(135deg, rgba($hp-gold, 0.18) 0%, rgba(255, 255, 255, 0.92) 70%);
+    border: 1px solid rgba($hp-gold, 0.5);
+    box-shadow: 0 0.8rem 2rem rgba(20, 60, 50, 0.07);
+    strong {
+        display: block;
+        font-size: clamp(14px, 1.1vw, 16px);
+        font-weight: 800;
+        line-height: 1.3;
+        color: $hp-green;
+    }
+    p {
+        margin: 3px 0 0;
+        font-size: clamp(12.5px, 0.95vw, 14px);
+        font-weight: 400;
+        line-height: 1.55;
+        color: #5b6b62;
+    }
+    b {
+        font-weight: 800;
+        color: $hp-green;
+    }
+    @media (max-width: 640px) {
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px 14px;
+    }
+}
+
+.cardFeeIcon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: $hp-gradient;
+    color: #fff;
+    font-size: 18px;
+    box-shadow: 0 6px 14px rgba(26, 154, 91, 0.3);
+    @media (max-width: 640px) {
+        width: 38px;
+        height: 38px;
+        font-size: 16px;
+    }
+}
+
+.cardNote {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    margin: 8px 0 0;
+    padding: 7px 10px;
+    border-radius: 10px;
+    background: rgba($hp-gold, 0.15);
+    color: #7a5a1c;
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 1.45;
+    svg {
+        flex: none;
+        margin-top: 2px;
+        font-size: 11px;
+    }
+}
+
+.summaryNote {
+    margin: -6px 0 16px;
+}
+
+.summaryFee {
+    background: rgba($hp-gold, 0.1);
+    span {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+    }
+    em {
+        font-size: 11.5px;
+        font-style: normal;
+        font-weight: 600;
+        color: #7a5a1c;
+    }
+}
