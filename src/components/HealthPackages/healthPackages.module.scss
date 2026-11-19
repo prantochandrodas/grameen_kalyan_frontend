@@ -1353,8 +1353,7 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     color: #1c2a22;
     cursor: pointer;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    &:invalid,
-    &:has(option[value='']: checked) {
+    &:invalid {
         color: #9aa59f; // placeholder look until a value is picked
     }
     option {
@@ -1448,4 +1447,8 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     .req {
         font-size: 13px;
     }
+}
+
+.field select.selectEmpty {
+    color: #9aa59f;
 }

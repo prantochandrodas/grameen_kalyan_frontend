@@ -55,10 +55,12 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<IBookingInputs>();
 
   const { ref: nameRef, ...nameProps } = register('name', { required: true });
+  const bloodValue = watch('bloodGroup');
 
   const total = items.reduce((sum, pkg) => sum + getPackageTotals(pkg).price, 0);
   const saved = items.reduce((sum, pkg) => sum + getPackageTotals(pkg).save, 0);
@@ -466,6 +468,7 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
                   </label>
                   <select
                     id="hpBlood"
+                    className={bloodValue ? '' : style.selectEmpty}
                     defaultValue=""
                     aria-invalid={!!errors.bloodGroup}
                     {...register('bloodGroup')}

@@ -40,7 +40,7 @@ const GREY: RGB = [107, 122, 114];
 const TINT: RGB = [238, 247, 241];
 const LINE: RGB = [208, 224, 213];
 const WHITE: RGB = [255, 255, 255];
-const LEAF: RGB = [150, 214, 165]; // light green used for the logo leaves on the dark header
+const LEAF: RGB = [255, 255, 255]; // white logo leaves on the dark header
 
 // company details (header tagline + footer contact lines)
 const COMPANY = {
@@ -212,15 +212,15 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
   const stroke = (c: RGB) => doc.setDrawColor(c[0], c[1], c[2]);
 
   /* ---------- header band ---------- */
-  const LOGO_H = 16;
+  const LOGO_H = 13;
   const logoW = logo ? Math.min(LOGO_H * logo.ratio, 70) : 0;
   const logoH = logo ? logoW / logo.ratio : 0;
-  const logoBottom = logo ? 8 + logoH : 24;
+  const logoBottom = logo ? 6 + logoH : 19;
   const infoLines: { text: string; bold?: boolean; color: RGB }[] = [
     { text: COMPANY.tagline, bold: true, color: [240, 214, 140] },
   ];
   const infoStep = lineH(8.5);
-  const headerH = Math.max(logoBottom + 6 + infoLines.length * infoStep + 3, 40);
+  const headerH = Math.max(logoBottom + 5 + infoLines.length * infoStep + 3, 30);
 
   fill(GREEN);
   doc.rect(0, 0, W, headerH, 'F');
@@ -229,33 +229,33 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
 
   if (logo) {
     // logo found -> show only the logo, directly on the green header (no white box, no text)
-    doc.addImage(logo.data, 'PNG', M, 8, logoW, logoH);
+    doc.addImage(logo.data, 'PNG', M, 6, logoW, logoH);
   } else {
     // logo missing -> show the name
-    draw(COMPANY.name, M, 20, { size: 22, bold: true, color: WHITE });
+    draw(COMPANY.name, M, 17, { size: 20, bold: true, color: WHITE });
   }
 
   // under the logo: tagline, phone, email, website, address
-  let hy = logoBottom + 6;
+  let hy = logoBottom + 5;
   infoLines.forEach((l) => {
     draw(l.text, M, hy, { size: l.bold ? 9.5 : 8.5, bold: l.bold, color: l.color });
     hy += infoStep;
   });
 
-  draw('INVOICE', W - M, 19, {
-    size: 26,
+  draw('INVOICE', W - M, 14, {
+    size: 22,
     bold: true,
     color: WHITE,
     align: 'right',
   });
-  draw(`No: ${data.number}`, W - M, 27, {
-    size: 10,
+  draw(`No: ${data.number}`, W - M, 21, {
+    size: 9.5,
     bold: true,
     color: [240, 214, 140],
     align: 'right',
   });
-  draw(`Date: ${data.issuedAt}`, W - M, 33, {
-    size: 9.5,
+  draw(`Date: ${data.issuedAt}`, W - M, 26.5, {
+    size: 9,
     color: WHITE,
     align: 'right',
   });
@@ -332,9 +332,14 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
     });
   };
 
-  let y = headerH + 12;
+  let y = headerH + 9;
   drawBox(M, y, 'BILLED TO', billed);
-  drawBox(M + boxW + gap, y, 'Social business primary healthcare center', center);
+  drawBox(
+    M + boxW + gap,
+    y,
+    'SOCIAL BUSINESS PRIMARY HEALTHCARE CENTER',
+    center
+  );
   y += boxH + 9;
 
   /* ---------- package table ---------- */
@@ -384,7 +389,7 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
     const rowH =
       4 + nameLines.length * lineH(10.5) + inclLines.length * lineH(7.5) + 2.5;
 
-    if (y + rowH > H - 40) {
+    if (y + rowH > H - 32) {
       doc.addPage();
       y = tableHeader(18);
     }
@@ -431,7 +436,7 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
 
   /* ---------- totals ---------- */
   y += 8;
-  if (y + 52 > H - 40) {
+  if (y + 52 > H - 32) {
     doc.addPage();
     y = 20;
   }
@@ -511,7 +516,20 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
       draw(l, M + 6, ny, { size: 9, color: DARK });
       ny += lineH(9);
     });
+    y += noteH + 8;
   }
+
+  /* ---------- thank you (below the note card) ---------- */
+  if (y + 10 > H - 32) {
+    doc.addPage();
+    y = 20;
+  }
+  draw('Thank you for choosing Grameen Kalyan.', W / 2, y + 4, {
+    size: 10.5,
+    bold: true,
+    color: GREEN,
+    align: 'center',
+  });
 
   /* ---------- footer on every page ---------- */
   const pages = doc.getNumberOfPages();
@@ -530,36 +548,34 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
 
   for (let p = 1; p <= pages; p += 1) {
     doc.setPage(p);
+
+    // computer-generated note sits ABOVE the golden line
+    draw(
+      'This is a computer-generated invoice and does not require a signature.',
+      W / 2,
+      H - 26.5,
+      { size: 7.5, color: GREY, align: 'center' }
+    );
+    if (pages > 1) {
+      draw(`Page ${p} of ${pages}`, W - M, H - 26.5, {
+        size: 7.5,
+        color: GREY,
+        align: 'right',
+      });
+    }
+
     fill(GOLD);
-    doc.rect(M, H - 35, CW, 0.6, 'F');
-    draw('Thank you for choosing Grameen Kalyan.', W / 2, H - 29, {
-      size: 9.5,
-      bold: true,
-      color: GREEN,
-      align: 'center',
-    });
-    let fy = H - 23.5;
+    doc.rect(M, H - 23, CW, 0.6, 'F');
+
+    let fy = H - 18;
     footerLines.forEach((line) => {
       draw(line, W / 2, fy, {
         size: fitSize(line, 8, CW),
         color: GREY,
         align: 'center',
       });
-      fy += 4.6;
+      fy += 4.2;
     });
-    draw(
-      'This is a computer-generated invoice and does not require a signature.',
-      W / 2,
-      H - 8.5,
-      { size: 7.5, color: GREY, align: 'center' }
-    );
-    if (pages > 1) {
-      draw(`Page ${p} of ${pages}`, W - M, H - 8.5, {
-        size: 7.5,
-        color: GREY,
-        align: 'right',
-      });
-    }
   }
 
   doc.save(`Invoice-${data.number}.pdf`);

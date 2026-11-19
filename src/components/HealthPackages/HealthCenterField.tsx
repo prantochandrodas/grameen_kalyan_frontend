@@ -21,10 +21,26 @@ interface IHealthCenterFieldProps {
   error?: boolean;
 }
 
-const MIN_CHARS = 2;
-const MAX_RESULTS = 20;
+const MAX_RESULTS = 50;
 
 const norm = (text: string) => text.trim().toLowerCase().replace(/\s+/g, ' ');
+
+// all text fields of a center (name, address, upazila, district, division ...) as one search string
+const haystack = (center: IHealthCenter) =>
+  norm(
+    Object.values(center as unknown as Record<string, unknown>)
+      .filter((v) => typeof v === 'string' && !v.startsWith('http'))
+      .join(' ')
+  );
+
+// every typed word must appear somewhere in the center data
+const matches = (center: IHealthCenter, term: string) => {
+  const text = haystack(center);
+  return norm(term)
+    .split(' ')
+    .filter(Boolean)
+    .every((word) => text.includes(word));
+};
 
 // bold the part of the name that matches what the user typed
 const highlight = (text: string, term: string) => {
@@ -55,9 +71,29 @@ const HealthCenterField = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const requestId = useRef(0);
   const skipSearch = useRef(false);
+  const allCenters = useRef<Promise<IHealthCenter[]> | null>(null);
+
+  // load the full list once, then reuse it for local filtering
+  const loadAll = () => {
+    if (!allCenters.current) {
+      allCenters.current = getDataByKeyword('')
+        .then((res: { data?: IHealthCenter[] }) =>
+          Array.isArray(res?.data) ? res.data : []
+        )
+        .then((list: IHealthCenter[]) => {
+          if (!list.length) allCenters.current = null; // retry next time if it came back empty
+          return list;
+        })
+        .catch(() => {
+          allCenters.current = null;
+          return [] as IHealthCenter[];
+        });
+    }
+    return allCenters.current;
+  };
 
   const term = query.trim();
-  const showList = open && !value && term.length >= MIN_CHARS;
+  const showList = open && !value;
 
   const choose = (center: IHealthCenter) => {
     skipSearch.current = center.name !== query;
@@ -77,22 +113,32 @@ const HealthCenterField = ({
       return undefined;
     }
 
-    if (term.length < MIN_CHARS) {
-      setResults([]);
-      setSearched(false);
-      setLoading(false);
-      return undefined;
-    }
-
     requestId.current += 1;
     const id = requestId.current;
     setLoading(true);
 
     const timer = setTimeout(async () => {
       try {
-        const res = await getDataByKeyword(term);
+        const [res, everything] = await Promise.all([
+          getDataByKeyword(term),
+          loadAll(),
+        ]);
         if (id !== requestId.current) return;
-        const list: IHealthCenter[] = Array.isArray(res?.data) ? res.data : [];
+
+        const fromApi: IHealthCenter[] = Array.isArray(res?.data)
+          ? res.data
+          : [];
+        const local = term
+          ? everything.filter((c) => matches(c, term))
+          : everything;
+
+        // merge both results and remove duplicates
+        const seen = new Set<string | number>();
+        const list = [...fromApi, ...local].filter((c) => {
+          if (seen.has(c.id)) return false;
+          seen.add(c.id);
+          return true;
+        });
 
         // the full center name was typed -> select it automatically
         const exact = list.find((item) => norm(item.name) === norm(term));
@@ -112,7 +158,7 @@ const HealthCenterField = ({
       } finally {
         if (id === requestId.current) setLoading(false);
       }
-    }, 300);
+    }, term ? 300 : 0);
 
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -152,6 +198,21 @@ const HealthCenterField = ({
     setOpen(false);
     onChange(null);
     inputRef.current?.focus();
+  };
+
+  // open the list on click/focus; on phones bring the field to the top so the list stays above the keyboard
+  const openList = () => {
+    setOpen(true);
+    if (window.matchMedia('(max-width: 600px)').matches) {
+      window.setTimeout(
+        () =>
+          wrapRef.current?.scrollIntoView({
+            block: 'start',
+            behavior: 'smooth',
+          }),
+        250
+      );
+    }
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -198,7 +259,8 @@ const HealthCenterField = ({
           aria-invalid={!!error && !value}
           value={query}
           onChange={handleInput}
-          onFocus={() => setOpen(true)}
+          onFocus={openList}
+          onClick={openList}
           onKeyDown={handleKeyDown}
         />
         {loading ? (
@@ -230,7 +292,9 @@ const HealthCenterField = ({
 
           {!loading && searched && results.length === 0 && (
             <li className={style.centerEmpty}>
-              No health center found for “{term}”
+              {term
+                ? `No health center found for “${term}”`
+                : 'No health center available'}
             </li>
           )}
 
@@ -253,7 +317,9 @@ const HealthCenterField = ({
                   {highlight(center.name, term)}
                 </span>
                 {center.address && (
-                  <span className={style.centerMeta}>{center.address}</span>
+                  <span className={style.centerMeta}>
+                    {highlight(center.address, term)}
+                  </span>
                 )}
               </span>
               {center.division_name && (
