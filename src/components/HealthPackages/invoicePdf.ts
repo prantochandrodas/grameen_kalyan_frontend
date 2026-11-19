@@ -110,12 +110,33 @@ const loadLogo = (): Promise<ILogo | null> =>
     img.src = logoImg.src;
   });
 
+// random owner password for every invoice (nobody needs to know it)
+const randomPassword = () => {
+  const bytes = new Uint8Array(24);
+  window.crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+};
+
 export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
   const { jsPDF } = await import('jspdf');
-  const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
+  const doc = new jsPDF({
+    unit: 'mm',
+    format: 'a4',
+    compress: true,
+    // opens without a password, but only PRINT is allowed
+    // (editing, copying text, changing pages, annotations are blocked)
+    encryption: {
+      userPassword: '',
+      ownerPassword: randomPassword(),
+      userPermissions: ['print'],
+    },
+  });
   doc.setProperties({
     title: `Invoice ${data.number}`,
+    subject: `Health package invoice ${data.number}`,
     author: 'Grameen Kalyan',
+    creator: 'Grameen Kalyan',
+    keywords: `${data.number}, ${data.total}`,
   });
 
   const W = 210;
@@ -585,17 +606,20 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
   /* ---------- note ---------- */
   if (c.note) {
     const noteLines = wrap(c.note, CW - 14, 9, false);
-    const noteH = 15 + noteLines.length * lineH(9);
-    if (y + noteH > H - 40) {
+    if (y + 15 + noteLines.length * lineH(9) > H - 40) {
       doc.addPage();
       y = 20;
     }
     // very long note: keep it inside the page (limit to what fits)
-    const maxNoteLines = Math.floor((H - 40 - y - 15) / lineH(9));
-    if (noteLines.length > maxNoteLines && maxNoteLines > 0) {
+    const maxNoteLines = Math.max(
+      1,
+      Math.floor((H - 40 - y - 15) / lineH(9))
+    );
+    if (noteLines.length > maxNoteLines) {
       noteLines.length = maxNoteLines;
       noteLines[maxNoteLines - 1] = `${noteLines[maxNoteLines - 1].slice(0, -3)}...`;
     }
+    const noteH = 15 + noteLines.length * lineH(9);
     fill(TINT);
     stroke(LINE);
     doc.setLineWidth(0.25);
@@ -641,15 +665,17 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
   for (let p = 1; p <= pages; p += 1) {
     doc.setPage(p);
 
-    // computer-generated note sits ABOVE the golden line
-    draw(
-      'This is a computer-generated invoice and does not require a signature.',
-      W / 2,
-      H - 26.5,
-      { size: 7.5, color: GREY, align: 'center' }
-    );
+    // computer-generated note sits ABOVE the golden line (font shrinks to fit one line)
+    const verifyText = `Computer-generated invoice, no signature required. Ref: ${
+      data.number
+    } | Total: ${formatBDT(data.total)}. Please verify with Grameen Kalyan if altered.`;
+    draw(verifyText, W / 2, H - 26.5, {
+      size: fitSize(verifyText, 7, CW),
+      color: GREY,
+      align: 'center',
+    });
     if (pages > 1) {
-      draw(`Page ${p} of ${pages}`, W - M, H - 26.5, {
+      draw(`Page ${p} of ${pages}`, W - M, H - 29.5, {
         size: 7.5,
         color: GREY,
         align: 'right',

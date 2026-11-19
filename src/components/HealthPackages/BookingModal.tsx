@@ -134,7 +134,7 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
       '',
       ...lines,
       cardFee > 0
-        ? `Health Card registration (one-time, ${CARD_VALIDITY_MONTHS} months) - ${formatBDT(cardFee)}`
+        ? `Health Card Registration (one-time, ${CARD_VALIDITY_MONTHS} months) - ${formatBDT(cardFee)}`
         : '',
       '',
       `Total: ${formatBDT(total)}`,
@@ -307,7 +307,7 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
                     ))}
                     {invoice.cardFee > 0 && (
                       <li>
-                        <b>Health Card registration (one-time)</b>
+                        <b>Health Card Registration (one-time)</b>
                         <em>{formatBDT(invoice.cardFee)}</em>
                       </li>
                     )}
@@ -362,7 +362,7 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
               {cardFee > 0 && (
                 <li className={style.summaryFee}>
                   <span>
-                    Health Card registration
+                    Health Card Registration
                     <em>
                       One-time fee · valid {CARD_VALIDITY_MONTHS} months
                     </em>
