@@ -16,6 +16,7 @@ import {
   FaIdCard,
   FaPercent,
   FaShoppingCart,
+  FaSlidersH,
   FaTint,
   FaUserClock,
   FaUserMd,
@@ -41,6 +42,7 @@ import {
 } from '@/shared/utils/healthPackagePricing';
 
 import BookingModal from './BookingModal';
+import CustomPackage from './CustomPackage';
 import style from './healthPackages.module.scss';
 
 const ICONS: Record<PackageIconKey, IconType> = {
@@ -205,6 +207,8 @@ const HealthPackages = () => {
   const [cart, setCart] = useState<string[]>([]);
   const [cartReady, setCartReady] = useState(false);
   const [booking, setBooking] = useState<string[] | null>(null);
+  const [customizing, setCustomizing] = useState(false);
+  const [customBooking, setCustomBooking] = useState<IHealthPackage | null>(null);
 
   // load the saved cart once
   useEffect(() => {
@@ -302,7 +306,8 @@ const HealthPackages = () => {
             ))}
           </ul>
 
-          {/* ---------- One-time card fee notice ---------- */}
+          {/* ---------- Card fee notice + Customize package (50 / 50 on desktop) ---------- */}
+          <div className={style.promoRow}>
           <div className={style.cardFeeNotice} role="note">
             <span className={style.cardFeeIcon} aria-hidden="true">
               <FaIdCard />
@@ -318,6 +323,28 @@ const HealthPackages = () => {
                 one time.
               </p>
             </div>
+          </div>
+
+          {/* ---------- Customize package ---------- */}
+          <div className={style.customCta}>
+            <div className={style.customCtaText}>
+              <span className={style.customCtaIcon} aria-hidden="true">
+                <FaSlidersH />
+              </span>
+              <div>
+                <strong>Can’t find the right package?</strong>
+                <p>Pick only the tests you need and build your own package.</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              className={`${style.btn} ${style.customCtaBtn}`}
+              onClick={() => setCustomizing(true)}
+            >
+              <FaSlidersH aria-hidden="true" />
+              Customize Package
+            </button>
+          </div>
           </div>
 
           {/* ---------- Filters ---------- */}
@@ -367,7 +394,7 @@ const HealthPackages = () => {
 
         {/* ---------- Floating cart bar ---------- */}
         <AnimatePresence>
-          {cartItems.length > 0 && !booking && (
+          {cartItems.length > 0 && !booking && !customizing && !customBooking && (
             <div className={style.cartWrap}>
               <motion.div
                 className={style.cartBar}
@@ -421,6 +448,32 @@ const HealthPackages = () => {
               onSuccess={(ids) =>
                 setCart((prev) => prev.filter((id) => !ids.includes(id)))
               }
+            />
+          )}
+        </AnimatePresence>
+
+        {/* ---------- Customize package modal ---------- */}
+        <AnimatePresence>
+          {customizing && (
+            <CustomPackage
+              key="custom"
+              onClose={() => setCustomizing(false)}
+              onBook={(pkg) => {
+                setCustomizing(false);
+                setCustomBooking(pkg);
+              }}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* ---------- Booking modal for the customized package ---------- */}
+        <AnimatePresence>
+          {customBooking && (
+            <BookingModal
+              key="custom-booking"
+              items={[customBooking]}
+              onClose={() => setCustomBooking(null)}
+              onSuccess={() => undefined}
             />
           )}
         </AnimatePresence>

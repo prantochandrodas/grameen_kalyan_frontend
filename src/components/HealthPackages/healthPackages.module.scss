@@ -432,14 +432,14 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     li {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: 5px;
         padding: 4px 10px;
         border-radius: 999px;
         background: rgba($hp-gold, 0.15);
         color: #7a5a1c;
-        font-size: 11.5px;
-        font-weight: 600;
-        line-height: 1.3;
+        font-size: 9.5px;
+        font-weight: 500;
+        line-height: 1;
     }
     svg {
         flex: none;
@@ -1475,8 +1475,8 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     display: flex;
     align-items: center;
     gap: 14px;
-    max-width: 110rem;
-    margin: 0 auto 2.2rem;
+    min-width: 0;
+    margin: 0;
     padding: 14px 18px;
     border-radius: 1.2rem;
     background: linear-gradient(135deg, rgba($hp-gold, 0.18) 0%, rgba(255, 255, 255, 0.92) 70%);
@@ -1561,4 +1561,483 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
         font-weight: 600;
         color: #7a5a1c;
     }
+}
+
+
+/* ================= Card fee notice + Customize (50 / 50 row) ================= */
+
+.promoRow {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    // same gap as the package cards, so both rows line up
+    gap: $hp-gap;
+    // full width: starts at the left edge and ends at the right edge of the package cards
+    width: 100%;
+    margin: 0 0 2.2rem;
+    // tablet + mobile: one under another
+    @media (max-width: 1100px) {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
+}
+
+
+/* ================= Customize package: button strip ================= */
+
+.customCta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-width: 0;
+    margin: 0;
+    padding: 14px 18px;
+    border-radius: 1.4rem;
+    background: $hp-gradient;
+    color: #fff;
+    box-shadow: 0 1.2rem 2.8rem rgba(26, 154, 91, 0.25);
+    @media (max-width: 640px) {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 16px 14px;
+        text-align: center;
+    }
+}
+
+.customCtaText {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+    strong {
+        display: block;
+        font-size: clamp(15px, 1.2vw, 18px);
+        font-weight: 800;
+        line-height: 1.3;
+    }
+    p {
+        margin: 2px 0 0;
+        font-size: clamp(12.5px, 0.95vw, 14px);
+        font-weight: 400;
+        line-height: 1.45;
+        opacity: 0.92;
+    }
+    @media (max-width: 640px) {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+.customCtaIcon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-size: 18px;
+}
+
+.customCtaBtn {
+    flex: none;
+    min-height: 48px;
+    padding: 0 22px;
+    white-space: nowrap;
+    background: linear-gradient(45deg, #dad565, $hp-gold);
+    color: #1d3b27;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+    &:hover {
+        transform: translateY(-2px);
+    }
+}
+
+// 50% width (desktop + laptop): keep both cards tidy and the same height
+@media (min-width: 1101px) {
+    .cardFeeNotice p {
+        font-size: 12.5px;
+        line-height: 1.5;
+    }
+    .customCta {
+        gap: 12px;
+    }
+    .customCtaText {
+        gap: 12px;
+        p {
+            font-size: 12.5px;
+        }
+    }
+    .customCtaBtn {
+        padding: 0 16px;
+        font-size: 13px;
+    }
+}
+
+
+/* ================= Customize package: modal ================= */
+
+.cpSheet {
+    width: min(680px, 100%);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    @media (max-width: 600px) {
+        max-height: 94vh;
+        max-height: 94dvh;
+    }
+}
+
+.cpBody {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 26px 24px 16px;
+    @media (max-width: 600px) {
+        padding: 22px 16px 12px;
+    }
+}
+
+.cpLead {
+    margin: 0 0 16px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: #5b6b62;
+}
+
+.cpTypes {
+    display: grid;
+    gap: 12px;
+}
+
+.cpType {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 16px;
+    text-align: left;
+    border-radius: 14px;
+    border: 1.5px solid rgba($color-primary, 0.2);
+    background: #fff;
+    color: $hp-green;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    >svg {
+        flex: none;
+        color: $hp-gold;
+        font-size: 15px;
+    }
+    &:hover {
+        border-color: $color-primary;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 22px rgba(26, 154, 91, 0.16);
+    }
+    &:focus-visible {
+        outline: 2px solid $hp-gold;
+        outline-offset: 2px;
+    }
+}
+
+.cpTypeIcon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: $hp-gradient;
+    color: #fff;
+    font-size: 19px;
+    box-shadow: 0 6px 14px rgba(26, 154, 91, 0.3);
+}
+
+.cpTypeText {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    strong {
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 1.3;
+    }
+    small {
+        font-size: 12.5px;
+        font-weight: 400;
+        line-height: 1.45;
+        color: #5b6b62;
+    }
+    em {
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 1.4;
+        color: #7a5a1c;
+    }
+}
+
+.cpMode {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 6px 8px 6px 12px;
+    border-radius: 12px;
+    background: rgba(26, 154, 91, 0.1);
+    border: 1px solid rgba(26, 154, 91, 0.28);
+    span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        font-size: 13px;
+        font-weight: 700;
+        color: $hp-green;
+    }
+    button {
+        flex: none;
+        min-height: 36px;
+        padding: 0 8px;
+        border: 0;
+        background: transparent;
+        color: $color-primary;
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 700;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+
+.cpNotice {
+    margin: 0 0 12px;
+}
+
+.cpSearch {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    >svg {
+        position: absolute;
+        left: 13px;
+        color: $color-primary;
+        font-size: 14px;
+        pointer-events: none;
+    }
+    input {
+        width: 100%;
+        padding: 11px 40px 11px 38px;
+        border-radius: 10px;
+        border: 1.5px solid rgba($color-primary, 0.2);
+        background: #fff;
+        font-family: inherit;
+        font-size: 16px; // stops iOS zoom on focus
+        color: #1c2a22;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        &::placeholder {
+            color: #9aa59f;
+        }
+        &:focus {
+            outline: none;
+            border-color: $color-primary;
+            box-shadow: 0 0 0 3px rgba($color-primary, 0.14);
+        }
+    }
+    button {
+        position: absolute;
+        right: 5px;
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border: 0;
+        border-radius: 50%;
+        background: transparent;
+        color: #6b7a72;
+        font-size: 13px;
+        cursor: pointer;
+        &:hover {
+            background: rgba($color-primary, 0.1);
+            color: $color-primary;
+        }
+    }
+}
+
+.cpToolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #6b7a72;
+    button {
+        min-height: 32px;
+        padding: 0 4px;
+        border: 0;
+        background: transparent;
+        color: $color-primary;
+        font-family: inherit;
+        font-size: 12.5px;
+        font-weight: 700;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+}
+
+.cpList {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid rgba($color-primary, 0.12);
+    li+li {
+        border-top: 1px solid rgba($color-primary, 0.08);
+    }
+}
+
+.cpEmpty {
+    padding: 18px 14px;
+    text-align: center;
+    font-size: 13px;
+    color: #6b7a72;
+}
+
+.cpRow {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 52px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    // real checkbox stays on top (invisible): tap, keyboard and screen readers keep working
+    input {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+    &:hover {
+        background: rgba($color-primary, 0.05);
+    }
+    input:focus-visible~.cpCheck {
+        outline: 2px solid $hp-gold;
+        outline-offset: 2px;
+    }
+}
+
+.cpCheck {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    border: 1.5px solid rgba($color-primary, 0.35);
+    background: #fff;
+    color: transparent;
+    font-size: 12px;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.cpRowOn {
+    background: rgba($color-primary, 0.07);
+    .cpCheck {
+        background: $hp-gradient;
+        border-color: transparent;
+        color: #fff;
+    }
+}
+
+.cpName {
+    flex: 1;
+    min-width: 0;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #27352d;
+}
+
+.cpRate {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    s {
+        font-size: 12px;
+        opacity: 0.5;
+    }
+    b {
+        font-size: 14px;
+        font-weight: 800;
+        color: $color-primary;
+    }
+    @media (max-width: 360px) {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0;
+    }
+}
+
+.cpFoot {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 24px calc(14px + env(safe-area-inset-bottom, 0px));
+    background: #fff;
+    border-top: 1px solid rgba($color-primary, 0.12);
+    box-shadow: 0 -8px 20px rgba(20, 60, 50, 0.06);
+    @media (max-width: 600px) {
+        padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+.cpSum {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+    span {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #5b6b62;
+    }
+    strong {
+        font-size: clamp(19px, 5vw, 24px);
+        font-weight: 800;
+        color: $color-primary;
+    }
+    small {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #1a9a5b;
+    }
+}
+
+.cpBook {
+    flex: none;
+    min-height: 48px;
+    padding: 0 20px;
 }

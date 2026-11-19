@@ -53,3 +53,84 @@ export const getCardFeeAmount = () => {
   }
   return 0;
 };
+
+
+/* ================= Customize package ================= */
+
+export type CustomerMode = 'member' | 'regular';
+
+export interface ICustomTest {
+  key: string;
+  name: string;
+  rate: number; // regular rate
+  price: number; // discount rate
+}
+
+export const CUSTOM_PACKAGE_ID = 'custom-package';
+
+// same test with a different spelling in different packages -> one test
+const TEST_ALIASES: Record<string, string> = {
+  's. creatinine': 'serum creatinine',
+  'fbs (fasting blood sugar)': 'fbs',
+  hbsag: 'hbsag (screening)',
+  'doctor consultation': 'health center doctor consultation (mbbs)',
+};
+
+// every unique test from all packages (card registration excluded), A-Z
+export const getCustomTests = (): ICustomTest[] => {
+  const map = new Map<string, ICustomTest>();
+
+  HEALTH_PACKAGES.forEach((pkg) => {
+    pkg.tests.forEach((t) => {
+      if (isCardFee(t.name)) return;
+      const base = t.name.trim().toLowerCase().replace(/\s+/g, ' ');
+      const key = TEST_ALIASES[base] || base;
+      const found = map.get(key);
+
+      if (!found) {
+        map.set(key, {
+          key,
+          name: t.name.trim(),
+          rate: t.rate,
+          price: t.price,
+        });
+      } else if (found.price === 0 && t.price > 0) {
+        // a "FREE" copy of a test must not win over the paid one
+        found.rate = t.rate;
+        found.price = t.price;
+      }
+    });
+  });
+
+  return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name));
+};
+
+// turns the selected tests into a normal package, so cart/booking/invoice logic works as it is
+export const buildCustomPackage = (
+  selected: ICustomTest[],
+  mode: CustomerMode
+): IHealthPackage => {
+  const tests = selected.map((t) => ({
+    name: t.name,
+    rate: t.rate,
+    price: mode === 'member' ? t.price : t.rate,
+  }));
+
+  // new / expired user pays the card fee once; an existing member does not
+  const fee = getCardFeeAmount();
+  if (mode === 'regular' && fee > 0) {
+    tests.unshift({ name: 'Card registration', rate: fee, price: fee });
+  }
+
+  return {
+    ...HEALTH_PACKAGES[0],
+    id: CUSTOM_PACKAGE_ID,
+    name:
+      mode === 'member'
+        ? 'Customized Package (Member Rate)'
+        : 'Customized Package (Regular Rate)',
+    tagline: 'Tests chosen by you',
+    perks: [],
+    tests: tests as IHealthPackage['tests'],
+  };
+};
