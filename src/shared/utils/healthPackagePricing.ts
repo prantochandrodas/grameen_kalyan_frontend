@@ -106,29 +106,23 @@ export const getCustomTests = (): ICustomTest[] => {
 };
 
 // turns the selected tests into a normal package, so cart/booking/invoice logic works as it is
+// Always keeps BOTH rates (rate = regular, price = discount).
+// The Confirm Your Package page decides which one is charged (card Yes/No).
 export const buildCustomPackage = (
   selected: ICustomTest[],
-  mode: CustomerMode
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _mode?: CustomerMode
 ): IHealthPackage => {
   const tests = selected.map((t) => ({
     name: t.name,
     rate: t.rate,
-    price: mode === 'member' ? t.price : t.rate,
+    price: t.price,
   }));
-
-  // new / expired user pays the card fee once; an existing member does not
-  const fee = getCardFeeAmount();
-  if (mode === 'regular' && fee > 0) {
-    tests.unshift({ name: 'Card registration', rate: fee, price: fee });
-  }
 
   return {
     ...HEALTH_PACKAGES[0],
     id: CUSTOM_PACKAGE_ID,
-    name:
-      mode === 'member'
-        ? 'Customized Package (Member Rate)'
-        : 'Customized Package (Regular Rate)',
+    name: 'Customized Package',
     tagline: 'Tests chosen by you',
     perks: [],
     tests: tests as IHealthPackage['tests'],

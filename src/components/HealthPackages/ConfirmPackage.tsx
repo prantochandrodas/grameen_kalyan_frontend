@@ -1,0 +1,95 @@
+// ================= START: src/components/HealthPackages/ConfirmPackage.tsx =================
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { FaArrowRight } from 'react-icons/fa';
+
+import { HEALTH_PACKAGES, IHealthPackage } from '@/data/healthPackages';
+import { clearCheckout, getCheckout } from '@/shared/utils/checkoutStore';
+import {
+  getHealthPackageCart,
+  saveHealthPackageCart,
+} from '@/shared/utils/healthPackageCart';
+
+import BookingModal from './BookingModal';
+import style from './healthPackages.module.scss';
+
+const ConfirmPackage = () => {
+  const router = useRouter();
+  const [ready, setReady] = useState(false);
+  const [items, setItems] = useState<IHealthPackage[]>([]);
+
+  useEffect(() => {
+    const checkout = getCheckout();
+    if (checkout) {
+      const list = checkout.ids
+        .map((id) => HEALTH_PACKAGES.find((pkg) => pkg.id === id))
+        .filter((pkg): pkg is IHealthPackage => !!pkg);
+      setItems(checkout.custom ? [...list, checkout.custom] : list);
+    }
+    setReady(true);
+    window.scrollTo(0, 0);
+  }, []);
+
+  if (!ready) {
+    return (
+      <main className={style.pageWrap}>
+        <p className={style.pageMsg}>Loading…</p>
+      </main>
+    );
+  }
+
+  if (!items.length) {
+    return (
+      <main className={style.pageWrap}>
+        <div className={style.pageRoot}>
+          <div className={`${style.pageSheet} ${style.pageEmpty}`}>
+            <h3>No package selected</h3>
+            <p>Please choose a healthcare package first.</p>
+            <Link href="/health-packages" className={`${style.btn} ${style.btnPrimary}`}>
+              Browse packages
+              <FaArrowRight aria-hidden="true" />
+            </Link>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className={style.pageWrap}>
+      <ol className={style.steps} aria-label="Booking steps">
+        <li className={style.stepDone}>
+          <span>1</span>Select
+        </li>
+        <li className={style.stepOn}>
+          <span>2</span>Confirm
+        </li>
+        <li>
+          <span>3</span>Invoice
+        </li>
+      </ol>
+
+      <BookingModal
+        asPage
+        items={items}
+        onClose={() => router.push('/health-packages')}
+        onSuccess={(ids) => {
+          clearCheckout();
+          try {
+            saveHealthPackageCart(
+              getHealthPackageCart().filter((id) => !ids.includes(id))
+            );
+          } catch {
+            /* ignore */
+          }
+        }}
+      />
+    </main>
+  );
+};
+
+export default ConfirmPackage;
+// ================== END: src/components/HealthPackages/ConfirmPackage.tsx ==================

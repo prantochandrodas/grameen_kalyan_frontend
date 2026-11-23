@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BiSolidDownArrow } from 'react-icons/bi';
-import { FaShoppingCart } from 'react-icons/fa';
+import { FaShoppingCart, FaUserCircle } from 'react-icons/fa';
 import {
   FaFacebookF,
   FaYoutube,
@@ -18,6 +18,7 @@ import {
   getHealthPackageCartCount,
   HEALTH_PACKAGE_CART_EVENT,
 } from '@/shared/utils/healthPackageCart';
+import { useAuth } from '@/shared/context/AuthContext';
 import style from './mainNavbar.module.scss';
 import LanguageSwitcher from './LanguageSwitcher';
 
@@ -69,6 +70,7 @@ const Navbar = ({
   // which dropdown is open on mobile (tap to open/close)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [cartCount, setCartCount] = useState(0);
+  const { user } = useAuth();
 
   const safeDonates = Array.isArray(donates) ? donates : [];
   const safeServices = Array.isArray(services) ? services : [];
@@ -259,7 +261,16 @@ const Navbar = ({
 
       <div className={style.navRight}>
         {/* <LanguageSwitcher /> */}
-
+        <Link
+          href={user ? '/dashboard' : '/login'}
+          className={`${style.cartLink} ${style.loginLink}`}
+          aria-label={user ? 'My Account' : 'Login to My Account'}
+          title={user ? 'My Account' : 'Login to My Account'}
+        >
+          <FaUserCircle aria-hidden="true" />
+          {user && <span className={style.loginDot} aria-hidden="true" />}
+        </Link>
+        
         <Link
           href="/cart"
           className={style.cartLink}

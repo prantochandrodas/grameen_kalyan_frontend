@@ -2104,3 +2104,245 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     min-height: 48px;
     padding: 0 20px;
 }
+
+
+/* ================= Confirm Your Package (separate page) ================= */
+
+.pageWrap {
+    min-height: 70vh;
+    padding: 34px 16px 72px;
+    background: radial-gradient(ellipse at 10% 0%, rgba(26, 154, 91, 0.1), transparent 34rem), $hp-bg;
+    @media (max-width: 600px) {
+        padding: 16px 10px 44px;
+    }
+}
+
+.pageRoot {
+    display: flex;
+    justify-content: center;
+}
+
+.pageSheet {
+    position: relative;
+    width: min(680px, 100%);
+    padding: 30px 28px 26px;
+    border: 1px solid rgba($color-primary, 0.1);
+    border-radius: 20px;
+    background: linear-gradient(180deg, #fff 0%, #eef9f2 100%);
+    box-shadow: 0 24px 60px rgba(11, 97, 45, 0.14);
+    @media (max-width: 600px) {
+        padding: 20px 14px 20px;
+        border-radius: 16px;
+    }
+}
+
+.pageBack {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: $color-primary;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.pageMsg {
+    padding: 70px 0;
+    text-align: center;
+    color: $color-text-grey;
+}
+
+.pageEmpty {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    text-align: center;
+    h3 {
+        margin: 0;
+    }
+    p {
+        margin: 0 0 6px;
+        color: $color-text-grey;
+    }
+}
+
+.steps {
+    display: flex;
+    justify-content: center;
+    gap: 8px 18px;
+    flex-wrap: wrap;
+    margin: 0 auto 18px;
+    padding: 0;
+    list-style: none;
+    li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #8aa095;
+        font-size: 12.5px;
+        font-weight: 700;
+    }
+    span {
+        display: grid;
+        place-items: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #e3ece6;
+        font-size: 12px;
+    }
+}
+
+.stepOn {
+    color: $hp-green !important;
+    span {
+        background: $hp-gradient !important;
+        color: #fff;
+    }
+}
+
+.stepDone {
+    color: #1a9a5b !important;
+    span {
+        background: rgba(26, 154, 91, 0.2) !important;
+        color: #0b612d;
+    }
+}
+
+
+/* ---- Health Card Yes / No ---- */
+
+.cardChoice {
+    margin: 4px 0 14px;
+    padding: 14px;
+    border: 1.5px solid rgba($hp-gold, 0.45);
+    border-radius: 14px;
+    background: #fffaf0;
+    scroll-margin-top: 110px;
+}
+
+.cardChoiceError {
+    border-color: #c0392b;
+    background: #fff6f5;
+}
+
+.cardChoiceHead {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+    strong {
+        display: block;
+        font-size: 15px;
+        color: #1b3024;
+    }
+    p {
+        margin: 2px 0 0;
+        font-size: 12.5px;
+        line-height: 1.45;
+        color: #68786e;
+    }
+}
+
+.cardChoiceIcon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgba($hp-gold, 0.18);
+    color: $hp-gold;
+    font-size: 17px;
+}
+
+.yesNo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    @media (max-width: 420px) {
+        grid-template-columns: 1fr;
+    }
+    button {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        min-height: 58px;
+        padding: 10px 12px;
+        border: 1.5px solid #d6e3da;
+        border-radius: 12px;
+        background: #fff;
+        color: #1b3024;
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        b {
+            font-size: 14px;
+        }
+        small {
+            font-size: 12px;
+            color: #68786e;
+        }
+        &:hover {
+            border-color: #1a9a5b;
+        }
+        &[aria-pressed='true'] {
+            border-color: #1a9a5b;
+            background: #eaf7ef;
+            box-shadow: 0 0 0 3px rgba(26, 154, 91, 0.16);
+        }
+    }
+}
+
+.cardChoiceMsg {
+    display: block;
+    margin-top: 8px;
+    color: #c0392b;
+    font-size: 12.5px;
+    font-weight: 600;
+}
+
+
+/* ---- success: validity + auto account ---- */
+
+.validityBox,
+.accountBox {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0 0 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    text-align: left;
+    svg {
+        flex: none;
+        margin-top: 3px;
+    }
+}
+
+.validityBox {
+    background: #eaf7ef;
+    color: #0b612d;
+}
+
+.accountBox {
+    background: #fff7e6;
+    color: #7a5a12;
+    a {
+        color: inherit;
+        font-weight: 800;
+        text-decoration: underline;
+    }
+}

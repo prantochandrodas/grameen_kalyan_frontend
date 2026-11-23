@@ -29,14 +29,14 @@ import {
   saveHealthPackageCart,
 } from '@/shared/utils/healthPackageCart';
 
-import BookingModal from './BookingModal';
+import { useCheckout } from '@/components/Auth/useCheckout';
 import style from './healthPackageCart.module.scss';
 
 const HealthPackageCart = () => {
   const [cartIds, setCartIds] = useState<string[]>([]);
   const [cartReady, setCartReady] = useState(false);
   const [storageError, setStorageError] = useState(false);
-  const [booking, setBooking] = useState(false);
+  const { startCheckout, checkoutGate } = useCheckout();
 
   useEffect(() => {
     const syncCart = () => {
@@ -268,7 +268,7 @@ const HealthPackageCart = () => {
               <button
                 type="button"
                 className={style.primaryButton}
-                onClick={() => setBooking(true)}
+                onClick={() => startCheckout({ ids: cartIds })}
                 disabled={!items.length}
               >
                 Continue to booking
@@ -283,14 +283,7 @@ const HealthPackageCart = () => {
         )}
       </div>
 
-      {booking && bookingItems.length > 0 && (
-        <BookingModal
-          items={bookingItems}
-          onClose={() => setBooking(false)}
-          onSuccess={(ids) => updateCart(cartIds.filter((id) => !ids.includes(id)))
-          }
-        />
-      )}
+      {checkoutGate}
     </main>
   );
 };

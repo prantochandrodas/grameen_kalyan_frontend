@@ -4,14 +4,33 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
-import { FaCheck, FaFilePdf, FaPhoneAlt, FaTimes } from 'react-icons/fa';
+import Link from 'next/link';
+import {
+  FaArrowLeft,
+  FaCheck,
+  FaCheckCircle,
+  FaFilePdf,
+  FaIdCard,
+  FaPhoneAlt,
+  FaTimes,
+} from 'react-icons/fa';
 
 import { IHealthPackage, formatBDT } from '@/data/healthPackages';
 import {
   CARD_VALIDITY_MONTHS,
+  CUSTOM_PACKAGE_ID,
+  getCardFeeAmount,
   getCartTotals,
   getPackageCore,
 } from '@/shared/utils/healthPackagePricing';
+import { useAuth } from '@/shared/context/AuthContext';
+import {
+  IPurchase,
+  addMonths,
+  getActiveCard,
+  getPurchases,
+  recordPurchase,
+} from '@/shared/utils/authService';
 import { IHealthCenter } from '@/shared/types/healthCenter';
 
 import HealthCenterField from './HealthCenterField';
@@ -34,6 +53,7 @@ interface IBookingModalProps {
   items: IHealthPackage[];
   onClose: () => void;
   onSuccess: (ids: string[]) => void;
+  asPage?: boolean;
 }
 
 const PHONE_REGEX = /^(?:\+?88)?01[3-9]\d{8}$/;
@@ -41,7 +61,20 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 const GENDERS = ['Male', 'Female', 'Other'];
 
-const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
+
+const fmtDate = (value: string | Date) =>
+  new Date(value).toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  });
+const BookingModal = ({
+  items,
+  onClose,
+  onSuccess,
+  asPage = false,
+}: IBookingModalProps) => {
+
   const [done, setDone] = useState(false);
   const [apiError, setApiError] = useState(false);
   const [center, setCenter] = useState<IHealthCenter | null>(null);
@@ -49,6 +82,15 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
   const [invoice, setInvoice] = useState<IInvoiceData | null>(null);
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState(false);
+  const { user } = useAuth();
+  const [wantCard, setWantCard] = useState<boolean | null>(null);
+  const [cardError, setCardError] = useState(false);
+  const [activeCardUntil, setActiveCardUntil] = useState<string | null>(null);
+  const [newAccount, setNewAccount] = useState(false);
+  const [purchaseInfo, setPurchaseInfo] = useState<{
+    hasCard: boolean;
+    validUntil: string;
+  } | null>(null);
   const firstField = useRef<HTMLInputElement | null>(null);
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
@@ -57,6 +99,7 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<IBookingInputs>();
 
@@ -64,10 +107,29 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
   const bloodValue = watch('bloodGroup');
 
   const cartTotals = getCartTotals(items);
-  const { total, saved, cardFee } = cartTotals;
+  const { packagesPrice, packagesRate } = cartTotals;
+  const isCustom = items.some((pkg) => pkg.id === CUSTOM_PACKAGE_ID);
+  // Health Card Yes / No question: Customize Package only
+  const needsCardChoice = isCustom && !activeCardUntil;
+  const CARD_FEE = getCardFeeAmount() || 150;
+  // existing packages: always discount rate + normal card fee (as before)
+  // custom package: card Yes (or active card) = discount rate, card No = regular rate
+  const hasDiscount = !isCustom || !needsCardChoice || wantCard === true;
+  const cardFee = isCustom
+    ? needsCardChoice && wantCard
+      ? CARD_FEE
+      : 0
+    : cartTotals.cardFee;
+  const total = (hasDiscount ? packagesPrice : packagesRate) + cardFee;
+  const saved = hasDiscount ? packagesRate - packagesPrice : 0;
+  const unitPrice = (pkg: IHealthPackage) => {
+    const core = getPackageCore(pkg);
+    return hasDiscount ? core.price : core.rate;
+  };
 
-  // close on Esc, lock page scroll, focus the first field
+  // popup mode only: close on Esc, lock page scroll, focus the first field
   useEffect(() => {
+    if (asPage) return undefined;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') closeRef.current();
     };
@@ -81,7 +143,30 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
       document.body.style.overflow = previous;
       window.clearTimeout(timer);
     };
-  }, []);
+  }, [asPage]);
+
+  // logged-in user: auto fill Your Name / Phone / Email
+  useEffect(() => {
+    if (!user) return;
+    setValue('name', user.name);
+    setValue('phone', user.phone);
+    setValue('email', user.email);
+  }, [user, setValue]);
+
+  // logged-in user: is the 6 month Health Card still active?
+  useEffect(() => {
+    if (!user) {
+      setActiveCardUntil(null);
+      return undefined;
+    }
+    let live = true;
+    getPurchases(user.id).then((list) => {
+      if (live) setActiveCardUntil(getActiveCard(list));
+    });
+    return () => {
+      live = false;
+    };
+  }, [user]);
 
   const scrollToCenter = () =>
     document
@@ -91,6 +176,7 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
   // other fields are invalid -> still tell the user if the center is missing
   const onInvalid = () => {
     if (!center) setCenterError(true);
+    if (needsCardChoice && wantCard === null) setCardError(true);
   };
 
   const onSubmit = async (data: IBookingInputs) => {
@@ -102,12 +188,26 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
       return;
     }
 
+    if (needsCardChoice && wantCard === null) {
+      setCardError(true);
+      document
+        .getElementById('hpCard')
+        ?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      return;
+    }
+
     // invoice number (also sent to the admin so both sides can match it)
     const now = new Date();
     const stamp = `${String(now.getFullYear()).slice(2)}${String(
       now.getMonth() + 1
     ).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
     const number = `GK-HP-${stamp}-${Math.floor(1000 + Math.random() * 9000)}`;
+    // card = 6 months, no card = package 1 month (from purchase date)
+    const hasCard = isCustom ? (needsCardChoice ? !!wantCard : true) : cardFee > 0;
+    const validUntil =
+      isCustom && activeCardUntil
+        ? new Date(activeCardUntil)
+        : addMonths(now, hasCard ? CARD_VALIDITY_MONTHS : 1);
     const dateFormat: Intl.DateTimeFormatOptions = {
       day: '2-digit',
       month: 'short',
@@ -115,8 +215,7 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
     };
 
     const lines = items.map(
-      (pkg, i) =>
-        `${i + 1}. ${pkg.name} - ${formatBDT(getPackageCore(pkg).price)}`
+      (pkg, i) => `${i + 1}. ${pkg.name} - ${formatBDT(unitPrice(pkg))}`
     );
     const message = [
       'Health package booking request',
@@ -136,6 +235,14 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
       cardFee > 0
         ? `Health Card Registration (one-time, ${CARD_VALIDITY_MONTHS} months) - ${formatBDT(cardFee)}`
         : '',
+      isCustom
+        ? activeCardUntil
+          ? `Health Card: existing, valid until ${fmtDate(validUntil)}`
+          : `Health Card: ${wantCard ? 'Yes' : 'No'} - ${
+              wantCard ? 'card' : 'package'
+            } valid until ${fmtDate(validUntil)}`
+        : `${hasCard ? 'Health Card' : 'Package'} valid until ${fmtDate(validUntil)}`,
+      user ? `Customer Account: ${user.phone}` : 'Customer: new (account auto created)',
       '',
       `Total: ${formatBDT(total)}`,
       data.note ? `\nNote: ${data.note}` : '',
@@ -191,15 +298,52 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
             name: pkg.name,
             testCount: core.testCount,
             rate: core.rate,
-            price: core.price,
+            price: hasDiscount ? core.price : core.rate,
             tests: core.tests.map((test) => test.name),
           };
         }),
         cardFee,
-        totalRate: cartTotals.totalRate,
+        totalRate: packagesRate + cardFee,
         total,
         saved,
       });
+      // save the purchase for the dashboard (new customer -> account auto created)
+      const purchase: IPurchase = {
+        id: number,
+        invoiceNo: number,
+        date: now.toISOString(),
+        items: items.map((pkg) => ({
+          name: pkg.name,
+          price: unitPrice(pkg),
+        })),
+        cardFee,
+        total,
+        hasCard,
+        validUntil: validUntil.toISOString(),
+        center: center.name,
+        patientName: data.patientName.trim(),
+        patient: {
+          name: data.patientName.trim(),
+          gender: data.gender,
+          age: data.age.trim(),
+          bloodGroup: data.bloodGroup || '',
+          phone: data.phone.trim(),
+          email: (data.email || '').trim(),
+          preferredDate: data.date || '',
+          note: (data.note || '').trim(),
+        },
+      };
+      const rec = await recordPurchase(
+        purchase,
+        {
+          name: data.name.trim(),
+          phone: data.phone.trim(),
+          email: (data.email || '').trim(),
+        },
+        user
+      );
+      if (rec.ok && rec.data.isNewAccount) setNewAccount(true);
+      setPurchaseInfo({ hasCard, validUntil: validUntil.toISOString() });
       setDone(true);
       onSuccess(items.map((pkg) => pkg.id));
     } catch (error) {
@@ -223,15 +367,15 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
 
   return (
     <motion.div
-      className={style.modalOverlay}
+      className={asPage ? style.pageRoot : style.modalOverlay}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      onClick={onClose}
+      onClick={asPage ? undefined : onClose}
     >
       <motion.div
-        className={style.modalSheet}
+        className={asPage ? style.pageSheet : style.modalSheet}
         role="dialog"
         aria-modal="true"
         aria-labelledby="hp-modal-title"
@@ -241,14 +385,21 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
         transition={{ duration: 0.3 }}
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          type="button"
-          className={style.modalClose}
-          onClick={onClose}
-          aria-label="Close"
-        >
-          <FaTimes />
-        </button>
+        {asPage ? (
+          <button type="button" className={style.pageBack} onClick={onClose}>
+            <FaArrowLeft aria-hidden="true" />
+            Back to packages
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={style.modalClose}
+            onClick={onClose}
+            aria-label="Close"
+          >
+            <FaTimes />
+          </button>
+        )}
 
         {done && invoice ? (
           <div className={style.success}>
@@ -320,6 +471,30 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
               </div>
             </div>
 
+
+            {purchaseInfo && (
+              <div className={style.validityBox}>
+                <FaIdCard aria-hidden="true" />
+                <span>
+                  {purchaseInfo.hasCard
+                    ? `Your Health Card is valid for ${CARD_VALIDITY_MONTHS} months, until ${fmtDate(purchaseInfo.validUntil)}.`
+                    : `Your package is valid for 1 month, until ${fmtDate(purchaseInfo.validUntil)}.`}
+                </span>
+              </div>
+            )}
+
+            {newAccount && (
+              <div className={style.accountBox}>
+                <FaCheckCircle aria-hidden="true" />
+                <span>
+                  We created your account using your phone / email. To see all
+                  your purchases, go to{' '}
+                  <Link href="/forgot-password">Forgot Password</Link>, verify
+                  the OTP and login.
+                </span>
+              </div>
+            )}
+
             {downloadError && (
               <p className={style.apiError} role="alert">
                 Could not create the PDF. Please try again.
@@ -336,13 +511,18 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
                 <FaFilePdf />
                 {downloading ? 'Preparing PDF...' : 'Download Invoice (PDF)'}
               </button>
-              <button
-                type="button"
-                className={`${style.btn} ${style.btnGhost}`}
-                onClick={onClose}
-              >
-                Close
-              </button>
+              {user ? (
+                <Link href="/dashboard" className={`${style.btn} ${style.btnGhost}`}>
+                  My Dashboard
+                </Link>
+              ) : (
+                <Link
+                  href="/forgot-password"
+                  className={`${style.btn} ${style.btnGhost}`}
+                >
+                  Login to see my purchases
+                </Link>
+              )}
             </div>
           </div>
         ) : (
@@ -356,7 +536,7 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
               {items.map((pkg) => (
                 <li key={pkg.id}>
                   <span>{pkg.name}</span>
-                  <b>{formatBDT(getPackageCore(pkg).price)}</b>
+                  <b>{formatBDT(unitPrice(pkg))}</b>
                 </li>
               ))}
               {cardFee > 0 && (
@@ -387,6 +567,69 @@ const BookingModal = ({ items, onClose, onSuccess }: IBookingModalProps) => {
                 </span>
               </p>
             )}
+
+
+            {isCustom && (needsCardChoice ? (
+              <div
+                id="hpCard"
+                className={`${style.cardChoice} ${cardError ? style.cardChoiceError : ''}`}
+                role="group"
+                aria-labelledby="hpCardTitle"
+              >
+                <div className={style.cardChoiceHead}>
+                  <span className={style.cardChoiceIcon} aria-hidden="true">
+                    <FaIdCard />
+                  </span>
+                  <div>
+                    <strong id="hpCardTitle">Do you want a Health Card?</strong>
+                    <p>
+                      Take the card ({formatBDT(CARD_FEE)}, {CARD_VALIDITY_MONTHS}{' '}
+                      months) to get the discount rate. Without it, regular rate
+                      applies.
+                    </p>
+                  </div>
+                </div>
+                <div className={style.yesNo}>
+                  <button
+                    type="button"
+                    aria-pressed={wantCard === true}
+                    onClick={() => {
+                      setWantCard(true);
+                      setCardError(false);
+                    }}
+                  >
+                    <b>Yes, I want the card</b>
+                    <small>
+                      Discount rate · {formatBDT(CARD_FEE)} · {CARD_VALIDITY_MONTHS} months
+                    </small>
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={wantCard === false}
+                    onClick={() => {
+                      setWantCard(false);
+                      setCardError(false);
+                    }}
+                  >
+                    <b>No, thanks</b>
+                    <small>Regular rate · no card fee · valid 1 month</small>
+                  </button>
+                </div>
+                {cardError && (
+                  <small className={style.cardChoiceMsg} role="alert">
+                    Please choose Yes or No to continue
+                  </small>
+                )}
+              </div>
+            ) : (
+              <p className={`${style.cardNote} ${style.summaryNote}`}>
+                <FaCheckCircle aria-hidden="true" />
+                <span>
+                  Your Health Card is active until {fmtDate(activeCardUntil as string)}.
+                  No card fee.
+                </span>
+              </p>
+            ))}
 
             <form
               className={style.form}

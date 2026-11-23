@@ -41,7 +41,7 @@ import {
   getPackageCore,
 } from '@/shared/utils/healthPackagePricing';
 
-import BookingModal from './BookingModal';
+import { useCheckout } from '@/components/Auth/useCheckout';
 import CustomPackage from './CustomPackage';
 import style from './healthPackages.module.scss';
 
@@ -206,9 +206,8 @@ const HealthPackages = () => {
   const [filter, setFilter] = useState<string>('all');
   const [cart, setCart] = useState<string[]>([]);
   const [cartReady, setCartReady] = useState(false);
-  const [booking, setBooking] = useState<string[] | null>(null);
   const [customizing, setCustomizing] = useState(false);
-  const [customBooking, setCustomBooking] = useState<IHealthPackage | null>(null);
+  const { startCheckout, checkoutGate, gateOpen } = useCheckout();
 
   // load the saved cart once
   useEffect(() => {
@@ -254,13 +253,6 @@ const HealthPackages = () => {
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
 
-  const bookingItems = useMemo(
-    () =>
-      (booking || [])
-        .map((id) => HEALTH_PACKAGES.find((pkg) => pkg.id === id))
-        .filter(Boolean) as IHealthPackage[],
-    [booking]
-  );
 
   return (
     <MotionConfig reducedMotion="user">
@@ -382,7 +374,7 @@ const HealthPackages = () => {
                 index={index}
                 inCart={cart.includes(pkg.id)}
                 onToggle={toggleCart}
-                onBuy={(id) => setBooking([id])}
+                onBuy={(id) => startCheckout({ ids: [id] })}
               />
             ))}
           </div>
@@ -394,7 +386,7 @@ const HealthPackages = () => {
 
         {/* ---------- Floating cart bar ---------- */}
         <AnimatePresence>
-          {cartItems.length > 0 && !booking && !customizing && !customBooking && (
+          {cartItems.length > 0 && !gateOpen && !customizing && (
             <div className={style.cartWrap}>
               <motion.div
                 className={style.cartBar}
@@ -428,7 +420,7 @@ const HealthPackages = () => {
                 <button
                   type="button"
                   className={`${style.btn} ${style.btnPrimary} ${style.cartBook}`}
-                  onClick={() => setBooking(cart)}
+                  onClick={() => startCheckout({ ids: cart })}
                 >
                   Book Now
                   <FaArrowRight />
@@ -438,19 +430,8 @@ const HealthPackages = () => {
           )}
         </AnimatePresence>
 
-        {/* ---------- Booking modal ---------- */}
-        <AnimatePresence>
-          {booking && bookingItems.length > 0 && (
-            <BookingModal
-              key="booking"
-              items={bookingItems}
-              onClose={() => setBooking(null)}
-              onSuccess={(ids) =>
-                setCart((prev) => prev.filter((id) => !ids.includes(id)))
-              }
-            />
-          )}
-        </AnimatePresence>
+        {/* ---------- Existing user / new customer popup ---------- */}
+        {checkoutGate}
 
         {/* ---------- Customize package modal ---------- */}
         <AnimatePresence>
@@ -460,23 +441,12 @@ const HealthPackages = () => {
               onClose={() => setCustomizing(false)}
               onBook={(pkg) => {
                 setCustomizing(false);
-                setCustomBooking(pkg);
+                startCheckout({ ids: [], custom: pkg });
               }}
             />
           )}
         </AnimatePresence>
 
-        {/* ---------- Booking modal for the customized package ---------- */}
-        <AnimatePresence>
-          {customBooking && (
-            <BookingModal
-              key="custom-booking"
-              items={[customBooking]}
-              onClose={() => setCustomBooking(null)}
-              onSuccess={() => undefined}
-            />
-          )}
-        </AnimatePresence>
       </section>
     </MotionConfig>
   );

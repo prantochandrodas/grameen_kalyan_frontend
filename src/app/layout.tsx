@@ -9,6 +9,7 @@ import {
   ButtonScrollTop,
 } from '@/shared/components';
 import OpeningPopup from '@/shared/components/OpeningPopup/OpeningPopup';
+import { AuthProvider } from '@/shared/context/AuthContext';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 // const inter = Inter({ subsets: ['latin'] });
@@ -60,6 +61,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
+        <AuthProvider>
         <Navbar
           badgeImage={badgeImage}
           logoImage={logoImage}
@@ -71,6 +73,7 @@ export default async function RootLayout({
         <Footer logoImage={logoImage} />
         <ButtonScrollTop />
         <OpeningPopup />
+        </AuthProvider>
       </body>
     </html>
   );

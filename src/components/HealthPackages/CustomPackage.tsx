@@ -275,13 +275,21 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
                   {chosen.length} {chosen.length === 1 ? 'test' : 'tests'}{' '}
                   selected
                 </span>
-                <strong>{formatBDT(totals ? totals.total : 0)}</strong>
+                <strong>
+                  {formatBDT(
+                    totals
+                      ? mode === 'member'
+                        ? totals.packagesPrice
+                        : totals.packagesRate
+                      : 0
+                  )}
+                </strong>
                 {totals && totals.cardFee > 0 && (
                   <small>
                     Incl. {formatBDT(totals.cardFee)} one-time card fee
                   </small>
                 )}
-                {totals && totals.saved > 0 && (
+                {mode === 'member' && totals && totals.saved > 0 && (
                   <small>You save {formatBDT(totals.saved)}</small>
                 )}
               </div>
