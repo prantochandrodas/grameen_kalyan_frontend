@@ -122,14 +122,14 @@ const PackageCard = ({
           </div>
         </header>
 
-        <ul className={style.perks}>
+        {/* <ul className={style.perks}>
           {pkg.perks.map((perk) => (
             <li key={perk}>
               <FaCheck aria-hidden="true" />
               {perk}
             </li>
           ))}
-        </ul>
+        </ul> */}
 
         {/* tests */}
         <ul className={style.tests}>
