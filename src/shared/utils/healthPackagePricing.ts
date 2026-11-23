@@ -59,6 +59,15 @@ export const getCardFeeAmount = () => {
 
 export type CustomerMode = 'member' | 'regular';
 
+// answer taken inside the Customize Package popup
+// member = existing member (discount rate, no card fee)
+// yes    = new user / expired card takes the Health Card (discount rate + card fee)
+// no     = new user / expired card, no card (regular rate, no card fee)
+export type CardChoice = 'member' | 'yes' | 'no';
+
+// the doctor consultation test (offered when Book Now is clicked)
+export const CUSTOM_CONSULT_KEY = 'health center doctor consultation (mbbs)';
+
 export interface ICustomTest {
   key: string;
   name: string;

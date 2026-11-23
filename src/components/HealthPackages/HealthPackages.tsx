@@ -439,9 +439,9 @@ const HealthPackages = () => {
             <CustomPackage
               key="custom"
               onClose={() => setCustomizing(false)}
-              onBook={(pkg) => {
+              onBook={(pkg, cardChoice) => {
                 setCustomizing(false);
-                startCheckout({ ids: [], custom: pkg });
+                startCheckout({ ids: [], custom: pkg, cardChoice });
               }}
             />
           )}

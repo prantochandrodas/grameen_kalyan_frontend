@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   FaArrowRight,
@@ -9,12 +9,15 @@ import {
   FaSearch,
   FaTimes,
   FaUserCheck,
+  FaUserMd,
   FaUserPlus,
 } from 'react-icons/fa';
 
 import { IHealthPackage, formatBDT } from '@/data/healthPackages';
 import {
   CARD_VALIDITY_MONTHS,
+  CUSTOM_CONSULT_KEY,
+  CardChoice,
   CustomerMode,
   buildCustomPackage,
   getCardFeeAmount,
@@ -26,29 +29,30 @@ import style from './healthPackages.module.scss';
 
 interface ICustomPackageProps {
   onClose: () => void;
-  onBook: (pkg: IHealthPackage) => void;
+  onBook: (pkg: IHealthPackage, cardChoice: CardChoice) => void;
 }
 
 const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
   const [mode, setMode] = useState<CustomerMode | null>(null);
   const [selected, setSelected] = useState<string[]>([]);
   const [query, setQuery] = useState('');
-  const closeRef = useRef(onClose);
-  closeRef.current = onClose;
+  const [askCard, setAskCard] = useState(false);
+  const [wantCard, setWantCard] = useState<boolean | null>(null);
+  const [askDoctor, setAskDoctor] = useState(false);
 
   const allTests = useMemo(() => getCustomTests(), []);
-  const cardFee = getCardFeeAmount();
+  const cardFee = getCardFeeAmount() || 150;
+  const consultTest = allTests.find((t) => t.key === CUSTOM_CONSULT_KEY) || null;
+  // existing member OR new user who takes the card = discount rate
+  const isDiscount = mode === 'member' || wantCard === true;
+  // card fee is added once, only when a new user says Yes
+  const appliedCardFee = mode === 'regular' && wantCard === true ? cardFee : 0;
 
-  // close on Esc + lock page scroll
+  // lock page scroll (the popup closes ONLY with the close button)
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeRef.current();
-    };
-    document.addEventListener('keydown', onKey);
     const previous = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
-      document.removeEventListener('keydown', onKey);
       document.body.style.overflow = previous;
     };
   }, []);
@@ -76,8 +80,37 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
 
   const changeType = () => {
     setMode(null);
+    setWantCard(null);
+    setAskCard(false);
     setSelected([]);
     setQuery('');
+  };
+
+  // New user / card expired -> Health Card Yes / No -> tests popup
+  const chooseCard = (yes: boolean) => {
+    setWantCard(yes);
+    setMode('regular');
+    setAskCard(false);
+  };
+
+  // send the package to the booking page (doctor consultation is optional)
+  const finishBooking = (withDoctor: boolean) => {
+    if (!mode) return;
+    const alreadyHas = !!consultTest && selected.includes(consultTest.key);
+    const tests =
+      withDoctor && consultTest && !alreadyHas ? [...chosen, consultTest] : chosen;
+    if (!tests.length) return;
+    const cardChoice: CardChoice =
+      mode === 'member' ? 'member' : wantCard ? 'yes' : 'no';
+    setAskDoctor(false);
+    onBook(buildCustomPackage(tests, mode), cardChoice);
+  };
+
+  // Book Now -> ask about doctor consultation (skipped if it is already selected)
+  const handleBook = () => {
+    if (!pkg) return;
+    if (consultTest && !selected.includes(consultTest.key)) setAskDoctor(true);
+    else finishBooking(false);
   };
 
   return (
@@ -87,10 +120,11 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      onClick={onClose}
     >
       <motion.div
-        className={`${style.modalSheet} ${style.cpSheet}`}
+        className={`${style.modalSheet} ${style.cpSheet} ${
+          askCard ? style.cpSheetSm : ''
+        }`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="cp-title"
@@ -109,7 +143,59 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
           <FaTimes />
         </button>
 
-        {!mode ? (
+        {askCard ? (
+          /* ---------------- Step 1b: Health Card Yes / No ---------------- */
+          <div className={style.cpBody}>
+            <span className={style.cpAskIcon} aria-hidden="true">
+              <FaIdCard />
+            </span>
+            <div className={style.modalHead}>
+              <span className={style.eyebrow}>Health Card</span>
+              <h3 id="cp-title">Do you want a Health Card?</h3>
+            </div>
+            <p className={style.cpLead}>
+              One-time card fee {formatBDT(cardFee)}, valid {CARD_VALIDITY_MONTHS}{' '}
+              months. With the card you get the discount rate on every test.
+            </p>
+
+            <div className={style.cpChoices}>
+              <button
+                type="button"
+                className={`${style.cpChoice} ${style.cpChoicePrimary}`}
+                onClick={() => chooseCard(true)}
+              >
+                <FaCheck aria-hidden="true" />
+                <span>
+                  <b>Yes, I want the card</b>
+                  <small>
+                    Discount rate on every test · One-time fee {formatBDT(cardFee)}
+                  </small>
+                </span>
+                <FaArrowRight aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className={style.cpChoice}
+                onClick={() => chooseCard(false)}
+              >
+                <FaTimes aria-hidden="true" />
+                <span>
+                  <b>No, thanks</b>
+                  <small>Regular rate · No card fee · Valid 1 month</small>
+                </span>
+                <FaArrowRight aria-hidden="true" />
+              </button>
+            </div>
+
+            <button
+              type="button"
+              className={style.cpAskLink}
+              onClick={() => setAskCard(false)}
+            >
+              Back
+            </button>
+          </div>
+        ) : !mode ? (
           /* ---------------- Step 1: who are you? ---------------- */
           <div className={style.cpBody}>
             <div className={style.modalHead}>
@@ -148,7 +234,7 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
                 role="radio"
                 aria-checked={false}
                 className={style.cpType}
-                onClick={() => setMode('regular')}
+                onClick={() => setAskCard(true)}
               >
                 <span className={style.cpTypeIcon} aria-hidden="true">
                   <FaUserPlus />
@@ -159,10 +245,7 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
                     First time here, or my last package was bought more than{' '}
                     {CARD_VALIDITY_MONTHS} months ago.
                   </small>
-                  <em>
-                    Regular rate
-                    {cardFee > 0 && ` · One-time card fee ${formatBDT(cardFee)}`}
-                  </em>
+                  <em>Health Card option · Card fee {formatBDT(cardFee)}</em>
                 </span>
                 <FaArrowRight aria-hidden="true" />
               </button>
@@ -182,7 +265,9 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
                   {mode === 'member' ? <FaUserCheck /> : <FaUserPlus />}
                   {mode === 'member'
                     ? 'Existing member · Discount rate'
-                    : 'New / expired · Regular rate'}
+                    : wantCard
+                    ? 'Health Card · Discount rate'
+                    : 'No card · Regular rate'}
                 </span>
                 <button type="button" onClick={changeType}>
                   Change
@@ -194,9 +279,11 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
                 <span>
                   {mode === 'member'
                     ? 'No card fee. Our team will verify your previous purchase before confirming.'
-                    : `One-time Health Card fee ${
-                        cardFee > 0 ? formatBDT(cardFee) : ''
-                      } is added once to your total (valid ${CARD_VALIDITY_MONTHS} months).`}
+                    : wantCard
+                    ? `One-time Health Card fee ${formatBDT(
+                        cardFee
+                      )} is added once to your total (valid ${CARD_VALIDITY_MONTHS} months).`
+                    : 'No Health Card. Regular rate applies and the package is valid for 1 month.'}
                 </span>
               </p>
 
@@ -253,7 +340,7 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
                         </span>
                         <span className={style.cpName}>{t.name}</span>
                         <span className={style.cpRate}>
-                          {mode === 'member' ? (
+                          {isDiscount ? (
                             <>
                               {t.rate > t.price && <s>{formatBDT(t.rate)}</s>}
                               <b>{t.price === 0 ? 'FREE' : formatBDT(t.price)}</b>
@@ -278,18 +365,17 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
                 <strong>
                   {formatBDT(
                     totals
-                      ? mode === 'member'
-                        ? totals.packagesPrice
-                        : totals.packagesRate
+                      ? (isDiscount ? totals.packagesPrice : totals.packagesRate) +
+                          appliedCardFee
                       : 0
                   )}
                 </strong>
-                {totals && totals.cardFee > 0 && (
+                {totals && appliedCardFee > 0 && (
                   <small>
-                    Incl. {formatBDT(totals.cardFee)} one-time card fee
+                    Incl. {formatBDT(appliedCardFee)} one-time card fee
                   </small>
                 )}
-                {mode === 'member' && totals && totals.saved > 0 && (
+                {isDiscount && totals && totals.saved > 0 && (
                   <small>You save {formatBDT(totals.saved)}</small>
                 )}
               </div>
@@ -297,7 +383,7 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
                 type="button"
                 className={`${style.btn} ${style.btnPrimary} ${style.cpBook}`}
                 disabled={!pkg}
-                onClick={() => pkg && onBook(pkg)}
+                onClick={handleBook}
               >
                 Book Now
                 <FaArrowRight />
@@ -306,6 +392,73 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
           </>
         )}
       </motion.div>
+
+      {/* ---------------- Doctor consultation popup (on Book Now) ---------------- */}
+      {askDoctor && consultTest && (
+        <div className={`${style.modalOverlay} ${style.cpAskOverlay}`}>
+          <motion.div
+            className={`${style.modalSheet} ${style.cpSheetSm}`}
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="cp-doc-title"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            <span className={style.cpAskIcon} aria-hidden="true">
+              <FaUserMd />
+            </span>
+            <div className={style.modalHead}>
+              <span className={style.eyebrow}>Doctor Consultation</span>
+              <h3 id="cp-doc-title">Add a doctor consultation?</h3>
+            </div>
+            <p className={style.cpLead}>
+              Meet a health center doctor (MBBS) for{' '}
+              <strong>
+                {formatBDT(isDiscount ? consultTest.price : consultTest.rate)}
+              </strong>
+              . It is added to your total only if you say Yes.
+            </p>
+
+            <div className={style.cpChoices}>
+              <button
+                type="button"
+                className={`${style.cpChoice} ${style.cpChoicePrimary}`}
+                onClick={() => finishBooking(true)}
+              >
+                <FaCheck aria-hidden="true" />
+                <span>
+                  <b>Yes, add consultation</b>
+                  <small>
+                    + {formatBDT(isDiscount ? consultTest.price : consultTest.rate)} added to total
+                  </small>
+                </span>
+                <FaArrowRight aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                className={style.cpChoice}
+                onClick={() => finishBooking(false)}
+              >
+                <FaTimes aria-hidden="true" />
+                <span>
+                  <b>No, continue without it</b>
+                  <small>No consultation fee</small>
+                </span>
+                <FaArrowRight aria-hidden="true" />
+              </button>
+            </div>
+
+            <button
+              type="button"
+              className={style.cpAskLink}
+              onClick={() => setAskDoctor(false)}
+            >
+              Back to tests
+            </button>
+          </motion.div>
+        </div>
+      )}
     </motion.div>
   );
 };

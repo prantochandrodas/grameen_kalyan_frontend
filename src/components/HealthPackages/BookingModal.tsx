@@ -19,6 +19,7 @@ import { IHealthPackage, formatBDT } from '@/data/healthPackages';
 import {
   CARD_VALIDITY_MONTHS,
   CUSTOM_PACKAGE_ID,
+  CardChoice,
   getCardFeeAmount,
   getCartTotals,
   getPackageCore,
@@ -54,6 +55,7 @@ interface IBookingModalProps {
   onClose: () => void;
   onSuccess: (ids: string[]) => void;
   asPage?: boolean;
+  cardChoice?: CardChoice;
 }
 
 const PHONE_REGEX = /^(?:\+?88)?01[3-9]\d{8}$/;
@@ -73,6 +75,7 @@ const BookingModal = ({
   onClose,
   onSuccess,
   asPage = false,
+  cardChoice,
 }: IBookingModalProps) => {
 
   const [done, setDone] = useState(false);
@@ -83,7 +86,9 @@ const BookingModal = ({
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState(false);
   const { user } = useAuth();
-  const [wantCard, setWantCard] = useState<boolean | null>(null);
+  const [wantCard, setWantCard] = useState<boolean | null>(
+    cardChoice === 'yes' ? true : cardChoice === 'no' ? false : null
+  );
   const [cardError, setCardError] = useState(false);
   const [activeCardUntil, setActiveCardUntil] = useState<string | null>(null);
   const [newAccount, setNewAccount] = useState(false);
@@ -110,7 +115,7 @@ const BookingModal = ({
   const { packagesPrice, packagesRate } = cartTotals;
   const isCustom = items.some((pkg) => pkg.id === CUSTOM_PACKAGE_ID);
   // Health Card Yes / No question: Customize Package only
-  const needsCardChoice = isCustom && !activeCardUntil;
+  const needsCardChoice = isCustom && !activeCardUntil && cardChoice !== 'member';
   const CARD_FEE = getCardFeeAmount() || 150;
   // existing packages: always discount rate + normal card fee (as before)
   // custom package: card Yes (or active card) = discount rate, card No = regular rate
@@ -238,6 +243,8 @@ const BookingModal = ({
       isCustom
         ? activeCardUntil
           ? `Health Card: existing, valid until ${fmtDate(validUntil)}`
+          : cardChoice === 'member'
+          ? 'Existing member: discount rate, no card fee (previous purchase to be verified)'
           : `Health Card: ${wantCard ? 'Yes' : 'No'} - ${
               wantCard ? 'card' : 'package'
             } valid until ${fmtDate(validUntil)}`
@@ -625,8 +632,9 @@ const BookingModal = ({
               <p className={`${style.cardNote} ${style.summaryNote}`}>
                 <FaCheckCircle aria-hidden="true" />
                 <span>
-                  Your Health Card is active until {fmtDate(activeCardUntil as string)}.
-                  No card fee.
+                  {activeCardUntil
+                    ? `Your Health Card is active until ${fmtDate(activeCardUntil)}. No card fee.`
+                    : 'Existing member discount rate. No card fee. Our team will verify your previous purchase.'}
                 </span>
               </p>
             ))}

@@ -1,9 +1,11 @@
 // ================= START: src/shared/utils/checkoutStore.ts =================
 import type { IHealthPackage } from '@/data/healthPackages';
+import type { CardChoice } from '@/shared/utils/healthPackagePricing';
 
 export interface ICheckout {
   ids: string[];
   custom?: IHealthPackage | null;
+  cardChoice?: CardChoice;
 }
 
 const KEY = 'gk-checkout';
