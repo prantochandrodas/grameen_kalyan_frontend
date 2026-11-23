@@ -565,10 +565,10 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
 }
 
 .actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 10px;
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    margin-top: 12px;
 }
 
 .btn {
@@ -621,6 +621,39 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     &:hover:not(:disabled) {
         transform: translateY(-2px);
         box-shadow: 0 12px 24px rgba(26, 154, 91, 0.36);
+    }
+}
+
+// package card: big Buy Now + small icon-only Add to Cart
+.btnBuy {
+    flex: 1;
+    min-width: 0;
+    min-height: 45px;
+    border-radius: 12px;
+    font-size: 15px;
+    letter-spacing: 0.01em;
+    svg {
+        font-size: 15px;
+        transition: transform 0.25s ease;
+    }
+    &:hover svg {
+        transform: translateX(3px);
+    }
+}
+
+.btnIcon {
+    flex: none;
+    width: 50px;
+    min-height: 45px;
+    padding: 0;
+    border-radius: 12px;
+    svg {
+        font-size: 18px;
+    }
+    &.btnAdded {
+        background: $color-primary;
+        border-color: $color-primary;
+        color: #fff;
     }
 }
 

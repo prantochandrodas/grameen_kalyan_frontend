@@ -2,6 +2,7 @@
 import logoImg from '@/assets/images/logo.png';
 import { formatBDT } from '@/data/healthPackages';
 import { CARD_VALIDITY_MONTHS } from '@/shared/utils/healthPackagePricing';
+import type { jsPDF as JsPdfDoc } from 'jspdf';
 
 type RGB = [number, number, number];
 
@@ -117,7 +118,20 @@ const randomPassword = () => {
   return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
 };
 
-export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
+// vertical spacing tiers (mm): sec = gap between sections, pad = row top padding, pb = row bottom padding
+interface ISpacing {
+  sec: number;
+  pad: number;
+  pb: number;
+}
+const SPACING: ISpacing[] = [
+  { sec: 7, pad: 3.2, pb: 1.8 }, // normal
+  { sec: 5.5, pad: 2.6, pb: 1.4 },
+  { sec: 4, pad: 2.1, pb: 1 },
+  { sec: 3, pad: 1.6, pb: 0.6 }, // tightest
+];
+
+async function buildInvoice(data: IInvoiceData, T: ISpacing): Promise<JsPdfDoc> {
   const { jsPDF } = await import('jspdf');
   const doc = new jsPDF({
     unit: 'mm',
@@ -389,7 +403,7 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
     });
   };
 
-  let y = headerH + 9;
+  let y = headerH + T.sec;
   drawBox(M, y, 'BILLED TO', billed);
   drawBox(
     M + boxW + gap,
@@ -397,7 +411,7 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
     'SOCIAL BUSINESS PRIMARY HEALTHCARE CENTER',
     center
   );
-  y += boxH + 9;
+  y += boxH + T.sec;
 
   /* ---------- package table ---------- */
   const COL_NUM = M + 4;
@@ -444,7 +458,11 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
       false
     );
     const rowH =
-      4 + nameLines.length * lineH(10.5) + inclLines.length * lineH(7.5) + 2.5;
+      T.pad +
+      nameLines.length * lineH(10.5) +
+      inclLines.length * lineH(7.5) +
+      T.pb;
+    const base = T.pad + 2.5; // first text baseline inside the row
 
     if (y + rowH > H - 32) {
       doc.addPage();
@@ -456,7 +474,7 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
       doc.rect(M, y, CW, rowH, 'F');
     }
 
-    let ty = y + 6.5;
+    let ty = y + base;
     draw(String(i + 1), COL_NUM, ty, { size: 9.5, bold: true, color: GOLD });
     nameLines.forEach((l) => {
       draw(l, COL_NAME, ty, { size: 10.5, bold: true, color: GREEN });
@@ -467,19 +485,19 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
       ty += lineH(7.5);
     });
 
-    draw(String(item.testCount), COL_TESTS, y + 6.5, {
+    draw(String(item.testCount), COL_TESTS, y + base, {
       size: 9.5,
       align: 'center',
     });
     if (item.rate > item.price) {
       const label = formatBDT(item.rate);
-      draw(label, COL_RATE, y + 6.5, { size: 9, color: GREY, align: 'right' });
+      draw(label, COL_RATE, y + base, { size: 9, color: GREY, align: 'right' });
       const w = measure(label, 9, false);
       stroke(GREY);
       doc.setLineWidth(0.2);
-      doc.line(COL_RATE - w, y + 5.4, COL_RATE, y + 5.4);
+      doc.line(COL_RATE - w, y + base - 1.1, COL_RATE, y + base - 1.1);
     }
-    draw(formatBDT(item.price), COL_AMOUNT, y + 6.5, {
+    draw(formatBDT(item.price), COL_AMOUNT, y + base, {
       size: 10,
       bold: true,
       align: 'right',
@@ -507,7 +525,11 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
       false
     );
     const feeH =
-      4 + feeName.length * lineH(10.5) + feeNote.length * lineH(7.5) + 2.5;
+      T.pad +
+      feeName.length * lineH(10.5) +
+      feeNote.length * lineH(7.5) +
+      T.pb;
+    const feeBase = T.pad + 2.5;
 
     if (y + feeH > H - 32) {
       doc.addPage();
@@ -518,7 +540,7 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
       doc.rect(M, y, CW, feeH, 'F');
     }
 
-    let fy = y + 6.5;
+    let fy = y + feeBase;
     draw(String(n + 1), COL_NUM, fy, { size: 9.5, bold: true, color: GOLD });
     feeName.forEach((l) => {
       draw(l, COL_NAME, fy, { size: 10.5, bold: true, color: GREEN });
@@ -528,8 +550,8 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
       draw(l, COL_NAME, fy - 0.8, { size: 7.5, color: GREY });
       fy += lineH(7.5);
     });
-    draw('-', COL_TESTS, y + 6.5, { size: 9.5, align: 'center' });
-    draw(formatBDT(data.cardFee), COL_AMOUNT, y + 6.5, {
+    draw('-', COL_TESTS, y + feeBase, { size: 9.5, align: 'center' });
+    draw(formatBDT(data.cardFee), COL_AMOUNT, y + feeBase, {
       size: 10,
       bold: true,
       align: 'right',
@@ -542,8 +564,8 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
   }
 
   /* ---------- totals ---------- */
-  y += 8;
-  if (y + 52 > H - 32) {
+  y += T.sec;
+  if (y + (data.saved > 0 ? 32 : 26) > H - 32) {
     doc.addPage();
     y = 20;
   }
@@ -601,7 +623,7 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
     iy += lineH(9);
   });
 
-  y = Math.max(ty + 15, iy) + 8;
+  y = Math.max(ty + 15, iy) + T.sec;
 
   /* ---------- note ---------- */
   if (c.note) {
@@ -632,7 +654,7 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
       draw(l, M + 6, ny, { size: 9, color: DARK });
       ny += lineH(9);
     });
-    y += noteH + 8;
+    y += noteH + T.sec;
   }
 
   /* ---------- thank you (below the note card) ---------- */
@@ -695,6 +717,19 @@ export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
       fy += 4.2;
     });
   }
+
+  return doc;
+}
+
+export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
+  // 1) try ONE page: normal spacing first, then tighter and tighter
+  let doc = await buildInvoice(data, SPACING[0]);
+  for (let i = 1; i < SPACING.length && doc.getNumberOfPages() > 1; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    doc = await buildInvoice(data, SPACING[i]);
+  }
+  // 2) still more than one page -> multi page with normal spacing
+  if (doc.getNumberOfPages() > 1) doc = await buildInvoice(data, SPACING[0]);
 
   doc.save(`Invoice-${data.number}.pdf`);
 }

@@ -177,22 +177,23 @@ const PackageCard = ({
           <div className={style.actions}>
             <button
               type="button"
-              className={`${style.btn} ${style.btnGhost} ${
-                inCart ? style.btnAdded : ''
-              }`}
-              aria-pressed={inCart}
-              onClick={() => onToggle(pkg.id)}
+              className={`${style.btn} ${style.btnPrimary} ${style.btnBuy}`}
+              onClick={() => onBuy(pkg.id)}
             >
-              {inCart ? <FaCheck /> : <FaShoppingCart />}
-              {inCart ? 'Added' : 'Add to Cart'}
+              Buy Now
+              <FaArrowRight aria-hidden="true" />
             </button>
             <button
               type="button"
-              className={`${style.btn} ${style.btnPrimary}`}
-              onClick={() => onBuy(pkg.id)}
+              className={`${style.btn} ${style.btnGhost} ${style.btnIcon} ${
+                inCart ? style.btnAdded : ''
+              }`}
+              aria-pressed={inCart}
+              aria-label={inCart ? 'Remove from cart' : 'Add to cart'}
+              title={inCart ? 'Added to cart' : 'Add to cart'}
+              onClick={() => onToggle(pkg.id)}
             >
-              <FaArrowRight />
-              Buy Now
+              {inCart ? <FaCheck aria-hidden="true" /> : <FaShoppingCart aria-hidden="true" />}
             </button>
           </div>
         </footer>
