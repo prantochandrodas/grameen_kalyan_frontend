@@ -257,12 +257,10 @@ export async function sendOtp(
   }
 
   const users = read<IStored[]>(USERS_KEY, []);
-  const found = users.find(
-    (u) => (id.type === 'phone' ? u.phone : u.email) === id.value
-  );
+  const found = users.find((u) => u.email === id.value);
   if (!found) {
     return fail(
-      'No account found with this mobile number / email. Please create an account.'
+      'No account found with this email. Please check your email or book a package to create an account.'
     );
   }
   const code = String(Math.floor(100000 + Math.random() * 900000));
