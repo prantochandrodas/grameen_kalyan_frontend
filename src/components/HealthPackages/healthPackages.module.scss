@@ -2491,3 +2491,214 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     text-decoration: underline;
     cursor: pointer;
 }
+
+
+/* ================= Confirm page: 2 column layout ================= */
+
+.pageSheetWide {
+    width: min(1080px, 100%);
+    padding: 30px 28px 28px;
+    @media (max-width: 600px) {
+        padding: 18px 12px 20px;
+    }
+}
+
+.confirmGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: 28px;
+    align-items: start;
+    @media (max-width: 900px) {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 18px;
+    }
+}
+
+.confirmLeft {
+    position: sticky;
+    top: 110px;
+    min-width: 0;
+    @media (max-width: 900px) {
+        position: static;
+    }
+}
+
+.confirmRight {
+    min-width: 0;
+    padding-left: 28px;
+    border-left: 1px dashed rgba($color-primary, 0.22);
+    @media (max-width: 900px) {
+        padding-left: 0;
+        border-left: 0;
+        padding-top: 18px;
+        border-top: 1px dashed rgba($color-primary, 0.22);
+    }
+}
+
+
+/* package details (left) */
+
+.includeList {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.includeItem {
+    border: 1px solid rgba($color-primary, 0.14);
+    border-radius: 14px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.includeHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    background: linear-gradient(90deg, rgba($color-primary, 0.08), rgba($color-primary, 0.02));
+    border-bottom: 1px solid rgba($color-primary, 0.1);
+    b {
+        display: block;
+        font-size: 14.5px;
+        font-weight: 700;
+        color: $hp-green;
+    }
+    small {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: #1a9a5b;
+    }
+    em {
+        flex: none;
+        font-style: normal;
+        font-weight: 800;
+        font-size: 15px;
+        color: $color-primary;
+    }
+}
+
+.includeTests {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0;
+    padding: 12px 14px 14px;
+    list-style: none;
+    @media (max-width: 360px) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    li {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        min-width: 0;
+        padding: 7px 10px;
+        border-radius: 8px;
+        background: rgba($color-primary, 0.05);
+        font-size: 12.5px;
+        line-height: 1.35;
+        color: #27352d;
+        svg {
+            flex: none;
+            margin-top: 3px;
+            font-size: 10px;
+            color: #1a9a5b;
+        }
+        span {
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+    }
+}
+
+
+/* login box (right) */
+
+.loginBox,
+.loggedBox {
+    margin-bottom: 16px;
+    border-radius: 14px;
+    border: 1px solid rgba($color-primary, 0.16);
+    background: #fff;
+}
+
+.loginHead,
+.loggedBox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    strong {
+        display: block;
+        font-size: 13.5px;
+        color: $hp-green;
+    }
+    small {
+        font-size: 11.5px;
+        color: #6b7c72;
+    }
+}
+
+.loginToggle,
+.loggedBox button {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 16px;
+    border: 0;
+    border-radius: 999px;
+    background: $hp-gradient;
+    color: #fff;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.loggedBox {
+    background: rgba($color-primary, 0.06);
+    div {
+        flex: 1;
+        min-width: 0;
+    }
+    button {
+        background: #fff;
+        color: $color-primary;
+        border: 1px solid rgba($color-primary, 0.25);
+    }
+}
+
+.loggedAvatar {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: $hp-gradient;
+    color: #fff;
+}
+
+.loginBody {
+    padding: 4px 14px 16px;
+    border-top: 1px solid rgba($color-primary, 0.1);
+}
+
+.emailHint {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    margin: 2px 0 0;
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: #6b7c72;
+    svg {
+        flex: none;
+        margin-top: 2px;
+        color: #1a9a5b;
+    }
+}

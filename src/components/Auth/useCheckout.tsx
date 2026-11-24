@@ -1,45 +1,23 @@
-// ================= START: src/components/Auth/useCheckout.tsx =================
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { AnimatePresence } from 'framer-motion';
 
-import { getSessionUser } from '@/shared/utils/authService';
 import { ICheckout, saveCheckout } from '@/shared/utils/checkoutStore';
 
-import AuthGateModal from './AuthGateModal';
-
-// Buy Now / Book Now / Continue to booking -> login user goes straight to the
-// Confirm Your Package page, a visitor first sees the existing/new popup.
+// Buy Now / Book Now -> always go straight to the Confirm Your Package page.
+// Login is handled on that page (no popup).
 export const useCheckout = () => {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
 
   const startCheckout = useCallback(
     (checkout: ICheckout) => {
       saveCheckout(checkout);
-      if (getSessionUser()) router.push('/confirm-package');
-      else setOpen(true);
+      router.push('/confirm-package');
     },
     [router]
   );
 
-  const checkoutGate = (
-    <AnimatePresence>
-      {open && (
-        <AuthGateModal
-          key="gate"
-          onClose={() => setOpen(false)}
-          onContinue={() => {
-            setOpen(false);
-            router.push('/confirm-package');
-          }}
-        />
-      )}
-    </AnimatePresence>
-  );
-
-  return { startCheckout, checkoutGate, gateOpen: open };
+  // kept so old code (HealthPackages.tsx / HealthPackageCart.tsx) keeps working
+  return { startCheckout, checkoutGate: null, gateOpen: false };
 };
-// ================== END: src/components/Auth/useCheckout.tsx ==================

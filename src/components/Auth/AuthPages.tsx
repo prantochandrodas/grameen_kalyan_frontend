@@ -245,8 +245,9 @@ export const ForgotPasswordPage = () => {
   const request = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setError('');
-    if (!parseIdentifier(identifier)) {
-      setError('Enter a valid mobile number or email');
+    const parsed = parseIdentifier(identifier);
+    if (!parsed || parsed.type !== 'email') {
+      setError('Enter your email address. SMS OTP is not available yet.');
       return;
     }
     setBusy(true);
@@ -298,7 +299,7 @@ export const ForgotPasswordPage = () => {
       title="Forgot Password"
       sub={
         step === 'request'
-          ? 'Enter your mobile number or email. We will send a one time OTP.'
+          ? 'Enter your email address. We will send a one time OTP to it.'
           : `Enter the 6 digit OTP sent to ${identifier.trim()}.`
       }
     >
@@ -306,12 +307,12 @@ export const ForgotPasswordPage = () => {
         <form className={style.form} onSubmit={request} noValidate>
           <TextField
             id="fpId"
-            label="Mobile Number or Email"
+            label="Email"
             icon={<FaUser />}
             type="text"
             inputMode="text"
             autoCapitalize="none"
-            placeholder="01XXXXXXXXX or name@example.com"
+            placeholder="name@example.com"
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
           />
@@ -329,7 +330,7 @@ export const ForgotPasswordPage = () => {
         <form className={style.form} onSubmit={verify} noValidate>
           {demoCode && (
             <p className={style.demoBox}>
-              Demo mode: no SMS is sent. Your OTP is <b>{demoCode}</b>
+              Demo mode: no email is sent. Your OTP is <b>{demoCode}</b>
             </p>
           )}
 

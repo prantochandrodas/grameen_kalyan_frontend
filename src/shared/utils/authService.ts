@@ -244,7 +244,10 @@ export async function sendOtp(
   identifier: string
 ): Promise<Res<{ demoCode?: string }>> {
   const id = parseIdentifier(identifier);
-  if (!id) return fail('Enter a valid mobile number or email');
+  if (!id) return fail('Enter a valid email address');
+  if (id.type !== 'email') {
+    return fail('SMS OTP is not available yet. Please use your email address.');
+  }
 
   if (USE_API) {
     const r = await api<Record<string, unknown>>('/auth/otp/send', 'POST', {

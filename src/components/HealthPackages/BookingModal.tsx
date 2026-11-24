@@ -13,6 +13,9 @@ import {
   FaIdCard,
   FaPhoneAlt,
   FaTimes,
+  FaSignInAlt,
+  FaUserCheck,
+  FaEnvelope,
 } from 'react-icons/fa';
 
 import { IHealthPackage, formatBDT } from '@/data/healthPackages';
@@ -34,6 +37,7 @@ import {
 } from '@/shared/utils/authService';
 import { IHealthCenter } from '@/shared/types/healthCenter';
 
+import LoginForm from '@/components/Auth/LoginForm';
 import HealthCenterField from './HealthCenterField';
 import type { IInvoiceData } from './invoicePdf';
 import style from './healthPackages.module.scss';
@@ -85,7 +89,8 @@ const BookingModal = ({
   const [invoice, setInvoice] = useState<IInvoiceData | null>(null);
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState(false);
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const [showLogin, setShowLogin] = useState(false);
   const [wantCard, setWantCard] = useState<boolean | null>(
     cardChoice === 'yes' ? true : cardChoice === 'no' ? false : null
   );
@@ -382,7 +387,11 @@ const BookingModal = ({
       onClick={asPage ? undefined : onClose}
     >
       <motion.div
-        className={asPage ? style.pageSheet : style.modalSheet}
+        className={
+          asPage
+            ? `${style.pageSheet} ${!done ? style.pageSheetWide : ''}`
+            : style.modalSheet
+        }
         role="dialog"
         aria-modal="true"
         aria-labelledby="hp-modal-title"
@@ -494,10 +503,10 @@ const BookingModal = ({
               <div className={style.accountBox}>
                 <FaCheckCircle aria-hidden="true" />
                 <span>
-                  We created your account using your phone / email. To see all
-                  your purchases, go to{' '}
-                  <Link href="/forgot-password">Forgot Password</Link>, verify
-                  the OTP and login.
+                  We created your account using your email. To open your user
+                  panel, go to{' '}
+                  <Link href="/forgot-password">Forgot Password</Link>, enter
+                  your email, verify the OTP sent to it and login.
                 </span>
               </div>
             )}
@@ -533,10 +542,36 @@ const BookingModal = ({
             </div>
           </div>
         ) : (
-          <>
+          <div className={style.confirmGrid}>
+            <div className={style.confirmLeft}>
             <div className={style.modalHead}>
               <span className={style.eyebrow}>Book Your Grameen Kalyan Checkup</span>
               <h3 id="hp-modal-title">Confirm Your Package</h3>
+            </div>
+
+            <div className={style.includeList}>
+              {items.map((pkg) => {
+                const core = getPackageCore(pkg);
+                return (
+                  <section key={pkg.id} className={style.includeItem}>
+                    <header className={style.includeHead}>
+                      <span>
+                        <b>{pkg.name}</b>
+                        <small>{core.testCount} tests included</small>
+                      </span>
+                      <em>{formatBDT(unitPrice(pkg))}</em>
+                    </header>
+                    <ul className={style.includeTests}>
+                      {core.tests.map((test) => (
+                        <li key={test.name}>
+                          <FaCheck aria-hidden="true" />
+                          <span>{test.name}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                );
+              })}
             </div>
 
             <ul className={style.summary}>
@@ -638,6 +673,54 @@ const BookingModal = ({
                 </span>
               </p>
             ))}
+            </div>
+
+            <div className={style.confirmRight}>
+            {user ? (
+              <div className={style.loggedBox}>
+                <span className={style.loggedAvatar} aria-hidden="true">
+                  <FaUserCheck />
+                </span>
+                <div>
+                  <strong>{user.name}</strong>
+                  <small>Logged in · your details are filled in</small>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    logout();
+                    setValue('name', '');
+                    setValue('phone', '');
+                    setValue('email', '');
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <div className={style.loginBox}>
+                <div className={style.loginHead}>
+                  <div>
+                    <strong>Already have an account?</strong>
+                    <small>Login to auto-fill your saved details</small>
+                  </div>
+                  <button
+                    type="button"
+                    className={style.loginToggle}
+                    aria-expanded={showLogin}
+                    onClick={() => setShowLogin((v) => !v)}
+                  >
+                    <FaSignInAlt aria-hidden="true" />
+                    {showLogin ? 'Close' : 'Login'}
+                  </button>
+                </div>
+                {showLogin && (
+                  <div className={style.loginBody}>
+                    <LoginForm onSuccess={() => setShowLogin(false)} />
+                  </div>
+                )}
+              </div>
+            )}
 
             <form
               className={style.form}
@@ -803,7 +886,7 @@ const BookingModal = ({
 
               <div className={style.field}>
                 <label htmlFor="hpEmail">
-                  Email <span className={style.optional}>(optional)</span>
+                  Email <span className={style.req} aria-hidden="true">*</span>
                 </label>
                 <input
                   id="hpEmail"
@@ -813,6 +896,7 @@ const BookingModal = ({
                   placeholder="name@example.com"
                   aria-invalid={!!errors.email}
                   {...register('email', {
+                    required: 'Email is required to open your user panel',
                     pattern: {
                       value: EMAIL_REGEX,
                       message: 'Please provide a valid email address',
@@ -820,6 +904,11 @@ const BookingModal = ({
                   })}
                 />
                 {errors.email && <small>{errors.email.message}</small>}
+                <p className={style.emailHint}>
+                  <FaEnvelope aria-hidden="true" />
+                  To view your user panel we send an OTP to this email (SMS is
+                  not available yet).
+                </p>
               </div>
 
               <div className={style.field}>
@@ -859,7 +948,8 @@ const BookingModal = ({
                 <a href="tel:+880244802111">+880244802111</a>
               </p>
             </form>
-          </>
+            </div>
+          </div>
         )}
       </motion.div>
     </motion.div>
