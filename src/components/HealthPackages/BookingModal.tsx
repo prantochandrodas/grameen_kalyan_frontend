@@ -16,6 +16,10 @@ import {
   FaSignInAlt,
   FaUserCheck,
   FaEnvelope,
+  FaUserCircle,
+  FaNotesMedical,
+  FaEye,
+  FaEyeSlash,
 } from 'react-icons/fa';
 
 import { IHealthPackage, formatBDT } from '@/data/healthPackages';
@@ -49,7 +53,9 @@ interface IBookingInputs {
   age: string;
   bloodGroup: string;
   phone: string;
+  patientPhone: string;
   email: string;
+  password: string;
   date: string;
   note: string;
 }
@@ -91,6 +97,7 @@ const BookingModal = ({
   const [downloadError, setDownloadError] = useState(false);
   const { user, logout } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
+  const [showPw, setShowPw] = useState(false);
   const [wantCard, setWantCard] = useState<boolean | null>(
     cardChoice === 'yes' ? true : cardChoice === 'no' ? false : null
   );
@@ -110,11 +117,22 @@ const BookingModal = ({
     handleSubmit,
     watch,
     setValue,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<IBookingInputs>();
 
   const { ref: nameRef, ...nameProps } = register('name', { required: true });
   const bloodValue = watch('bloodGroup');
+
+  // "Same as me": copy the booking person's name / phone to the patient
+  const copyUserToPatient = () => {
+    setValue('patientName', (getValues('name') || '').trim(), {
+      shouldValidate: true,
+    });
+    setValue('patientPhone', (getValues('phone') || '').trim(), {
+      shouldValidate: true,
+    });
+  };
 
   const cartTotals = getCartTotals(items);
   const { packagesPrice, packagesRate } = cartTotals;
@@ -190,6 +208,8 @@ const BookingModal = ({
   };
 
   const onSubmit = async (data: IBookingInputs) => {
+    // account phone: own phone, or the patient phone when it is left blank
+    const userPhone = (data.phone || '').trim() || data.patientPhone.trim();
     setApiError(false);
 
     if (!center) {
@@ -232,7 +252,10 @@ const BookingModal = ({
       `Invoice No: ${number}`,
       '',
       `Booked By: ${data.name.trim()}`,
+      `Booked By Phone: ${userPhone}`,
+      `Booked By Email: ${data.email.trim()}`,
       `Patient Name: ${data.patientName.trim()}`,
+      `Patient Phone: ${data.patientPhone.trim()}`,
       `Gender: ${data.gender}`,
       `Age: ${data.age.trim()}`,
       data.bloodGroup ? `Blood Group: ${data.bloodGroup}` : '',
@@ -269,7 +292,7 @@ const BookingModal = ({
       `Health Package Booking: ${items.map((pkg) => pkg.name).join(', ')}`
     );
     formdata.append('email', data.email);
-    formdata.append('phone', data.phone);
+    formdata.append('phone', userPhone);
     formdata.append('date', data.date || '');
     formdata.append('message', message);
 
@@ -289,7 +312,7 @@ const BookingModal = ({
           gender: data.gender,
           age: data.age.trim(),
           bloodGroup: data.bloodGroup,
-          phone: data.phone.trim(),
+          phone: userPhone,
           email: data.email.trim(),
           preferredDate: data.date
             ? new Date(`${data.date}T00:00:00`).toLocaleDateString(
@@ -339,7 +362,7 @@ const BookingModal = ({
           gender: data.gender,
           age: data.age.trim(),
           bloodGroup: data.bloodGroup || '',
-          phone: data.phone.trim(),
+          phone: data.patientPhone.trim(),
           email: (data.email || '').trim(),
           preferredDate: data.date || '',
           note: (data.note || '').trim(),
@@ -349,8 +372,9 @@ const BookingModal = ({
         purchase,
         {
           name: data.name.trim(),
-          phone: data.phone.trim(),
+          phone: userPhone,
           email: (data.email || '').trim(),
+          password: (data.password || '').trim(),
         },
         user
       );
@@ -737,23 +761,139 @@ const BookingModal = ({
               />
 
 
-              <div className={style.field}>
-                <label htmlFor="hpName">
-                  Your Name <span className={style.req} aria-hidden="true">*</span>
-                </label>
-                <input
-                  id="hpName"
-                  type="text"
-                  autoComplete="name"
-                  placeholder="Enter your full name"
-                  aria-invalid={!!errors.name}
-                  {...nameProps}
-                  ref={(el) => {
-                    nameRef(el);
-                    firstField.current = el;
-                  }}
-                />
-                {errors.name && <small>Your name is required</small>}
+              <div className={style.formSection}>
+                <span className={style.formSectionIcon} aria-hidden="true">
+                  <FaUserCircle />
+                </span>
+                <div>
+                  <h4>Your Account</h4>
+                  <p>The person who is booking this package</p>
+                </div>
+              </div>
+
+              <div className={style.fieldRow}>
+                <div className={style.field}>
+                  <label htmlFor="hpName">
+                    Your Name <span className={style.req} aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="hpName"
+                    type="text"
+                    autoComplete="name"
+                    placeholder="Enter your full name"
+                    aria-invalid={!!errors.name}
+                    {...nameProps}
+                    ref={(el) => {
+                      nameRef(el);
+                      firstField.current = el;
+                    }}
+                  />
+                  {errors.name && <small>Your name is required</small>}
+                </div>
+
+                <div className={style.field}>
+                  <label htmlFor="hpUserPhone">
+                    Your Phone <span className={style.optional}>(optional)</span>
+                  </label>
+                  <input
+                    id="hpUserPhone"
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    placeholder="01XXXXXXXXX"
+                    aria-invalid={!!errors.phone}
+                    {...register('phone', {
+                      validate: (v) =>
+                        !v ||
+                        PHONE_REGEX.test(v.trim()) ||
+                        'Enter a valid Bangladeshi mobile number',
+                    })}
+                  />
+                  {errors.phone && <small>{errors.phone.message}</small>}
+                </div>
+              </div>
+
+              <div className={user ? undefined : style.fieldRow}>
+                <div className={style.field}>
+                  <label htmlFor="hpEmail">
+                    Email <span className={style.req} aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="hpEmail"
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    placeholder="name@example.com"
+                    aria-invalid={!!errors.email}
+                    {...register('email', {
+                      required: 'Email is required to open your user panel',
+                      pattern: {
+                        value: EMAIL_REGEX,
+                        message: 'Please provide a valid email address',
+                      },
+                    })}
+                  />
+                  {errors.email && <small>{errors.email.message}</small>}
+                </div>
+
+                {!user && (
+                  <div className={style.field}>
+                    <label htmlFor="hpPassword">
+                      Password <span className={style.req} aria-hidden="true">*</span>
+                    </label>
+                    <div className={style.pwWrap}>
+                      <input
+                        id="hpPassword"
+                        type={showPw ? 'text' : 'password'}
+                        autoComplete="new-password"
+                        placeholder="Min 6 characters"
+                        aria-invalid={!!errors.password}
+                        {...register('password', {
+                          required: 'Password is required',
+                          minLength: {
+                            value: 6,
+                            message: 'Use at least 6 characters',
+                          },
+                        })}
+                      />
+                      <button
+                        type="button"
+                        className={style.pwToggle}
+                        onClick={() => setShowPw((v) => !v)}
+                        aria-label={showPw ? 'Hide password' : 'Show password'}
+                      >
+                        {showPw ? <FaEyeSlash /> : <FaEye />}
+                      </button>
+                    </div>
+                    {errors.password && <small>{errors.password.message}</small>}
+                  </div>
+                )}
+              </div>
+
+              {!user && (
+                <p className={style.emailHint}>
+                  <FaEnvelope aria-hidden="true" />
+                  Your password creates your account so you can login and see
+                  your user panel. If you forget it, we send an OTP to this
+                  email (SMS is not available yet).
+                </p>
+              )}
+
+              <div className={`${style.formSection} ${style.formSectionPatient}`}>
+                <span className={style.formSectionIcon} aria-hidden="true">
+                  <FaNotesMedical />
+                </span>
+                <div>
+                  <h4>Patient Details</h4>
+                  <p>The person who will take the tests</p>
+                </div>
+                <button
+                  type="button"
+                  className={style.sameBtn}
+                  onClick={copyUserToPatient}
+                >
+                  Same as me
+                </button>
               </div>
 
               <div className={style.fieldRow}>
@@ -777,6 +917,32 @@ const BookingModal = ({
                 </div>
 
                 <div className={style.field}>
+                  <label htmlFor="hpPhone">
+                    Patient Phone <span className={style.req} aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="hpPhone"
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="off"
+                    placeholder="01XXXXXXXXX"
+                    aria-invalid={!!errors.patientPhone}
+                    {...register('patientPhone', {
+                      required: 'Patient phone is required',
+                      pattern: {
+                        value: PHONE_REGEX,
+                        message: 'Enter a valid Bangladeshi mobile number',
+                      },
+                    })}
+                  />
+                  {errors.patientPhone && (
+                    <small>{errors.patientPhone.message}</small>
+                  )}
+                </div>
+              </div>
+
+              <div className={style.fieldRow}>
+                <div className={style.field}>
                   <label htmlFor="hpGender">
                     Patient Gender <span className={style.req} aria-hidden="true">*</span>
                   </label>
@@ -799,9 +965,7 @@ const BookingModal = ({
                   </select>
                   {errors.gender && <small>{errors.gender.message}</small>}
                 </div>
-              </div>
 
-              <div className={style.fieldRow}>
                 <div className={style.field}>
                   <label htmlFor="hpAge">
                     Patient Age <span className={style.req} aria-hidden="true">*</span>
@@ -823,7 +987,9 @@ const BookingModal = ({
                   />
                   {errors.age && <small>{errors.age.message}</small>}
                 </div>
+              </div>
 
+              <div className={style.fieldRow}>
                 <div className={style.field}>
                   <label htmlFor="hpBlood">
                     Patient Blood Group <span className={style.optional}>(optional)</span>
@@ -842,33 +1008,6 @@ const BookingModal = ({
                       </option>
                     ))}
                   </select>
-                  {errors.bloodGroup && (
-                    <small>{errors.bloodGroup.message}</small>
-                  )}
-                </div>
-              </div>
-
-              <div className={style.fieldRow}>
-                <div className={style.field}>
-                  <label htmlFor="hpPhone">
-                    Phone <span className={style.req} aria-hidden="true">*</span>
-                  </label>
-                  <input
-                    id="hpPhone"
-                    type="tel"
-                    inputMode="tel"
-                    autoComplete="tel"
-                    placeholder="01XXXXXXXXX"
-                    aria-invalid={!!errors.phone}
-                    {...register('phone', {
-                      required: 'Phone number is required',
-                      pattern: {
-                        value: PHONE_REGEX,
-                        message: 'Enter a valid Bangladeshi mobile number',
-                      },
-                    })}
-                  />
-                  {errors.phone && <small>{errors.phone.message}</small>}
                 </div>
 
                 <div className={style.field}>
@@ -882,33 +1021,6 @@ const BookingModal = ({
                     {...register('date')}
                   />
                 </div>
-              </div>
-
-              <div className={style.field}>
-                <label htmlFor="hpEmail">
-                  Email <span className={style.req} aria-hidden="true">*</span>
-                </label>
-                <input
-                  id="hpEmail"
-                  type="email"
-                  inputMode="email"
-                  autoComplete="email"
-                  placeholder="name@example.com"
-                  aria-invalid={!!errors.email}
-                  {...register('email', {
-                    required: 'Email is required to open your user panel',
-                    pattern: {
-                      value: EMAIL_REGEX,
-                      message: 'Please provide a valid email address',
-                    },
-                  })}
-                />
-                {errors.email && <small>{errors.email.message}</small>}
-                <p className={style.emailHint}>
-                  <FaEnvelope aria-hidden="true" />
-                  To view your user panel we send an OTP to this email (SMS is
-                  not available yet).
-                </p>
               </div>
 
               <div className={style.field}>

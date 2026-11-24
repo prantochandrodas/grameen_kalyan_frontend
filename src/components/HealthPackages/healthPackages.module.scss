@@ -2702,3 +2702,92 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
         color: #1a9a5b;
     }
 }
+
+
+/* ================= Form sections (Your Account / Patient Details) ================= */
+
+.formSection {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 6px 0 0;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: linear-gradient(90deg, rgba($color-primary, 0.09), rgba($color-primary, 0.02));
+    border: 1px solid rgba($color-primary, 0.12);
+    h4 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 800;
+        color: $hp-green;
+    }
+    p {
+        margin: 1px 0 0;
+        font-size: 11.5px;
+        line-height: 1.3;
+        color: #6b7c72;
+    }
+    >div {
+        flex: 1;
+        min-width: 0;
+    }
+}
+
+.formSectionPatient {
+    margin-top: 12px;
+}
+
+.formSectionIcon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: $hp-gradient;
+    color: #fff;
+    font-size: 15px;
+}
+
+.sameBtn {
+    flex: none;
+    padding: 7px 13px;
+    border: 1.5px solid rgba($color-primary, 0.3);
+    border-radius: 999px;
+    background: #fff;
+    color: $color-primary;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    &:hover {
+        background: rgba($color-primary, 0.08);
+    }
+}
+
+
+/* password show / hide */
+
+.pwWrap {
+    position: relative;
+    .pwToggle {
+        position: absolute;
+        top: 50%;
+        right: 6px;
+        transform: translateY(-50%);
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        color: #6b7c72;
+        cursor: pointer;
+    }
+}
+
+.field .pwWrap input {
+    padding-right: 44px;
+}

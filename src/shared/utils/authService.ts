@@ -36,6 +36,7 @@ export interface IGuest {
   name: string;
   phone: string;
   email: string;
+  password?: string;
 }
 
 export type Res<T> = { ok: true; data: T } | { ok: false; message: string };
@@ -330,7 +331,7 @@ export async function recordPurchase(
     const phone = normalizePhone(guest.phone);
     const email = guest.email.trim().toLowerCase();
     const found = users.find(
-      (u) => u.phone === phone || (email !== '' && u.email === email)
+      (u) => email !== '' && u.email === email
     );
     if (found) {
       owner = found.id;
@@ -341,7 +342,7 @@ export async function recordPurchase(
         phone,
         email,
         createdAt: new Date().toISOString(),
-        hash: await sha(uid()), // random password - customer logs in with OTP
+        hash: await sha(guest.password || uid()), // own password, or random (login with email OTP)
       };
       write(USERS_KEY, [...users, created]);
       owner = created.id;
