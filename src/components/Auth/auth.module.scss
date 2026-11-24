@@ -1765,4 +1765,400 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     }
 }
 
+
+/* ================= Dashboard: compact mobile ================= */
+
+.dLong {
+    @media (max-width: 480px) {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .dWrap {
+        gap: 10px;
+    }
+    /* ---------- hero ---------- */
+    .dHero {
+        gap: 10px;
+        padding: 14px 12px;
+        border-radius: 16px;
+        &::before {
+            display: none;
+        }
+    }
+    .dHeroTop {
+        gap: 12px;
+    }
+    .dAvatar {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    .dWho {
+        small {
+            font-size: 12px;
+        }
+        h1 {
+            font-size: 18px;
+        }
+    }
+    .dChips {
+        gap: 5px 6px;
+        margin-top: 6px;
+        li {
+            padding: 4px 9px;
+            font-size: 12px;
+        }
+    }
+    .dCard {
+        gap: 10px;
+        padding: 9px 10px;
+        border-radius: 14px;
+    }
+    .dCardIcon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        font-size: 17px;
+    }
+    .dCardText {
+        strong {
+            font-size: 13.5px;
+        }
+        span {
+            margin-top: 1px;
+            font-size: 12px;
+        }
+    }
+    .dCardDays {
+        padding: 4px 10px;
+        b {
+            font-size: 17px;
+        }
+    }
+    .dHeroActions {
+        gap: 8px;
+    }
+    .dGhost {
+        flex: 1;
+        min-height: 38px;
+        padding: 0 12px;
+        border-radius: 10px;
+        font-size: 13px;
+    }
+    /* ---------- stats ---------- */
+    .dStats {
+        gap: 8px;
+    }
+    .dStat {
+        flex-direction: row;
+        align-items: center;
+        gap: 9px;
+        padding: 10px;
+        border-radius: 14px;
+        small {
+            font-size: 10.5px;
+            line-height: 1.25;
+            letter-spacing: 0.03em;
+        }
+        strong {
+            margin-top: 1px;
+            font-size: 15px;
+        }
+    }
+    .dStatIcon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        font-size: 14px;
+    }
+    /* ---------- tabs + section head ---------- */
+    .dTabs {
+        padding: 3px;
+        border-radius: 12px;
+        button {
+            min-height: 40px;
+            border-radius: 9px;
+            font-size: 14px;
+        }
+    }
+    .sectionHead {
+        gap: 8px;
+        h2 {
+            font-size: 16.5px;
+        }
+        .btnSmall {
+            min-height: 38px;
+            padding: 0 14px;
+            border-radius: 10px;
+            font-size: 13px;
+        }
+    }
+    .dNote {
+        margin: 2px 0 0;
+        font-size: 12px;
+    }
+    /* ---------- purchase cards ---------- */
+    .dOrders {
+        gap: 10px;
+        margin-top: 10px;
+    }
+    .dOrder {
+        padding: 11px 10px 11px 14px;
+        border-radius: 16px;
+    }
+    .dOrderTop {
+        gap: 10px;
+        margin-bottom: 4px;
+    }
+    .dOrderIcon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        font-size: 14px;
+    }
+    .dOrderMeta {
+        strong {
+            font-size: 14px;
+        }
+        span {
+            font-size: 12px;
+            line-height: 1.4;
+        }
+    }
+    .chip {
+        padding: 4px 9px;
+        font-size: 11px;
+    }
+    .orderItems li {
+        padding: 6px 0;
+        font-size: 13px;
+    }
+    .itemName {
+        gap: 8px;
+    }
+    .itemIcon {
+        width: 26px;
+        height: 26px;
+        border-radius: 8px;
+        font-size: 11.5px;
+    }
+    .dPatient {
+        gap: 5px;
+        margin-top: 6px;
+        li {
+            padding: 4px 9px;
+            font-size: 12px;
+        }
+    }
+    .dToggle {
+        min-height: 38px;
+        margin-top: 8px;
+        padding: 0 10px;
+        border-radius: 10px;
+        font-size: 13px;
+    }
+    .dInfo {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 6px;
+        margin-top: 8px;
+        div {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 8px 10px;
+            border-radius: 10px;
+        }
+        dt {
+            flex: none;
+            font-size: 11px;
+        }
+        dd {
+            margin: 0;
+            font-size: 13.5px;
+            text-align: right;
+        }
+        .dInfoWide {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            dd {
+                text-align: left;
+            }
+        }
+    }
+    .orderFoot {
+        gap: 6px;
+        margin-top: 8px;
+        padding-top: 8px;
+        font-size: 12px;
+        strong {
+            font-size: 15px;
+        }
+    }
+    .dMeter {
+        height: 5px;
+    }
+    .dActions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 8px;
+    }
+    .dDownload,
+    .dEdit {
+        gap: 6px;
+        min-height: 40px;
+        padding: 0 8px;
+        border-radius: 10px;
+        font-size: 12.5px;
+    }
+    /* ---------- profile tab ---------- */
+    .dPanel {
+        padding: 14px 12px;
+        border-radius: 16px;
+        h2 {
+            font-size: 16.5px;
+        }
+        .hint {
+            margin-bottom: 10px;
+        }
+        .form {
+            gap: 10px;
+        }
+        .field {
+            gap: 4px;
+            label {
+                font-size: 13px;
+            }
+        }
+        .inputWrap input {
+            height: 46px;
+        }
+        .btn {
+            min-height: 46px;
+        }
+    }
+    .avatarBox {
+        gap: 10px;
+        margin-bottom: 12px;
+        padding: 10px;
+        border-radius: 14px;
+    }
+    .avatarPreview {
+        width: 68px;
+        height: 68px;
+        font-size: 26px;
+    }
+    .avatarBtns {
+        margin-top: 2px;
+    }
+    .avatarUpload,
+    .avatarRemove {
+        min-height: 36px;
+        padding: 0 14px;
+        font-size: 12.5px;
+    }
+    .dDanger {
+        margin-top: 12px;
+        padding: 10px 12px;
+    }
+}
+
+
+/* ================= Dashboard popups: compact mobile ================= */
+
+@media (max-width: 600px) {
+    .dSheet {
+        padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+        border-radius: 18px 18px 0 0;
+        &::before {
+            content: '';
+            display: block;
+            width: 36px;
+            height: 4px;
+            margin: 0 auto 10px;
+            border-radius: 999px;
+            background: rgba($g, 0.22);
+        }
+        .close {
+            top: 12px;
+            right: 10px;
+            width: 34px;
+            height: 34px;
+        }
+        .gateHead {
+            margin: 0 42px 10px 0;
+            h3 {
+                margin: 0;
+                font-size: 18px;
+                line-height: 1.25;
+            }
+            p {
+                font-size: 12.5px;
+            }
+        }
+        .form {
+            gap: 10px;
+        }
+        .field {
+            gap: 4px;
+            label {
+                font-size: 13px;
+            }
+            small {
+                font-size: 12px;
+            }
+        }
+        .inputWrap input,
+        .field select,
+        .field input[type='number'],
+        .field input[type='date'] {
+            height: 46px;
+            border-radius: 11px;
+        }
+        .field textarea {
+            height: 68px;
+            min-height: 0;
+            padding: 10px 12px;
+            border-radius: 11px;
+        }
+        .twoCol {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            @media (max-width: 340px) {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+        .errorBox {
+            padding: 9px 12px;
+            font-size: 13px;
+        }
+        .form>.btn {
+            position: sticky;
+            bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+            z-index: 2;
+            min-height: 46px;
+            font-size: 15px;
+            box-shadow: 0 0 0 8px #eef9f2, 0 8px 18px rgba(26, 154, 91, 0.3);
+        }
+        .confirmBody {
+            gap: 10px;
+        }
+        .confirmIcon {
+            width: 46px;
+            height: 46px;
+            font-size: 20px;
+        }
+        .confirmBtns {
+            gap: 8px;
+            .btnGhost,
+            .btnDanger {
+                min-height: 44px;
+            }
+        }
+    }
+}
+
 // ================== END: src/components/Auth/auth.module.scss ==================

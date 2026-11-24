@@ -132,7 +132,7 @@ const Popup = ({
       onClick={onClose}
     >
       <motion.div
-        className={style.sheet}
+        className={`${style.sheet} ${style.dSheet}`}
         role="dialog"
         aria-modal="true"
         aria-label={title}
@@ -956,21 +956,6 @@ const Dashboard = () => {
                         )}
                       </ul>
 
-                      <ul className={style.orderItems}>
-                        {o.items.map((item) => (
-                          <li key={item.name}>
-                            <span>{item.name}</span>
-                            <b>{formatBDT(item.price)}</b>
-                          </li>
-                        ))}
-                        {o.cardFee > 0 && (
-                          <li>
-                            <span>Health Card (6 months)</span>
-                            <b>{formatBDT(o.cardFee)}</b>
-                          </li>
-                        )}
-                      </ul>
-
                       <button
                         type="button"
                         className={style.dToggle}
@@ -1042,7 +1027,7 @@ const Dashboard = () => {
                           onClick={() => setEditing(o)}
                         >
                           <FaEdit aria-hidden="true" />
-                          Edit patient details
+                          Edit <span className={style.dLong}>patient </span>details
                         </button>
                       </div>
                     </li>
