@@ -20,6 +20,7 @@ import {
   FaNotesMedical,
   FaEye,
   FaEyeSlash,
+  FaChevronDown,
 } from 'react-icons/fa';
 
 import { IHealthPackage, formatBDT } from '@/data/healthPackages';
@@ -98,6 +99,8 @@ const BookingModal = ({
   const { user, logout } = useAuth();
   const [showLogin, setShowLogin] = useState(false);
   const [showPw, setShowPw] = useState(false);
+  // which package's test list is open (null = all hidden)
+  const [openPkg, setOpenPkg] = useState<string | null>(null);
   const [wantCard, setWantCard] = useState<boolean | null>(
     cardChoice === 'yes' ? true : cardChoice === 'no' ? false : null
   );
@@ -576,23 +579,50 @@ const BookingModal = ({
             <div className={style.includeList}>
               {items.map((pkg) => {
                 const core = getPackageCore(pkg);
+                const isOpen = openPkg === pkg.id;
                 return (
-                  <section key={pkg.id} className={style.includeItem}>
-                    <header className={style.includeHead}>
-                      <span>
+                  <section
+                    key={pkg.id}
+                    className={`${style.includeItem} ${
+                      isOpen ? style.includeOpen : ''
+                    }`}
+                  >
+                    <button
+                      type="button"
+                      className={style.includeHead}
+                      aria-expanded={isOpen}
+                      aria-controls={`hp-tests-${pkg.id}`}
+                      onClick={() => setOpenPkg(isOpen ? null : pkg.id)}
+                    >
+                      <span className={style.includeName}>
                         <b>{pkg.name}</b>
-                        <small>{core.testCount} tests included</small>
+                        <small>
+                          {core.testCount} tests included ·{' '}
+                          {isOpen ? 'Hide' : 'View'} list
+                        </small>
                       </span>
                       <em>{formatBDT(unitPrice(pkg))}</em>
-                    </header>
-                    <ul className={style.includeTests}>
-                      {core.tests.map((test) => (
-                        <li key={test.name}>
-                          <FaCheck aria-hidden="true" />
-                          <span>{test.name}</span>
-                        </li>
-                      ))}
-                    </ul>
+                      <FaChevronDown
+                        className={style.includeChevron}
+                        aria-hidden="true"
+                      />
+                    </button>
+                    <div
+                      id={`hp-tests-${pkg.id}`}
+                      className={style.includeBody}
+                      aria-hidden={!isOpen}
+                    >
+                      <div className={style.includeInner}>
+                        <ul className={style.includeTests}>
+                          {core.tests.map((test) => (
+                            <li key={test.name}>
+                              <FaCheck aria-hidden="true" />
+                              <span>{test.name}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
                   </section>
                 );
               })}

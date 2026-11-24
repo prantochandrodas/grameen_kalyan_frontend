@@ -2554,11 +2554,23 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
 .includeHead {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 12px;
-    padding: 12px 14px;
+    width: 100%;
+    padding: 13px 14px;
+    border: 0;
     background: linear-gradient(90deg, rgba($color-primary, 0.08), rgba($color-primary, 0.02));
-    border-bottom: 1px solid rgba($color-primary, 0.1);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+    &:hover {
+        background: linear-gradient(90deg, rgba($color-primary, 0.14), rgba($color-primary, 0.05));
+    }
+    &:focus-visible {
+        outline: 2px solid $hp-gold;
+        outline-offset: -2px;
+    }
     b {
         display: block;
         font-size: 14.5px;
@@ -2566,6 +2578,8 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
         color: $hp-green;
     }
     small {
+        display: block;
+        margin-top: 1px;
         font-size: 11.5px;
         font-weight: 600;
         color: #1a9a5b;
@@ -2577,6 +2591,50 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
         font-size: 15px;
         color: $color-primary;
     }
+}
+
+.includeName {
+    flex: 1;
+    min-width: 0;
+}
+
+.includeChevron {
+    flex: none;
+    font-size: 12px;
+    color: $color-primary;
+    transition: transform 0.25s ease;
+}
+
+.includeOpen {
+    border-color: rgba($color-primary, 0.3);
+    box-shadow: 0 8px 22px rgba(11, 97, 45, 0.1);
+    .includeChevron {
+        transform: rotate(180deg);
+    }
+    .includeHead {
+        border-bottom: 1px solid rgba($color-primary, 0.1);
+    }
+}
+
+
+/* smooth open / close (no JS height calculation) */
+
+.includeBody {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.includeOpen .includeBody {
+    grid-template-rows: 1fr;
+}
+
+.includeInner {
+    min-height: 0;
+    overflow: hidden;
 }
 
 .includeTests {
