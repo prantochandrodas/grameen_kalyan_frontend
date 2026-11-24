@@ -267,7 +267,16 @@ const Navbar = ({
           aria-label={user ? 'My Account' : 'Login to My Account'}
           title={user ? 'My Account' : 'Login to My Account'}
         >
-          <FaUserCircle aria-hidden="true" />
+          {user?.avatar ? (
+            <span
+              className={style.loginAvatar}
+              role="img"
+              aria-hidden="true"
+              style={{ backgroundImage: `url("${user.avatar}")` }}
+            />
+          ) : (
+            <FaUserCircle aria-hidden="true" />
+          )}
           {user && <span className={style.loginDot} aria-hidden="true" />}
         </Link>
         

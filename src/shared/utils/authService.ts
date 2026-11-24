@@ -5,6 +5,7 @@ export interface IUser {
   phone: string;
   email: string;
   createdAt: string;
+  avatar?: string; // profile photo (small JPEG data URL)
 }
 
 export interface IPurchase {
@@ -125,6 +126,7 @@ const strip = (u: IStored): IUser => ({
   phone: u.phone,
   email: u.email,
   createdAt: u.createdAt,
+  avatar: u.avatar,
 });
 
 const setSession = (user: IUser | null, token?: string) => {
@@ -467,5 +469,31 @@ export async function deleteAccount(userId: string): Promise<Res<boolean>> {
   write(ORDERS_KEY, all);
   setSession(null);
   return { ok: true, data: true };
+}
+
+
+/* ---------------- profile photo (add / change / remove) ---------------- */
+// avatar = small JPEG data URL, or '' to remove the photo
+export async function updateAvatar(
+  userId: string,
+  avatar: string
+): Promise<Res<IUser>> {
+  if (USE_API) {
+    const r = await api<{ user: IUser }>('/auth/avatar', 'PUT', { avatar });
+    if (!r.ok) return r;
+    setSession(r.data.user);
+    return { ok: true, data: r.data.user };
+  }
+
+  const users = read<IStored[]>(USERS_KEY, []);
+  const index = users.findIndex((u) => u.id === userId);
+  if (index < 0) return fail('Account not found.');
+  const next: IStored = { ...users[index] };
+  if (avatar) next.avatar = avatar;
+  else delete next.avatar;
+  users[index] = next;
+  write(USERS_KEY, users);
+  setSession(strip(next));
+  return { ok: true, data: strip(next) };
 }
 // ================== END: src/shared/utils/authService.ts ==================

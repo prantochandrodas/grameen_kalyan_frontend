@@ -1303,4 +1303,145 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     }
 }
 
+
+/* ================= Profile photo ================= */
+
+.dAvatar {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.dNote {
+    margin: -4px 0 14px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: $muted;
+}
+
+.avatarBox {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+    padding: 14px;
+    border: 1px solid rgba($g, 0.14);
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba($g, 0.07), rgba($g, 0.02));
+    @media (max-width: 480px) {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+.avatarPreview {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 84px;
+    height: 84px;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    background-color: $g;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 0 0 2px rgba($g, 0.35), 0 8px 20px rgba(11, 97, 45, 0.18);
+    color: #fff;
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.avatarInfo {
+    display: grid;
+    flex: 1;
+    gap: 4px;
+    min-width: 0;
+    strong {
+        font-size: 14.5px;
+        color: $g;
+    }
+    small {
+        font-size: 12px;
+        line-height: 1.4;
+        color: $muted;
+    }
+}
+
+.avatarBtns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+    @media (max-width: 480px) {
+        justify-content: center;
+    }
+}
+
+.avatarUpload,
+.avatarRemove {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 40px;
+    padding: 0 16px;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.avatarUpload {
+    border: 0;
+    background: linear-gradient(135deg, $g, #1a9a5b);
+    box-shadow: 0 6px 14px rgba(11, 97, 45, 0.2);
+    color: #fff;
+}
+
+.avatarRemove {
+    border: 1.5px solid #f0c6c2;
+    background: #fff6f5;
+    color: $err;
+    &:hover:not(:disabled) {
+        background: #fde8e6;
+    }
+}
+
+.avatarFile {
+    display: none;
+}
+
+
+/* ================= Patient edit: single button + date field ================= */
+
+.dActionsSingle {
+    grid-template-columns: 1fr;
+}
+
+.field input[type='date'] {
+    width: 100%;
+    height: 50px;
+    padding: 0 14px;
+    border: 1.5px solid $line;
+    border-radius: 12px;
+    background: #fff;
+    color: $ink;
+    font: inherit;
+    font-size: 16px; // stops iOS zoom
+    text-align: left;
+    -webkit-appearance: none;
+    appearance: none;
+    &:focus {
+        outline: none;
+        border-color: $g2;
+        box-shadow: 0 0 0 4px rgba(26, 154, 91, 0.14);
+    }
+}
+
 // ================== END: src/components/Auth/auth.module.scss ==================

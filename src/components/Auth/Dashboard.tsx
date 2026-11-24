@@ -1,7 +1,7 @@
 // ================= START: src/components/Auth/Dashboard.tsx =================
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import {
   FaArrowRight,
   FaCalendarAlt,
+  FaCamera,
   FaChevronDown,
   FaEdit,
   FaEnvelope,
@@ -32,9 +33,9 @@ import {
   IUser,
   PHONE_REGEX,
   deleteAccount,
-  deletePurchase,
   getActiveCard,
   getPurchases,
+  updateAvatar,
   updatePatient,
   updateProfile,
 } from '@/shared/utils/authService';
@@ -166,7 +167,7 @@ const PatientModal = ({
       <form className={style.form} onSubmit={handleSubmit(onSubmit)} noValidate>
         <TextField
           id="ptName"
-          label="Patient Name"
+          label="Patient Name *"
           icon={<FaUser />}
           type="text"
           placeholder="Patient full name"
@@ -176,8 +177,12 @@ const PatientModal = ({
 
         <div className={style.twoCol}>
           <div className={style.field}>
-            <label htmlFor="ptGender">Gender</label>
-            <select id="ptGender" {...register('gender')}>
+            <label htmlFor="ptGender">Gender *</label>
+            <select
+              id="ptGender"
+              aria-invalid={!!errors.gender}
+              {...register('gender', { required: 'Select gender' })}
+            >
               <option value="">Select</option>
               {GENDERS.map((g) => (
                 <option key={g} value={g}>
@@ -185,9 +190,12 @@ const PatientModal = ({
                 </option>
               ))}
             </select>
+            {errors.gender && (
+              <small role="alert">{errors.gender.message}</small>
+            )}
           </div>
           <div className={style.field}>
-            <label htmlFor="ptAge">Age</label>
+            <label htmlFor="ptAge">Age *</label>
             <input
               id="ptAge"
               type="number"
@@ -195,8 +203,8 @@ const PatientModal = ({
               placeholder="Age"
               aria-invalid={!!errors.age}
               {...register('age', {
+                required: 'Age is required',
                 validate: (v) =>
-                  v === '' ||
                   (Number(v) >= 0 && Number(v) <= 120) ||
                   'Enter a valid age (0-120)',
               })}
@@ -205,21 +213,31 @@ const PatientModal = ({
           </div>
         </div>
 
-        <div className={style.field}>
-          <label htmlFor="ptBlood">Blood Group</label>
-          <select id="ptBlood" {...register('bloodGroup')}>
-            <option value="">Select (optional)</option>
-            {BLOOD_GROUPS.map((b) => (
-              <option key={b} value={b}>
-                {b}
-              </option>
-            ))}
-          </select>
+        <div className={style.twoCol}>
+          <div className={style.field}>
+            <label htmlFor="ptBlood">Blood Group (optional)</label>
+            <select id="ptBlood" {...register('bloodGroup')}>
+              <option value="">Select</option>
+              {BLOOD_GROUPS.map((b) => (
+                <option key={b} value={b}>
+                  {b}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className={style.field}>
+            <label htmlFor="ptDate">Preferred Date (optional)</label>
+            <input id="ptDate" type="date" {...register('preferredDate')} />
+          </div>
         </div>
 
         <TextField
           id="ptPhone"
-          label="Contact Phone"
+          {...register('phone', {
+            validate: (v) =>
+              v === '' || PHONE_REGEX.test(v.replace(/[\s-]/g, '')) ||
+              'Enter a valid mobile number',
+          })}
           icon={<FaPhoneAlt />}
           type="tel"
           inputMode="tel"
@@ -304,6 +322,145 @@ const ConfirmModal = ({
   </Popup>
 );
 
+/* ---------------- profile photo (add / change / remove) ---------------- */
+const AVATAR_SIZE = 320;
+
+// square crop + resize in the browser so the saved image stays small
+const resizeImage = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('read'));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('decode'));
+      img.onload = () => {
+        const side = Math.min(img.width, img.height);
+        const canvas = document.createElement('canvas');
+        canvas.width = AVATAR_SIZE;
+        canvas.height = AVATAR_SIZE;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          reject(new Error('canvas'));
+          return;
+        }
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, AVATAR_SIZE, AVATAR_SIZE);
+        ctx.drawImage(
+          img,
+          (img.width - side) / 2,
+          (img.height - side) / 2,
+          side,
+          side,
+          0,
+          0,
+          AVATAR_SIZE,
+          AVATAR_SIZE
+        );
+        resolve(canvas.toDataURL('image/jpeg', 0.85));
+      };
+      img.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+
+const AvatarUploader = ({
+  user,
+  onDone,
+}: {
+  user: IUser;
+  onDone: (message: string) => void;
+}) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+
+  const save = async (avatar: string, message: string) => {
+    setBusy(true);
+    const res = await updateAvatar(user.id, avatar);
+    setBusy(false);
+    if (!res.ok) {
+      setError(res.message);
+      return;
+    }
+    onDone(message);
+  };
+
+  const onPick = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    setError('');
+    if (!file.type.startsWith('image/')) {
+      setError('Please choose an image file (JPG, PNG or WebP).');
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      setError('This image is too large. Please choose one under 8 MB.');
+      return;
+    }
+    try {
+      await save(await resizeImage(file), 'Profile photo updated');
+    } catch {
+      setError('Could not read this image. Please try another one.');
+    }
+  };
+
+  return (
+    <div className={style.avatarBox}>
+      <span
+        className={style.avatarPreview}
+        role="img"
+        aria-label="Profile photo"
+        style={
+          user.avatar ? { backgroundImage: `url("${user.avatar}")` } : undefined
+        }
+      >
+        {!user.avatar && (user.name.trim().charAt(0).toUpperCase() || 'U')}
+      </span>
+      <div className={style.avatarInfo}>
+        <strong>Profile photo</strong>
+        <small>JPG, PNG or WebP. It is shown in the website header.</small>
+        <div className={style.avatarBtns}>
+          <button
+            type="button"
+            className={style.avatarUpload}
+            onClick={() => inputRef.current?.click()}
+            disabled={busy}
+          >
+            <FaCamera aria-hidden="true" />
+            {busy ? 'Saving...' : user.avatar ? 'Change photo' : 'Upload photo'}
+          </button>
+          {user.avatar && (
+            <button
+              type="button"
+              className={style.avatarRemove}
+              onClick={() => save('', 'Profile photo removed')}
+              disabled={busy}
+            >
+              <FaTrashAlt aria-hidden="true" />
+              Remove
+            </button>
+          )}
+        </div>
+        {error && (
+          <p className={style.errorBox} role="alert">
+            {error}
+          </p>
+        )}
+      </div>
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className={style.avatarFile}
+        onChange={onPick}
+        tabIndex={-1}
+        aria-hidden="true"
+      />
+    </div>
+  );
+};
+
 /* ---------------- account details form ---------------- */
 interface IProfileInputs {
   name: string;
@@ -383,8 +540,11 @@ const ProfileForm = ({
         autoCapitalize="none"
         error={errors.email?.message}
         {...register('email', {
-          validate: (v) =>
-            v === '' || EMAIL_REGEX.test(v) || 'Please provide a valid email address',
+          required: 'Email is required for OTP verification',
+          pattern: {
+            value: EMAIL_REGEX,
+            message: 'Please provide a valid email address',
+          },
         })}
       />
 
@@ -415,7 +575,6 @@ const Dashboard = () => {
   const [orders, setOrders] = useState<IPurchase[] | null>(null);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [editing, setEditing] = useState<IPurchase | null>(null);
-  const [removing, setRemoving] = useState<IPurchase | null>(null);
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [busy, setBusy] = useState(false);
   const [toast, setToast] = useState('');
@@ -459,16 +618,6 @@ const Dashboard = () => {
   const spent = list.reduce((sum, o) => sum + o.total, 0);
   const now = Date.now();
 
-  const removeOrder = async () => {
-    if (!removing) return;
-    setBusy(true);
-    const res = await deletePurchase(user.id, removing.id);
-    setBusy(false);
-    setToast(res.ok ? 'Purchase record deleted' : res.message);
-    setRemoving(null);
-    if (res.ok) await load();
-  };
-
   const removeAccount = async () => {
     setBusy(true);
     const res = await deleteAccount(user.id);
@@ -487,8 +636,16 @@ const Dashboard = () => {
         {/* ---------- hero ---------- */}
         <section className={style.dHero}>
           <div className={style.dHeroTop}>
-            <span className={style.dAvatar} aria-hidden="true">
-              {user.name.trim().charAt(0).toUpperCase() || 'U'}
+            <span
+              className={style.dAvatar}
+              aria-hidden="true"
+              style={
+                user.avatar
+                  ? { backgroundImage: `url("${user.avatar}")` }
+                  : undefined
+              }
+            >
+              {!user.avatar && (user.name.trim().charAt(0).toUpperCase() || 'U')}
             </span>
             <div className={style.dWho}>
               <small>Welcome back</small>
@@ -609,6 +766,10 @@ const Dashboard = () => {
                 <FaArrowRight aria-hidden="true" />
               </Link>
             </div>
+            <p className={style.dNote}>
+              You can update the patient details of a purchase. Purchase
+              records cannot be deleted.
+            </p>
 
             {orders === null ? (
               <p className={style.loadingText}>Loading your purchases…</p>
@@ -709,22 +870,14 @@ const Dashboard = () => {
                         <strong>{formatBDT(o.total)}</strong>
                       </div>
 
-                      <div className={style.dActions}>
+                      <div className={`${style.dActions} ${style.dActionsSingle}`}>
                         <button
                           type="button"
                           className={style.dEdit}
                           onClick={() => setEditing(o)}
                         >
                           <FaEdit aria-hidden="true" />
-                          Edit patient
-                        </button>
-                        <button
-                          type="button"
-                          className={style.dDelete}
-                          onClick={() => setRemoving(o)}
-                        >
-                          <FaTrashAlt aria-hidden="true" />
-                          Delete
+                          Edit patient details
                         </button>
                       </div>
                     </li>
@@ -741,8 +894,9 @@ const Dashboard = () => {
             <div className={style.dPanel}>
               <h2>Account details</h2>
               <p className={style.hint}>
-                Update your name, mobile number or email.
+                Update your photo, name, mobile number or email.
               </p>
+              <AvatarUploader user={user} onDone={setToast} />
               <ProfileForm user={user} onDone={setToast} />
             </div>
 
@@ -789,20 +943,9 @@ const Dashboard = () => {
             onClose={() => setEditing(null)}
             onSaved={async () => {
               setEditing(null);
-              setToast('Patient information updated');
+              setToast('Patient details updated');
               await load();
             }}
-          />
-        )}
-        {removing && (
-          <ConfirmModal
-            key="remove"
-            title="Delete this purchase?"
-            text={`Purchase ${removing.invoiceNo} will be removed from your dashboard. This cannot be undone.`}
-            label="Delete purchase"
-            busy={busy}
-            onCancel={() => setRemoving(null)}
-            onConfirm={removeOrder}
           />
         )}
         {deletingAccount && (
