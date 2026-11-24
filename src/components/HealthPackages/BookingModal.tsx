@@ -353,6 +353,9 @@ const BookingModal = ({
         items: items.map((pkg) => ({
           name: pkg.name,
           price: unitPrice(pkg),
+          ...(isCustom
+            ? { tests: getPackageCore(pkg).tests.map((test) => test.name) }
+            : {}),
         })),
         cardFee,
         total,

@@ -692,13 +692,29 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
 }
 
 .chip {
+    display: inline-flex;
     flex: none;
-    padding: 4px 10px;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px;
     border-radius: 999px;
     background: rgba($g2, 0.14);
     color: $g;
     font-size: 11.5px;
     font-weight: 800;
+    white-space: nowrap;
+    &::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+}
+
+.chipWarn {
+    background: #fdf1d9;
+    color: #9a6a0a;
 }
 
 .chipOff {
@@ -708,16 +724,22 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
 
 .orderItems {
     display: grid;
-    gap: 6px;
+    gap: 0;
     margin: 0;
     padding: 0;
     list-style: none;
     li {
         display: flex;
+        align-items: center;
         justify-content: space-between;
         gap: 12px;
+        padding: 9px 0;
+        border-bottom: 1px dashed $line;
         font-size: 13.5px;
         color: $ink;
+        &:last-child {
+            border-bottom: 0;
+        }
         span {
             min-width: 0;
             overflow-wrap: anywhere;
@@ -763,7 +785,7 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
 .dWrap {
     display: grid;
     gap: 18px;
-    width: min(1040px, 100%);
+    width: min(1080px, 100%);
 }
 
 .dHero {
@@ -785,6 +807,16 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
         height: 220px;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.1);
+        pointer-events: none;
+    }
+    &::before {
+        content: '';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 70px;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='70' viewBox='0 0 400 70' fill='none'%3E%3Cpath d='M0 40h110l12-22 16 44 14-40 10 18h238' stroke='white' stroke-opacity='.16' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") repeat-x bottom / 400px 70px;
         pointer-events: none;
     }
     @media (max-width: 600px) {
@@ -865,19 +897,57 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     gap: 12px;
     padding: 12px 14px;
     border: 1px solid rgba(255, 255, 255, 0.28);
-    border-radius: 14px;
+    border-radius: 16px;
     background: rgba(255, 255, 255, 0.14);
-    svg {
-        flex: none;
-        font-size: 24px;
-    }
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+}
+
+.dCardIcon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    font-size: 20px;
+}
+
+.dCardText {
+    flex: 1;
+    min-width: 0;
     strong {
         display: block;
         font-size: 14.5px;
     }
     span {
+        display: block;
+        margin-top: 2px;
         font-size: 12.5px;
+        line-height: 1.4;
         opacity: 0.92;
+    }
+}
+
+.dCardDays {
+    flex: none;
+    padding: 6px 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.92);
+    color: $g;
+    text-align: center;
+    line-height: 1.15;
+    b {
+        display: block;
+        font-size: 20px;
+        font-weight: 800;
+    }
+    small {
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
     }
 }
 
@@ -920,10 +990,10 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
 
 .dStats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 12px;
-    @media (max-width: 700px) {
-        grid-template-columns: 1fr;
+    @media (max-width: 900px) {
+        grid-template-columns: repeat(2, 1fr);
         gap: 10px;
     }
 }
@@ -931,15 +1001,19 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
 .dStat {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
+    min-width: 0;
     padding: 16px;
     border: 1px solid $line;
     border-radius: 16px;
     background: #fff;
     box-shadow: 0 6px 18px rgba(11, 97, 45, 0.05);
+    >div {
+        min-width: 0;
+    }
     small {
         display: block;
-        font-size: 12px;
+        font-size: 11.5px;
         font-weight: 700;
         letter-spacing: 0.04em;
         text-transform: uppercase;
@@ -948,8 +1022,18 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     strong {
         display: block;
         margin-top: 2px;
-        font-size: 20px;
+        font-size: 19px;
         color: $g;
+        overflow-wrap: anywhere;
+    }
+    @media (max-width: 480px) {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 14px 12px;
+        strong {
+            font-size: 16px;
+        }
     }
 }
 
@@ -963,6 +1047,21 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     background: rgba($g2, 0.12);
     color: $g2;
     font-size: 18px;
+}
+
+.dStat:nth-child(2) .dStatIcon {
+    background: rgba(#2f80ed, 0.12);
+    color: #2f80ed;
+}
+
+.dStat:nth-child(3) .dStatIcon {
+    background: rgba($gold, 0.16);
+    color: $gold;
+}
+
+.dStat:nth-child(4) .dStatIcon {
+    background: rgba(#8e5bd6, 0.12);
+    color: #8e5bd6;
 }
 
 .dTabs {
@@ -1001,29 +1100,88 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
 
 .dOrders {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 14px;
     margin: 14px 0 0;
     padding: 0;
     list-style: none;
 }
 
+.dOrdersMulti {
+    @media (min-width: 701px) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: stretch;
+        .dOrder {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            >* {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+            >.orderFoot {
+                margin-top: auto;
+            }
+        }
+    }
+    @media (min-width: 701px) and (max-width: 900px) {
+        .dInfo {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
 .dOrder {
-    padding: 16px;
+    position: relative;
+    padding: 16px 16px 16px 20px;
+    overflow: hidden;
     border: 1px solid $line;
     border-radius: 18px;
     background: #fff;
     box-shadow: 0 8px 22px rgba(11, 97, 45, 0.06);
+    transition: box-shadow 0.2s ease;
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 4px;
+        background: linear-gradient(180deg, $g2, #95c11f);
+    }
+    &:hover {
+        box-shadow: 0 12px 28px rgba(11, 97, 45, 0.1);
+    }
     @media (max-width: 600px) {
-        padding: 14px 12px;
+        padding: 14px 12px 14px 16px;
     }
 }
 
 .dOrderTop {
     display: flex;
     align-items: flex-start;
-    justify-content: space-between;
-    gap: 10px;
-    margin-bottom: 12px;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.dOrderIcon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba($g2, 0.12);
+    color: $g;
+    font-size: 16px;
+    @media (max-width: 380px) {
+        display: none;
+    }
+}
+
+.dOrderMeta {
+    flex: 1;
+    min-width: 0;
     strong {
         display: block;
         font-size: 15px;
@@ -1031,8 +1189,20 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
         overflow-wrap: anywhere;
     }
     span {
+        display: block;
         font-size: 12.5px;
+        line-height: 1.5;
         color: $muted;
+    }
+    .dCenter {
+        display: flex;
+        align-items: flex-start;
+        gap: 5px;
+        svg {
+            flex: none;
+            margin-top: 3px;
+            color: $g2;
+        }
     }
 }
 
@@ -1441,6 +1611,157 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
         outline: none;
         border-color: $g2;
         box-shadow: 0 0 0 4px rgba(26, 154, 91, 0.14);
+    }
+}
+
+
+/* ================= Dashboard v3: healthcare details ================= */
+
+.itemName {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.itemIcon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: rgba($g2, 0.12);
+    color: $g2;
+    font-size: 13px;
+    font-style: normal;
+}
+
+.itemIconGold {
+    background: rgba($gold, 0.16);
+    color: $gold;
+}
+
+.dPatient {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+    li {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        max-width: 100%;
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: #f1f7f3;
+        color: $ink;
+        font-size: 12.5px;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+        svg {
+            flex: none;
+            color: $g2;
+        }
+    }
+    .dBlood {
+        background: #fdecec;
+        color: #b3261e;
+        svg {
+            color: #d64545;
+        }
+    }
+}
+
+.dMeter {
+    flex: 0 0 100%;
+    height: 6px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e6efe8;
+    span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, $g2, #95c11f);
+        transition: width 0.6s ease;
+    }
+}
+
+.dMeterWarn span {
+    background: linear-gradient(90deg, #e0a526, #f0c75e);
+}
+
+.dInfo {
+    animation: dFade 0.25s ease;
+}
+
+@keyframes dFade {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ================= Dashboard: invoice download ================= */
+
+.dDownload {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 12px;
+    background: linear-gradient(135deg, $g, $g2);
+    box-shadow: 0 6px 14px rgba(11, 97, 45, 0.2);
+    color: #fff;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    &:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 20px rgba(11, 97, 45, 0.26);
+    }
+    &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+}
+
+.dSpin {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.45);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: dSpin 0.7s linear infinite;
+}
+
+@keyframes dSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.dActions {
+    @media (max-width: 480px) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.dOrdersMulti .dActions {
+    @media (min-width: 701px) and (max-width: 900px) {
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 

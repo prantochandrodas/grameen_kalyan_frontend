@@ -452,7 +452,9 @@ async function buildInvoice(data: IInvoiceData, T: ISpacing): Promise<JsPdfDoc> 
   data.items.forEach((item, i) => {
     const nameLines = wrap(item.name, NAME_W, 10.5, true);
     const inclLines = wrap(
-      `Includes: ${item.tests.join(', ')}`,
+      item.tests.length
+        ? `Includes: ${item.tests.join(', ')}`
+        : 'Tests selected by you',
       NAME_W,
       7.5,
       false
@@ -485,10 +487,15 @@ async function buildInvoice(data: IInvoiceData, T: ISpacing): Promise<JsPdfDoc> 
       ty += lineH(7.5);
     });
 
-    draw(String(item.testCount), COL_TESTS, y + base, {
-      size: 9.5,
-      align: 'center',
-    });
+    draw(
+      item.testCount > 0 ? String(item.testCount) : '-',
+      COL_TESTS,
+      y + base,
+      {
+        size: 9.5,
+        align: 'center',
+      }
+    );
     if (item.rate > item.price) {
       const label = formatBDT(item.rate);
       draw(label, COL_RATE, y + base, { size: 9, color: GREY, align: 'right' });

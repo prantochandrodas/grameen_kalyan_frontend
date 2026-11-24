@@ -12,7 +12,7 @@ export interface IPurchase {
   id: string;
   invoiceNo: string;
   date: string; // ISO purchase date
-  items: { name: string; price: number }[];
+  items: { name: string; price: number; tests?: string[] }[];
   cardFee: number;
   total: number;
   hasCard: boolean;

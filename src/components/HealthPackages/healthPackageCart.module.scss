@@ -6,13 +6,13 @@ $cart-muted: #68786e;
 $cart-line: #e4ece6;
 .page {
     min-height: 65vh;
-    padding: clamp(2.4rem, 5vw, 5.6rem) 2rem 8rem;
+    padding: clamp(2.4rem, 5vw, 5.6rem) 1.6rem 8rem;
     background: radial-gradient(ellipse at 12% 0%, rgba(19, 132, 71, 0.08), transparent 34rem), #f6f9f6;
     color: $cart-ink;
 }
 
 .container {
-    width: min(112rem, 100%);
+    width: min(1080px, 100%);
     margin: 0 auto;
 }
 
@@ -459,7 +459,7 @@ $cart-line: #e4ece6;
 
 @media (max-width: 700px) {
     .page {
-        padding: 2.2rem 1.6rem calc(5rem + env(safe-area-inset-bottom));
+        padding: 2.2rem 1rem calc(5rem + env(safe-area-inset-bottom));
     }
     .backLink {
         margin-bottom: 2rem;

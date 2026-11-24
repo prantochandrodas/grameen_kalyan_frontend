@@ -8,19 +8,30 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import {
   FaArrowRight,
+  FaBaby,
   FaCalendarAlt,
   FaCamera,
+  FaCheckCircle,
   FaChevronDown,
+  FaClipboardList,
+  FaDownload,
   FaEdit,
   FaEnvelope,
   FaExclamationTriangle,
+  FaFemale,
+  FaHeartbeat,
   FaIdCard,
+  FaMapMarkerAlt,
+  FaNotesMedical,
   FaPhoneAlt,
   FaReceipt,
+  FaShieldAlt,
   FaSignOutAlt,
   FaTimes,
+  FaTint,
   FaTrashAlt,
   FaUser,
+  FaUserInjured,
   FaWallet,
 } from 'react-icons/fa';
 
@@ -54,6 +65,28 @@ const fmt = (iso: string) =>
   });
 
 const dash = (value?: string) => (value && value.trim() ? value : '—');
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+const daysLeft = (iso: string) =>
+  Math.ceil((new Date(iso).getTime() - Date.now()) / DAY_MS);
+
+const greeting = () => {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning';
+  if (hour < 17) return 'Good afternoon';
+  return 'Good evening';
+};
+
+const pkgIcon = (name: string): React.ReactElement => {
+  const n = name.toLowerCase();
+  if (n.includes('women')) return <FaFemale />;
+  if (n.includes('pregnan')) return <FaBaby />;
+  if (n.includes('diabet')) return <FaTint />;
+  if (n.includes('hypertens') || n.includes('heart')) return <FaHeartbeat />;
+  if (n.includes('custom')) return <FaClipboardList />;
+  return <FaNotesMedical />;
+};
 
 const getPatient = (o: IPurchase): IPatientInfo => ({
   name: o.patient?.name || o.patientName,
@@ -233,11 +266,7 @@ const PatientModal = ({
 
         <TextField
           id="ptPhone"
-          {...register('phone', {
-            validate: (v) =>
-              v === '' || PHONE_REGEX.test(v.replace(/[\s-]/g, '')) ||
-              'Enter a valid mobile number',
-          })}
+          label="Contact Phone"
           icon={<FaPhoneAlt />}
           type="tel"
           inputMode="tel"
@@ -578,6 +607,7 @@ const Dashboard = () => {
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [busy, setBusy] = useState(false);
   const [toast, setToast] = useState('');
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   const userId = user ? user.id : '';
 
@@ -617,6 +647,10 @@ const Dashboard = () => {
   const cardUntil = getActiveCard(list);
   const spent = list.reduce((sum, o) => sum + o.total, 0);
   const now = Date.now();
+  const activeCount = list.filter(
+    (o) => new Date(o.validUntil).getTime() > now
+  ).length;
+  const cardDaysLeft = cardUntil ? Math.max(daysLeft(cardUntil), 0) : 0;
 
   const removeAccount = async () => {
     setBusy(true);
@@ -628,6 +662,20 @@ const Dashboard = () => {
       return;
     }
     router.push('/');
+  };
+
+  const downloadInvoice = async (o: IPurchase) => {
+    if (downloadingId) return;
+    setDownloadingId(o.id);
+    try {
+      const { downloadPurchaseInvoice } = await import('./purchaseInvoice');
+      await downloadPurchaseInvoice(o, user);
+      setToast('Invoice downloaded');
+    } catch {
+      setToast('Could not create the invoice. Please try again.');
+    } finally {
+      setDownloadingId(null);
+    }
   };
 
   return (
@@ -648,7 +696,7 @@ const Dashboard = () => {
               {!user.avatar && (user.name.trim().charAt(0).toUpperCase() || 'U')}
             </span>
             <div className={style.dWho}>
-              <small>Welcome back</small>
+              <small>{greeting()}, welcome back</small>
               <h1>{user.name}</h1>
               <ul className={style.dChips}>
                 <li>
@@ -666,8 +714,10 @@ const Dashboard = () => {
           </div>
 
           <div className={`${style.dCard} ${cardUntil ? '' : style.dCardOff}`}>
-            <FaIdCard aria-hidden="true" />
-            <div>
+            <span className={style.dCardIcon} aria-hidden="true">
+              {cardUntil ? <FaShieldAlt /> : <FaIdCard />}
+            </span>
+            <div className={style.dCardText}>
               <strong>
                 {cardUntil ? 'Health Card is active' : 'No active Health Card'}
               </strong>
@@ -677,6 +727,12 @@ const Dashboard = () => {
                   : 'Take a Health Card with your next package for the discount rate.'}
               </span>
             </div>
+            {cardUntil && (
+              <div className={style.dCardDays}>
+                <b>{cardDaysLeft}</b>
+                <small>days left</small>
+              </div>
+            )}
           </div>
 
           <div className={style.dHeroActions}>
@@ -711,6 +767,15 @@ const Dashboard = () => {
             <div>
               <small>Purchases</small>
               <strong>{list.length}</strong>
+            </div>
+          </div>
+          <div className={style.dStat}>
+            <span className={style.dStatIcon}>
+              <FaCheckCircle aria-hidden="true" />
+            </span>
+            <div>
+              <small>Active packages</small>
+              <strong>{activeCount}</strong>
             </div>
           </div>
           <div className={style.dStat}>
@@ -784,11 +849,30 @@ const Dashboard = () => {
                 </Link>
               </div>
             ) : (
-              <ul className={style.dOrders}>
+              <ul
+                className={`${style.dOrders} ${
+                  list.length > 1 ? style.dOrdersMulti : ''
+                }`}
+              >
                 {list.map((o) => {
                   const active = new Date(o.validUntil).getTime() > now;
                   const isOpen = expanded === o.id;
                   const p = getPatient(o);
+                  const period =
+                    new Date(o.validUntil).getTime() - new Date(o.date).getTime();
+                  const pct =
+                    period > 0
+                      ? Math.min(
+                          100,
+                          Math.max(
+                            0,
+                            ((new Date(o.validUntil).getTime() - now) / period) *
+                              100
+                          )
+                        )
+                      : 0;
+                  const remain = daysLeft(o.validUntil);
+                  const soon = active && remain <= 7;
                   const rows: [string, string][] = [
                     ['Patient name', p.name],
                     ['Gender', p.gender],
@@ -805,18 +889,72 @@ const Dashboard = () => {
                   return (
                     <li className={style.dOrder} key={o.id}>
                       <div className={style.dOrderTop}>
-                        <div>
+                        <span className={style.dOrderIcon} aria-hidden="true">
+                          <FaReceipt />
+                        </span>
+                        <div className={style.dOrderMeta}>
                           <strong>{o.invoiceNo}</strong>
-                          <span>
-                            Purchased on {fmt(o.date)} · {o.center}
+                          <span>Purchased on {fmt(o.date)}</span>
+                          <span className={style.dCenter}>
+                            <FaMapMarkerAlt aria-hidden="true" />
+                            {o.center}
                           </span>
                         </div>
                         <span
-                          className={`${style.chip} ${active ? '' : style.chipOff}`}
+                          className={`${style.chip} ${
+                            active ? (soon ? style.chipWarn : '') : style.chipOff
+                          }`}
                         >
-                          {active ? 'Active' : 'Expired'}
+                          {active
+                            ? soon
+                              ? `${Math.max(remain, 0)}d left`
+                              : 'Active'
+                            : 'Expired'}
                         </span>
                       </div>
+
+                      <ul className={style.orderItems}>
+                        {o.items.map((item) => (
+                          <li key={item.name}>
+                            <span className={style.itemName}>
+                              <i className={style.itemIcon} aria-hidden="true">
+                                {pkgIcon(item.name)}
+                              </i>
+                              {item.name}
+                            </span>
+                            <b>{formatBDT(item.price)}</b>
+                          </li>
+                        ))}
+                        {o.cardFee > 0 && (
+                          <li>
+                            <span className={style.itemName}>
+                              <i
+                                className={`${style.itemIcon} ${style.itemIconGold}`}
+                                aria-hidden="true"
+                              >
+                                <FaIdCard />
+                              </i>
+                              Health Card (6 months)
+                            </span>
+                            <b>{formatBDT(o.cardFee)}</b>
+                          </li>
+                        )}
+                      </ul>
+
+                      <ul className={style.dPatient} aria-label="Patient">
+                        <li>
+                          <FaUserInjured aria-hidden="true" />
+                          {dash(p.name)}
+                        </li>
+                        {p.age && <li>{p.age} yrs</li>}
+                        {p.gender && <li>{p.gender}</li>}
+                        {p.bloodGroup && (
+                          <li className={style.dBlood}>
+                            <FaTint aria-hidden="true" />
+                            {p.bloodGroup}
+                          </li>
+                        )}
+                      </ul>
 
                       <ul className={style.orderItems}>
                         {o.items.map((item) => (
@@ -863,6 +1001,14 @@ const Dashboard = () => {
                       )}
 
                       <div className={style.orderFoot}>
+                        <div
+                          className={`${style.dMeter} ${
+                            soon ? style.dMeterWarn : ''
+                          }`}
+                          aria-hidden="true"
+                        >
+                          <span style={{ width: `${active ? pct : 0}%` }} />
+                        </div>
                         <span>
                           {o.hasCard ? 'Card' : 'Package'} valid until{' '}
                           {fmt(o.validUntil)}
@@ -870,7 +1016,26 @@ const Dashboard = () => {
                         <strong>{formatBDT(o.total)}</strong>
                       </div>
 
-                      <div className={`${style.dActions} ${style.dActionsSingle}`}>
+                      <div className={style.dActions}>
+                        <button
+                          type="button"
+                          className={style.dDownload}
+                          onClick={() => downloadInvoice(o)}
+                          disabled={downloadingId !== null}
+                          aria-busy={downloadingId === o.id}
+                        >
+                          {downloadingId === o.id ? (
+                            <>
+                              <span className={style.dSpin} aria-hidden="true" />
+                              Preparing…
+                            </>
+                          ) : (
+                            <>
+                              <FaDownload aria-hidden="true" />
+                              Download invoice
+                            </>
+                          )}
+                        </button>
                         <button
                           type="button"
                           className={style.dEdit}
