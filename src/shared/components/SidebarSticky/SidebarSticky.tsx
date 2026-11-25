@@ -14,6 +14,7 @@ import { IoIosMail } from 'react-icons/io';
 import { RxCross2 } from 'react-icons/rx';
 import { IoSearch } from 'react-icons/io5';
 
+import { useSetting } from '@/shared/context/SettingContext';
 import style from './sidebarSticky.module.scss';
 import ContactForm from './ContactForm/ContactForm';
 
@@ -86,6 +87,7 @@ const findPage = (query: string): ISitePage | undefined => {
 };
 
 const SidebarSticky = () => {
+  const setting = useSetting();
   const [openPhone, setOpenPhone] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
   const [openContactForm, setOpenContactForm] = useState(false);
@@ -264,12 +266,19 @@ const SidebarSticky = () => {
           className={`${numberContainer} ${openPhone ? visibleNumber : ''}`}
         >
           <span className={phoneLabel}>Call Us</span>
-          <a className={phoneLink} href="tel:+880244802111">
-            +880244802111
-          </a>
-          <a className={phoneLink} href="tel:+8809642115500">
-            +8809642115500
-          </a>
+          {setting.contact_number_two && (
+            <a className={phoneLink} href={`tel:${setting.contact_number_two}`}>
+              {setting.contact_number_two}
+            </a>
+          )}
+          {setting.contact_number_three && (
+            <a
+              className={phoneLink}
+              href={`tel:${setting.contact_number_three}`}
+            >
+              {setting.contact_number_three}
+            </a>
+          )}
         </div>
 
         {/* Contact Form */}

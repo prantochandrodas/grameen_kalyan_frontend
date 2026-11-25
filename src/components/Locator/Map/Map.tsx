@@ -8,6 +8,7 @@ import Image from 'next/image';
 
 import layoutImg from '@/assets/layout/layout-tr-small.svg';
 import arrowIcon from '@/assets/icons/arrow-left.svg';
+import { useSetting, getMapUrl } from '@/shared/context/SettingContext';
 
 import style from './map.module.scss';
 
@@ -80,6 +81,7 @@ const splitLabel = (label: string) => {
 };
 
 const Map = () => {
+  const setting = useSetting();
   const [schedules, setSchedules] = useState<Schedule[]>(fallbackSchedules);
   const [activeId, setActiveId] = useState<string | number>(
     fallbackSchedules[0].id
@@ -136,7 +138,7 @@ const Map = () => {
         <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d456.28681477838296!2d90.3503437!3d23.8081239!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c108eabc683b%3A0x3f4df94c55d19627!2sGrameen%20Kalyan!5e0!3m2!1sen!2sbd!4v1775020631634!5m2!1sen!2sbd" title="Grameen Kalyan head office" loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen></iframe>
         <a
           className={openMapsBtn}
-          href="https://www.google.com/maps/search/?api=1&query=Grameen%20Kalyan%205th%20Floor%20Grameen%20Telecom%20Bhaban%20Mirpur%20Dhaka"
+          href={getMapUrl(setting.map_link)}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Open Grameen Kalyan in Google Maps"

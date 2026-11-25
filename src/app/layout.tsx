@@ -10,15 +10,25 @@ import {
 } from '@/shared/components';
 import OpeningPopup from '@/shared/components/OpeningPopup/OpeningPopup';
 import { AuthProvider } from '@/shared/context/AuthContext';
+import { SettingProvider } from '@/shared/context/SettingContext';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 // const inter = Inter({ subsets: ['latin'] });
 
-export const metadata = {
-  title: 'Grameen Kalyan',
-  description:
-    'Grameen Kalyan believes in trust, quality and innovation in delivering services. We are on a mission to transform healthcare in Bangladesh at primary, ...',
-};
+export async function generateMetadata() {
+  const settingRes = await useFetchLaravelData({
+    url: '/setting',
+    revalidateIn: 3600,
+  });
+  const setting = settingRes?.data ?? {};
+
+  return {
+    title: setting.company_name || 'Grameen Kalyan',
+    description:
+      'Grameen Kalyan believes in trust, quality and innovation in delivering services. We are on a mission to transform healthcare in Bangladesh at primary, ...',
+    icons: setting.fav_icon ? { icon: setting.fav_icon } : undefined,
+  };
+}
 
 export default async function RootLayout({
   children,
@@ -55,25 +65,33 @@ export default async function RootLayout({
     ? donatesRes
     : (donatesRes?.data ?? []);
 
+  const settingRes = await useFetchLaravelData({
+    url: '/setting',
+    revalidateIn: 3600,
+  });
+  const setting = settingRes?.data ?? {};
+
   const badgeImage = navbarData?.badge_image;
   const logoImage = navbarData?.navbar_logo;
 
   return (
     <html lang="en">
       <body suppressHydrationWarning={true}>
-        <AuthProvider>
-        <Navbar
-          badgeImage={badgeImage}
-          logoImage={logoImage}
-          donates={donates}
-          services={services}
-        />
-        {children}
-        <SidebarSticky />
-        <Footer logoImage={logoImage} />
-        <ButtonScrollTop />
-        <OpeningPopup />
-        </AuthProvider>
+        <SettingProvider value={setting}>
+          <AuthProvider>
+            <Navbar
+              badgeImage={badgeImage}
+              logoImage={logoImage}
+              donates={donates}
+              services={services}
+            />
+            {children}
+            <SidebarSticky />
+            <Footer logoImage={logoImage} />
+            <ButtonScrollTop />
+            <OpeningPopup />
+          </AuthProvider>
+        </SettingProvider>
       </body>
     </html>
   );

@@ -33,6 +33,7 @@ import {
   getPackageCore,
 } from '@/shared/utils/healthPackagePricing';
 import { useAuth } from '@/shared/context/AuthContext';
+import { useSetting } from '@/shared/context/SettingContext';
 import {
   IPurchase,
   addMonths,
@@ -97,6 +98,7 @@ const BookingModal = ({
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState(false);
   const { user, logout } = useAuth();
+  const setting = useSetting();
   const [showLogin, setShowLogin] = useState(false);
   const [showPw, setShowPw] = useState(false);
   // which package's test list is open (null = all hidden)
@@ -1090,7 +1092,9 @@ const BookingModal = ({
               <p className={style.callLine}>
                 <FaPhoneAlt aria-hidden="true" />
                 Prefer a call?
-                <a href="tel:+880244802111">+880244802111</a>
+                <a href={`tel:${setting.contact_number_two}`}>
+                  {setting.contact_number_two}
+                </a>
               </p>
             </form>
             </div>

@@ -11,9 +11,11 @@ import {
   FaLocationDot,
   FaPhone,
   FaEnvelope,
+  FaInstagram,
 } from 'react-icons/fa6';
 
 import { IMAGE_BASE_URL } from '@/config';
+import { useSetting, getMapUrl } from '@/shared/context/SettingContext';
 import footerIcon from '@/assets/images/favicon-footer.png';
 
 import style from './footer.module.scss';
@@ -49,43 +51,43 @@ const {
   leaf,
 } = style;
 
-const socialLinks = [
-  {
-    name: 'Facebook',
-    href: 'https://www.facebook.com/share/1Fam3kM6je/',
-    Icon: FaFacebookF,
-  },
-  {
-    name: 'LinkedIn',
-    href: 'https://www.linkedin.com/company/grameenkalyan/?originalSubdomain=bd',
-    Icon: FaLinkedinIn,
-  },
-  {
-    name: 'YouTube',
-    href: 'https://www.youtube.com/@GrameenKalyan1996',
-    Icon: FaYoutube,
-  },
-  {
-    name: 'WhatsApp',
-    href: 'https://wa.me/8801334944640',
-    Icon: FaWhatsapp,
-  },
-];
-
-const TAGLINE = 'In Healthcare, Right by Your Side';
-
-const MAP_URL = 'https://maps.app.goo.gl/TMyPosrVYwkzaKKK7';
-
 interface IFooterProps {
   logoImage?: string;
 }
 
 const Footer = ({ logoImage }: IFooterProps) => {
+  const setting = useSetting();
   const taglineRef = useRef<HTMLParagraphElement>(null);
   const [taglineVisible, setTaglineVisible] = useState(false);
   const [typedCount, setTypedCount] = useState(0);
   const currentYear = new Date().getFullYear();
-  const logoSrc = logoImage ? IMAGE_BASE_URL + logoImage : '';
+  const logoSrc =
+    setting.footer_logo || (logoImage ? IMAGE_BASE_URL + logoImage : '');
+
+  const TAGLINE = setting.tag_line || '';
+
+  const phones = [
+    setting.contact_number_one,
+    setting.contact_number_two,
+    setting.contact_number_three,
+  ].filter(Boolean) as string[];
+
+  // "5th Floor,Grameen Telecom Bhaban,53/1 Box Nagar, Mirpur 1,..." ke ager moto 4 line a bhag kore
+  const addressLines = (setting.address || '').split(/,(?=\S)/);
+
+  const whatsappNumber = (setting.contact_number_one || '').replace(/\D/g, '');
+
+  const socialLinks = [
+    { name: 'Facebook', href: setting.facebook_link || '', Icon: FaFacebookF },
+    { name: 'Instagram', href: setting.instagram_link || '', Icon: FaInstagram },
+    { name: 'LinkedIn', href: setting.linkedin_link || '', Icon: FaLinkedinIn },
+    { name: 'YouTube', href: setting.youtube_link || '', Icon: FaYoutube },
+    {
+      name: 'WhatsApp',
+      href: whatsappNumber ? `https://wa.me/${whatsappNumber}` : '',
+      Icon: FaWhatsapp,
+    },
+  ].filter((s) => s.href);
 
   useEffect(() => {
     const el = taglineRef.current;
@@ -141,7 +143,7 @@ const Footer = ({ logoImage }: IFooterProps) => {
 
     timer = setTimeout(tick, 600);
     return () => clearTimeout(timer);
-  }, [taglineVisible]);
+  }, [taglineVisible, TAGLINE]);
 
   return (
     <footer className={footer}>
@@ -151,7 +153,7 @@ const Footer = ({ logoImage }: IFooterProps) => {
             <Image
               className={logo}
               src={logoSrc}
-              alt="Grameen Kalyan"
+              alt={setting.company_name || 'Grameen Kalyan'}
               width={300}
               height={120}
             />
@@ -161,7 +163,7 @@ const Footer = ({ logoImage }: IFooterProps) => {
           <h3 className={title}>Address</h3>
           <a
             className={`${row} ${mapLink}`}
-            href={MAP_URL}
+            href={getMapUrl(setting.map_link)}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Open Grameen Kalyan address in Google Maps"
@@ -170,13 +172,16 @@ const Footer = ({ logoImage }: IFooterProps) => {
               <FaLocationDot />
             </span>
             <p className={text}>
-              5th Floor,
-              <br />
-              Grameen Telecom Bhaban,
-              <br />
-              53/1 Box Nagar, Mirpur 1,
-              <br />
-              Dhaka 1216, Bangladesh
+              {addressLines.map((line, i) => (
+                <React.Fragment key={line}>
+                  {line.trim()}
+                  {i < addressLines.length - 1 && (
+                    <>
+                      ,<br />
+                    </>
+                  )}
+                </React.Fragment>
+              ))}
             </p>
           </a>
         </div>
@@ -188,17 +193,19 @@ const Footer = ({ logoImage }: IFooterProps) => {
               <FaPhone />
             </span>
             <div className={text}>
-              <a href="tel:+8801334944640">+8801334944640</a>
-              <a href="tel:+880244802111">+880244802111</a>
-              <a href="tel:+8809642115500">+8809642115500</a>
+              {phones.map((phone) => (
+                <a key={phone} href={`tel:${phone}`}>
+                  {phone}
+                </a>
+              ))}
             </div>
           </div>
           <div className={row}>
             <span className={iconCircle}>
               <FaEnvelope />
             </span>
-            <a className={text} href="mailto:contact@grameenkalyan.com">
-              contact@grameenkalyan.com
+            <a className={text} href={`mailto:${setting.email}`}>
+              {setting.email}
             </a>
           </div>
         </div>
@@ -241,8 +248,8 @@ const Footer = ({ logoImage }: IFooterProps) => {
 
         <div className={bottomContent}>
           <p className={copywrite}>
-            © <span suppressHydrationWarning>{currentYear}</span> Grameen Kalyan.
-            All Rights Reserved.
+            © <span suppressHydrationWarning>{currentYear}</span>{' '}
+            {setting.copyright_text}
           </p>
           <p
             ref={taglineRef}

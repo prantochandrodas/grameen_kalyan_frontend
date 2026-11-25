@@ -19,6 +19,7 @@ import {
   HEALTH_PACKAGE_CART_EVENT,
 } from '@/shared/utils/healthPackageCart';
 import { useAuth } from '@/shared/context/AuthContext';
+import { useSetting } from '@/shared/context/SettingContext';
 import style from './mainNavbar.module.scss';
 import LanguageSwitcher from './LanguageSwitcher';
 
@@ -46,19 +47,6 @@ interface IMenuItem {
   children?: { label: string; href: string }[];
 }
 
-const socials = [
-  { icon: FaFacebookF, href: 'https://www.facebook.com/share/1Fam3kM6je/' },
-  { icon: FaYoutube, href: 'https://www.youtube.com/@GrameenKalyan1996' },
-  {
-    icon: FaInstagram,
-    href: 'https://www.instagram.com/explore/locations/118227903152262/grameen-kalyan/',
-  },
-  {
-    icon: FaLinkedinIn,
-    href: 'https://www.linkedin.com/company/grameenkalyan/?originalSubdomain=bd',
-  },
-];
-
 const Navbar = ({
   badgeImage,
   logoImage,
@@ -71,10 +59,19 @@ const Navbar = ({
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [cartCount, setCartCount] = useState(0);
   const { user } = useAuth();
+  const setting = useSetting();
+
+  // Instagram setting API te nei, tai ager link ta-i thakbe
+  const socials = [
+    { icon: FaFacebookF, href: setting.facebook_link },
+    { icon: FaYoutube, href: setting.youtube_link },
+    { icon: FaInstagram, href: setting.instagram_link },
+    { icon: FaLinkedinIn, href: setting.linkedin_link },
+  ].filter((s) => s.href) as { icon: typeof FaFacebookF; href: string }[];
 
   const safeDonates = Array.isArray(donates) ? donates : [];
   const safeServices = Array.isArray(services) ? services : [];
-  const logoSrc = IMAGE_BASE_URL + logoImage;
+  const logoSrc = setting.logo || IMAGE_BASE_URL + logoImage;
   const badgeSrc = IMAGE_BASE_URL + badgeImage;
 
   const menu: IMenuItem[] = [
