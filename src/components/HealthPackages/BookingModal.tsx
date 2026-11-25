@@ -401,7 +401,7 @@ const BookingModal = ({
     setDownloadError(false);
     try {
       const { downloadInvoicePdf } = await import('./invoicePdf');
-      await downloadInvoicePdf(invoice);
+      await downloadInvoicePdf(invoice, setting);
     } catch (error) {
       setDownloadError(true);
     } finally {

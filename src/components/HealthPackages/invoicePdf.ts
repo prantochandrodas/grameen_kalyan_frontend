@@ -2,6 +2,7 @@
 import logoImg from '@/assets/images/logo.png';
 import { formatBDT } from '@/data/healthPackages';
 import { CARD_VALIDITY_MONTHS } from '@/shared/utils/healthPackagePricing';
+import type { ISetting } from '@/shared/context/SettingContext';
 import type { jsPDF as JsPdfDoc } from 'jspdf';
 
 type RGB = [number, number, number];
@@ -45,16 +46,22 @@ const LINE: RGB = [208, 224, 213];
 const WHITE: RGB = [255, 255, 255];
 const LEAF: RGB = [255, 255, 255]; // white logo leaves on the dark header
 
-// company details (header tagline + footer contact lines)
-const COMPANY = {
-  name: 'Grameen Kalyan',
+// company details (header tagline + footer contact lines) - setting API theke
+const makeCompany = (s: ISetting = {}) => ({
+  name: s.company_name || 'Grameen Kalyan',
   tagline: 'Healthcare Package Booking',
-  hotlines: ['+8801334944640', '+880244802111', '+8809642115500'],
-  email: 'contact@grameenkalyan.com',
+  hotlines: [
+    s.contact_number_one,
+    s.contact_number_two,
+    s.contact_number_three,
+  ].filter(Boolean) as string[],
+  email: s.email || '',
   website: 'www.grameenkalyan.com',
-  address:
-    '5th Floor, Grameen Telecom Bhaban, 53/1 Box Nagar, Mirpur 1, Dhaka 1216, Bangladesh',
-};
+  // "5th Floor,Grameen Telecom Bhaban,..." -> comma er por space boshay
+  address: (s.address || '').replace(/,(?=\S)/g, ', '),
+});
+
+type ICompany = ReturnType<typeof makeCompany>;
 
 const PT = 0.3528; // 1pt in mm
 const S = 4; // canvas pixels per pt (sharp text for non-latin scripts)
@@ -131,7 +138,11 @@ const SPACING: ISpacing[] = [
   { sec: 3, pad: 1.6, pb: 0.6 }, // tightest
 ];
 
-async function buildInvoice(data: IInvoiceData, T: ISpacing): Promise<JsPdfDoc> {
+async function buildInvoice(
+  data: IInvoiceData,
+  T: ISpacing,
+  COMPANY: ICompany
+): Promise<JsPdfDoc> {
   const { jsPDF } = await import('jspdf');
   const doc = new jsPDF({
     unit: 'mm',
@@ -148,8 +159,8 @@ async function buildInvoice(data: IInvoiceData, T: ISpacing): Promise<JsPdfDoc> 
   doc.setProperties({
     title: `Invoice ${data.number}`,
     subject: `Health package invoice ${data.number}`,
-    author: 'Grameen Kalyan',
-    creator: 'Grameen Kalyan',
+    author: COMPANY.name,
+    creator: COMPANY.name,
     keywords: `${data.number}, ${data.total}`,
   });
 
@@ -669,7 +680,7 @@ async function buildInvoice(data: IInvoiceData, T: ISpacing): Promise<JsPdfDoc> 
     doc.addPage();
     y = 20;
   }
-  draw('Thank you for choosing Grameen Kalyan.', W / 2, y + 4, {
+  draw(`Thank you for choosing ${COMPANY.name}.`, W / 2, y + 4, {
     size: 10.5,
     bold: true,
     color: GREEN,
@@ -697,7 +708,7 @@ async function buildInvoice(data: IInvoiceData, T: ISpacing): Promise<JsPdfDoc> 
     // computer-generated note sits ABOVE the golden line (font shrinks to fit one line)
     const verifyText = `Computer-generated invoice, no signature required. Ref: ${
       data.number
-    } | Total: ${formatBDT(data.total)}. Please verify with Grameen Kalyan if altered.`;
+    } | Total: ${formatBDT(data.total)}. Please verify with ${COMPANY.name} if altered.`;
     draw(verifyText, W / 2, H - 26.5, {
       size: fitSize(verifyText, 7, CW),
       color: GREY,
@@ -728,15 +739,22 @@ async function buildInvoice(data: IInvoiceData, T: ISpacing): Promise<JsPdfDoc> 
   return doc;
 }
 
-export async function downloadInvoicePdf(data: IInvoiceData): Promise<void> {
+export async function downloadInvoicePdf(
+  data: IInvoiceData,
+  setting?: ISetting
+): Promise<void> {
+  const company = makeCompany(setting);
+
   // 1) try ONE page: normal spacing first, then tighter and tighter
-  let doc = await buildInvoice(data, SPACING[0]);
+  let doc = await buildInvoice(data, SPACING[0], company);
   for (let i = 1; i < SPACING.length && doc.getNumberOfPages() > 1; i += 1) {
     // eslint-disable-next-line no-await-in-loop
-    doc = await buildInvoice(data, SPACING[i]);
+    doc = await buildInvoice(data, SPACING[i], company);
   }
   // 2) still more than one page -> multi page with normal spacing
-  if (doc.getNumberOfPages() > 1) doc = await buildInvoice(data, SPACING[0]);
+  if (doc.getNumberOfPages() > 1) {
+    doc = await buildInvoice(data, SPACING[0], company);
+  }
 
   doc.save(`Invoice-${data.number}.pdf`);
 }

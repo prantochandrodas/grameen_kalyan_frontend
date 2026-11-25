@@ -37,6 +37,7 @@ import {
 
 import { formatBDT } from '@/data/healthPackages';
 import { useAuth } from '@/shared/context/AuthContext';
+import { useSetting } from '@/shared/context/SettingContext';
 import {
   EMAIL_REGEX,
   IPatientInfo,
@@ -600,6 +601,7 @@ type Tab = 'purchases' | 'profile';
 const Dashboard = () => {
   const router = useRouter();
   const { user, ready, logout } = useAuth();
+  const setting = useSetting();
   const [tab, setTab] = useState<Tab>('purchases');
   const [orders, setOrders] = useState<IPurchase[] | null>(null);
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -669,7 +671,7 @@ const Dashboard = () => {
     setDownloadingId(o.id);
     try {
       const { downloadPurchaseInvoice } = await import('./purchaseInvoice');
-      await downloadPurchaseInvoice(o, user);
+      await downloadPurchaseInvoice(o, user, setting);
       setToast('Invoice downloaded');
     } catch {
       setToast('Could not create the invoice. Please try again.');

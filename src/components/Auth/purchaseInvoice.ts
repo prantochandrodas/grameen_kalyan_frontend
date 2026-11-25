@@ -1,5 +1,6 @@
 // ================= START: src/components/Auth/purchaseInvoice.ts =================
 import type { IInvoiceData } from '@/components/HealthPackages/invoicePdf';
+import type { ISetting } from '@/shared/context/SettingContext';
 import { getDataByKeyword } from '@/components/Healthcare/MapSection/mapSection.helper';
 import { HEALTH_PACKAGES } from '@/data/healthPackages';
 import type { IHealthCenter } from '@/shared/types/healthCenter';
@@ -102,12 +103,13 @@ export const buildPurchaseInvoice = async (
 
 export const downloadPurchaseInvoice = async (
   o: IPurchase,
-  user: IUser
+  user: IUser,
+  setting?: ISetting
 ): Promise<void> => {
   const data = await buildPurchaseInvoice(o, user);
   const { downloadInvoicePdf } = await import(
     '@/components/HealthPackages/invoicePdf'
   );
-  await downloadInvoicePdf(data);
+  await downloadInvoicePdf(data, setting);
 };
 // ================== END: src/components/Auth/purchaseInvoice.ts ==================
