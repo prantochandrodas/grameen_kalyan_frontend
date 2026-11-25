@@ -3435,3 +3435,65 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     padding: 10px 12px;
     font-size: 12.5px;
 }
+
+
+/* ================= Customize package: email + password sign in ================= */
+
+.cpVerifyForm {
+    gap: 8px;
+}
+
+.cpVerifyInput {
+    width: 100%;
+}
+
+.cpPwWrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.cpPwInput {
+    padding-right: 46px;
+}
+
+.cpPwEye {
+    position: absolute;
+    right: 4px;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #6b7a72;
+    font-size: 15px;
+    cursor: pointer;
+    &:hover {
+        background: rgba($color-primary, 0.1);
+        color: $color-primary;
+    }
+    &:focus-visible {
+        outline: 2px solid $hp-gold;
+    }
+}
+
+.cpVerifyBtnFull {
+    width: 100%;
+}
+
+.cpVerifyLinks {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    a {
+        padding: 2px 0;
+        color: $color-primary;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+}

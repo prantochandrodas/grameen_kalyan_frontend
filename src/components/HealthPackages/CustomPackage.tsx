@@ -1,15 +1,16 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
   FaArrowRight,
   FaCheck,
-  FaEnvelope,
+  FaEye,
+  FaEyeSlash,
   FaIdCard,
   FaRedo,
   FaSearch,
-  FaShieldAlt,
   FaTag,
   FaTimes,
   FaUserCheck,
@@ -32,8 +33,7 @@ import {
   EMAIL_REGEX,
   getActiveCard,
   getPurchases,
-  sendOtp,
-  verifyOtp,
+  loginUser,
 } from '@/shared/utils/authService';
 import { useAuth } from '@/shared/context/AuthContext';
 
@@ -45,7 +45,7 @@ interface ICustomPackageProps {
 }
 
 type Plan = 'regular' | 'card' | 'member';
-type MemberStep = 'email' | 'otp' | 'checking' | 'active' | 'expired';
+type MemberStep = 'email' | 'checking' | 'active' | 'expired';
 
 const fmtDate = (value: string | null) =>
   value
@@ -72,8 +72,8 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
   const { user } = useAuth();
   const [step, setStep] = useState<MemberStep>('email');
   const [email, setEmail] = useState('');
-  const [otp, setOtp] = useState('');
-  const [demoCode, setDemoCode] = useState<string | null>(null);
+  const [password, setPassword] = useState('');
+  const [showPw, setShowPw] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [cardUntil, setCardUntil] = useState<string | null>(null);
@@ -97,7 +97,7 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
         ? `Health Card active until ${fmtDate(
             cardUntil
           )}. Discount rate on every test, no card fee.`
-        : 'Verify your email to see your member discount rate.'
+        : 'Sign in with your email and password to see your member discount rate.'
       : plan === 'card'
       ? `One-time Health Card fee ${formatBDT(
           cardFee
@@ -122,7 +122,7 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
         id: 'member',
         icon: <FaUserCheck />,
         title: 'Existing member',
-        sub: 'Verify email · Discount rate',
+        sub: 'Sign in · Discount rate',
       },
     ];
 
@@ -176,7 +176,7 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
     setError('');
   };
 
-  /* ---------- existing member: email verify -> card validity (6 months) ---------- */
+  /* ---------- existing member: email + password sign in -> card validity (6 months) ---------- */
   const runCheck = async (userId: string) => {
     setStep('checking');
     const list = await getPurchases(userId);
@@ -196,13 +196,14 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
     setStep('expired');
   };
 
-  // already logged in -> no OTP needed, check the card directly
+  // already logged in -> no sign in needed, check the card directly
   useEffect(() => {
     if (plan === 'member' && user && step === 'email') runCheck(user.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plan, user, step]);
 
-  const sendCode = async (e?: React.FormEvent) => {
+  // existing member: email + password sign in -> then check the Health Card
+  const signIn = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setError('');
     const value = email.trim().toLowerCase();
@@ -210,41 +211,21 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
       setError('Enter a valid email address.');
       return;
     }
-    setBusy(true);
-    const res = await sendOtp(value);
-    setBusy(false);
-    if (!res.ok) {
-      setError(res.message);
-      return;
-    }
-    setDemoCode(res.data.demoCode || null);
-    setOtp('');
-    setStep('otp');
-  };
-
-  const verifyCode = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    setError('');
-    if (!/^\d{6}$/.test(otp)) {
-      setError('Enter the 6 digit OTP.');
+    if (!password) {
+      setError('Enter your password.');
       return;
     }
     setBusy(true);
     setStep('checking');
-    const res = await verifyOtp(email.trim().toLowerCase(), otp);
+    const res = await loginUser(value, password);
     setBusy(false);
     if (!res.ok) {
-      setStep('otp');
+      setStep('email');
       setError(res.message);
       return;
     }
+    setPassword('');
     await runCheck(res.data.id);
-  };
-
-  const changeEmail = () => {
-    setStep('email');
-    setOtp('');
-    setError('');
   };
 
   // send the package to the booking page (doctor consultation is optional)
@@ -347,100 +328,73 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
 
                 {step === 'email' && (
                   <form
-                    onSubmit={sendCode}
+                    onSubmit={signIn}
                     noValidate
                     className={style.cpVerifyForm}
                   >
                     <h4 className={style.cpVerifyTitle}>
-                      <FaEnvelope aria-hidden="true" /> Verify your email
+                      <FaUserCheck aria-hidden="true" /> Member sign in
                     </h4>
                     <p className={style.cpVerifyText}>
-                      Enter the email you used when you bought your package. We
-                      will send you a 6 digit OTP.
+                      Sign in with the email and password of your Grameen Kalyan
+                      account to check your Health Card.
                     </p>
-                    <div className={style.cpVerifyRow}>
-                      <input
-                        type="email"
-                        inputMode="email"
-                        autoComplete="email"
-                        className={style.cpVerifyInput}
-                        placeholder="you@example.com"
-                        aria-label="Email address"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                      <button
-                        type="submit"
-                        className={style.cpVerifyBtn}
-                        disabled={busy}
-                      >
-                        {busy ? 'Sending…' : 'Send OTP'}
-                      </button>
-                    </div>
-                    {error && (
-                      <p className={style.cpVerifyError} role="alert">
-                        {error}
-                      </p>
-                    )}
-                    <button
-                      type="button"
-                      className={style.cpLinkBtn}
-                      onClick={() => choosePlan('regular')}
-                    >
-                      I am a new customer
-                    </button>
-                  </form>
-                )}
 
-                {step === 'otp' && (
-                  <form
-                    onSubmit={verifyCode}
-                    noValidate
-                    className={style.cpVerifyForm}
-                  >
-                    <h4 className={style.cpVerifyTitle}>
-                      <FaShieldAlt aria-hidden="true" /> Enter the OTP
-                    </h4>
-                    <p className={style.cpVerifyText}>
-                      We sent a 6 digit code to <b>{email.trim()}</b>.
-                    </p>
-                    {demoCode && (
-                      <p className={style.cpDemo}>Demo OTP: {demoCode}</p>
-                    )}
-                    <div className={style.cpVerifyRow}>
+                    <input
+                      type="email"
+                      inputMode="email"
+                      autoComplete="email"
+                      className={style.cpVerifyInput}
+                      placeholder="Email address"
+                      aria-label="Email address"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+
+                    <div className={style.cpPwWrap}>
                       <input
-                        type="text"
-                        inputMode="numeric"
-                        autoComplete="one-time-code"
-                        maxLength={6}
-                        className={`${style.cpVerifyInput} ${style.cpOtpInput}`}
-                        placeholder="000000"
-                        aria-label="OTP code"
-                        value={otp}
-                        onChange={(e) =>
-                          setOtp(e.target.value.replace(/\D/g, ''))
-                        }
+                        type={showPw ? 'text' : 'password'}
+                        autoComplete="current-password"
+                        className={`${style.cpVerifyInput} ${style.cpPwInput}`}
+                        placeholder="Password"
+                        aria-label="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                       />
                       <button
-                        type="submit"
-                        className={style.cpVerifyBtn}
-                        disabled={busy}
+                        type="button"
+                        className={style.cpPwEye}
+                        onClick={() => setShowPw((s) => !s)}
+                        aria-label={showPw ? 'Hide password' : 'Show password'}
                       >
-                        {busy ? 'Verifying…' : 'Verify'}
+                        {showPw ? <FaEyeSlash /> : <FaEye />}
                       </button>
                     </div>
+
                     {error && (
                       <p className={style.cpVerifyError} role="alert">
                         {error}
                       </p>
                     )}
+
                     <button
-                      type="button"
-                      className={style.cpLinkBtn}
-                      onClick={changeEmail}
+                      type="submit"
+                      className={`${style.cpVerifyBtn} ${style.cpVerifyBtnFull}`}
+                      disabled={busy}
                     >
-                      Change email
+                      {busy ? 'Signing in…' : 'Sign in & check card'}
                     </button>
+
+                    <div className={style.cpVerifyLinks}>
+                      <Link href="/forgot-password">Forgot password?</Link>
+                      <button
+                        type="button"
+                        className={style.cpLinkBtn}
+                        onClick={() => choosePlan('regular')}
+                      >
+                        I am a new customer
+                      </button>
+                    </div>
                   </form>
                 )}
 
