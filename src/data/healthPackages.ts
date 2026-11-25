@@ -1,15 +1,7 @@
 // ================= START: src/data/healthPackages.ts =================
 import type { StaticImageData } from 'next/image';
 
-import pregnancyImg from '@/assets/images/services/health-care.webp';
-import womenImg from '@/assets/images/healthcare/grid-1.webp';
-import diabeticImg from '@/assets/images/services/emergency-response.png';
-import hypertensionImg from '@/assets/images/services/healthcare.png';
-import childImg from '@/assets/images/services/wellbeing.png';
-import infertilityImg from '@/assets/images/about/about-bg.webp';
-import seniorImg from '@/assets/images/services/social-business.png';
-
-export type PackageCategory = 'mother' | 'chronic' | 'child' | 'senior';
+export type PackageCategory = string; // category id (API)
 export type PackageIconKey =
   | 'baby'
   | 'female'
@@ -30,200 +22,107 @@ export interface IHealthPackage {
   name: string;
   tagline: string;
   category: PackageCategory;
+  categoryName?: string;
   icon: PackageIconKey;
-  image: StaticImageData;
+  image: StaticImageData | string;
   imagePosition?: string;
   perks: string[];
   tests: IPackageTest[];
   price?: number; // optional manual override of the package price
 }
 
-export const PACKAGE_FILTERS: { key: 'all' | PackageCategory; label: string }[] =
-  [
-    { key: 'all', label: 'All Packages' },
-    { key: 'mother', label: 'Mother & Women' },
-    { key: 'chronic', label: 'Chronic Care' },
-    { key: 'child', label: 'Child Care' },
-    { key: 'senior', label: 'Senior Citizen' },
-  ];
+export interface IPackageFilter {
+  key: string; // 'all' or category id
+  label: string;
+}
 
-const t = (name: string, rate: number, price: number = rate): IPackageTest => ({
-  name,
-  rate,
-  price,
-});
+/* ================= API: get-packages / get-package-categories ================= */
 
-const CARD_PERKS = [
-  'Health Card for up to 6 family members',
-  'Doctor consultation included',
+export interface IApiPackageTest {
+  test_id: string;
+  name: string;
+  rate: number;
+  net_price: number;
+}
+
+export interface IApiPackage {
+  id: number;
+  name: string;
+  category_id: string;
+  category_name: string;
+  description: string | null;
+  thumbnail_image: string | null;
+  doctor_charge: number;
+  final_doctor_charge: number;
+  tests: IApiPackageTest[];
+}
+
+export interface IApiPackageCategory {
+  id: number;
+  name: string;
+}
+
+// one-time Health Card fee (API te nei)
+export const HEALTH_CARD_FEE = 150;
+
+const CONSULT_NAME = 'Health center doctor consultation (MBBS)';
+
+// card icon: package er nam dekhe (API te icon nei)
+const ICON_RULES: [RegExp, PackageIconKey][] = [
+  [/pregnan/i, 'baby'],
+  [/women/i, 'female'],
+  [/diabet/i, 'drop'],
+  [/hyper/i, 'heart'],
+  [/child/i, 'child'],
+  [/senior/i, 'senior'],
 ];
 
-export const HEALTH_PACKAGES: IHealthPackage[] = [
-  {
-    id: 'pregnancy',
-    name: 'Pregnancy Package',
-    tagline: 'Safe motherhood screening',
-    category: 'mother',
-    icon: 'baby',
-    image: pregnancyImg,
-    imagePosition: 'center 40%',
-    perks: CARD_PERKS,
-    tests: [
-      t('Card registration', 150),
-      t('Blood Grouping', 120, 100),
-      t('CBC (cell counter)', 400, 350),
-      t('Urine R/E', 200, 150),
-      t('FBS', 120, 100),
-      t('2HABF', 120, 100),
-      t('HBsAg (Screening)', 400, 300),
-      t('VDRL', 400, 300),
-      t('USG of pregnancy profile (Sonographer Color)', 500, 450),
-      t('TSH', 700, 600),
-      t('FT4', 1000, 900),
-      t('Health center doctor consultation (MBBS)', 250, 200),
-    ],
-  },
-  {
-    id: 'women-health',
-    name: 'Women Health Package',
-    tagline: 'Complete women’s wellness check',
-    category: 'mother',
-    icon: 'female',
-    image: womenImg,
-    imagePosition: 'center 45%',
-    perks: CARD_PERKS,
-    tests: [
-      t('Card registration', 150),
-      t('CBC (cell counter)', 400, 350),
-      t('Urine R/E', 200, 150),
-      t('FBS', 120, 100),
-      t('2HABF', 120, 100),
-      t('Serum Creatinine', 400, 350),
-      t('SGPT', 400, 320),
-      t('Lipid profile', 1000, 800),
-      t('TSH', 700, 600),
-      t('FT4', 1000, 900),
-      t('USG of W/A', 750, 700),
-      t('Health center doctor consultation (MBBS)', 250, 200),
-    ],
-  },
-  {
-    id: 'diabetic',
-    name: 'Diabetic Package',
-    tagline: 'Sugar, kidney & lipid monitoring',
-    category: 'chronic',
-    icon: 'drop',
-    image: diabeticImg,
-    imagePosition: 'center 35%',
-    perks: CARD_PERKS,
-    tests: [
-      t('Card registration', 150),
-      t('CBC (cell counter)', 400, 350),
-      t('Urine R/E', 200, 150),
-      t('FBS', 120, 100),
-      t('2HABF', 120, 100),
-      t('Lipid profile', 1000, 800),
-      t('TSH', 700, 600),
-      t('FT4', 1000, 900),
-      t('USG of whole abdomen', 750, 700),
-      t('SGPT', 400, 320),
-      t('Serum Creatinine', 400, 350),
-      t('Health center doctor consultation (MBBS)', 250, 200),
-    ],
-  },
-  {
-    id: 'hypertension',
-    name: 'Hypertension Package',
-    tagline: 'Heart, kidney & thyroid checkup',
-    category: 'chronic',
-    icon: 'heart',
-    image: hypertensionImg,
-    imagePosition: 'center 40%',
-    perks: CARD_PERKS,
-    tests: [
-      t('Card Registration', 150),
-      t('CBC (cell counter)', 400, 350),
-      t('FBS', 120, 100),
-      t('2HABF', 120, 100),
-      t('Serum creatinine', 400, 350),
-      t('SGPT', 400, 320),
-      t('TSH', 700, 600),
-      t('FT4', 1000, 900),
-      t('USG of whole abdomen', 750, 700),
-      t('Health center doctor consultation (MBBS)', 250, 200),
-    ],
-  },
-  {
-    id: 'child-care',
-    name: 'Child Care Package',
-    tagline: 'Essential child health screening',
-    category: 'child',
-    icon: 'child',
-    image: childImg,
-    imagePosition: 'center 35%',
-    perks: CARD_PERKS,
-    tests: [
-      t('Card registration', 150),
-      t('Blood Grouping', 120, 100),
-      t('CBC (cell counter)', 400, 350),
-      t('SGPT', 400, 320),
-      t('Serum creatinine', 400, 350),
-      t('Urine R/E', 200, 150),
-      t('HbsAg', 400, 300),
-      t('Health center doctor consultation (MBBS)', 250, 200),
-    ],
-  },
-  {
-    id: 'infertility',
-    name: 'Infertility Special Package',
-    tagline: 'Hormone & reproductive screening',
-    category: 'mother',
-    icon: 'care',
-    image: infertilityImg,
-    imagePosition: 'center 30%',
-    perks: CARD_PERKS,
-    tests: [
-      t('Card registration', 150),
-      t('Blood Grouping', 120, 100),
-      t('CBC (cell counter)', 400, 350),
-      t('FBS', 120, 100),
-      t('2HABF', 120, 100),
-      t('Urine R/E', 200, 150),
-      t('VDRL', 400, 300),
-      t('HbsAg (Screening)', 400, 300),
-      t('TSH', 700, 600),
-      t('FT4', 1000, 900),
-      t('Serum prolactin', 1200, 1000),
-      t('USG of L/A (Lower abdomen)', 550, 500),
-      t('Health center doctor consultation (MBBS)', 250, 200),
-    ],
-  },
-  {
-    id: 'senior-citizen',
-    name: 'Senior Citizen (60+) Health Check',
-    tagline: 'Complete checkup for 60+ patients',
-    category: 'senior',
-    icon: 'senior',
-    image: seniorImg,
-    imagePosition: 'center 40%',
-    perks: ['Doctor consultation free', 'Special for age 60+'],
-    tests: [
-      t('Blood Grouping', 120),
-      t('CBC (cell counter)', 400),
-      t('Urine R/E', 200),
-      t('FBS (Fasting blood sugar)', 120),
-      t('2HABF', 120),
-      t('S. Creatinine', 400),
-      t('SGPT', 400),
-      t('Lipid profile', 1000),
-      t('TSH', 700),
-      t('FT4', 1000),
-      t('USG of whole abdomen', 750),
-      t('Doctor consultation', 250, 0), // free inside the package
-    ],
-  },
+const getIcon = (name: string): PackageIconKey => {
+  const rule = ICON_RULES.find(([re]) => re.test(name));
+  return rule ? rule[1] : 'care';
+};
+
+export const buildPackageFilters = (
+  categories: IApiPackageCategory[]
+): IPackageFilter[] => [
+  { key: 'all', label: 'All Packages' },
+  ...categories.map((c) => ({ key: String(c.id), label: c.name })),
 ];
 
+export const mapApiPackage = (p: IApiPackage): IHealthPackage => {
+  const tests: IPackageTest[] = (p.tests || []).map((item) => ({
+    name: item.name,
+    rate: Number(item.rate) || 0,
+    price: Number(item.net_price) || 0,
+  }));
+
+  // doctor consultation API te alada field; list a na thakle shesh a add hobe
+  if (
+    Number(p.doctor_charge) > 0 &&
+    !tests.some((item) => /consultation/i.test(item.name))
+  ) {
+    tests.push({
+      name: CONSULT_NAME,
+      rate: Number(p.doctor_charge),
+      price: Number(p.final_doctor_charge) || 0,
+    });
+  }
+
+  return {
+    id: String(p.id),
+    name: p.name,
+    tagline: (p.description || '').replace(/\s+/g, ' ').trim(),
+    category: String(p.category_id),
+    categoryName: p.category_name,
+    icon: getIcon(p.name),
+    image: p.thumbnail_image || '',
+    perks: [],
+    tests: [
+      { name: 'Card registration', rate: HEALTH_CARD_FEE, price: HEALTH_CARD_FEE },
+      ...tests,
+    ],
+  };
+};
 export const formatBDT = (amount: number) =>
   `BDT ${amount.toLocaleString('en-US')}`;
 

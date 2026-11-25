@@ -23,12 +23,11 @@ import {
 } from 'react-icons/fa';
 
 import {
-  HEALTH_PACKAGES,
-  PACKAGE_FILTERS,
   IHealthPackage,
   PackageIconKey,
   formatBDT,
 } from '@/data/healthPackages';
+import { useHealthPackages } from '@/shared/context/HealthPackagesContext';
 import {
   getHealthPackageCart,
   saveHealthPackageCart,
@@ -204,6 +203,7 @@ const PackageCard = ({
 
 /* ------------------------------ Main section ------------------------------ */
 const HealthPackages = () => {
+  const { packages, filters } = useHealthPackages();
   const [filter, setFilter] = useState<string>('all');
   const [cart, setCart] = useState<string[]>([]);
   const [cartReady, setCartReady] = useState(false);
@@ -214,12 +214,12 @@ const HealthPackages = () => {
   useEffect(() => {
     try {
       const saved = getHealthPackageCart();
-      setCart(saved.filter((id) => HEALTH_PACKAGES.some((pkg) => pkg.id === id)));
+      setCart(saved.filter((id) => packages.some((pkg) => pkg.id === id)));
     } catch (e) {
       // storage blocked or corrupted - start with an empty cart
     }
     setCartReady(true);
-  }, []);
+  }, [packages]);
 
   // keep the cart saved
   useEffect(() => {
@@ -234,17 +234,17 @@ const HealthPackages = () => {
   const visible = useMemo(
     () =>
       filter === 'all'
-        ? HEALTH_PACKAGES
-        : HEALTH_PACKAGES.filter((pkg) => pkg.category === filter),
-    [filter]
+        ? packages
+        : packages.filter((pkg) => pkg.category === filter),
+    [filter, packages]
   );
 
   const cartItems = useMemo(
     () =>
       cart
-        .map((id) => HEALTH_PACKAGES.find((pkg) => pkg.id === id))
+        .map((id) => packages.find((pkg) => pkg.id === id))
         .filter(Boolean) as IHealthPackage[],
-    [cart]
+    [cart, packages]
   );
 
   const cartTotals = useMemo(() => getCartTotals(cartItems), [cartItems]);
@@ -342,12 +342,11 @@ const HealthPackages = () => {
 
           {/* ---------- Filters ---------- */}
           <div className={style.filters} role="tablist" aria-label="Packages">
-            {PACKAGE_FILTERS.map((item) => {
+            {filters.map((item) => {
               const count =
                 item.key === 'all'
-                  ? HEALTH_PACKAGES.length
-                  : HEALTH_PACKAGES.filter((p) => p.category === item.key)
-                      .length;
+                  ? packages.length
+                  : packages.filter((p) => p.category === item.key).length;
               return (
                 <button
                   key={item.key}

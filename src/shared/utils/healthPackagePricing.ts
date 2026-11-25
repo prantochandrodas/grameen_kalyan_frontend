@@ -1,4 +1,4 @@
-import { HEALTH_PACKAGES, IHealthPackage } from '@/data/healthPackages';
+import { HEALTH_CARD_FEE, IHealthPackage } from '@/data/healthPackages';
 
 export const CARD_VALIDITY_MONTHS = 6;
 
@@ -46,13 +46,7 @@ export const getCartTotals = (items: IHealthPackage[]) => {
 };
 
 // card fee amount for the page notice
-export const getCardFeeAmount = () => {
-  for (let i = 0; i < HEALTH_PACKAGES.length; i += 1) {
-    const fee = getCardFee(HEALTH_PACKAGES[i]);
-    if (fee) return fee.price;
-  }
-  return 0;
-};
+export const getCardFeeAmount = () => HEALTH_CARD_FEE;
 
 
 /* ================= Customize package ================= */
@@ -86,10 +80,10 @@ const TEST_ALIASES: Record<string, string> = {
 };
 
 // every unique test from all packages (card registration excluded), A-Z
-export const getCustomTests = (): ICustomTest[] => {
+export const getCustomTests = (packages: IHealthPackage[]): ICustomTest[] => {
   const map = new Map<string, ICustomTest>();
 
-  HEALTH_PACKAGES.forEach((pkg) => {
+  packages.forEach((pkg) => {
     pkg.tests.forEach((t) => {
       if (isCardFee(t.name)) return;
       const base = t.name.trim().toLowerCase().replace(/\s+/g, ' ');
@@ -129,10 +123,12 @@ export const buildCustomPackage = (
   }));
 
   return {
-    ...HEALTH_PACKAGES[0],
     id: CUSTOM_PACKAGE_ID,
     name: 'Customized Package',
     tagline: 'Tests chosen by you',
+    category: 'custom',
+    icon: 'care',
+    image: '',
     perks: [],
     tests: tests as IHealthPackage['tests'],
   };

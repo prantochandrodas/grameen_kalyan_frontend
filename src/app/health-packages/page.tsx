@@ -3,6 +3,8 @@ import React from 'react';
 
 import { HeroSection, WorkTogether } from '@/shared/components';
 import { HealthPackages } from '@/components/HealthPackages';
+import { HealthPackagesProvider } from '@/shared/context/HealthPackagesContext';
+import { getHealthPackagesData } from '@/shared/utils/healthPackagesApi';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 import heroImg from '@/assets/images/about/about-bg.webp';
 
@@ -17,6 +19,7 @@ const HealthPackagesPage = async () => {
     url: '/home-contents',
   });
   const workTogetherImage = homePageContentData?.work_together_image;
+  const { packages, filters } = await getHealthPackagesData();
 
   return (
     <>
@@ -27,7 +30,9 @@ const HealthPackagesPage = async () => {
         title="Healthcare Packages"
         subtitle="Affordable checkups for you and your family"
       />
-      <HealthPackages />
+      <HealthPackagesProvider packages={packages} filters={filters}>
+        <HealthPackages />
+      </HealthPackagesProvider>
       <WorkTogether image={workTogetherImage} />
     </>
   );

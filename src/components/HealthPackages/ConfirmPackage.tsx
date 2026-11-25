@@ -6,7 +6,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FaArrowRight } from 'react-icons/fa';
 
-import { HEALTH_PACKAGES, IHealthPackage } from '@/data/healthPackages';
+import { IHealthPackage } from '@/data/healthPackages';
+import { useHealthPackages } from '@/shared/context/HealthPackagesContext';
 import { clearCheckout, getCheckout } from '@/shared/utils/checkoutStore';
 import type { CardChoice } from '@/shared/utils/healthPackagePricing';
 import {
@@ -19,6 +20,7 @@ import style from './healthPackages.module.scss';
 
 const ConfirmPackage = () => {
   const router = useRouter();
+  const { packages } = useHealthPackages();
   const [ready, setReady] = useState(false);
   const [items, setItems] = useState<IHealthPackage[]>([]);
   const [cardChoice, setCardChoice] = useState<CardChoice | undefined>(undefined);
@@ -27,14 +29,14 @@ const ConfirmPackage = () => {
     const checkout = getCheckout();
     if (checkout) {
       const list = checkout.ids
-        .map((id) => HEALTH_PACKAGES.find((pkg) => pkg.id === id))
+        .map((id) => packages.find((pkg) => pkg.id === id))
         .filter((pkg): pkg is IHealthPackage => !!pkg);
       setItems(checkout.custom ? [...list, checkout.custom] : list);
       setCardChoice(checkout.cardChoice);
     }
     setReady(true);
     window.scrollTo(0, 0);
-  }, []);
+  }, [packages]);
 
   if (!ready) {
     return (

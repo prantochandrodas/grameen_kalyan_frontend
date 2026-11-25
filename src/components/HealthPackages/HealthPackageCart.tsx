@@ -13,11 +13,8 @@ import {
   FaTrashAlt,
 } from 'react-icons/fa';
 
-import {
-  HEALTH_PACKAGES,
-  IHealthPackage,
-  formatBDT,
-} from '@/data/healthPackages';
+import { IHealthPackage, formatBDT } from '@/data/healthPackages';
+import { useHealthPackages } from '@/shared/context/HealthPackagesContext';
 import {
   CARD_VALIDITY_MONTHS,
   getCartTotals,
@@ -33,6 +30,7 @@ import { useCheckout } from '@/components/Auth/useCheckout';
 import style from './healthPackageCart.module.scss';
 
 const HealthPackageCart = () => {
+  const { packages } = useHealthPackages();
   const [cartIds, setCartIds] = useState<string[]>([]);
   const [cartReady, setCartReady] = useState(false);
   const [storageError, setStorageError] = useState(false);
@@ -41,9 +39,7 @@ const HealthPackageCart = () => {
   useEffect(() => {
     const syncCart = () => {
       const saved = getHealthPackageCart();
-      setCartIds(
-        saved.filter((id) => HEALTH_PACKAGES.some((pkg) => pkg.id === id))
-      );
+      setCartIds(saved.filter((id) => packages.some((pkg) => pkg.id === id)));
     };
 
     syncCart();
@@ -55,13 +51,13 @@ const HealthPackageCart = () => {
       window.removeEventListener(HEALTH_PACKAGE_CART_EVENT, syncCart);
       window.removeEventListener('storage', syncCart);
     };
-  }, []);
+  }, [packages]);
 
   const items = useMemo(
     () => cartIds
-      .map((id) => HEALTH_PACKAGES.find((pkg) => pkg.id === id))
+      .map((id) => packages.find((pkg) => pkg.id === id))
       .filter((pkg): pkg is IHealthPackage => pkg !== undefined),
-    [cartIds]
+    [cartIds, packages]
   );
   const {
     packagesRate,
@@ -73,7 +69,7 @@ const HealthPackageCart = () => {
   const updateCart = (nextIds: string[]) => {
     const validIds = nextIds
       .filter((id, index) => nextIds.indexOf(id) === index)
-      .filter((id) => HEALTH_PACKAGES.some((pkg) => pkg.id === id));
+      .filter((id) => packages.some((pkg) => pkg.id === id));
 
     try {
       saveHealthPackageCart(validIds);
@@ -176,7 +172,7 @@ const HealthPackageCart = () => {
                       </div>
                       <div className={style.packageInfo}>
                         <span className={style.category}>
-                          {pkg.category.replace('-', ' ')}
+                          {pkg.categoryName}
                         </span>
                         <h3>{pkg.name}</h3>
                         <p>{pkg.tagline}</p>

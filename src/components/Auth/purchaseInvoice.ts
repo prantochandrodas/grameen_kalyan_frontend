@@ -2,7 +2,7 @@
 import type { IInvoiceData } from '@/components/HealthPackages/invoicePdf';
 import type { ISetting } from '@/shared/context/SettingContext';
 import { getDataByKeyword } from '@/components/Healthcare/MapSection/mapSection.helper';
-import { HEALTH_PACKAGES } from '@/data/healthPackages';
+import { getHealthPackagesData } from '@/shared/utils/healthPackagesApi';
 import type { IHealthCenter } from '@/shared/types/healthCenter';
 import type { IPurchase, IUser } from '@/shared/utils/authService';
 import { getPackageCore } from '@/shared/utils/healthPackagePricing';
@@ -50,9 +50,10 @@ export const buildPurchaseInvoice = async (
 ): Promise<IInvoiceData> => {
   const p = o.patient;
   const center = await findCenter(o.center);
+  const { packages } = await getHealthPackagesData();
 
   const items = o.items.map((item) => {
-    const pkg = HEALTH_PACKAGES.find((x) => same(x.name, item.name));
+    const pkg = packages.find((x) => same(x.name, item.name));
     const core = pkg ? getPackageCore(pkg) : null;
     const tests =
       item.tests && item.tests.length

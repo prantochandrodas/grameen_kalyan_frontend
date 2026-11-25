@@ -24,6 +24,7 @@ import {
   getCartTotals,
   getCustomTests,
 } from '@/shared/utils/healthPackagePricing';
+import { useHealthPackages } from '@/shared/context/HealthPackagesContext';
 
 import style from './healthPackages.module.scss';
 
@@ -40,7 +41,8 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
   const [wantCard, setWantCard] = useState<boolean | null>(null);
   const [askDoctor, setAskDoctor] = useState(false);
 
-  const allTests = useMemo(() => getCustomTests(), []);
+  const { packages } = useHealthPackages();
+  const allTests = useMemo(() => getCustomTests(packages), [packages]);
   const cardFee = getCardFeeAmount() || 150;
   const consultTest = allTests.find((t) => t.key === CUSTOM_CONSULT_KEY) || null;
   // existing member OR new user who takes the card = discount rate
