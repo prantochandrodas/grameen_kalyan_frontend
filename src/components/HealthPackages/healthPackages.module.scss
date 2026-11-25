@@ -2849,3 +2849,589 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
 .field .pwWrap input {
     padding-right: 44px;
 }
+
+
+/* ================= Customize package: 3 options + email verify ================= */
+
+.cpPlans {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin: 0 0 14px;
+    @media (max-width: 600px) {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+}
+
+.cpPlan {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    min-height: 96px;
+    padding: 12px;
+    text-align: left;
+    border: 1.5px solid rgba($color-primary, 0.2);
+    border-radius: 14px;
+    background: #fff;
+    color: $hp-green;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    @media (max-width: 600px) {
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        min-height: 62px;
+    }
+    &:hover {
+        border-color: $color-primary;
+    }
+    &:focus-visible {
+        outline: 2px solid $hp-gold;
+        outline-offset: 2px;
+    }
+}
+
+.cpPlanIcon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba($color-primary, 0.12);
+    color: $color-primary;
+    font-size: 15px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.cpPlanText {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    strong {
+        font-size: 14px;
+        font-weight: 800;
+        line-height: 1.3;
+    }
+    small {
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.4;
+        color: #5b6b62;
+    }
+}
+
+.cpPlanOn {
+    border-color: $color-primary;
+    background: linear-gradient(180deg, #f4fbf7 0%, #e6f5ec 100%);
+    box-shadow: 0 8px 20px rgba(26, 154, 91, 0.18);
+    .cpPlanIcon {
+        background: $hp-gradient;
+        color: #fff;
+    }
+}
+
+.cpVerify {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 16px;
+    border-radius: 14px;
+    border: 1.5px dashed rgba($color-primary, 0.35);
+    background: #fff;
+    @media (max-width: 600px) {
+        padding: 14px 12px;
+    }
+}
+
+.cpVerifyForm {
+    display: grid;
+    gap: 10px;
+}
+
+.cpVerifyTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 800;
+    color: $hp-green;
+    svg {
+        color: $hp-gold;
+    }
+}
+
+.cpVerifyText {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #5b6b62;
+    word-break: break-word;
+}
+
+.cpVerifyRow {
+    display: flex;
+    gap: 8px;
+    @media (max-width: 480px) {
+        flex-direction: column;
+    }
+}
+
+.cpVerifyInput {
+    flex: 1;
+    min-width: 0;
+    min-height: 46px;
+    padding: 0 14px;
+    border-radius: 12px;
+    border: 1.5px solid rgba($color-primary, 0.25);
+    background: #fff;
+    color: $hp-green;
+    font-family: inherit;
+    font-size: 16px; // 16px stops the iOS zoom on focus
+    &:focus {
+        outline: none;
+        border-color: $color-primary;
+        box-shadow: 0 0 0 3px rgba(26, 154, 91, 0.15);
+    }
+}
+
+.cpOtpInput {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0.4em;
+}
+
+.cpVerifyBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 46px;
+    padding: 0 22px;
+    border: 0;
+    border-radius: 12px;
+    background: $hp-gradient;
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(26, 154, 91, 0.25);
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
+.cpVerifyError {
+    margin: 0;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #c0392b;
+}
+
+.cpDemo {
+    margin: 0;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: rgba($hp-gold, 0.14);
+    color: #7a5a1c;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.cpLinkBtn {
+    align-self: flex-start;
+    padding: 4px 0;
+    border: 0;
+    background: none;
+    color: $color-primary;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.cpSpin {
+    animation: cpSpin 0.9s linear infinite;
+}
+
+.cpSkelRow {
+    height: 52px;
+    background: linear-gradient(90deg, #f1f4f2 25%, #e4ebe6 37%, #f1f4f2 63%);
+    background-size: 400% 100%;
+    animation: cpShimmer 1.3s ease infinite;
+}
+
+@keyframes cpSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes cpShimmer {
+    0% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}
+
+
+/* ================= Customize package: compact spacing (overrides) ================= */
+
+
+/* close button */
+
+.cpSheet .modalClose {
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
+}
+
+
+/* body */
+
+.cpBody {
+    padding: 16px 18px 8px;
+    @media (max-width: 600px) {
+        padding: 14px 12px 6px;
+    }
+    /* eyebrow + title */
+    .modalHead {
+        margin-bottom: 8px;
+        padding-right: 36px;
+        h3 {
+            margin: 0;
+            font-size: 20px;
+            line-height: 1.25;
+            @media (max-width: 600px) {
+                font-size: 18px;
+            }
+        }
+    }
+    .eyebrow {
+        gap: 8px;
+        margin-bottom: 2px;
+        font-size: 12px;
+    }
+}
+
+
+/* 3 options */
+
+.cpPlans {
+    gap: 8px;
+    margin: 0 0 8px;
+    @media (max-width: 600px) {
+        gap: 6px;
+    }
+}
+
+.cpPlan {
+    gap: 6px;
+    min-height: 0;
+    padding: 9px 10px;
+    border-radius: 12px;
+    @media (max-width: 600px) {
+        gap: 10px;
+        min-height: 0;
+        padding: 8px 10px;
+    }
+}
+
+.cpPlanIcon {
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+}
+
+.cpPlanText {
+    gap: 1px;
+    strong {
+        font-size: 13.5px;
+        line-height: 1.25;
+    }
+    small {
+        font-size: 11.5px;
+        line-height: 1.3;
+    }
+}
+
+
+/* notice */
+
+.cpNotice {
+    margin: 0 0 8px;
+    padding: 6px 9px;
+    border-radius: 9px;
+}
+
+
+/* email verify box */
+
+.cpVerify {
+    gap: 8px;
+    margin-bottom: 8px;
+    padding: 12px;
+    border-radius: 12px;
+    @media (max-width: 600px) {
+        padding: 10px;
+    }
+    .cpChoices {
+        gap: 8px;
+        margin-top: 0;
+    }
+    .cpChoice {
+        min-height: 54px;
+        padding: 9px 12px;
+        border-radius: 12px;
+    }
+}
+
+.cpVerifyForm {
+    gap: 8px;
+}
+
+.cpVerifyTitle {
+    font-size: 14px;
+}
+
+.cpVerifyText {
+    font-size: 12.5px;
+    line-height: 1.45;
+}
+
+.cpVerifyInput,
+.cpVerifyBtn {
+    min-height: 42px;
+}
+
+.cpLinkBtn {
+    padding: 2px 0;
+}
+
+
+/* search + toolbar */
+
+.cpSearch {
+    margin-bottom: 6px;
+    input {
+        padding: 9px 38px 9px 36px;
+    }
+    >svg {
+        left: 12px;
+    }
+}
+
+.cpToolbar {
+    margin-bottom: 4px;
+    font-size: 12px;
+    button {
+        min-height: 28px;
+        font-size: 12px;
+    }
+}
+
+
+/* test list */
+
+.cpRow {
+    gap: 10px;
+    min-height: 44px;
+    padding: 7px 12px;
+    @media (max-width: 600px) {
+        min-height: 42px;
+        padding: 6px 10px;
+    }
+}
+
+.cpCheck {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    font-size: 11px;
+}
+
+.cpName {
+    font-size: 13.5px;
+    line-height: 1.3;
+}
+
+.cpRate {
+    gap: 5px;
+    b {
+        font-size: 13.5px;
+    }
+    s {
+        font-size: 11.5px;
+    }
+}
+
+.cpEmpty {
+    padding: 14px 12px;
+}
+
+.cpSkelRow {
+    height: 44px;
+}
+
+
+/* footer */
+
+.cpFoot {
+    gap: 10px;
+    padding: 8px 18px calc(10px + env(safe-area-inset-bottom, 0px));
+    @media (max-width: 600px) {
+        padding: 8px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+.cpSum {
+    line-height: 1.2;
+    span {
+        font-size: 12px;
+    }
+    strong {
+        font-size: clamp(18px, 5vw, 22px);
+    }
+    small {
+        font-size: 11px;
+    }
+}
+
+.cpBook {
+    min-height: 44px;
+    padding: 0 18px;
+}
+
+
+/* ================= Customize package: icon + title on one line ================= */
+
+.cpPlan {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 4px;
+    padding: 9px 10px;
+    @media (max-width: 600px) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 3px;
+        padding: 8px 10px;
+    }
+}
+
+.cpPlanHead {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    strong {
+        min-width: 0;
+        font-size: 13.5px;
+        font-weight: 800;
+        line-height: 1.25;
+    }
+}
+
+.cpPlanIcon {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+}
+
+.cpPlanSub {
+    font-size: 11.5px;
+    font-weight: 500;
+    line-height: 1.35;
+    color: #5b6b62;
+    @media (max-width: 600px) {
+        padding-left: 36px; // aligns with the title (icon 28px + gap 8px)
+    }
+}
+
+
+/* ================= Customize package: tighter test list ================= */
+
+
+/* space above the list */
+
+.cpNotice {
+    margin: 0 0 6px;
+}
+
+.cpSearch {
+    margin-bottom: 4px;
+    input {
+        padding: 8px 36px 8px 34px;
+    }
+}
+
+.cpToolbar {
+    margin-bottom: 3px;
+    font-size: 11.5px;
+    button {
+        min-height: 24px;
+        font-size: 11.5px;
+    }
+}
+
+
+/* list + rows */
+
+.cpList {
+    border-radius: 10px;
+}
+
+.cpRow {
+    gap: 9px;
+    min-height: 36px;
+    padding: 5px 10px;
+    @media (max-width: 600px) {
+        gap: 9px;
+        min-height: 40px; // keeps a comfortable finger tap
+        padding: 5px 10px;
+    }
+}
+
+.cpCheck {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    font-size: 10px;
+}
+
+.cpName {
+    font-size: 13px;
+    line-height: 1.25;
+}
+
+.cpRate {
+    gap: 4px;
+    b {
+        font-size: 13px;
+    }
+    s {
+        font-size: 11px;
+    }
+}
+
+.cpSkelRow {
+    height: 36px;
+}
+
+.cpEmpty {
+    padding: 10px 12px;
+    font-size: 12.5px;
+}

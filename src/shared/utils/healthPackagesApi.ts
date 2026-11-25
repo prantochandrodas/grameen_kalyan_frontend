@@ -7,6 +7,7 @@ import {
   buildPackageFilters,
   mapApiPackage,
 } from '@/data/healthPackages';
+import { ICustomTest } from '@/shared/utils/healthPackagePricing';
 
 const getJson = async (path: string) => {
   try {
@@ -41,4 +42,32 @@ export const getHealthPackagesData = async (): Promise<{
     packages: apiPackages.map(mapApiPackage),
     filters: buildPackageFilters(apiCategories),
   };
+};
+
+
+
+/* ================= Customize package: tests from /api/tests ================= */
+
+interface IApiTest {
+  id: number;
+  name: string;
+  rate: string;
+  net_price: string;
+  is_active: string | number;
+}
+
+// returns null when the API fails (the popup then shows a Retry button)
+export const fetchCustomTests = async (): Promise<ICustomTest[] | null> => {
+  const res = await getJson('/tests');
+  if (!res || !Array.isArray(res.data)) return null;
+
+  return (res.data as IApiTest[])
+    .filter((t) => String(t.is_active) === '1')
+    .map((t) => ({
+      key: t.name.trim().toLowerCase().replace(/\s+/g, ' '),
+      name: t.name.trim(),
+      rate: Number(t.rate) || 0, // regular rate
+      price: Number(t.net_price) || 0, // discount rate
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 };
