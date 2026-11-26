@@ -561,12 +561,26 @@ $nav-lime: #8db51f;
         font-size: 1.7rem;
         font-weight: 600;
         letter-spacing: 0.02em;
+        color: $color-secondary-goldenrod;
+        -webkit-tap-highlight-color: transparent;
+        transition: color 250ms ease, padding-left 250ms ease;
         &::after {
             display: none;
         }
         &:hover,
+        &:active,
+        &:focus-visible,
         &.active {
-            color: $color-secondary-goldenrod;
+            color: #fff;
+        }
+        &:hover,
+        &:active {
+            padding-left: 0.8rem;
+        }
+        &:focus-visible {
+            outline: 2px solid $color-secondary-goldenrod;
+            outline-offset: -2px;
+            border-radius: 6px;
         }
         svg {
             font-size: 1.2rem;
@@ -580,12 +594,23 @@ $nav-lime: #8db51f;
         font-size: 1.55rem;
         font-weight: 500;
         text-align: left;
-        color: rgba(255, 255, 255, 0.88);
+        color: $color-secondary-goldenrod;
+        -webkit-tap-highlight-color: transparent;
+        transition: color 250ms ease, padding-left 250ms ease;
         &:hover,
+        &:active,
+        &:focus-visible,
         &.active {
             background: transparent;
-            color: $color-secondary-goldenrod;
+            color: #fff;
             font-weight: 600;
         }
+        &:hover,
+        &:active {
+            padding-left: 1.6rem;
+        }
+    }
+    .dropdown {
+        border-left-color: rgba($color-secondary-goldenrod, 0.7);
     }
 }
