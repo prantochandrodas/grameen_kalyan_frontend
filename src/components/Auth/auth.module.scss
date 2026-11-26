@@ -2525,4 +2525,143 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     }
 }
 
-// ================== END: src/components/Auth/auth.module.scss ==================
+
+/* ================= Dashboard v4: tight spacing ================= */
+
+
+/* page: header -> hero and last card -> footer gap */
+
+.dPage {
+    padding: 28px 16px 44px;
+    @media (max-width: 600px) {
+        padding: 10px 10px 28px;
+    }
+}
+
+.dNote {
+    margin: 2px 0 0;
+}
+
+
+/* ---------- tablet + desktop ---------- */
+
+@media (min-width: 601px) {
+    .dWrap {
+        gap: 14px;
+    }
+    /* hero */
+    .dHero {
+        gap: 12px;
+        padding: 18px 22px;
+    }
+    .dAvatar {
+        width: 62px;
+        height: 62px;
+        font-size: 26px;
+    }
+    .dCard {
+        padding: 10px 14px;
+    }
+    .dCardIcon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    /* stats */
+    .dStat {
+        gap: 12px;
+        padding: 12px 14px;
+    }
+    .dStatIcon {
+        width: 40px;
+        height: 40px;
+        font-size: 17px;
+    }
+    /* tabs */
+    .dTabs button {
+        min-height: 42px;
+    }
+    /* purchase cards */
+    .dOrders {
+        gap: 12px;
+        margin-top: 12px;
+    }
+    .dOrder {
+        padding: 14px 16px 14px 20px;
+    }
+    .dOrderTop {
+        gap: 10px;
+        margin-bottom: 4px;
+    }
+    .dOrderIcon {
+        width: 36px;
+        height: 36px;
+        font-size: 15px;
+    }
+    .orderItems li {
+        padding: 7px 0;
+    }
+    .dPatient {
+        margin-top: 8px;
+    }
+    .dToggle {
+        min-height: 40px;
+        margin-top: 10px;
+    }
+    .dInfo {
+        gap: 8px;
+        margin-top: 10px;
+    }
+    .orderFoot {
+        gap: 6px;
+        margin-top: 10px;
+        padding-top: 10px;
+    }
+    .dActions {
+        gap: 8px;
+        margin-top: 10px;
+    }
+    .dDownload,
+    .dEdit {
+        min-height: 42px;
+    }
+}
+
+
+/* hero: Edit profile / Logout move up to the right of the name (saves a whole row) */
+
+@media (min-width: 761px) {
+    .dHero {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 12px 20px;
+    }
+    .dHeroTop {
+        grid-column: 1;
+        grid-row: 1;
+    }
+    .dHeroActions {
+        grid-column: 2;
+        grid-row: 1;
+        flex-wrap: nowrap;
+    }
+    .dCard {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+}
+
+
+/* 2-column cards: no more stretched cards / empty gap, tighter inner gap */
+
+@media (min-width: 701px) {
+    .dOrdersMulti {
+        align-items: start;
+        .dOrder {
+            gap: 8px;
+        }
+    }
+}
+
+
+/* ================= END Dashboard v4 ================= */ // ================== END: src/components/Auth/auth.module.scss ==================

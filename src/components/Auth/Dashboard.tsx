@@ -681,7 +681,7 @@ const Dashboard = () => {
   };
 
   return (
-    <main className={style.page}>
+    <main className={`${style.page} ${style.dPage}`}>
       <div className={style.dWrap}>
         {/* ---------- hero ---------- */}
         <section className={style.dHero}>
