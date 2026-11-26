@@ -20,22 +20,16 @@ import {
 import { IHealthPackage, formatBDT } from '@/data/healthPackages';
 import {
   CARD_VALIDITY_MONTHS,
-  CUSTOM_CONSULT_KEY,
   CardChoice,
   CustomerMode,
   ICustomTest,
   buildCustomPackage,
-  getCardFeeAmount,
   getCartTotals,
 } from '@/shared/utils/healthPackagePricing';
 import { fetchCustomTests } from '@/shared/utils/healthPackagesApi';
-import {
-  EMAIL_REGEX,
-  getActiveCard,
-  getPurchases,
-  loginUser,
-} from '@/shared/utils/authService';
+import { EMAIL_REGEX, loginUser } from '@/shared/utils/authService';
 import { useAuth } from '@/shared/context/AuthContext';
+import { useCharges } from '@/shared/hook/useCharges';
 
 import style from './healthPackages.module.scss';
 
@@ -76,12 +70,13 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
   const [showPw, setShowPw] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
-  const [cardUntil, setCardUntil] = useState<string | null>(null);
-  const [expiredOn, setExpiredOn] = useState<string | null>(null);
 
-  const cardFee = getCardFeeAmount() || 150;
-  const consultTest =
-    allTests.find((t) => t.key === CUSTOM_CONSULT_KEY) || null;
+  // card fee + doctor charge both come from the API
+  const { cardFee, doctor: doctorCharge } = useCharges();
+  const doctorStatus = doctorCharge?.status ?? 0;
+  const doctorAmount = doctorCharge?.amount ?? 0;
+  // status 1 = added to subtotal | 2 = optional (asked on Book Now) | 3 = free
+  const doctorNow = doctorStatus === 1 ? doctorAmount : 0;
   const mode: CustomerMode = plan === 'member' ? 'member' : 'regular';
   const memberReady = plan === 'member' && step === 'active';
   // tests are shown only for new customers or a verified member
@@ -94,15 +89,13 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
   const notice =
     plan === 'member'
       ? memberReady
-        ? `Health Card active until ${fmtDate(
-            cardUntil
-          )}. Discount rate on every test, no card fee.`
+        ? 'Your Micro Health insurance Card is active. Discount rate on every test, no card fee.'
         : 'Sign in with your email and password to see your member discount rate.'
       : plan === 'card'
-      ? `One-time Health Card fee ${formatBDT(
+      ? `On time micro health insurance card ${formatBDT(
           cardFee
         )} is added once to your total (valid ${CARD_VALIDITY_MONTHS} months).`
-      : 'No Health Card. Regular rate applies and the package is valid for 1 month.';
+      : 'No micro health insurance card. Regular rate applies and the package is valid for 1 month.';
 
   const plans: { id: Plan; icon: React.ReactNode; title: string; sub: string }[] =
     [
@@ -176,29 +169,16 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
     setError('');
   };
 
-  /* ---------- existing member: email + password sign in -> card validity (6 months) ---------- */
-  const runCheck = async (userId: string) => {
-    setStep('checking');
-    const list = await getPurchases(userId);
-    const until = getActiveCard(list);
-    if (until) {
-      setCardUntil(until);
-      setStep('active');
-      return;
-    }
-    const last = list
-      .filter((p) => p.hasCard)
-      .sort(
-        (a, b) =>
-          new Date(b.validUntil).getTime() - new Date(a.validUntil).getTime()
-      )[0];
-    setExpiredOn(last ? last.validUntil : null);
-    setStep('expired');
+  /* ---------- existing member: has_valid_card comes from the login API ---------- */
+  const runCheck = (hasValidCard?: boolean) => {
+    setStep(hasValidCard ? 'active' : 'expired');
   };
 
-  // already logged in -> no sign in needed, check the card directly
+  // already logged in -> no sign in needed, use the saved has_valid_card
   useEffect(() => {
-    if (plan === 'member' && user && step === 'email') runCheck(user.id);
+    if (plan === 'member' && user && step === 'email') {
+      runCheck(user.hasValidCard);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plan, user, step]);
 
@@ -225,26 +205,30 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
       return;
     }
     setPassword('');
-    await runCheck(res.data.id);
+    runCheck(res.data.hasValidCard);
   };
 
-  // send the package to the booking page (doctor consultation is optional)
+  // send the package to the booking page
   const finishBooking = (withDoctor: boolean) => {
-    if (!showTests) return;
-    const alreadyHas = !!consultTest && selected.includes(consultTest.key);
-    const tests =
-      withDoctor && consultTest && !alreadyHas ? [...chosen, consultTest] : chosen;
-    if (!tests.length) return;
+    if (!showTests || !chosen.length) return;
     const cardChoice: CardChoice =
       plan === 'member' ? 'member' : plan === 'card' ? 'yes' : 'no';
+
+    let doctor: IHealthPackage['doctor'];
+    if (doctorStatus === 1 || (doctorStatus === 2 && withDoctor)) {
+      doctor = { rate: doctorAmount, price: doctorAmount };
+    } else if (doctorStatus === 3) {
+      doctor = { rate: 0, price: 0, free: true };
+    }
+
     setAskDoctor(false);
-    onBook(buildCustomPackage(tests, mode), cardChoice);
+    onBook(buildCustomPackage(chosen, mode, doctor), cardChoice);
   };
 
-  // Book Now -> ask about doctor consultation (skipped if it is already selected)
+  // Book Now -> status 2 asks Yes / No, status 1 and 3 go straight on
   const handleBook = () => {
     if (!pkg) return;
-    if (consultTest && !selected.includes(consultTest.key)) setAskDoctor(true);
+    if (doctorStatus === 2 && doctorAmount > 0) setAskDoctor(true);
     else finishBooking(false);
   };
 
@@ -401,16 +385,11 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
                 {step === 'expired' && (
                   <>
                     <h4 className={style.cpVerifyTitle}>
-                      <FaIdCard aria-hidden="true" />{' '}
-                      {expiredOn
-                        ? 'Your Health Card has expired'
-                        : 'No active Health Card found'}
+                      <FaIdCard aria-hidden="true" /> No active Health Card found
                     </h4>
                     <p className={style.cpVerifyText}>
-                      {expiredOn
-                        ? `Your card expired on ${fmtDate(expiredOn)}. `
-                        : ''}
-                      Choose how you want to continue.
+                      Your previous card is not valid any more. Get a new Health
+                      Card to continue and enjoy the discount rate on every test.
                     </p>
                     <div className={style.cpChoices}>
                       <button
@@ -420,22 +399,10 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
                       >
                         <FaCheck aria-hidden="true" />
                         <span>
-                          <b>Get a new Health Card</b>
+                          <b>Get Micro Health insurance Card</b>
                           <small>
                             Discount rate · One-time fee {formatBDT(cardFee)}
                           </small>
-                        </span>
-                        <FaArrowRight aria-hidden="true" />
-                      </button>
-                      <button
-                        type="button"
-                        className={style.cpChoice}
-                        onClick={() => choosePlan('regular')}
-                      >
-                        <FaTimes aria-hidden="true" />
-                        <span>
-                          <b>Continue without card</b>
-                          <small>Regular rate · No card fee · Valid 1 month</small>
                         </span>
                         <FaArrowRight aria-hidden="true" />
                       </button>
@@ -557,10 +524,24 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
                 {formatBDT(
                   totals
                     ? (isDiscount ? totals.packagesPrice : totals.packagesRate) +
-                        appliedCardFee
+                        appliedCardFee +
+                        doctorNow
                     : 0
                 )}
               </strong>
+              {totals && (
+                <small>
+                  Tests{' '}
+                  {formatBDT(
+                    isDiscount ? totals.packagesPrice : totals.packagesRate
+                  )}
+                  {doctorStatus === 1 && doctorAmount > 0
+                    ? ` + Doctor ${formatBDT(doctorAmount)}`
+                    : ''}
+                  {doctorStatus === 3 ? ' + Doctor FREE' : ''}
+                  {doctorStatus === 2 ? ' · Doctor optional' : ''}
+                </small>
+              )}
               {totals && appliedCardFee > 0 && (
                 <small>
                   Incl. {formatBDT(appliedCardFee)} one-time card fee
@@ -584,7 +565,7 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
       </motion.div>
 
       {/* ---------------- Doctor consultation popup (on Book Now) ---------------- */}
-      {askDoctor && consultTest && (
+      {askDoctor && doctorStatus === 2 && (
         <div className={`${style.modalOverlay} ${style.cpAskOverlay}`}>
           <motion.div
             className={`${style.modalSheet} ${style.cpSheetSm}`}
@@ -605,7 +586,7 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
             <p className={style.cpLead}>
               Meet a health center doctor (MBBS) for{' '}
               <strong>
-                {formatBDT(isDiscount ? consultTest.price : consultTest.rate)}
+                {formatBDT(doctorAmount)}
               </strong>
               . It is added to your total only if you say Yes.
             </p>
@@ -620,7 +601,7 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
                 <span>
                   <b>Yes, add consultation</b>
                   <small>
-                    + {formatBDT(isDiscount ? consultTest.price : consultTest.rate)} added to total
+                    + {formatBDT(doctorAmount)} added to total
                   </small>
                 </span>
                 <FaArrowRight aria-hidden="true" />

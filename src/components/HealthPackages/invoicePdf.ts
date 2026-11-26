@@ -465,6 +465,8 @@ async function buildInvoice(
     const inclLines = wrap(
       item.tests.length
         ? `Includes: ${item.tests.join(', ')}`
+        : item.testCount === 0
+        ? 'Health center doctor consultation (MBBS)'
         : 'Tests selected by you',
       NAME_W,
       7.5,

@@ -46,6 +46,7 @@ import {
   getPackageCore,
 } from '@/shared/utils/healthPackagePricing';
 
+import { useCharges } from '@/shared/hook/useCharges';
 import { useCheckout } from '@/components/Auth/useCheckout';
 import CustomPackage from './CustomPackage';
 import style from './healthPackages.module.scss';
@@ -66,7 +67,6 @@ const FEATURES = [
   { icon: FaPercent, text: 'Special discounted diagnostic rates' },
 ];
 
-const CARD_FEE = getCardFeeAmount();
 /* ---------------------------- Package card ---------------------------- */
 interface IPackageCardProps {
   pkg: IHealthPackage;
@@ -84,7 +84,8 @@ const PackageCard = ({
   onBuy,
 }: IPackageCardProps) => {
   const Icon = ICONS[pkg.icon];
-  const { tests, rate, price, save, percent, testCount } = getPackageCore(pkg);
+  const { tests, doctor, rate, price, save, percent, testCount } =
+    getPackageCore(pkg);
   const cardFee = getCardFee(pkg);
 
   return (
@@ -155,6 +156,24 @@ const PackageCard = ({
           ))}
         </ul>
 
+        {/* Doctor Consultation Charge (outside the test list) */}
+        {doctor && (
+          <div className={style.doctorRow}>
+            <span className={style.doctorLabel}>
+              <FaUserMd aria-hidden="true" />
+              Doctor Consultation Charge
+            </span>
+            <span className={style.rate}>
+              {doctor.rate > doctor.price && <s>{formatBDT(doctor.rate)}</s>}
+              {doctor.price === 0 ? (
+                <em className={style.free}>FREE</em>
+              ) : (
+                <b className={style.ratePrice}>{formatBDT(doctor.price)}</b>
+              )}
+            </span>
+          </div>
+        )}
+
         {/* price + actions */}
         <footer className={style.cardFoot}>
           <div className={style.totalRow}>
@@ -211,6 +230,7 @@ const PackageCard = ({
 
 /* ------------------------------ Main section ------------------------------ */
 const HealthPackages = () => {
+  const { cardFee: CARD_FEE } = useCharges();
   const { packages: serverPackages, filters: serverFilters } =
     useHealthPackages();
   const [packages, setPackages] = useState<IHealthPackage[]>(serverPackages);

@@ -8,11 +8,14 @@ export const isCardFee = (name: string) => CARD_REGEX.test(name);
 // price of the package WITHOUT the card registration line
 export const getPackageCore = (pkg: IHealthPackage) => {
   const tests = pkg.tests.filter((t) => !isCardFee(t.name));
-  const rate = tests.reduce((sum, t) => sum + t.rate, 0);
-  const price = tests.reduce((sum, t) => sum + t.price, 0);
+  const doctor = pkg.doctor || null;
+  const rate =
+    tests.reduce((sum, t) => sum + t.rate, 0) + (doctor ? doctor.rate : 0);
+  const price =
+    tests.reduce((sum, t) => sum + t.price, 0) + (doctor ? doctor.price : 0);
   const save = rate - price;
   const percent = rate > 0 ? Math.round((save / rate) * 100) : 0;
-  return { tests, rate, price, save, percent, testCount: tests.length };
+  return { tests, doctor, rate, price, save, percent, testCount: tests.length };
 };
 
 // the card registration line of a package (null if the package has none)
@@ -46,7 +49,11 @@ export const getCartTotals = (items: IHealthPackage[]) => {
 };
 
 // card fee amount for the page notice
-export const getCardFeeAmount = () => HEALTH_CARD_FEE;
+let cardFeeAmount = HEALTH_CARD_FEE;
+export const setCardFeeAmount = (amount: number) => {
+  if (amount > 0) cardFeeAmount = amount;
+};
+export const getCardFeeAmount = () => cardFeeAmount;
 
 
 /* ================= Customize package ================= */
@@ -63,6 +70,7 @@ export type CardChoice = 'member' | 'yes' | 'no';
 export const CUSTOM_CONSULT_KEY = 'health center doctor consultation (mbbs)';
 
 export interface ICustomTest {
+  id?: number;
   key: string;
   name: string;
   rate: number; // regular rate
@@ -114,9 +122,11 @@ export const getCustomTests = (packages: IHealthPackage[]): ICustomTest[] => {
 export const buildCustomPackage = (
   selected: ICustomTest[],
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _mode?: CustomerMode
+  _mode?: CustomerMode,
+  doctor?: IHealthPackage['doctor']
 ): IHealthPackage => {
   const tests = selected.map((t) => ({
+    id: t.id,
     name: t.name,
     rate: t.rate,
     price: t.price,
@@ -131,5 +141,6 @@ export const buildCustomPackage = (
     image: '',
     perks: [],
     tests: tests as IHealthPackage['tests'],
+    doctor,
   };
 };

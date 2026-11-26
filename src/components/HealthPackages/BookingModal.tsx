@@ -28,7 +28,6 @@ import {
   CARD_VALIDITY_MONTHS,
   CUSTOM_PACKAGE_ID,
   CardChoice,
-  getCardFeeAmount,
   getCartTotals,
   getPackageCore,
 } from '@/shared/utils/healthPackagePricing';
@@ -36,13 +35,17 @@ import { useAuth } from '@/shared/context/AuthContext';
 import { useSetting } from '@/shared/context/SettingContext';
 import {
   IPurchase,
-  addMonths,
-  getActiveCard,
-  getPurchases,
   recordPurchase,
+  updateSessionUser,
 } from '@/shared/utils/authService';
 import { IHealthCenter } from '@/shared/types/healthCenter';
 
+import { useCharges } from '@/shared/hook/useCharges';
+import {
+  checkEmailExists,
+  mapOrderInvoice,
+  placeOrder,
+} from '@/shared/utils/orderApi';
 import LoginForm from '@/components/Auth/LoginForm';
 import HealthCenterField from './HealthCenterField';
 import type { IInvoiceData } from './invoicePdf';
@@ -74,6 +77,8 @@ const PHONE_REGEX = /^(?:\+?88)?01[3-9]\d{8}$/;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 const GENDERS = ['Male', 'Female', 'Other'];
+// change this when the final payment method is decided
+const PAYMENT_METHOD = 'Test';
 
 
 const fmtDate = (value: string | Date) =>
@@ -91,7 +96,7 @@ const BookingModal = ({
 }: IBookingModalProps) => {
 
   const [done, setDone] = useState(false);
-  const [apiError, setApiError] = useState(false);
+  const [apiError, setApiError] = useState('');
   const [center, setCenter] = useState<IHealthCenter | null>(null);
   const [centerError, setCenterError] = useState(false);
   const [invoice, setInvoice] = useState<IInvoiceData | null>(null);
@@ -107,7 +112,8 @@ const BookingModal = ({
     cardChoice === 'yes' ? true : cardChoice === 'no' ? false : null
   );
   const [cardError, setCardError] = useState(false);
-  const [activeCardUntil, setActiveCardUntil] = useState<string | null>(null);
+  // has_valid_card comes from the login API
+  const hasValidCard = !!user?.hasValidCard;
   const [newAccount, setNewAccount] = useState(false);
   const [purchaseInfo, setPurchaseInfo] = useState<{
     hasCard: boolean;
@@ -142,9 +148,11 @@ const BookingModal = ({
   const cartTotals = getCartTotals(items);
   const { packagesPrice, packagesRate } = cartTotals;
   const isCustom = items.some((pkg) => pkg.id === CUSTOM_PACKAGE_ID);
+  const customDoctor =
+    items.find((pkg) => pkg.id === CUSTOM_PACKAGE_ID)?.doctor || null;
   // Health Card Yes / No question: Customize Package only
-  const needsCardChoice = isCustom && !activeCardUntil && cardChoice !== 'member';
-  const CARD_FEE = getCardFeeAmount() || 150;
+  const needsCardChoice = isCustom && !hasValidCard && cardChoice !== 'member';
+  const { cardFee: CARD_FEE } = useCharges();
   // existing packages: always discount rate + normal card fee (as before)
   // custom package: card Yes (or active card) = discount rate, card No = regular rate
   const hasDiscount = !isCustom || !needsCardChoice || wantCard === true;
@@ -157,7 +165,9 @@ const BookingModal = ({
   const saved = hasDiscount ? packagesRate - packagesPrice : 0;
   const unitPrice = (pkg: IHealthPackage) => {
     const core = getPackageCore(pkg);
-    return hasDiscount ? core.price : core.rate;
+    const base = hasDiscount ? core.price : core.rate;
+    // custom package: the doctor charge is its own row, not part of the tests price
+    return isCustom ? base - (pkg.doctor ? pkg.doctor.price : 0) : base;
   };
 
   // popup mode only: close on Esc, lock page scroll, focus the first field
@@ -186,20 +196,13 @@ const BookingModal = ({
     setValue('email', user.email);
   }, [user, setValue]);
 
-  // logged-in user: is the 6 month Health Card still active?
+  // logged-in user: auto fill Your Name / Phone / Email
   useEffect(() => {
-    if (!user) {
-      setActiveCardUntil(null);
-      return undefined;
-    }
-    let live = true;
-    getPurchases(user.id).then((list) => {
-      if (live) setActiveCardUntil(getActiveCard(list));
-    });
-    return () => {
-      live = false;
-    };
-  }, [user]);
+    if (!user) return;
+    setValue('name', user.name);
+    setValue('phone', user.phone);
+    setValue('email', user.email);
+  }, [user, setValue]);
 
   const scrollToCenter = () =>
     document
@@ -215,7 +218,8 @@ const BookingModal = ({
   const onSubmit = async (data: IBookingInputs) => {
     // account phone: own phone, or the patient phone when it is left blank
     const userPhone = (data.phone || '').trim() || data.patientPhone.trim();
-    setApiError(false);
+    const email = data.email.trim().toLowerCase();
+    setApiError('');
 
     if (!center) {
       setCenterError(true);
@@ -231,136 +235,95 @@ const BookingModal = ({
       return;
     }
 
-    // invoice number (also sent to the admin so both sides can match it)
-    const now = new Date();
-    const stamp = `${String(now.getFullYear()).slice(2)}${String(
-      now.getMonth() + 1
-    ).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
-    const number = `GK-HP-${stamp}-${Math.floor(1000 + Math.random() * 9000)}`;
-    // card = 6 months, no card = package 1 month (from purchase date)
-    const hasCard = isCustom ? (needsCardChoice ? !!wantCard : true) : cardFee > 0;
-    const validUntil =
-      isCustom && activeCardUntil
-        ? new Date(activeCardUntil)
-        : addMonths(now, hasCard ? CARD_VALIDITY_MONTHS : 1);
-    const dateFormat: Intl.DateTimeFormatOptions = {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    };
-
-    const lines = items.map(
-      (pkg, i) => `${i + 1}. ${pkg.name} - ${formatBDT(unitPrice(pkg))}`
-    );
-    const message = [
-      'Health package booking request',
-      `Invoice No: ${number}`,
-      '',
-      `Booked By: ${data.name.trim()}`,
-      `Booked By Phone: ${userPhone}`,
-      `Booked By Email: ${data.email.trim()}`,
-      `Patient Name: ${data.patientName.trim()}`,
-      `Patient Phone: ${data.patientPhone.trim()}`,
-      `Gender: ${data.gender}`,
-      `Age: ${data.age.trim()}`,
-      data.bloodGroup ? `Blood Group: ${data.bloodGroup}` : '',
-      '',
-      `Social Business Health Center: ${center.name}`,
-      center.address ? `Address: ${center.address}` : '',
-      center.contact_info ? `Contact: ${center.contact_info}` : '',
-      '',
-      ...lines,
-      cardFee > 0
-        ? `Health Card Registration (one-time, ${CARD_VALIDITY_MONTHS} months) - ${formatBDT(cardFee)}`
-        : '',
-      isCustom
-        ? activeCardUntil
-          ? `Health Card: existing, valid until ${fmtDate(validUntil)}`
-          : cardChoice === 'member'
-          ? 'Existing member: discount rate, no card fee (previous purchase to be verified)'
-          : `Health Card: ${wantCard ? 'Yes' : 'No'} - ${
-              wantCard ? 'card' : 'package'
-            } valid until ${fmtDate(validUntil)}`
-        : `${hasCard ? 'Health Card' : 'Package'} valid until ${fmtDate(validUntil)}`,
-      user ? `Customer Account: ${user.phone}` : 'Customer: new (account auto created)',
-      '',
-      `Total: ${formatBDT(total)}`,
-      data.note ? `\nNote: ${data.note}` : '',
-    ]
-      .filter((line, i, all) => line !== '' || all[i - 1] !== '')
-      .join('\n');
-
-    const formdata = new FormData();
-    formdata.append('name', data.name);
-    formdata.append(
-      'subject',
-      `Health Package Booking: ${items.map((pkg) => pkg.name).join(', ')}`
-    );
-    formdata.append('email', data.email);
-    formdata.append('phone', userPhone);
-    formdata.append('date', data.date || '');
-    formdata.append('message', message);
-
-    try {
-      const response = await fetch(
-        'https://admin.grameenkalyan.com/api/save-contact-form',
-        { method: 'POST', body: formdata }
+    // guest whose email already has an account -> login first
+    if (!user && (await checkEmailExists(email))) {
+      setShowLogin(true);
+      setApiError(
+        'This email already has an account. Please login above to continue.'
       );
-      if (!response.ok) throw new Error('Request fail');
+      return;
+    }
 
-      setInvoice({
-        number,
-        issuedAt: now.toLocaleDateString('en-GB', dateFormat),
-        customer: {
-          name: data.name.trim(),
-          patientName: data.patientName.trim(),
-          gender: data.gender,
-          age: data.age.trim(),
-          bloodGroup: data.bloodGroup,
-          phone: userPhone,
-          email: data.email.trim(),
-          preferredDate: data.date
-            ? new Date(`${data.date}T00:00:00`).toLocaleDateString(
-                'en-GB',
-                dateFormat
-              )
-            : '',
-          note: data.note.trim(),
-        },
-        center: {
-          name: center.name,
-          address: center.address || '',
-          contact: center.contact_info || '',
-        },
-        items: items.map((pkg) => {
+    const customPkg = items.find((pkg) => pkg.id === CUSTOM_PACKAGE_ID);
+    const doctorCharge = customPkg?.doctor ? customPkg.doctor.price : 0;
+    const hasCard = cardFee > 0;
+
+    // custom -> order_type 2 (tests) | normal -> order_type 1 (packages, doctor charge is inside the package price)
+    const orderItems = customPkg
+      ? customPkg.tests.map((t) => ({
+          test_id: t.id,
+          price: t.rate,
+          discount: hasDiscount ? t.rate - t.price : 0,
+        }))
+      : items.map((pkg) => {
           const core = getPackageCore(pkg);
           return {
-            name: pkg.name,
-            testCount: core.testCount,
-            rate: core.rate,
-            price: hasDiscount ? core.price : core.rate,
-            tests: core.tests.map((test) => test.name),
+            package_id: Number(pkg.id),
+            price: core.rate,
+            discount: core.rate - core.price,
           };
-        }),
-        cardFee,
-        totalRate: packagesRate + cardFee,
-        total,
-        saved,
-      });
-      // save the purchase for the dashboard (new customer -> account auto created)
+        });
+
+    const result = await placeOrder({
+      name: data.name.trim(),
+      phone: userPhone,
+      email,
+      ...(user ? {} : { password: (data.password || '').trim() }),
+      patient_name: data.patientName.trim(),
+      gender: data.gender.toLowerCase(),
+      blood_group: data.bloodGroup || null,
+      preferred_date: data.date || null,
+      note: [
+        (data.note || '').trim(),
+        `Patient age: ${data.age.trim()}`,
+        `Patient phone: ${data.patientPhone.trim()}`,
+      ]
+        .filter(Boolean)
+        .join(' | '),
+      order_type: customPkg ? 2 : 1,
+      card_purchase_status: hasCard ? 1 : 2,
+      doctor_charge: doctorCharge,
+      health_center_id: center.id,
+      items: orderItems,
+      card_charge: cardFee,
+      payment_method: PAYMENT_METHOD,
+    });
+
+    if (!result.ok) {
+      setApiError(result.message);
+      return;
+    }
+
+    const inv = result.data.invoice;
+    const validUntil = new Date(inv.expire_date);
+
+    setInvoice(
+      mapOrderInvoice(result.data, {
+        age: data.age.trim(),
+        phone: userPhone,
+      })
+    );
+
+    if (user) {
+      // dashboard copy for the logged-in customer
       const purchase: IPurchase = {
-        id: number,
-        invoiceNo: number,
-        date: now.toISOString(),
-        items: items.map((pkg) => ({
-          name: pkg.name,
-          price: unitPrice(pkg),
-          ...(isCustom
-            ? { tests: getPackageCore(pkg).tests.map((test) => test.name) }
-            : {}),
-        })),
+        id: inv.quick_no,
+        invoiceNo: inv.quick_no,
+        date: new Date().toISOString(),
+        items: [
+          ...items.map((pkg) => ({
+            name: pkg.name,
+            price: unitPrice(pkg),
+            ...(isCustom
+              ? { tests: getPackageCore(pkg).tests.map((test) => test.name) }
+              : {}),
+          })),
+          ...(doctorCharge > 0
+            ? [{ name: 'Doctor Consultation Charge', price: doctorCharge }]
+            : []),
+        ],
         cardFee,
-        total,
+        total: Number(inv.summary.total_amount),
         hasCard,
         validUntil: validUntil.toISOString(),
         center: center.name,
@@ -371,28 +334,25 @@ const BookingModal = ({
           age: data.age.trim(),
           bloodGroup: data.bloodGroup || '',
           phone: data.patientPhone.trim(),
-          email: (data.email || '').trim(),
+          email,
           preferredDate: data.date || '',
           note: (data.note || '').trim(),
         },
       };
-      const rec = await recordPurchase(
+      await recordPurchase(
         purchase,
-        {
-          name: data.name.trim(),
-          phone: userPhone,
-          email: (data.email || '').trim(),
-          password: (data.password || '').trim(),
-        },
+        { name: data.name.trim(), phone: userPhone, email },
         user
       );
-      if (rec.ok && rec.data.isNewAccount) setNewAccount(true);
-      setPurchaseInfo({ hasCard, validUntil: validUntil.toISOString() });
-      setDone(true);
-      onSuccess(items.map((pkg) => pkg.id));
-    } catch (error) {
-      setApiError(true);
+      // a new card was bought -> the member now has a valid card
+      if (hasCard) updateSessionUser({ hasValidCard: true });
+    } else {
+      setNewAccount(true);
     }
+
+    setPurchaseInfo({ hasCard, validUntil: validUntil.toISOString() });
+    setDone(true);
+    onSuccess(items.map((pkg) => pkg.id));
   };
 
   const handleDownload = async () => {
@@ -634,12 +594,19 @@ const BookingModal = ({
             </div>
 
             <ul className={style.summary}>
-              {items.map((pkg) => (
-                <li key={pkg.id}>
-                  <span>{pkg.name}</span>
-                  <b>{formatBDT(unitPrice(pkg))}</b>
+              {isCustom && customDoctor && (
+                <li className={style.summaryFee}>
+                  <span>
+                    Doctor Consultation Charge
+                    <em>Health center doctor (MBBS)</em>
+                  </span>
+                  <b>
+                    {customDoctor.free
+                      ? 'FREE'
+                      : formatBDT(customDoctor.price)}
+                  </b>
                 </li>
-              ))}
+              )}
               {cardFee > 0 && (
                 <li className={style.summaryFee}>
                   <span>
@@ -726,9 +693,8 @@ const BookingModal = ({
               <p className={`${style.cardNote} ${style.summaryNote}`}>
                 <FaCheckCircle aria-hidden="true" />
                 <span>
-                  {activeCardUntil
-                    ? `Your Health Card is active until ${fmtDate(activeCardUntil)}. No card fee.`
-                    : 'Existing member discount rate. No card fee. Our team will verify your previous purchase.'}
+                  Your Micro Health insurance Card is active. Discount rate applied, no card
+                  fee.
                 </span>
               </p>
             ))}
@@ -1076,8 +1042,7 @@ const BookingModal = ({
 
               {apiError && (
                 <p className={style.apiError} role="alert">
-                  Something went wrong. Please check your connection and try
-                  again.
+                  {apiError}
                 </p>
               )}
 

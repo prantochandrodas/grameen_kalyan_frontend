@@ -277,6 +277,12 @@ export const logout = () => {
   }).catch(() => undefined);
 };
 
+// patch the saved session user (e.g. after a new Health Card is bought)
+export const updateSessionUser = (patch: Partial<IUser>) => {
+  const current = getSessionUser();
+  if (current) setSession({ ...current, ...patch });
+};
+
 /* ---------------- register / login ---------------- */
 export async function registerUser(input: {
   name: string;

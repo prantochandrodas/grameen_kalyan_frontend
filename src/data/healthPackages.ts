@@ -15,6 +15,7 @@ export interface IPackageTest {
   name: string;
   rate: number; // normal rate
   price: number; // package price (0 = free)
+  id?: number; // test id (/api/tests) - used by Customize orders
 }
 
 export interface IHealthPackage {
@@ -29,6 +30,8 @@ export interface IHealthPackage {
   perks: string[];
   tests: IPackageTest[];
   price?: number; // optional manual override of the package price
+  // Doctor Consultation Charge - shown OUTSIDE the test list
+  doctor?: { rate: number; price: number; free?: boolean };
 }
 
 export interface IPackageFilter {
@@ -65,7 +68,6 @@ export interface IApiPackageCategory {
 // one-time Health Card fee (API te nei)
 export const HEALTH_CARD_FEE = 150;
 
-const CONSULT_NAME = 'Health center doctor consultation (MBBS)';
 
 // card icon: package er nam dekhe (API te icon nei)
 const ICON_RULES: [RegExp, PackageIconKey][] = [
@@ -89,24 +91,21 @@ export const buildPackageFilters = (
   ...categories.map((c) => ({ key: String(c.id), label: c.name })),
 ];
 
-export const mapApiPackage = (p: IApiPackage): IHealthPackage => {
-  const tests: IPackageTest[] = (p.tests || []).map((item) => ({
-    name: item.name,
-    rate: Number(item.rate) || 0,
-    price: Number(item.net_price) || 0,
-  }));
+export const mapApiPackage = (
+  p: IApiPackage,
+  cardFee: number = HEALTH_CARD_FEE
+): IHealthPackage => {
+  // the consultation is NOT a test row: it comes from doctor_charge / final_doctor_charge
+  const tests: IPackageTest[] = (p.tests || [])
+    .filter((item) => !/consultation/i.test(item.name))
+    .map((item) => ({
+      name: item.name,
+      rate: Number(item.rate) || 0,
+      price: Number(item.net_price) || 0,
+    }));
 
-  // doctor consultation API te alada field; list a na thakle shesh a add hobe
-  if (
-    Number(p.doctor_charge) > 0 &&
-    !tests.some((item) => /consultation/i.test(item.name))
-  ) {
-    tests.push({
-      name: CONSULT_NAME,
-      rate: Number(p.doctor_charge),
-      price: Number(p.final_doctor_charge) || 0,
-    });
-  }
+  const doctorRate = Number(p.doctor_charge) || 0;
+  const doctorPrice = Number(p.final_doctor_charge) || 0;
 
   return {
     id: String(p.id),
@@ -117,12 +116,14 @@ export const mapApiPackage = (p: IApiPackage): IHealthPackage => {
     icon: getIcon(p.name),
     image: p.thumbnail_image || '',
     perks: [],
-    tests: [
-      { name: 'Card registration', rate: HEALTH_CARD_FEE, price: HEALTH_CARD_FEE },
-      ...tests,
-    ],
+    tests: [{ name: 'Card registration', rate: cardFee, price: cardFee }, ...tests],
+    doctor:
+      doctorRate > 0
+        ? { rate: doctorRate, price: doctorPrice, free: doctorPrice === 0 }
+        : undefined,
   };
 };
+
 export const formatBDT = (amount: number) =>
   `BDT ${amount.toLocaleString('en-US')}`;
 

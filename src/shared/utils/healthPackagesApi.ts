@@ -6,7 +6,10 @@ import {
   buildPackageFilters,
   mapApiPackage,
 } from '@/data/healthPackages';
-import { ICustomTest } from '@/shared/utils/healthPackagePricing';
+import {
+  ICustomTest,
+  setCardFeeAmount,
+} from '@/shared/utils/healthPackagePricing';
 
 const API_BASE = 'https://admin.grameenkalyan.com/api';
 
@@ -32,15 +35,40 @@ const getJson = async (path: string, retries = 1): Promise<any> => {
   return null;
 };
 
+/* ================= card-charge / doctor-charge ================= */
+
+export interface IDoctorCharge {
+  amount: number;
+  status: 1 | 2 | 3; // 1 = added to subtotal, 2 = optional, 3 = free
+}
+
+export const fetchCardCharge = async (): Promise<number | null> => {
+  const res = await getJson('/card-charge');
+  const amount = Number(res?.amount);
+  return amount > 0 ? amount : null;
+};
+
+export const fetchDoctorCharge = async (): Promise<IDoctorCharge | null> => {
+  const res = await getJson('/doctor-charge');
+  const status = Number(res?.data?.status);
+  if (!res?.data || ![1, 2, 3].includes(status)) return null;
+  return {
+    amount: Number(res.data.amount) || 0,
+    status: status as 1 | 2 | 3,
+  };
+};
+
 export const getHealthPackagesData = async (): Promise<{
   packages: IHealthPackage[];
   filters: IPackageFilter[];
   failed: boolean;
 }> => {
-  const [packagesRes, categoriesRes] = await Promise.all([
+  const [packagesRes, categoriesRes, cardFee] = await Promise.all([
     getJson('/get-packages'),
     getJson('/get-package-categories'),
+    fetchCardCharge(),
   ]);
+  if (cardFee) setCardFeeAmount(cardFee);
 
   const apiPackages: IApiPackage[] = Array.isArray(packagesRes?.data)
     ? packagesRes.data
@@ -52,12 +80,11 @@ export const getHealthPackagesData = async (): Promise<{
     : [];
 
   return {
-    packages: apiPackages.map(mapApiPackage),
+    packages: apiPackages.map((p) => mapApiPackage(p, cardFee || undefined)),
     filters: buildPackageFilters(apiCategories),
     failed: !packagesRes,
   };
 };
-
 
 
 /* ================= Customize package: tests from /api/tests ================= */
@@ -76,8 +103,11 @@ export const fetchCustomTests = async (): Promise<ICustomTest[] | null> => {
   if (!res || !Array.isArray(res.data)) return null;
 
   return (res.data as IApiTest[])
-    .filter((t) => String(t.is_active) === '1')
+    .filter(
+      (t) => String(t.is_active) === '1' && !/consultation/i.test(t.name)
+    )
     .map((t) => ({
+      id: t.id,
       key: t.name.trim().toLowerCase().replace(/\s+/g, ' '),
       name: t.name.trim(),
       rate: Number(t.rate) || 0, // regular rate
