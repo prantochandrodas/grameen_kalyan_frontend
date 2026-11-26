@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
-import { FaArrowRight, FaUser } from 'react-icons/fa';
+import { FaArrowRight, FaInfoCircle, FaUser } from 'react-icons/fa';
 
 import { loginUser, parseIdentifier } from '@/shared/utils/authService';
 
@@ -19,10 +19,29 @@ interface IInputs {
 interface ILoginFormProps {
   onSuccess: () => void;
   defaultIdentifier?: string;
+  registerHref?: string; // shows a "Create account" button when the customer is not found
 }
 
-const LoginForm = ({ onSuccess, defaultIdentifier = '' }: ILoginFormProps) => {
+// backend says the customer does not exist (not a wrong password)
+const NOT_FOUND_RE =
+  /not\s*found|no\s+(customer|account|user)|not\s+registered|(does\s*not|doesn'?t)\s+exist/i;
+
+const LoginForm = ({
+  onSuccess,
+  defaultIdentifier = '',
+  registerHref,
+}: ILoginFormProps) => {
   const [apiError, setApiError] = useState('');
+  const isNotFound = NOT_FOUND_RE.test(apiError);
+
+  // keeps ?next=/path so the user returns to the right page after registering
+  const getRegisterLink = () => {
+    if (!registerHref) return '';
+    const next = new URLSearchParams(window.location.search).get('next');
+    return next
+      ? `${registerHref}?next=${encodeURIComponent(next)}`
+      : registerHref;
+  };
   const {
     register,
     handleSubmit,
@@ -79,7 +98,27 @@ const LoginForm = ({ onSuccess, defaultIdentifier = '' }: ILoginFormProps) => {
         </Link>
       </div>
 
-      {apiError && (
+      {apiError && isNotFound && (
+        <div className={style.infoBox} role="alert">
+          <FaInfoCircle aria-hidden="true" />
+          <div>
+            <strong>Account not found</strong>
+            <span>
+              We couldn&apos;t find an account with these details. Please check
+              your mobile number or email
+              {registerHref ? ', or create a new account.' : '.'}
+            </span>
+          </div>
+          {registerHref && (
+            <Link href={getRegisterLink()} className={style.infoLink}>
+              Create account
+              <FaArrowRight aria-hidden="true" />
+            </Link>
+          )}
+        </div>
+      )}
+
+      {apiError && !isNotFound && (
         <p className={style.errorBox} role="alert">
           {apiError}
         </p>

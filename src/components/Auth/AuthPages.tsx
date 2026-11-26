@@ -118,6 +118,7 @@ export const LoginPage = () => {
       <LoginForm
         key={prefill}
         defaultIdentifier={prefill}
+        registerHref="/register"
         onSuccess={() => router.push(getNextPath())}
       />
       <div className={style.divider}>
