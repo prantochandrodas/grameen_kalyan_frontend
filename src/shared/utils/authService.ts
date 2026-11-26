@@ -6,6 +6,7 @@ export interface IUser {
   email: string;
   createdAt: string;
   avatar?: string; // profile photo (small JPEG data URL)
+  hasValidCard?: boolean; // from the login / register API
 }
 
 export interface IPurchase {
@@ -40,7 +41,14 @@ export interface IGuest {
   password?: string;
 }
 
-export type Res<T> = { ok: true; data: T } | { ok: false; message: string };
+export type Res<T> =
+  | { ok: true; data: T }
+  | {
+      ok: false;
+      message: string;
+      fields?: Record<string, string>; // per-field messages (email, phone...)
+      duplicate?: boolean; // email / phone already registered
+    };
 
 interface IStored extends IUser {
   hash: string;
@@ -141,6 +149,60 @@ const setSession = (user: IUser | null, token?: string) => {
   window.dispatchEvent(new Event(AUTH_EVENT));
 };
 
+/* ---------------- real API (admin.grameenkalyan.com) ---------------- */
+interface IApiCustomer {
+  id: number | string;
+  name: string;
+  phone?: string | null;
+  email?: string | null;
+  image?: string | null;
+  created_at?: string;
+}
+
+interface IApiAuth {
+  token: string;
+  customer: IApiCustomer;
+  has_valid_card?: boolean;
+}
+
+const fromApiCustomer = (c: IApiCustomer, hasValidCard?: boolean): IUser => ({
+  id: String(c.id),
+  name: c.name,
+  phone: c.phone || '',
+  email: c.email || '',
+  createdAt: c.created_at || new Date().toISOString(),
+  avatar: c.image && /^(https?:|data:)/.test(c.image) ? c.image : undefined,
+  hasValidCard,
+});
+
+/* ---- turn raw Laravel keys (validation.unique ...) into clear messages ---- */
+const FIELD_LABEL: Record<string, string> = {
+  name: 'name',
+  email: 'email address',
+  phone: 'mobile number',
+  password: 'password',
+};
+
+const isUniqueError = (text: string) =>
+  /unique|already been taken|already exists/i.test(text);
+
+const friendlyMessage = (field: string, raw: string) => {
+  const text = raw.trim();
+  const label = FIELD_LABEL[field] || field;
+  if (isUniqueError(text)) return `This ${label} is already registered.`;
+  if (/required/i.test(text)) return `Please enter your ${label}.`;
+  if (/validation\.min|at least/i.test(text)) {
+    return `Your ${label} is too short.`;
+  }
+  if (/validation\.(email|regex)|a valid|invalid|format/i.test(text)) {
+    return `Please enter a valid ${label}.`;
+  }
+  if (/^validation\./i.test(text)) {
+    return `Please check your ${label} and try again.`;
+  }
+  return text;
+};
+
 async function api<T>(
   path: string,
   method: 'GET' | 'POST' | 'PUT' | 'DELETE',
@@ -159,7 +221,29 @@ async function api<T>(
     });
     const json = await response.json().catch(() => ({}));
     if (!response.ok || json.success === false) {
-      return fail(json.message || 'Something went wrong. Please try again.');
+      // Laravel validation: { message, errors: { field: ['text', ...] } }
+      const fields: Record<string, string> = {};
+      let duplicate = false;
+      if (json.errors && typeof json.errors === 'object') {
+        Object.entries(
+          json.errors as Record<string, string[] | string>
+        ).forEach(([field, value]) => {
+          const raw = Array.isArray(value) ? value[0] : value;
+          if (!raw) return;
+          if (isUniqueError(String(raw))) duplicate = true;
+          fields[field] = friendlyMessage(field, String(raw));
+        });
+      }
+      const rawMessage = typeof json.message === 'string' ? json.message : '';
+      return {
+        ok: false,
+        message:
+          Object.values(fields)[0] ||
+          (rawMessage && !/^validation\./i.test(rawMessage) ? rawMessage : '') ||
+          'Something went wrong. Please try again.',
+        fields: Object.keys(fields).length ? fields : undefined,
+        duplicate,
+      };
     }
     return { ok: true, data: (json.data ?? json) as T };
   } catch {
@@ -171,7 +255,22 @@ async function api<T>(
 export const getSessionUser = (): IUser | null =>
   read<IUser | null>(SESSION_KEY, null);
 
-export const logout = () => setSession(null);
+// clears the session at once (instant UI), then ends the token on the server
+export const logout = () => {
+  let token: string | null = null;
+  try {
+    token = window.localStorage.getItem(TOKEN_KEY);
+  } catch {
+    /* ignore */
+  }
+  setSession(null);
+  if (!token) return;
+  fetch(`${API_URL}/logout`, {
+    method: 'POST',
+    headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+    keepalive: true, // finishes even if the page changes right after logout
+  }).catch(() => undefined);
+};
 
 /* ---------------- register / login ---------------- */
 export async function registerUser(input: {
@@ -180,40 +279,20 @@ export async function registerUser(input: {
   email: string;
   password: string;
 }): Promise<Res<IUser>> {
-  const phone = normalizePhone(input.phone);
-  const email = input.email.trim().toLowerCase();
-
-  if (USE_API) {
-    const r = await api<{ token: string; user: IUser }>(
-      '/auth/register',
-      'POST',
-      { name: input.name.trim(), phone, email, password: input.password }
-    );
-    if (!r.ok) return r;
-    setSession(r.data.user, r.data.token);
-    return { ok: true, data: r.data.user };
-  }
-
-  const users = read<IStored[]>(USERS_KEY, []);
-  if (users.some((u) => u.phone === phone)) {
-    return fail('This mobile number is already registered. Please login.');
-  }
-  if (users.some((u) => u.email === email)) {
-    return fail('This email is already registered. Please login.');
-  }
-  const created: IStored = {
-    id: uid(),
+  const r = await api<IApiAuth>('/customer/register', 'POST', {
     name: input.name.trim(),
-    phone,
-    email,
-    createdAt: new Date().toISOString(),
-    hash: await sha(input.password),
-  };
-  write(USERS_KEY, [...users, created]);
-  setSession(strip(created));
-  return { ok: true, data: strip(created) };
-}
+    email: input.email.trim().toLowerCase(),
+    phone: normalizePhone(input.phone),
+    password: input.password,
+  });
+  if (!r.ok) return r;
 
+  // no session here: after registration the user goes to the Login page
+  return {
+    ok: true,
+    data: fromApiCustomer(r.data.customer, r.data.has_valid_card),
+  };
+}
 export async function loginUser(
   identifier: string,
   password: string
@@ -221,25 +300,18 @@ export async function loginUser(
   const id = parseIdentifier(identifier);
   if (!id) return fail('Enter a valid mobile number or email');
 
-  if (USE_API) {
-    const r = await api<{ token: string; user: IUser }>('/auth/login', 'POST', {
-      identifier: id.value,
-      password,
-    });
-    if (!r.ok) return r;
-    setSession(r.data.user, r.data.token);
-    return { ok: true, data: r.data.user };
-  }
-
-  const users = read<IStored[]>(USERS_KEY, []);
-  const found = users.find(
-    (u) => (id.type === 'phone' ? u.phone : u.email) === id.value
+  const r = await api<IApiAuth>(
+    '/customer/login',
+    'POST',
+    id.type === 'email'
+      ? { email: id.value, password }
+      : { phone: id.value, password }
   );
-  if (!found || found.hash !== (await sha(password))) {
-    return fail('Incorrect mobile number / email or password.');
-  }
-  setSession(strip(found));
-  return { ok: true, data: strip(found) };
+  if (!r.ok) return r;
+
+  const user = fromApiCustomer(r.data.customer, r.data.has_valid_card);
+  setSession(user, r.data.token);
+  return { ok: true, data: user };
 }
 
 /* ---------------- OTP (login once / set new password) ---------------- */

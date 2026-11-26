@@ -15,6 +15,7 @@ export const metadata = {
 };
 
 const HealthPackagesPage = async () => {
+  const bannerData = await useFetchLaravelData({ url: '/banners/healthcare' });
   const homePageContentData = await useFetchLaravelData({
     url: '/home-contents',
   });
@@ -25,10 +26,13 @@ const HealthPackagesPage = async () => {
     <>
       <HeroSection
         heroFor="healthcare"
-        backgroundImage={heroImg.src}
+        backgroundImage={bannerData?.data?.banner || heroImg.src}
         imagePosition="center 28%"
-        title="Healthcare Packages"
-        subtitle="Affordable checkups for you and your family"
+        title={bannerData?.data?.title || 'Healthcare Packages'}
+        subtitle={
+          bannerData?.data?.subtitle ||
+          'Affordable checkups for you and your family'
+        }
       />
       <HealthPackagesProvider packages={packages} filters={filters}>
         <HealthPackages />

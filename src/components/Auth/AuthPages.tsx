@@ -11,6 +11,7 @@ import {
   FaEnvelope,
   FaHeartbeat,
   FaIdCard,
+  FaInfoCircle,
   FaPhoneAlt,
   FaShieldAlt,
   FaUser,
@@ -84,14 +85,41 @@ const useGuestOnly = () => {
 /* ---------- Login ---------- */
 export const LoginPage = () => {
   const router = useRouter();
+  const [justRegistered, setJustRegistered] = useState(false);
+  const [prefill, setPrefill] = useState('');
   useGuestOnly();
+
+  // from "Create Account": success message (registered=1) and/or pre-filled email
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('registered') === '1') setJustRegistered(true);
+    try {
+      const saved = window.sessionStorage.getItem('gk-registered-id');
+      if (saved) setPrefill(saved);
+      window.sessionStorage.removeItem('gk-registered-id');
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   return (
     <Shell
       title="Login to My Account"
       sub="Use your mobile number or email address."
     >
-      <LoginForm onSuccess={() => router.push(getNextPath())} />
+      {justRegistered && (
+        <p className={style.successBox} role="status">
+          <FaCheckCircle aria-hidden="true" />
+          <span>
+            Account created successfully! Please login to continue.
+          </span>
+        </p>
+      )}
+      <LoginForm
+        key={prefill}
+        defaultIdentifier={prefill}
+        onSuccess={() => router.push(getNextPath())}
+      />
       <div className={style.divider}>
         <span>New customer?</span>
       </div>
@@ -113,22 +141,68 @@ interface IRegisterInputs {
 export const RegisterPage = () => {
   const router = useRouter();
   const [apiError, setApiError] = useState('');
+  const [existsMsg, setExistsMsg] = useState('');
   useGuestOnly();
 
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<IRegisterInputs>();
 
+  // keep ?next=/path when sending the user to Login
+  const loginHref = () => {
+    const n = getNextPath('');
+    return n ? `/login?next=${encodeURIComponent(n)}` : '/login';
+  };
+
   const onSubmit = async (data: IRegisterInputs) => {
     setApiError('');
+    setExistsMsg('');
     const res = await registerUser(data);
     if (!res.ok) {
-      setApiError(res.message);
+      const f = res.fields || {};
+      const keys = ['name', 'phone', 'email', 'password'] as const;
+      const shown = keys.filter((k) => f[k]);
+
+      // each server message goes under its own field
+      shown.forEach((k) => setError(k, { type: 'server', message: f[k] }));
+
+      if (res.duplicate && (f.email || f.phone)) {
+        // already registered -> friendly "login instead" card
+        setExistsMsg(
+          f.email && f.phone
+            ? 'This email and mobile number are already registered with Grameen Kalyan.'
+            : f.email
+            ? 'This email address is already registered with Grameen Kalyan.'
+            : 'This mobile number is already registered with Grameen Kalyan.'
+        );
+        try {
+          window.sessionStorage.setItem(
+            'gk-registered-id',
+            data.email.trim().toLowerCase()
+          );
+        } catch {
+          /* ignore */
+        }
+      } else if (!shown.length) {
+        setApiError(res.message);
+      }
       return;
     }
-    router.push(getNextPath());
+
+    // registration done -> Login page with a success message
+    try {
+      window.sessionStorage.setItem(
+        'gk-registered-id',
+        data.email.trim().toLowerCase()
+      );
+    } catch {
+      /* ignore */
+    }
+    const next = getNextPath(''); // keep ?next=/path if there was one
+    router.push(`/login?registered=1${next ? `&next=${encodeURIComponent(next)}` : ''}`);
   };
 
   return (
@@ -197,6 +271,20 @@ export const RegisterPage = () => {
           })}
         />
 
+        {existsMsg && (
+          <div className={style.infoBox} role="alert">
+            <FaInfoCircle aria-hidden="true" />
+            <div>
+              <strong>Account already exists</strong>
+              <span>{existsMsg} Please login to continue.</span>
+            </div>
+            <Link href={loginHref()} className={style.infoLink}>
+              Login
+              <FaArrowRight aria-hidden="true" />
+            </Link>
+          </div>
+        )}
+
         {apiError && (
           <p className={style.errorBox} role="alert">
             {apiError}
@@ -205,7 +293,11 @@ export const RegisterPage = () => {
 
         <button type="submit" className={style.btn} disabled={isSubmitting}>
           {isSubmitting ? 'Creating account...' : 'Create Account'}
-          <FaArrowRight aria-hidden="true" />
+          {isSubmitting ? (
+            <span className={style.dSpin} aria-hidden="true" />
+          ) : (
+            <FaArrowRight aria-hidden="true" />
+          )}
         </button>
       </form>
 

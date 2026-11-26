@@ -1,7 +1,7 @@
 // ================= START: src/components/Auth/LoginForm.tsx =================
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { FaArrowRight, FaUser } from 'react-icons/fa';
@@ -18,15 +18,22 @@ interface IInputs {
 
 interface ILoginFormProps {
   onSuccess: () => void;
+  defaultIdentifier?: string;
 }
 
-const LoginForm = ({ onSuccess }: ILoginFormProps) => {
+const LoginForm = ({ onSuccess, defaultIdentifier = '' }: ILoginFormProps) => {
   const [apiError, setApiError] = useState('');
   const {
     register,
     handleSubmit,
+    setFocus,
     formState: { errors, isSubmitting },
-  } = useForm<IInputs>();
+  } = useForm<IInputs>({ defaultValues: { identifier: defaultIdentifier } });
+
+  // email is already filled (after registration) -> go straight to password
+  useEffect(() => {
+    if (defaultIdentifier) setFocus('password');
+  }, [defaultIdentifier, setFocus]);
 
   const onSubmit = async (data: IInputs) => {
     setApiError('');
@@ -80,7 +87,11 @@ const LoginForm = ({ onSuccess }: ILoginFormProps) => {
 
       <button type="submit" className={style.btn} disabled={isSubmitting}>
         {isSubmitting ? 'Logging in...' : 'Login'}
-        <FaArrowRight aria-hidden="true" />
+        {isSubmitting ? (
+          <span className={style.dSpin} aria-hidden="true" />
+        ) : (
+          <FaArrowRight aria-hidden="true" />
+        )}
       </button>
     </form>
   );
