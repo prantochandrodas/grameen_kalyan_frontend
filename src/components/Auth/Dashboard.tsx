@@ -1065,7 +1065,7 @@ const Dashboard = () => {
                 </div>
               </dl>
 
-              <div className={style.dDanger}>
+              {/* <div className={style.dDanger}>
                 <strong>Delete account</strong>
                 <p>
                   This permanently removes your profile and all purchase
@@ -1079,7 +1079,7 @@ const Dashboard = () => {
                   <FaTrashAlt aria-hidden="true" />
                   Delete my account
                 </button>
-              </div>
+              </div> */}
             </div>
           </section>
         )}

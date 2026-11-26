@@ -41,15 +41,6 @@ interface ICustomPackageProps {
 type Plan = 'regular' | 'card' | 'member';
 type MemberStep = 'email' | 'checking' | 'active' | 'expired';
 
-const fmtDate = (value: string | null) =>
-  value
-    ? new Date(value).toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      })
-    : '';
-
 const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
   // regular = new customer, no card | card = new customer takes card | member = existing member
   const [plan, setPlan] = useState<Plan>('regular');

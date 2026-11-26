@@ -160,6 +160,8 @@ const BookingModal = ({
     ? needsCardChoice && wantCard
       ? CARD_FEE
       : 0
+    : hasValidCard
+    ? 0 // active Health Card -> no card charge
     : cartTotals.cardFee;
   const total = (hasDiscount ? packagesPrice : packagesRate) + cardFee;
   const saved = hasDiscount ? packagesRate - packagesPrice : 0;
@@ -618,6 +620,15 @@ const BookingModal = ({
                   <b>{formatBDT(cardFee)}</b>
                 </li>
               )}
+              {!isCustom && hasValidCard && cartTotals.cardFee > 0 && (
+                <li className={style.summaryFee}>
+                  <span>
+                    Health Card Registration
+                    <em>Your card is active · no charge</em>
+                  </span>
+                  <b>FREE</b>
+                </li>
+              )}
               <li className={style.summaryTotal}>
                 <span>
                   Total
@@ -698,6 +709,16 @@ const BookingModal = ({
                 </span>
               </p>
             ))}
+
+            {!isCustom && hasValidCard && (
+              <p className={`${style.cardNote} ${style.summaryNote}`}>
+                <FaCheckCircle aria-hidden="true" />
+                <span>
+                  Your Micro Health insurance Card is active. No card fee for
+                  this booking.
+                </span>
+              </p>
+            )}
             </div>
 
             <div className={style.confirmRight}>
