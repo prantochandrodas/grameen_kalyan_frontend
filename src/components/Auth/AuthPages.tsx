@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import {
   FaArrowRight,
+  FaCheck,
   FaCheckCircle,
   FaEnvelope,
   FaHeartbeat,
@@ -25,10 +26,10 @@ import { useAuth } from '@/shared/context/AuthContext';
 import {
   EMAIL_REGEX,
   PHONE_REGEX,
-  parseIdentifier,
+  forgotPassword,
   registerUser,
-  sendOtp,
-  verifyOtp,
+  resetPassword,
+  verifyResetOtp,
 } from '@/shared/utils/authService';
 
 import LoginForm from './LoginForm';
@@ -127,6 +128,7 @@ const useGuestOnly = () => {
 export const LoginPage = () => {
   const router = useRouter();
   const [justRegistered, setJustRegistered] = useState(false);
+  const [justReset, setJustReset] = useState(false);
   const [prefill, setPrefill] = useState('');
   useGuestOnly();
 
@@ -134,6 +136,7 @@ export const LoginPage = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('registered') === '1') setJustRegistered(true);
+    if (params.get('reset') === '1') setJustReset(true);
     try {
       const saved = window.sessionStorage.getItem('gk-registered-id');
       if (saved) setPrefill(saved);
@@ -154,6 +157,15 @@ export const LoginPage = () => {
           <FaCheckCircle aria-hidden="true" />
           <span>
             Account created successfully! Please login to continue.
+          </span>
+        </p>
+      )}
+      {justReset && (
+        <p className={style.successBox} role="status">
+          <FaCheckCircle aria-hidden="true" />
+          <span>
+            Password updated successfully! Please login with your new
+            password.
           </span>
         </p>
       )}
@@ -355,21 +367,30 @@ export const RegisterPage = () => {
   );
 };
 
-/* ---------- Forgot password (OTP) ---------- */
+/* ---------- Forgot password (email -> OTP -> new password) ---------- */
+type FpStep = 'request' | 'verify' | 'reset';
+
+const FP_STEPS: { key: FpStep; label: string }[] = [
+  { key: 'request', label: 'Email' },
+  { key: 'verify', label: 'Verify' },
+  { key: 'reset', label: 'Reset' },
+];
+
 export const ForgotPasswordPage = () => {
   const router = useRouter();
   useGuestOnly();
 
-  const [step, setStep] = useState<'request' | 'verify'>('request');
-  const [mode, setMode] = useState<'login' | 'reset'>('login');
-  const [identifier, setIdentifier] = useState('');
+  const [step, setStep] = useState<FpStep>('request');
+  const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
-  const [demoCode, setDemoCode] = useState<string | null>(null);
+  const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [wait, setWait] = useState(0);
+
+  const stepIndex = FP_STEPS.findIndex((s) => s.key === step);
 
   // resend timer
   useEffect(() => {
@@ -378,100 +399,162 @@ export const ForgotPasswordPage = () => {
     return () => window.clearTimeout(timer);
   }, [wait]);
 
-  const request = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+  // jump straight into the OTP box
+  useEffect(() => {
+    if (step === 'verify') document.getElementById('fpOtp')?.focus();
+  }, [step]);
+
+  // step 1: send the OTP (also used by "Resend OTP")
+  const sendCode = async (resend = false) => {
     setError('');
-    const parsed = parseIdentifier(identifier);
-    if (!parsed || parsed.type !== 'email') {
-      setError('Enter your email address. SMS OTP is not available yet.');
-      return;
-    }
     setBusy(true);
-    const res = await sendOtp(identifier);
+    const res = await forgotPassword(email);
     setBusy(false);
     if (!res.ok) {
       setError(res.message);
       return;
     }
-    setDemoCode(res.data.demoCode || null);
+    setEmail(res.data.email);
     setCode('');
+    setNotice(
+      resend
+        ? 'A new OTP has been sent to your email.'
+        : 'If this email is registered, an OTP has been sent. Please check your inbox and spam folder.'
+    );
     setStep('verify');
     setWait(30);
   };
 
-  const verify = async (e: React.FormEvent) => {
+  const onRequest = (e: React.FormEvent) => {
+    e.preventDefault();
+    sendCode(false);
+  };
+
+  // step 2: check the OTP
+  const onVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     if (!/^\d{6}$/.test(code)) {
-      setError('Enter the 6 digit OTP');
+      setError('Enter the 6 digit OTP.');
       return;
     }
-    if (mode === 'reset') {
-      if (password.length < 6) {
-        setError('Use at least 6 characters for the new password');
-        return;
-      }
-      if (password !== confirm) {
-        setError('Passwords do not match');
-        return;
-      }
-    }
     setBusy(true);
-    const res = await verifyOtp(
-      identifier,
-      code,
-      mode === 'reset' ? password : undefined
-    );
+    const res = await verifyResetOtp(email, code);
     setBusy(false);
     if (!res.ok) {
       setError(res.message);
       return;
     }
-    router.push(getNextPath());
+    setNotice('');
+    setStep('reset');
   };
+
+  // step 3: save the new password, then go to Login
+  const onReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    if (password.length < 6) {
+      setError('Use at least 6 characters for the new password.');
+      return;
+    }
+    if (password !== confirm) {
+      setError('Password and confirm password do not match.');
+      return;
+    }
+    setBusy(true);
+    const res = await resetPassword(email, code, password, confirm);
+    setBusy(false);
+    if (!res.ok) {
+      setError(res.message);
+      return;
+    }
+    try {
+      window.sessionStorage.setItem('gk-registered-id', email);
+    } catch {
+      /* ignore */
+    }
+    const next = getNextPath('');
+    router.push(
+      `/login?reset=1${next ? `&next=${encodeURIComponent(next)}` : ''}`
+    );
+  };
+
+  const changeEmail = () => {
+    setStep('request');
+    setCode('');
+    setNotice('');
+    setError('');
+  };
+
+  const subText = {
+    request:
+      'Enter your registered email address. We will send a one time OTP to it.',
+    verify: `Enter the 6 digit OTP sent to ${email}.`,
+    reset: 'OTP verified. Create a new password for your account.',
+  }[step];
+
+  const errorBox = error && (
+    <p className={style.errorBox} role="alert">
+      {error}
+    </p>
+  );
+
+  const spinner = <span className={style.dSpin} aria-hidden="true" />;
 
   return (
     <Shell
       variant="forgot"
-      title="Forgot Password"
-      sub={
-        step === 'request'
-          ? 'Enter your email address. We will send a one time OTP to it.'
-          : `Enter the 6 digit OTP sent to ${identifier.trim()}.`
-      }
+      title={step === 'reset' ? 'Set New Password' : 'Forgot Password'}
+      sub={subText}
     >
-      {step === 'request' ? (
-        <form className={style.form} onSubmit={request} noValidate>
+      <ol className={style.steps} aria-label="Password reset progress">
+        {FP_STEPS.map((s, i) => (
+          <li
+            key={s.key}
+            className={
+              i < stepIndex ? style.stepDone : i === stepIndex ? style.stepOn : ''
+            }
+            aria-current={i === stepIndex ? 'step' : undefined}
+          >
+            <b>{i < stepIndex ? <FaCheck aria-hidden="true" /> : i + 1}</b>
+            {s.label}
+          </li>
+        ))}
+      </ol>
+
+      {step === 'request' && (
+        <form className={style.form} onSubmit={onRequest} noValidate>
           <TextField
-            id="fpId"
+            id="fpEmail"
             label="Email"
-            icon={<FaUser />}
-            type="text"
-            inputMode="text"
+            icon={<FaEnvelope />}
+            type="email"
+            inputMode="email"
+            autoComplete="email"
             autoCapitalize="none"
             placeholder="name@example.com"
-            value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
-          {error && (
-            <p className={style.errorBox} role="alert">
-              {error}
-            </p>
-          )}
+          {errorBox}
           <button type="submit" className={style.btn} disabled={busy}>
             {busy ? 'Sending OTP...' : 'Send OTP'}
-            <FaArrowRight aria-hidden="true" />
+            {busy ? spinner : <FaArrowRight aria-hidden="true" />}
           </button>
         </form>
-      ) : (
-        <form className={style.form} onSubmit={verify} noValidate>
-          {demoCode && (
-            <p className={style.demoBox}>
-              Demo mode: no email is sent. Your OTP is <b>{demoCode}</b>
+      )}
+
+      {step === 'verify' && (
+        <form className={style.form} onSubmit={onVerify} noValidate>
+          {notice && (
+            <p className={style.successBox} style={{ margin: 0 }} role="status">
+              <FaCheckCircle aria-hidden="true" />
+              <span>{notice}</span>
             </p>
           )}
 
           <input
+            id="fpOtp"
             className={style.otpInput}
             type="text"
             inputMode="numeric"
@@ -483,59 +566,15 @@ export const ForgotPasswordPage = () => {
             onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
           />
 
-          <div className={style.seg} role="tablist" aria-label="After OTP">
-            <button
-              type="button"
-              role="tab"
-              aria-selected={mode === 'login'}
-              onClick={() => setMode('login')}
-            >
-              Login one time
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={mode === 'reset'}
-              onClick={() => setMode('reset')}
-            >
-              Set new password
-            </button>
-          </div>
+          {errorBox}
 
-          {mode === 'reset' && (
-            <>
-              <PasswordField
-                id="fpPw"
-                label="New Password"
-                autoComplete="new-password"
-                placeholder="At least 6 characters"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <PasswordField
-                id="fpPw2"
-                label="Confirm New Password"
-                autoComplete="new-password"
-                placeholder="Re-enter new password"
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-              />
-            </>
-          )}
-
-          {error && (
-            <p className={style.errorBox} role="alert">
-              {error}
-            </p>
-          )}
-
-          <button type="submit" className={style.btn} disabled={busy}>
-            {busy
-              ? 'Verifying...'
-              : mode === 'reset'
-              ? 'Verify & Set Password'
-              : 'Verify & Login'}
-            <FaArrowRight aria-hidden="true" />
+          <button
+            type="submit"
+            className={style.btn}
+            disabled={busy || code.length !== 6}
+          >
+            {busy ? 'Verifying...' : 'Verify OTP'}
+            {busy ? spinner : <FaArrowRight aria-hidden="true" />}
           </button>
 
           <p className={style.switchLine} style={{ margin: 0 }}>
@@ -544,23 +583,42 @@ export const ForgotPasswordPage = () => {
               type="button"
               className={style.link}
               disabled={wait > 0 || busy}
-              onClick={() => request()}
+              onClick={() => sendCode(true)}
             >
               {wait > 0 ? `Resend in ${wait}s` : 'Resend OTP'}
             </button>
           </p>
           <p className={style.switchLine} style={{ margin: 0 }}>
-            <button
-              type="button"
-              className={style.link}
-              onClick={() => {
-                setStep('request');
-                setError('');
-              }}
-            >
-              Change mobile / email
+            <button type="button" className={style.link} onClick={changeEmail}>
+              Change email
             </button>
           </p>
+        </form>
+      )}
+
+      {step === 'reset' && (
+        <form className={style.form} onSubmit={onReset} noValidate>
+          <PasswordField
+            id="fpPw"
+            label="New Password"
+            autoComplete="new-password"
+            placeholder="At least 6 characters"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <PasswordField
+            id="fpPw2"
+            label="Confirm New Password"
+            autoComplete="new-password"
+            placeholder="Re-enter new password"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+          />
+          {errorBox}
+          <button type="submit" className={style.btn} disabled={busy}>
+            {busy ? 'Saving...' : 'Reset Password'}
+            {busy ? spinner : <FaArrowRight aria-hidden="true" />}
+          </button>
         </form>
       )}
 

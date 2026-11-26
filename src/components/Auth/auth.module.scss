@@ -2465,4 +2465,64 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     }
 }
 
+
+/* ================= Forgot password: step indicator ================= */
+
+.steps {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    margin: 0 0 14px;
+    padding: 0;
+    list-style: none;
+    li {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: $muted;
+        font-size: 12.5px;
+        font-weight: 700;
+        &:not(:last-child)::after {
+            content: '';
+            width: 22px;
+            height: 2px;
+            margin-left: 1px;
+            border-radius: 2px;
+            background: $line;
+        }
+        b {
+            display: grid;
+            place-items: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #eef3ef;
+            font-size: 12px;
+            font-weight: 800;
+            transition: background 0.25s ease, color 0.25s ease;
+        }
+    }
+}
+
+.stepOn {
+    color: $g;
+    b {
+        background: $grad;
+        color: #fff;
+        box-shadow: 0 4px 10px rgba(26, 154, 91, 0.3);
+    }
+}
+
+.stepDone {
+    color: $g2;
+    b {
+        background: rgba($g2, 0.16);
+        color: $g2;
+    }
+    &:not(:last-child)::after {
+        background: $g2;
+    }
+}
+
 // ================== END: src/components/Auth/auth.module.scss ==================

@@ -181,6 +181,8 @@ const FIELD_LABEL: Record<string, string> = {
   email: 'email address',
   phone: 'mobile number',
   password: 'password',
+  otp: 'OTP',
+  password_confirmation: 'confirm password',
 };
 
 const isUniqueError = (text: string) =>
@@ -189,6 +191,9 @@ const isUniqueError = (text: string) =>
 const friendlyMessage = (field: string, raw: string) => {
   const text = raw.trim();
   const label = FIELD_LABEL[field] || field;
+  if (/confirmed|does not match/i.test(text)) {
+    return 'Password and confirm password do not match.';
+  }
   if (isUniqueError(text)) return `This ${label} is already registered.`;
   if (/required/i.test(text)) return `Please enter your ${label}.`;
   if (/validation\.min|at least/i.test(text)) {
@@ -381,6 +386,56 @@ export async function verifyOtp(
   window.localStorage.removeItem(OTP_KEY);
   setSession(strip(users[index]));
   return { ok: true, data: strip(users[index]) };
+}
+
+/* ---------------- forgot password (real API) ---------------- */
+// 1) send OTP to the email
+export async function forgotPassword(
+  email: string
+): Promise<Res<{ email: string }>> {
+  const id = parseIdentifier(email);
+  if (!id || id.type !== 'email') {
+    return fail('Please enter a valid email address.');
+  }
+  const r = await api<Record<string, unknown>>(
+    '/customer/forgot-password',
+    'POST',
+    { email: id.value }
+  );
+  return r.ok ? { ok: true, data: { email: id.value } } : r;
+}
+
+// 2) check the OTP
+export async function verifyResetOtp(
+  email: string,
+  otp: string
+): Promise<Res<{ email: string }>> {
+  const r = await api<Record<string, unknown>>(
+    '/customer/verify-otp',
+    'POST',
+    { email: email.trim().toLowerCase(), otp }
+  );
+  return r.ok ? { ok: true, data: { email } } : r;
+}
+
+// 3) set the new password
+export async function resetPassword(
+  email: string,
+  otp: string,
+  password: string,
+  passwordConfirmation: string
+): Promise<Res<{ email: string }>> {
+  const r = await api<Record<string, unknown>>(
+    '/customer/reset-password',
+    'POST',
+    {
+      email: email.trim().toLowerCase(),
+      otp,
+      password,
+      password_confirmation: passwordConfirmation,
+    }
+  );
+  return r.ok ? { ok: true, data: { email } } : r;
 }
 
 /* ---------------- purchases ---------------- */
