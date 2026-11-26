@@ -33,6 +33,7 @@ import {
   formatBDT,
 } from '@/data/healthPackages';
 import { getHealthPackagesData } from '@/shared/utils/healthPackagesApi';
+import { useHealthPackageContent } from '@/shared/utils/healthPackageContentApi';
 import { useHealthPackages } from '@/shared/context/HealthPackagesContext';
 import {
   getHealthPackageCart,
@@ -61,11 +62,15 @@ const ICONS: Record<PackageIconKey, IconType> = {
   senior: FaUserClock,
 };
 
-const FEATURES = [
-  { icon: FaIdCard, text: 'Healthcare Card for up to 6 family members' },
-  { icon: FaUserMd, text: 'Doctor consultation with every package' },
-  { icon: FaPercent, text: 'Special discounted diagnostic rates' },
-];
+const FEATURE_ICONS = [FaIdCard, FaUserMd, FaPercent];
+
+// makes "only once" bold, like the old design
+const highlightOnce = (text: string) =>
+  text
+    .split(/(only once)/i)
+    .map((part, i) =>
+      /^only once$/i.test(part) ? <b key={i}>{part}</b> : part
+    );
 
 /* ---------------------------- Package card ---------------------------- */
 interface IPackageCardProps {
@@ -231,6 +236,14 @@ const PackageCard = ({
 /* ------------------------------ Main section ------------------------------ */
 const HealthPackages = () => {
   const { cardFee: CARD_FEE } = useCharges();
+  const content = useHealthPackageContent();
+  const features = [
+    content.feature_one,
+    content.feature_two,
+    content.feature_three,
+  ]
+    .map((text, i) => ({ icon: FEATURE_ICONS[i], text }))
+    .filter((item) => item.text);
   const { packages: serverPackages, filters: serverFilters } =
     useHealthPackages();
   const [packages, setPackages] = useState<IHealthPackage[]>(serverPackages);
@@ -328,20 +341,17 @@ const HealthPackages = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <span className={style.eyebrow}>Affordable Checkups for your loved ones</span>
+            <span className={style.eyebrow}>{content.heading}</span>
             <h2 className={style.title}>
-              Our Healthcare <span>Packages</span>
+              {content.title_one} <span>{content.title_two}</span>
             </h2>
             <span className={style.titleBar} />
-            <p className={style.lead}>
-              Choose a package made for you and your family. Quality diagnostic
-              tests and doctor consultation at special discounted prices.
-            </p>
+            <p className={style.lead}>{content.description}</p>
           </motion.div>
 
           {/* ---------- Highlights ---------- */}
           <ul className={style.features}>
-            {FEATURES.map(({ icon: Icon, text }) => (
+            {features.map(({ icon: Icon, text }) => (
               <li key={text}>
                 <span aria-hidden="true">
                   <Icon />
@@ -359,14 +369,19 @@ const HealthPackages = () => {
             </span>
             <div>
               <strong>
-                On time micro health insurance card: {formatBDT(CARD_FEE)}
+                {content.health_card_title ||
+                  `On time micro health insurance card: ${formatBDT(CARD_FEE)}`}
               </strong>
-              <p>
-                Pay it <b>only once</b> and book as many packages as you need
-                within {CARD_VALIDITY_MONTHS} months. Package prices below do
-                not include the card fee, and it is added to your total just
-                one time.
-              </p>
+              {content.health_card_description ? (
+                <p>{highlightOnce(content.health_card_description)}</p>
+              ) : (
+                <p>
+                  Pay it <b>only once</b> and book as many packages as you need
+                  within {CARD_VALIDITY_MONTHS} months. Package prices below do
+                  not include the card fee, and it is added to your total just
+                  one time.
+                </p>
+              )}
             </div>
           </div>
 
@@ -377,8 +392,8 @@ const HealthPackages = () => {
                 <FaSlidersH />
               </span>
               <div>
-                <strong>Can’t find the right package?</strong>
-                <p>Pick only the tests you need and build your own package.</p>
+                <strong>{content.custom_package_title}</strong>
+                <p>{content.custom_package_description}</p>
               </div>
             </div>
             <button
@@ -387,7 +402,7 @@ const HealthPackages = () => {
               onClick={() => setCustomizing(true)}
             >
               <FaSlidersH aria-hidden="true" />
-              Customize Package
+              {content.custom_package_button_text}
             </button>
           </div>
           </div>
