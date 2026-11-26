@@ -109,12 +109,12 @@ const LoginForm = ({
               {registerHref ? ', or create a new account.' : '.'}
             </span>
           </div>
-          {registerHref && (
+          {/* {registerHref && (
             <Link href={getRegisterLink()} className={style.infoLink}>
               Create account
               <FaArrowRight aria-hidden="true" />
             </Link>
-          )}
+          )} */}
         </div>
       )}
 
