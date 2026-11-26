@@ -339,7 +339,7 @@ const HealthPackages = () => {
             </span>
             <div>
               <strong>
-                One-time Health Card fee: {formatBDT(CARD_FEE)}
+                On time micro health insurance card: {formatBDT(CARD_FEE)}
               </strong>
               <p>
                 Pay it <b>only once</b> and book as many packages as you need

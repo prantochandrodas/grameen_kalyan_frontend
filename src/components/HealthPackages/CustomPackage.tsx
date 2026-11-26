@@ -115,7 +115,7 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
       {
         id: 'card',
         icon: <FaIdCard />,
-        title: 'Get Health Card',
+        title: 'Get Micro Health insurance Card',
         sub: `Discount rate · ${formatBDT(cardFee)} one-time`,
       },
       {
