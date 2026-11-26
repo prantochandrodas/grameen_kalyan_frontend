@@ -1,4 +1,3 @@
-import { LARAVEL_BASE_URL } from '@/config';
 import {
   IApiPackage,
   IApiPackageCategory,
@@ -9,20 +8,34 @@ import {
 } from '@/data/healthPackages';
 import { ICustomTest } from '@/shared/utils/healthPackagePricing';
 
-const getJson = async (path: string) => {
-  try {
-    const res = await fetch(`${LARAVEL_BASE_URL}${path}`, {
-      cache: 'no-store',
-    });
-    return res.ok ? await res.json() : null;
-  } catch {
-    return null;
+const API_BASE = 'https://admin.grameenkalyan.com/api';
+
+// 12s timeout + 1 retry; returns null only when both tries fail
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getJson = async (path: string, retries = 1): Promise<any> => {
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 12000);
+    try {
+      const res = await fetch(`${API_BASE}${path}`, {
+        cache: 'no-store',
+        headers: { Accept: 'application/json' },
+        signal: controller.signal,
+      });
+      if (res.ok) return await res.json();
+    } catch {
+      // network error or timeout - try again
+    } finally {
+      clearTimeout(timer);
+    }
   }
+  return null;
 };
 
 export const getHealthPackagesData = async (): Promise<{
   packages: IHealthPackage[];
   filters: IPackageFilter[];
+  failed: boolean;
 }> => {
   const [packagesRes, categoriesRes] = await Promise.all([
     getJson('/get-packages'),
@@ -41,6 +54,7 @@ export const getHealthPackagesData = async (): Promise<{
   return {
     packages: apiPackages.map(mapApiPackage),
     filters: buildPackageFilters(apiCategories),
+    failed: !packagesRes,
   };
 };
 

@@ -3497,3 +3497,127 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
         text-decoration: underline;
     }
 }
+
+
+/* ================= Loading skeleton + empty / error state ================= */
+
+@keyframes hpShimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeletonCard {
+    flex-direction: column;
+    gap: 1.2rem;
+    padding-bottom: 1.8rem;
+    overflow: hidden;
+    pointer-events: none;
+    // fewer skeletons on small screens (2 per row / 1 per row)
+    @media (max-width: 1180px) {
+        &:nth-child(n + 3) {
+            display: none;
+        }
+    }
+    @media (max-width: 700px) {
+        &:nth-child(n+2) {
+            display: none;
+        }
+    }
+}
+
+.skMedia,
+.skLine {
+    display: block;
+    background: linear-gradient(90deg, #cfe3d8 25%, #eaf6ef 50%, #cfe3d8 75%);
+    background-size: 200% 100%;
+    animation: hpShimmer 1.4s ease-in-out infinite;
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+.skMedia {
+    aspect-ratio: 16 / 5;
+    border-radius: 1rem 1rem 0 0;
+}
+
+.skLine {
+    height: 14px;
+    margin: 0 1.6rem;
+    border-radius: 8px;
+}
+
+.skTitle {
+    width: 60%;
+    height: 20px;
+}
+
+.skBtn {
+    height: 45px;
+    margin-top: 0.8rem;
+    border-radius: 12px;
+}
+
+.stateBox {
+    max-width: 52rem;
+    margin: 0 auto;
+    padding: 3.4rem 2.4rem;
+    text-align: center;
+    border-radius: 1.6rem;
+    background: #fff;
+    border: 1.5px dashed rgba($hp-green, 0.25);
+    box-shadow: 0 1.4rem 3.4rem rgba(20, 60, 50, 0.08);
+    h3 {
+        margin: 1.4rem 0 0.6rem;
+        color: $hp-green;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+    p {
+        margin: 0 auto;
+        max-width: 38rem;
+        color: $color-text-grey;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    @media (max-width: 640px) {
+        padding: 2.6rem 1.6rem;
+    }
+}
+
+.stateIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: $hp-gradient;
+    color: #fff;
+    font-size: 24px;
+    box-shadow: 0 10px 22px rgba(26, 154, 91, 0.3);
+}
+
+.stateActions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 2rem;
+    a {
+        text-decoration: none;
+    }
+    .btn {
+        min-width: 150px;
+    }
+    @media (max-width: 480px) {
+        flex-direction: column;
+        .btn {
+            width: 100%;
+        }
+    }
+}

@@ -1,7 +1,7 @@
 // ================= START: HealthPackages.tsx =================
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { IconType } from 'react-icons';
@@ -15,6 +15,8 @@ import {
   FaHeartbeat,
   FaIdCard,
   FaPercent,
+  FaPhoneAlt,
+  FaRedo,
   FaShoppingCart,
   FaSlidersH,
   FaTint,
@@ -24,9 +26,11 @@ import {
 
 import {
   IHealthPackage,
+  IPackageFilter,
   PackageIconKey,
   formatBDT,
 } from '@/data/healthPackages';
+import { getHealthPackagesData } from '@/shared/utils/healthPackagesApi';
 import { useHealthPackages } from '@/shared/context/HealthPackagesContext';
 import {
   getHealthPackageCart,
@@ -92,14 +96,16 @@ const PackageCard = ({
       >
         {/* header image (16:5) */}
         <div className={style.cardMedia}>
-          <Image
-            className={style.cardImg}
-            src={pkg.image}
-            alt={pkg.name}
-            fill
-            sizes="(max-width: 700px) 100vw, (max-width: 1180px) 50vw, (max-width: 1599px) 33vw, 25vw"
-            style={{ objectPosition: pkg.imagePosition || 'center' }}
-          />
+          {pkg.image && (
+            <Image
+              className={style.cardImg}
+              src={pkg.image}
+              alt={pkg.name}
+              fill
+              sizes="(max-width: 700px) 100vw, (max-width: 1180px) 50vw, (max-width: 1599px) 33vw, 25vw"
+              style={{ objectPosition: pkg.imagePosition || 'center' }}
+            />
+          )}
           {save > 0 && (
             <span className={style.ribbon}>
               Save {save.toLocaleString('en-US')}
@@ -203,15 +209,39 @@ const PackageCard = ({
 
 /* ------------------------------ Main section ------------------------------ */
 const HealthPackages = () => {
-  const { packages, filters } = useHealthPackages();
+  const { packages: serverPackages, filters: serverFilters } =
+    useHealthPackages();
+  const [packages, setPackages] = useState<IHealthPackage[]>(serverPackages);
+  const [filters, setFilters] = useState<IPackageFilter[]>(serverFilters);
+  const [loadState, setLoadState] = useState<
+    'ready' | 'loading' | 'error' | 'empty'
+  >(serverPackages.length ? 'ready' : 'loading');
+
+  const loadPackages = useCallback(async () => {
+    setLoadState('loading');
+    const data = await getHealthPackagesData();
+    if (data.packages.length) {
+      setPackages(data.packages);
+      setFilters(data.filters);
+      setLoadState('ready');
+    } else {
+      setLoadState(data.failed ? 'error' : 'empty');
+    }
+  }, []);
+
+  // server list was empty (API blocked/slow on the server) -> load in the browser
+  useEffect(() => {
+    if (!serverPackages.length) loadPackages();
+  }, [serverPackages.length, loadPackages]);
   const [filter, setFilter] = useState<string>('all');
   const [cart, setCart] = useState<string[]>([]);
   const [cartReady, setCartReady] = useState(false);
   const [customizing, setCustomizing] = useState(false);
   const { startCheckout, checkoutGate, gateOpen } = useCheckout();
 
-  // load the saved cart once
+  // load the saved cart once the package list is available
   useEffect(() => {
+    if (!packages.length) return; // list not loaded yet - keep the saved cart
     try {
       const saved = getHealthPackageCart();
       setCart(saved.filter((id) => packages.some((pkg) => pkg.id === id)));
@@ -341,6 +371,7 @@ const HealthPackages = () => {
           </div>
 
           {/* ---------- Filters ---------- */}
+          {loadState === 'ready' && (
           <div className={style.filters} role="tablist" aria-label="Packages">
             {filters.map((item) => {
               const count =
@@ -364,20 +395,78 @@ const HealthPackages = () => {
               );
             })}
           </div>
+          )}
+
+          {/* ---------- Loading skeleton ---------- */}
+          {loadState === 'loading' && (
+            <div className={style.cards} aria-busy="true" aria-live="polite">
+              {[0, 1, 2, 3].map((i) => (
+                <div key={i} className={`${style.card} ${style.skeletonCard}`}>
+                  <span className={style.skMedia} />
+                  <span className={`${style.skLine} ${style.skTitle}`} />
+                  <span className={style.skLine} />
+                  <span className={style.skLine} />
+                  <span className={style.skLine} />
+                  <span className={`${style.skLine} ${style.skBtn}`} />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* ---------- Error / empty state ---------- */}
+          {(loadState === 'error' || loadState === 'empty') && (
+            <div className={style.stateBox} role="status">
+              <span className={style.stateIcon} aria-hidden="true">
+                {loadState === 'error' ? <FaRedo /> : <FaHandHoldingHeart />}
+              </span>
+              <h3>
+                {loadState === 'error'
+                  ? 'Could not load the packages'
+                  : 'Packages are coming soon'}
+              </h3>
+              <p>
+                {loadState === 'error'
+                  ? 'Please check your internet connection and try again.'
+                  : 'We are updating our health packages. Please check back shortly.'}
+              </p>
+              <div className={style.stateActions}>
+                <button
+                  type="button"
+                  className={`${style.btn} ${style.btnPrimary}`}
+                  onClick={loadPackages}
+                >
+                  <FaRedo aria-hidden="true" />
+                  Try Again
+                </button>
+                <a
+                  className={`${style.btn} ${style.btnGhost}`}
+                  href="tel:+8801334944640"
+                >
+                  <FaPhoneAlt aria-hidden="true" />
+                  Call Us
+                </a>
+              </div>
+            </div>
+          )}
 
           {/* ---------- Cards ---------- */}
-          <div className={style.cards}>
-            {visible.map((pkg, index) => (
-              <PackageCard
-                key={pkg.id}
-                pkg={pkg}
-                index={index}
-                inCart={cart.includes(pkg.id)}
-                onToggle={toggleCart}
-                onBuy={(id) => startCheckout({ ids: [id] })}
-              />
+          {loadState === 'ready' &&
+            (visible.length ? (
+              <div className={style.cards}>
+                {visible.map((pkg, index) => (
+                  <PackageCard
+                    key={pkg.id}
+                    pkg={pkg}
+                    index={index}
+                    inCart={cart.includes(pkg.id)}
+                    onToggle={toggleCart}
+                    onBuy={(id) => startCheckout({ ids: [id] })}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p className={style.note}>No packages in this category yet.</p>
             ))}
-          </div>
 
           <p className={style.note}>
             All prices are in Bangladeshi Taka (BDT).
