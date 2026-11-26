@@ -3621,3 +3621,115 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
         }
     }
 }
+
+
+/* ================= Side cart (right edge, vertically centered) ================= */
+
+@keyframes hpSideIn {
+    from {
+        opacity: 0;
+        transform: translate(100%, -50%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(0, -50%);
+    }
+}
+
+@keyframes hpPop {
+    0% {
+        transform: scale(1);
+    }
+    40% {
+        transform: scale(1.3);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.sideCart {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    z-index: 999980;
+    display: flex;
+    flex-direction: column;
+    width: 8rem;
+    overflow: hidden;
+    border-radius: 12px 0 0 12px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(15, 74, 44, 0.28);
+    text-decoration: none;
+    transform: translateY(-50%);
+    animation: hpSideIn 0.5s ease both;
+    transition: box-shadow 0.25s ease;
+    -webkit-tap-highlight-color: transparent;
+    @media (hover: hover) {
+        &:hover {
+            box-shadow: 0 14px 36px rgba(26, 154, 91, 0.4);
+        }
+    }
+    &:focus-visible {
+        outline: 3px solid $hp-gold;
+        outline-offset: 2px;
+    }
+    @media (max-width: 640px) {
+        width: 6.4rem;
+        border-radius: 10px 0 0 10px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+        transition: none;
+    }
+}
+
+.sideCartTop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 1rem 0.4rem 0.8rem;
+    background: $hp-gradient;
+    color: #fff;
+    svg {
+        font-size: 2.2rem;
+    }
+    small {
+        font-size: 1.1rem;
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;
+        animation: hpPop 0.35s ease;
+        @media (prefers-reduced-motion: reduce) {
+            animation: none;
+        }
+    }
+    @media (max-width: 640px) {
+        padding: 0.8rem 0.3rem 0.6rem;
+        svg {
+            font-size: 1.9rem;
+        }
+        small {
+            font-size: 1rem;
+        }
+    }
+}
+
+.sideCartTotal {
+    padding: 0.8rem 0.4rem;
+    text-align: center;
+    color: #8a978f;
+    font-size: 1.25rem;
+    font-weight: 800;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    @media (max-width: 640px) {
+        padding: 0.7rem 0.3rem;
+        font-size: 1.1rem;
+    }
+}
+
+.sideCartActive .sideCartTotal {
+    color: $hp-title;
+}

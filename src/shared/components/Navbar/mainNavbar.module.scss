@@ -402,7 +402,7 @@ $nav-lime: #8db51f;
 }
 
 .loginLink {
-    margin-right: 0;
+    margin-right: 5rem; // keeps the icon clear of the social block (mobile is reset below)
 }
 
 .navRight .loginLink {

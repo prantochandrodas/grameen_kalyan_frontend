@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BiSolidDownArrow } from 'react-icons/bi';
-import { FaShoppingCart, FaUserCircle } from 'react-icons/fa';
+import { FaUserCircle } from 'react-icons/fa';
 import {
   FaFacebookF,
   FaYoutube,
@@ -14,10 +14,10 @@ import {
 } from 'react-icons/fa';
 
 import { IMAGE_BASE_URL } from '@/config';
-import {
-  getHealthPackageCartCount,
-  HEALTH_PACKAGE_CART_EVENT,
-} from '@/shared/utils/healthPackageCart';
+// import {
+//   getHealthPackageCartCount,
+//   HEALTH_PACKAGE_CART_EVENT,
+// } from '@/shared/utils/healthPackageCart';
 import { useAuth } from '@/shared/context/AuthContext';
 import { useSetting } from '@/shared/context/SettingContext';
 import style from './mainNavbar.module.scss';
@@ -57,7 +57,7 @@ const Navbar = ({
   const [toggle, setToggle] = useState(false);
   // which dropdown is open on mobile (tap to open/close)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const [cartCount, setCartCount] = useState(0);
+  // const [cartCount, setCartCount] = useState(0);
   const { user } = useAuth();
   const setting = useSetting();
 
@@ -142,17 +142,17 @@ const Navbar = ({
     setOpenDropdown(null);
   }, [pathName]);
 
-  useEffect(() => {
-    const syncCartCount = () => setCartCount(getHealthPackageCartCount());
+  // useEffect(() => {
+  //   const syncCartCount = () => setCartCount(getHealthPackageCartCount());
 
-    syncCartCount();
-    window.addEventListener(HEALTH_PACKAGE_CART_EVENT, syncCartCount);
-    window.addEventListener('storage', syncCartCount);
-    return () => {
-      window.removeEventListener(HEALTH_PACKAGE_CART_EVENT, syncCartCount);
-      window.removeEventListener('storage', syncCartCount);
-    };
-  }, []);
+  //   syncCartCount();
+  //   window.addEventListener(HEALTH_PACKAGE_CART_EVENT, syncCartCount);
+  //   window.addEventListener('storage', syncCartCount);
+  //   return () => {
+  //     window.removeEventListener(HEALTH_PACKAGE_CART_EVENT, syncCartCount);
+  //     window.removeEventListener('storage', syncCartCount);
+  //   };
+  // }, []);
 
   // stop the page behind from scrolling while the mobile menu is open
   useEffect(() => {
@@ -277,7 +277,7 @@ const Navbar = ({
           {user && <span className={style.loginDot} aria-hidden="true" />}
         </Link>
         
-        <Link
+        {/* <Link
           href="/cart"
           className={style.cartLink}
           aria-label={`Health package cart, ${cartCount} ${
@@ -291,7 +291,7 @@ const Navbar = ({
               {cartCount > 99 ? '99+' : cartCount}
             </span>
           )}
-        </Link>
+        </Link> */}
 
         <div className={style.social}>
           {socials.map(({ icon: Icon, href }) => (

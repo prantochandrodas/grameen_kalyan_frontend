@@ -3,6 +3,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { IconType } from 'react-icons';
 import {
@@ -17,6 +18,7 @@ import {
   FaPercent,
   FaPhoneAlt,
   FaRedo,
+  FaShoppingBag,
   FaShoppingCart,
   FaSlidersH,
   FaTint,
@@ -518,6 +520,29 @@ const HealthPackages = () => {
             </div>
           )}
         </AnimatePresence>
+
+        {/* ---------- Side cart (right edge, vertically centered) ---------- */}
+        {!gateOpen && !customizing && (
+          <Link
+            href="/cart"
+            className={`${style.sideCart} ${
+              cartItems.length ? style.sideCartActive : ''
+            }`}
+            aria-label={`Open cart, ${cartItems.length} ${
+              cartItems.length === 1 ? 'package' : 'packages'
+            }, total ${formatBDT(cartTotals.total)}`}
+          >
+            <span className={style.sideCartTop}>
+              <FaShoppingBag aria-hidden="true" />
+              <small key={cartItems.length}>
+                {cartItems.length} {cartItems.length === 1 ? 'Item' : 'Items'}
+              </small>
+            </span>
+            <span className={style.sideCartTotal}>
+              ৳{cartTotals.total.toLocaleString('en-US')}
+            </span>
+          </Link>
+        )}
 
         {/* ---------- Existing user / new customer popup ---------- */}
         {checkoutGate}
