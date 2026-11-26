@@ -12,9 +12,13 @@ import {
   FaHeartbeat,
   FaIdCard,
   FaInfoCircle,
+  FaKey,
+  FaLock,
   FaPhoneAlt,
   FaShieldAlt,
+  FaStethoscope,
   FaUser,
+  FaUserPlus,
 } from 'react-icons/fa';
 
 import { useAuth } from '@/shared/context/AuthContext';
@@ -32,46 +36,83 @@ import { PasswordField, TextField, getNextPath } from './AuthUi';
 import style from './auth.module.scss';
 
 /* ---------- shared layout ---------- */
+type Variant = 'login' | 'register' | 'forgot';
+
+const SHELL_COPY: Record<
+  Variant,
+  { icon: React.ReactNode; eyebrow: string; heading: string; text: string }
+> = {
+  login: {
+    icon: <FaStethoscope />,
+    eyebrow: 'Secure sign in',
+    heading: 'Welcome back to better health.',
+    text: 'Login to book health packages, track every purchase and keep your Health Card details in one place.',
+  },
+  register: {
+    icon: <FaUserPlus />,
+    eyebrow: 'New account',
+    heading: 'Start your healthcare journey.',
+    text: 'Create a free account to book checkups, save your purchases and manage your Health Card.',
+  },
+  forgot: {
+    icon: <FaKey />,
+    eyebrow: 'Account recovery',
+    heading: 'Get back into your account.',
+    text: 'Verify with a one time OTP sent to your email and continue where you left off.',
+  },
+};
+
 const Shell = ({
+  variant,
   title,
   sub,
   children,
 }: {
+  variant: Variant;
   title: string;
   sub: string;
   children: React.ReactNode;
-}) => (
-  <main className={style.page}>
-    <div className={style.shell}>
-      <aside className={style.aside}>
-        <span className={style.asideBadge}>
-          <FaHeartbeat aria-hidden="true" /> Grameen Kalyan
-        </span>
-        <h2>Your health, one secure account.</h2>
-        <p>
-          Book health packages, track every purchase and keep your Health Card
-          details in one place.
-        </p>
-        <ul className={style.asideList}>
-          <li>
-            <FaCheckCircle aria-hidden="true" /> See all purchased packages
-          </li>
-          <li>
-            <FaIdCard aria-hidden="true" /> Health Card validity at a glance
-          </li>
-          <li>
-            <FaShieldAlt aria-hidden="true" /> Secure login with OTP
-          </li>
-        </ul>
-      </aside>
-      <section className={style.main}>
-        <h1 className={style.title}>{title}</h1>
-        <p className={style.sub}>{sub}</p>
-        {children}
-      </section>
-    </div>
-  </main>
-);
+}) => {
+  const copy = SHELL_COPY[variant];
+  return (
+    <main className={style.page}>
+      <div className={style.shell}>
+        <aside className={style.aside}>
+          <span className={style.asideBadge}>
+            <FaHeartbeat aria-hidden="true" /> Grameen Kalyan
+          </span>
+          <span className={style.asideIcon} aria-hidden="true">
+            {copy.icon}
+          </span>
+          <h2>{copy.heading}</h2>
+          <p>{copy.text}</p>
+          <ul className={style.asideList}>
+            <li>
+              <FaCheckCircle aria-hidden="true" /> See all purchased packages
+            </li>
+            <li>
+              <FaIdCard aria-hidden="true" /> Health Card validity at a glance
+            </li>
+            <li>
+              <FaShieldAlt aria-hidden="true" /> Secure login with OTP
+            </li>
+          </ul>
+          <span className={style.asideEcg} aria-hidden="true" />
+        </aside>
+        <section className={style.main}>
+          <p className={style.eyebrow}>{copy.eyebrow}</p>
+          <h1 className={style.title}>{title}</h1>
+          <p className={style.sub}>{sub}</p>
+          {children}
+          <p className={style.secureNote}>
+            <FaLock aria-hidden="true" /> Your information is kept private and
+            secure.
+          </p>
+        </section>
+      </div>
+    </main>
+  );
+};
 
 // already logged in -> go to the dashboard
 const useGuestOnly = () => {
@@ -104,6 +145,7 @@ export const LoginPage = () => {
 
   return (
     <Shell
+      variant="login"
       title="Login to My Account"
       sub="Use your mobile number or email address."
     >
@@ -208,6 +250,7 @@ export const RegisterPage = () => {
 
   return (
     <Shell
+      variant="register"
       title="Create Your Account"
       sub="It takes less than a minute. Your purchases will be saved here."
     >
@@ -389,6 +432,7 @@ export const ForgotPasswordPage = () => {
 
   return (
     <Shell
+      variant="forgot"
       title="Forgot Password"
       sub={
         step === 'request'

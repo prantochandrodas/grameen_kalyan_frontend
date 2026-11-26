@@ -16,7 +16,7 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     align-items: start;
     min-height: 70vh;
     padding: 48px 16px 72px;
-    background: radial-gradient(ellipse at 10% 0%, rgba(26, 154, 91, 0.1), transparent 34rem), #f6f9f6;
+    background: radial-gradient(ellipse at 10% 0%, rgba(26, 154, 91, 0.12), transparent 34rem), radial-gradient(ellipse at 95% 100%, rgba(195, 149, 61, 0.1), transparent 30rem), #f6f9f6;
     color: $ink;
     @media (max-width: 600px) {
         padding: 14px 10px 40px;
@@ -32,7 +32,7 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
 
 .shell {
     display: grid;
-    grid-template-columns: 0.9fr 1.1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     width: min(1080px, 100%);
     overflow: hidden;
     border: 1px solid $line;
@@ -50,11 +50,20 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 14px;
-    padding: 44px 36px;
+    gap: 10px;
+    padding: 34px 34px;
     overflow: hidden;
     background: $grad;
     color: #fff;
+    isolation: isolate;
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='44' viewBox='0 0 44 44'%3E%3Cpath d='M20 14h4v6h6v4h-6v6h-4v-6h-6v-4h6z' fill='white' fill-opacity='.08'/%3E%3C/svg%3E");
+        pointer-events: none;
+    }
     &::after {
         content: '';
         position: absolute;
@@ -67,14 +76,14 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     }
     h2 {
         margin: 0;
-        font-size: 28px;
+        font-size: 26px;
         line-height: 1.2;
         font-weight: 800;
     }
     p {
         margin: 0;
-        font-size: 14.5px;
-        line-height: 1.6;
+        font-size: 14px;
+        line-height: 1.5;
         opacity: 0.92;
     }
     @media (max-width: 860px) {
@@ -101,10 +110,58 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     font-weight: 700;
 }
 
+.asideIcon {
+    display: grid;
+    place-items: center;
+    align-self: flex-start;
+    width: 48px;
+    height: 48px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.16);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    font-size: 20px;
+    animation: auraPulse 2.8s ease-out infinite;
+    @media (max-width: 860px) {
+        display: none;
+    }
+}
+
+@keyframes auraPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(217, 242, 107, 0.45);
+    }
+    70%,
+    100% {
+        box-shadow: 0 0 0 16px rgba(217, 242, 107, 0);
+    }
+}
+
+.asideEcg {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    height: 64px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='70' viewBox='0 0 400 70' fill='none'%3E%3Cpath d='M0 40h110l12-22 16 44 14-40 10 18h238' stroke='white' stroke-opacity='.22' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") repeat-x bottom / 400px 64px;
+    pointer-events: none;
+    @media (max-width: 600px) {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .asideIcon {
+        animation: none;
+    }
+}
+
 .asideList {
     display: grid;
-    gap: 10px;
-    margin: 8px 0 0;
+    gap: 8px;
+    margin: 4px 0 0;
     padding: 0;
     list-style: none;
     font-size: 13.5px;
@@ -124,12 +181,64 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
 }
 
 .main {
-    padding: 44px 48px 38px;
+    position: relative;
+    padding: 34px 44px 26px;
+    background: radial-gradient(ellipse at 100% 0%, rgba(26, 154, 91, 0.09), transparent 18rem), #fff;
     @media (max-width: 1100px) {
-        padding: 40px 38px 34px;
+        padding: 30px 34px 24px;
     }
     @media (max-width: 600px) {
-        padding: 22px 16px 24px;
+        padding: 18px 14px 18px;
+    }
+}
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 8px;
+    color: $gold;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    &::before,
+    &::after {
+        content: '';
+        width: 22px;
+        height: 2px;
+        border-radius: 2px;
+        background: $gold;
+    }
+    @media (max-width: 600px) {
+        font-size: 11px;
+        &::before,
+        &::after {
+            width: 16px;
+        }
+    }
+}
+
+.secureNote {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 20px 0 0;
+    padding-top: 16px;
+    border-top: 1px dashed $line;
+    color: $muted;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-align: center;
+    svg {
+        flex: none;
+        color: $g2;
+    }
+    @media (max-width: 600px) {
+        margin-top: 16px;
+        padding-top: 12px;
+        font-size: 12px;
     }
 }
 
@@ -215,6 +324,10 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     color: $g2;
     font-size: 15px;
     pointer-events: none;
+}
+
+.inputWrap:focus-within .inputIcon {
+    color: $g;
 }
 
 .eye {
@@ -2261,6 +2374,93 @@ $grad: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
             .btnDanger {
                 min-height: 44px;
             }
+        }
+    }
+}
+
+
+/* ================= Auth cards: compact spacing ================= */
+
+.main {
+    .eyebrow {
+        margin-bottom: 6px;
+    }
+    .title {
+        margin-bottom: 2px;
+    }
+    .sub {
+        margin-bottom: 16px;
+        line-height: 1.45;
+    }
+    .form {
+        gap: 12px;
+    }
+    .field {
+        gap: 5px;
+    }
+    .inputWrap input {
+        height: 46px;
+    }
+    .eye {
+        width: 36px;
+        height: 36px;
+    }
+    .otpInput {
+        height: 52px;
+    }
+    .seg button {
+        min-height: 40px;
+    }
+    .rowEnd {
+        margin-top: -4px;
+    }
+    .btn,
+    .btnGhost {
+        min-height: 48px;
+    }
+    .divider {
+        margin: 14px 0 10px;
+    }
+    .switchLine {
+        margin-top: 12px;
+    }
+    .successBox {
+        margin-bottom: 12px;
+    }
+    .secureNote {
+        margin-top: 14px;
+        padding-top: 12px;
+    }
+    @media (max-width: 600px) {
+        .sub {
+            margin-bottom: 12px;
+        }
+        .form {
+            gap: 10px;
+        }
+        .field {
+            gap: 4px;
+        }
+        .inputWrap input {
+            height: 44px;
+        }
+        .otpInput {
+            height: 48px;
+            font-size: 22px;
+        }
+        .btn,
+        .btnGhost {
+            min-height: 46px;
+        }
+        .divider {
+            margin: 12px 0 8px;
+        }
+        .switchLine {
+            margin-top: 10px;
+        }
+        .secureNote {
+            margin-top: 12px;
+            padding-top: 10px;
         }
     }
 }
