@@ -56,8 +56,8 @@ $bg-light: #F7F5F2;
         padding: 0 40px;
     }
     @media (max-width: 900px) {
-        grid-template-columns: minmax(0, 1fr) auto;
-        column-gap: 12px;
+        grid-template-columns: auto auto 1fr;
+        column-gap: 10px;
         row-gap: 0;
         padding: 0 24px;
     }
@@ -133,6 +133,8 @@ $bg-light: #F7F5F2;
     @media (max-width: 900px) {
         box-sizing: border-box;
         height: 36px;
+        min-width: 152px; // View All & View All Videos same width
+        justify-content: center;
         padding: 0 18px;
         font-size: 13px;
     }
@@ -180,14 +182,14 @@ $bg-light: #F7F5F2;
     gap: 10px;
     z-index: 2;
     @media (max-width: 900px) {
-        position: absolute;
-        top: -68px; // View All Videos button row এর সাথে একই line এ
-        right: 0;
+        position: static;
+        grid-column: 2;
+        justify-self: start;
+        align-self: center;
         margin: 0;
     }
     @media (max-width: 480px) {
         gap: 8px;
-        top: -61px;
     }
 }
 
@@ -204,9 +206,9 @@ $bg-light: #F7F5F2;
     cursor: pointer;
     transition: all 0.2s ease;
     flex-shrink: 0;
-    @media (max-width: 480px) {
-        width: 34px;
-        height: 34px;
+    @media (max-width: 900px) {
+        width: 36px;
+        height: 36px;
     }
     &:hover {
         border-color: $brand-green;
