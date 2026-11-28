@@ -187,14 +187,14 @@
     gap: 10px;
     z-index: 2;
     @media (max-width: 900px) {
-        position: absolute;
-        top: -68px; // View All button row এর সাথে একই line এ
-        right: 0;
+        position: static;
+        grid-column: 2;
+        justify-self: end;
+        align-self: center;
         margin: 0;
     }
     @media (max-width: 480px) {
         gap: 8px;
-        top: -61px;
     }
 }
 

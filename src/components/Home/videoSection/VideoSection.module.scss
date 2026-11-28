@@ -56,12 +56,12 @@ $bg-light: #F7F5F2;
         padding: 0 40px;
     }
     @media (max-width: 900px) {
-        grid-template-columns: 1fr;
-        gap: 14px;
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: 12px;
+        row-gap: 0;
         padding: 0 24px;
     }
     @media (max-width: 480px) {
-        gap: 10px;
         padding: 0 16px;
     }
 }
@@ -70,6 +70,19 @@ $bg-light: #F7F5F2;
     display: flex;
     flex-direction: column;
     min-width: 0;
+    @media (max-width: 900px) {
+        display: contents; // children join the wrapper grid directly
+        >.tag,
+        >.heading,
+        >.desc {
+            grid-column: 1 / -1;
+        }
+        >.viewAllBtn {
+            grid-column: 1;
+            justify-self: start;
+            align-self: center;
+        }
+    }
 }
 
 .tag {
@@ -132,6 +145,17 @@ $bg-light: #F7F5F2;
 .sliderCol {
     position: relative;
     min-width: 0;
+    @media (max-width: 900px) {
+        display: contents;
+        > :not(.navBtns) {
+            grid-column: 1 / -1;
+            min-width: 0;
+            margin-top: 14px;
+            @media (max-width: 480px) {
+                margin-top: 10px;
+            }
+        }
+    }
      :global(.slick-list) {
         margin: 0 -15px;
         overflow: hidden;
