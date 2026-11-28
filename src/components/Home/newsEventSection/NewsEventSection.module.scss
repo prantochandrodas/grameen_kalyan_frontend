@@ -22,8 +22,8 @@
         padding: 0 40px;
     }
     @media (max-width: 900px) {
-        grid-template-columns: auto auto 1fr;
-        column-gap: 10px;
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: 12px;
         row-gap: 0;
         padding: 0 24px;
     }
@@ -215,7 +215,7 @@
     @media (max-width: 900px) {
         position: static;
         grid-column: 2;
-        justify-self: start;
+        justify-self: end;
         align-self: center;
         margin: 0;
     }
