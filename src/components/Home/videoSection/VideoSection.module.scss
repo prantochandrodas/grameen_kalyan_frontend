@@ -117,6 +117,12 @@ $bg-light: #F7F5F2;
     font-size: 14px;
     text-decoration: none;
     transition: all 0.2s ease;
+    @media (max-width: 900px) {
+        box-sizing: border-box;
+        height: 40px;
+        padding: 0 18px;
+        font-size: 13px;
+    }
     &:hover {
         background: $brand-green;
         color: #fff;
@@ -150,13 +156,14 @@ $bg-light: #F7F5F2;
     gap: 10px;
     z-index: 2;
     @media (max-width: 900px) {
-        position: static;
-        justify-content: flex-end;
-        margin-bottom: 10px;
+        position: absolute;
+        top: -68px; // View All Videos button row এর সাথে একই line এ
+        right: 0;
+        margin: 0;
     }
     @media (max-width: 480px) {
         gap: 8px;
-        margin-bottom: 8px;
+        top: -61px;
     }
 }
 
