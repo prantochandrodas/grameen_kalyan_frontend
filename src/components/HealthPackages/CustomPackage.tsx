@@ -43,7 +43,11 @@ type MemberStep = 'email' | 'checking' | 'active' | 'expired';
 
 const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
   // regular = new customer, no card | card = new customer takes card | member = existing member
-  const [plan, setPlan] = useState<Plan>('regular');
+  // logged in: no customer-type choice (card active = member, no card = must take the card)
+  const { user } = useAuth();
+  const [plan, setPlan] = useState<Plan>(
+    user ? (user.hasValidCard ? 'member' : 'card') : 'regular'
+  );
   const [selected, setSelected] = useState<string[]>([]);
   const [query, setQuery] = useState('');
   const [askDoctor, setAskDoctor] = useState(false);
@@ -54,8 +58,9 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
   const [loadError, setLoadError] = useState(false);
 
   // existing member verification
-  const { user } = useAuth();
-  const [step, setStep] = useState<MemberStep>('email');
+  const [step, setStep] = useState<MemberStep>(
+    user && user.hasValidCard ? 'active' : 'email'
+  );
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPw, setShowPw] = useState(false);
@@ -83,9 +88,13 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
         ? 'Your Micro Health insurance Card is active. Discount rate on every test, no card fee.'
         : 'Sign in with your email and password to see your member discount rate.'
       : plan === 'card'
-      ? `On time micro health insurance card ${formatBDT(
-          cardFee
-        )} is added once to your total (valid ${CARD_VALIDITY_MONTHS} months).`
+      ? user
+        ? `Your Health Card is not active. A one-time card fee of ${formatBDT(
+            cardFee
+          )} is added once to give you the discount rate (valid ${CARD_VALIDITY_MONTHS} months).`
+        : `On time micro health insurance card ${formatBDT(
+            cardFee
+          )} is added once to your total (valid ${CARD_VALIDITY_MONTHS} months).`
       : 'No micro health insurance card. Regular rate applies and the package is valid for 1 month.';
 
   const plans: { id: Plan; icon: React.ReactNode; title: string; sub: string }[] =
@@ -173,6 +182,17 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [plan, user, step]);
 
+  // login / logout while the popup is open -> keep the options in sync
+  useEffect(() => {
+    if (user) {
+      setPlan(user.hasValidCard ? 'member' : 'card');
+      if (user.hasValidCard) setStep('active');
+    } else {
+      setPlan('regular');
+      setStep('email');
+    }
+  }, [user]);
+
   // existing member: email + password sign in -> then check the Health Card
   const signIn = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -258,7 +278,32 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
               <h3 id="cp-title">Choose your tests</h3>
             </div>
 
-            {/* ---------- 3 options ---------- */}
+            {/* ---------- logged in: member strip ---------- */}
+            {user && (
+              <div className={style.cpMember}>
+                <span className={style.cpMemberIcon} aria-hidden="true">
+                  <FaUserCheck />
+                </span>
+                <span className={style.cpMemberText}>
+                  <strong>{user.name}</strong>
+                  <small>
+                    {user.hasValidCard
+                      ? 'Existing member · Discount rate'
+                      : 'Health Card needed · Discount rate'}
+                  </small>
+                </span>
+                <span
+                  className={`${style.cpMemberBadge} ${
+                    user.hasValidCard ? '' : style.cpMemberBadgeOff
+                  }`}
+                >
+                  {user.hasValidCard ? 'Card active' : 'No card'}
+                </span>
+              </div>
+            )}
+
+            {/* ---------- guest: 3 options ---------- */}
+            {!user && (
             <div
               className={style.cpPlans}
               role="radiogroup"
@@ -285,6 +330,7 @@ const CustomPackage = ({ onClose, onBook }: ICustomPackageProps) => {
                 </button>
               ))}
             </div>
+            )}
 
             <p className={`${style.cardNote} ${style.cpNotice}`}>
               <FaIdCard aria-hidden="true" />
