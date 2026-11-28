@@ -32,6 +32,7 @@ import {
   FaTrashAlt,
   FaUser,
   FaUserInjured,
+  FaUserMd,
   FaWallet,
 } from 'react-icons/fa';
 
@@ -40,13 +41,14 @@ import { useAuth } from '@/shared/context/AuthContext';
 import { useSetting } from '@/shared/context/SettingContext';
 import {
   EMAIL_REGEX,
+  IDashboardSummary,
   IPatientInfo,
   IPurchase,
   IUser,
   PHONE_REGEX,
   deleteAccount,
   getActiveCard,
-  getPurchases,
+  getDashboard,
   updateAvatar,
   updatePatient,
   updateProfile,
@@ -85,6 +87,7 @@ const pkgIcon = (name: string): React.ReactElement => {
   if (n.includes('pregnan')) return <FaBaby />;
   if (n.includes('diabet')) return <FaTint />;
   if (n.includes('hypertens') || n.includes('heart')) return <FaHeartbeat />;
+  if (n.includes('doctor')) return <FaUserMd />;
   if (n.includes('custom')) return <FaClipboardList />;
   return <FaNotesMedical />;
 };
@@ -460,7 +463,7 @@ const AvatarUploader = ({
             <FaCamera aria-hidden="true" />
             {busy ? 'Saving...' : user.avatar ? 'Change photo' : 'Upload photo'}
           </button>
-          {user.avatar && (
+          {/* {user.avatar && (
             <button
               type="button"
               className={style.avatarRemove}
@@ -470,7 +473,7 @@ const AvatarUploader = ({
               <FaTrashAlt aria-hidden="true" />
               Remove
             </button>
-          )}
+          )} */}
         </div>
         {error && (
           <p className={style.errorBox} role="alert">
@@ -604,6 +607,8 @@ const Dashboard = () => {
   const setting = useSetting();
   const [tab, setTab] = useState<Tab>('purchases');
   const [orders, setOrders] = useState<IPurchase[] | null>(null);
+  const [summary, setSummary] = useState<IDashboardSummary | null>(null);
+  const [loadError, setLoadError] = useState('');
   const [expanded, setExpanded] = useState<string | null>(null);
   const [editing, setEditing] = useState<IPurchase | null>(null);
   const [deletingAccount, setDeletingAccount] = useState(false);
@@ -615,12 +620,15 @@ const Dashboard = () => {
 
   const load = useCallback(async () => {
     if (!userId) return;
-    const list = await getPurchases(userId);
-    setOrders(
-      [...list].sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      )
-    );
+    setLoadError('');
+    const res = await getDashboard();
+    if (!res.ok) {
+      setLoadError(res.message);
+      setOrders((prev) => prev || []);
+      return;
+    }
+    setSummary(res.data.summary);
+    setOrders(res.data.orders);
   }, [userId]);
 
   useEffect(() => {
@@ -647,11 +655,12 @@ const Dashboard = () => {
 
   const list = orders || [];
   const cardUntil = getActiveCard(list);
-  const spent = list.reduce((sum, o) => sum + o.total, 0);
   const now = Date.now();
-  const activeCount = list.filter(
-    (o) => new Date(o.validUntil).getTime() > now
-  ).length;
+  const cardActive = summary ? summary.hasValidCard : !!user.hasValidCard;
+  const purchaseCount = summary ? summary.totalPurchased : list.length;
+  const activeCount = summary ? summary.activeCount : 0;
+  const spent = summary ? summary.totalSpent : 0;
+  const lastDate = summary ? summary.lastPurchaseDate : '';
   const cardDaysLeft = cardUntil ? Math.max(daysLeft(cardUntil), 0) : 0;
 
   const removeAccount = async () => {
@@ -715,21 +724,23 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className={`${style.dCard} ${cardUntil ? '' : style.dCardOff}`}>
+          <div className={`${style.dCard} ${cardActive ? '' : style.dCardOff}`}>
             <span className={style.dCardIcon} aria-hidden="true">
-              {cardUntil ? <FaShieldAlt /> : <FaIdCard />}
+              {cardActive ? <FaShieldAlt /> : <FaIdCard />}
             </span>
             <div className={style.dCardText}>
               <strong>
-                {cardUntil ? 'Health Card is active' : 'No active Health Card'}
+                {cardActive ? 'Health Card is active' : 'No active Health Card'}
               </strong>
               <span>
-                {cardUntil
-                  ? `Valid until ${fmt(cardUntil)}`
+                {cardActive
+                  ? cardUntil
+                    ? `Valid until ${fmt(cardUntil)}`
+                    : 'Member discount rate applies to your packages.'
                   : 'Take a Health Card with your next package for the discount rate.'}
               </span>
             </div>
-            {cardUntil && (
+            {cardActive && cardUntil && (
               <div className={style.dCardDays}>
                 <b>{cardDaysLeft}</b>
                 <small>days left</small>
@@ -768,7 +779,7 @@ const Dashboard = () => {
             </span>
             <div>
               <small>Purchases</small>
-              <strong>{list.length}</strong>
+              <strong>{purchaseCount}</strong>
             </div>
           </div>
           <div className={style.dStat}>
@@ -795,7 +806,7 @@ const Dashboard = () => {
             </span>
             <div>
               <small>Last purchase</small>
-              <strong>{list.length ? fmt(list[0].date) : '—'}</strong>
+              <strong>{lastDate ? fmt(lastDate) : '—'}</strong>
             </div>
           </div>
         </div>
@@ -808,7 +819,7 @@ const Dashboard = () => {
             aria-selected={tab === 'purchases'}
             onClick={() => setTab('purchases')}
           >
-            My purchases <em>{list.length}</em>
+            My purchases <em>{purchaseCount}</em>
           </button>
           <button
             type="button"
@@ -834,21 +845,38 @@ const Dashboard = () => {
               </Link>
             </div>
             <p className={style.dNote}>
-              You can update the patient details of a purchase. Purchase
+              Your package and customize orders with their invoices. Purchase
               records cannot be deleted.
             </p>
 
             {orders === null ? (
-              <p className={style.loadingText}>Loading your purchases…</p>
+              <div
+                className={style.dSkeletons}
+                aria-busy="true"
+                aria-label="Loading your purchases"
+              >
+                <span />
+                <span />
+              </div>
             ) : list.length === 0 ? (
               <div className={style.empty}>
-                <p>You have not purchased any package yet.</p>
-                <Link
-                  href="/health-packages"
-                  className={`${style.btn} ${style.btnSmall}`}
-                >
-                  Browse healthcare packages
-                </Link>
+                <p>{loadError || 'You have not purchased any package yet.'}</p>
+                {loadError ? (
+                  <button
+                    type="button"
+                    className={`${style.btn} ${style.btnSmall}`}
+                    onClick={load}
+                  >
+                    Try again
+                  </button>
+                ) : (
+                  <Link
+                    href="/health-packages"
+                    className={`${style.btn} ${style.btnSmall}`}
+                  >
+                    Browse healthcare packages
+                  </Link>
+                )}
               </div>
             ) : (
               <ul
@@ -875,18 +903,41 @@ const Dashboard = () => {
                       : 0;
                   const remain = daysLeft(o.validUntil);
                   const soon = active && remain <= 7;
+                  const status = (o.statusLabel || '').trim();
+                  const statusText = status
+                    ? status.charAt(0).toUpperCase() + status.slice(1)
+                    : 'Active';
+                  const pending = /pending/i.test(status);
+                  const chipText = !active
+                    ? 'Expired'
+                    : pending
+                    ? 'Pending'
+                    : soon
+                    ? `${Math.max(remain, 0)}d left`
+                    : statusText;
+                  const chipClass = !active
+                    ? style.chipOff
+                    : pending || soon
+                    ? style.chipWarn
+                    : '';
+                  const tests =
+                    o.items.find((i) => i.tests && i.tests.length)?.tests || [];
                   const rows: [string, string][] = [
                     ['Patient name', p.name],
-                    ['Gender', p.gender],
-                    ['Age', p.age ? `${p.age} years` : ''],
-                    ['Blood group', p.bloodGroup],
-                    ['Contact phone', p.phone],
-                    ['Email', p.email],
                     [
-                      'Preferred date',
-                      p.preferredDate ? fmt(p.preferredDate) : '',
+                      'Order type',
+                      o.orderType === 'custom'
+                        ? 'Customize package'
+                        : 'Health package',
                     ],
-                    ['Center', o.center],
+                    ['Status', statusText],
+                    ['Purchased on', fmt(o.date)],
+                    ['Valid until', fmt(o.validUntil)],
+                    ['Subtotal', formatBDT(o.subtotal || o.total)],
+                    [
+                      'Discount',
+                      o.discount ? `- ${formatBDT(o.discount)}` : formatBDT(0),
+                    ],
                   ];
                   return (
                     <li className={style.dOrder} key={o.id}>
@@ -902,16 +953,8 @@ const Dashboard = () => {
                             {o.center}
                           </span>
                         </div>
-                        <span
-                          className={`${style.chip} ${
-                            active ? (soon ? style.chipWarn : '') : style.chipOff
-                          }`}
-                        >
-                          {active
-                            ? soon
-                              ? `${Math.max(remain, 0)}d left`
-                              : 'Active'
-                            : 'Expired'}
+                        <span className={`${style.chip} ${chipClass}`}>
+                          {chipText}
                         </span>
                       </div>
 
@@ -943,6 +986,14 @@ const Dashboard = () => {
                         )}
                       </ul>
 
+                      {tests.length > 0 && (
+                        <ul className={style.dTests} aria-label="Selected tests">
+                          {tests.map((t, i) => (
+                            <li key={`${t}-${i}`}>{t}</li>
+                          ))}
+                        </ul>
+                      )}
+
                       <ul className={style.dPatient} aria-label="Patient">
                         <li>
                           <FaUserInjured aria-hidden="true" />
@@ -964,7 +1015,7 @@ const Dashboard = () => {
                         aria-expanded={isOpen}
                         onClick={() => setExpanded(isOpen ? null : o.id)}
                       >
-                        Patient details
+                        Order details
                         <FaChevronDown aria-hidden="true" />
                       </button>
 
@@ -1003,7 +1054,7 @@ const Dashboard = () => {
                         <strong>{formatBDT(o.total)}</strong>
                       </div>
 
-                      <div className={style.dActions}>
+                      <div className={`${style.dActions} ${style.dActionsSingle}`}>
                         <button
                           type="button"
                           className={style.dDownload}
@@ -1023,14 +1074,14 @@ const Dashboard = () => {
                             </>
                           )}
                         </button>
-                        <button
+                        {/* <button
                           type="button"
                           className={style.dEdit}
                           onClick={() => setEditing(o)}
                         >
                           <FaEdit aria-hidden="true" />
                           Edit <span className={style.dLong}>patient </span>details
-                        </button>
+                        </button> */}
                       </div>
                     </li>
                   );
@@ -1061,7 +1112,15 @@ const Dashboard = () => {
                 </div>
                 <div>
                   <dt>Total purchases</dt>
-                  <dd>{list.length}</dd>
+                  <dd>{purchaseCount}</dd>
+                </div>
+                <div>
+                  <dt>Active packages</dt>
+                  <dd>{activeCount}</dd>
+                </div>
+                <div>
+                  <dt>Health Card</dt>
+                  <dd>{cardActive ? 'Active' : 'Not active'}</dd>
                 </div>
               </dl>
 

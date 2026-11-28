@@ -21,6 +21,20 @@ export interface IPurchase {
   center: string;
   patientName: string;
   patient?: IPatientInfo;
+  orderType?: 'package' | 'custom'; // order_type 1 = package, 2 = customize
+  statusLabel?: string; // e.g. "pending" (from the API)
+  subtotal?: number;
+  discount?: number;
+  doctorCharge?: number;
+}
+
+// numbers shown on the dashboard (from GET /profile)
+export interface IDashboardSummary {
+  hasValidCard: boolean;
+  totalPurchased: number;
+  activeCount: number; // normal_package_count + customize_package_count
+  totalSpent: number;
+  lastPurchaseDate: string;
 }
 
 export interface IPatientInfo {
@@ -165,13 +179,21 @@ interface IApiAuth {
   has_valid_card?: boolean;
 }
 
+// API sends "/uploads/customer/xxx.webp" -> make it a full image url
+const toImageUrl = (image?: string | null): string | undefined => {
+  if (!image) return undefined;
+  if (/^(https?:|data:)/.test(image)) return image;
+  const origin = API_URL.replace(/\/api\/?$/, '');
+  return `${origin}${image.startsWith('/') ? '' : '/'}${image}`;
+};
+
 const fromApiCustomer = (c: IApiCustomer, hasValidCard?: boolean): IUser => ({
   id: String(c.id),
   name: c.name,
   phone: c.phone || '',
   email: c.email || '',
   createdAt: c.created_at || new Date().toISOString(),
-  avatar: c.image && /^(https?:|data:)/.test(c.image) ? c.image : undefined,
+  avatar: toImageUrl(c.image),
   hasValidCard,
 });
 
@@ -215,14 +237,16 @@ async function api<T>(
 ): Promise<Res<T>> {
   try {
     const token = window.localStorage.getItem(TOKEN_KEY);
+    const isForm = typeof FormData !== 'undefined' && body instanceof FormData;
     const response = await fetch(`${API_URL}${path}`, {
       method,
       headers: {
-        'Content-Type': 'application/json',
+        // FormData: the browser sets the multipart boundary itself
+        ...(isForm ? {} : { 'Content-Type': 'application/json' }),
         Accept: 'application/json',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
       },
-      body: body ? JSON.stringify(body) : undefined,
+      body: isForm ? (body as FormData) : body ? JSON.stringify(body) : undefined,
     });
     const json = await response.json().catch(() => ({}));
     if (!response.ok || json.success === false) {
@@ -511,43 +535,173 @@ export const getActiveCard = (list: IPurchase[]): string | null => {
   return valid.length ? valid[0].validUntil : null;
 };
 
+/* ---------------- dashboard (GET /profile) ---------------- */
+interface IApiOrderItem {
+  package_name?: string;
+  test_name?: string;
+  final_price?: string | number;
+}
 
+interface IApiOrder {
+  order_id: number | string;
+  quick_no: string;
+  order_type: string | number; // 1 = package, 2 = customize
+  date: string;
+  expire_date: string;
+  status_label?: string;
+  patient_name?: string;
+  subtotal?: string | number;
+  discount?: string | number;
+  card_charge?: string | number;
+  doctor_charge?: string | number;
+  total_amount?: string | number;
+  items?: IApiOrderItem[];
+}
+
+interface IApiProfile {
+  success?: boolean;
+  message?: string;
+  data?: IApiCustomer;
+  has_valid_card?: boolean;
+  total_purchased?: number | string;
+  normal_package_count?: number | string;
+  customize_package_count?: number | string;
+  totalSpent?: number | string;
+  lastPurchaseDate?: string | null;
+  normal_purchases?: IApiOrder[];
+  customize_purchases?: IApiOrder[];
+}
+
+const num = (value: unknown) => Number(value) || 0;
+
+// "2026-11-28" -> local start / end of that day (no timezone shift)
+const dayStart = (d?: string | null) =>
+  d && d.length === 10 ? `${d}T00:00:00` : d || '';
+const dayEnd = (d?: string | null) =>
+  d && d.length === 10 ? `${d}T23:59:59` : d || '';
+
+const fromApiOrder = (o: IApiOrder): IPurchase => {
+  const custom = String(o.order_type) === '2';
+  const rows = Array.isArray(o.items) ? o.items : [];
+  const doctorCharge = num(o.doctor_charge);
+
+  const items: IPurchase['items'] = custom
+    ? [
+        {
+          name: 'Customize Package',
+          price: rows.reduce((sum, i) => sum + num(i.final_price), 0),
+          tests: rows.map((i) => i.test_name || '').filter(Boolean),
+        },
+      ]
+    : rows.map((i) => ({
+        name: i.package_name || 'Health Package',
+        price: num(i.final_price),
+      }));
+  if (doctorCharge > 0) {
+    items.push({ name: 'Doctor Consultation Charge', price: doctorCharge });
+  }
+
+  return {
+    id: String(o.order_id),
+    invoiceNo: o.quick_no,
+    date: dayStart(o.date),
+    items,
+    cardFee: num(o.card_charge),
+    total: num(o.total_amount),
+    hasCard: num(o.card_charge) > 0,
+    validUntil: dayEnd(o.expire_date),
+    center: '',
+    patientName: o.patient_name || '',
+    orderType: custom ? 'custom' : 'package',
+    statusLabel: o.status_label || '',
+    subtotal: num(o.subtotal),
+    discount: num(o.discount),
+    doctorCharge,
+  };
+};
+
+export async function getDashboard(): Promise<
+  Res<{ user: IUser; summary: IDashboardSummary; orders: IPurchase[] }>
+> {
+  try {
+    const token = window.localStorage.getItem(TOKEN_KEY);
+    if (!token) {
+      setSession(null);
+      return fail('Please log in again.');
+    }
+    const response = await fetch(`${API_URL}/profile`, {
+      method: 'GET',
+      headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+      cache: 'no-store',
+    });
+    if (response.status === 401) {
+      setSession(null); // token expired -> dashboard sends the user to login
+      return fail('Your session has expired. Please log in again.');
+    }
+    const json = (await response.json().catch(() => null)) as IApiProfile | null;
+    if (!response.ok || !json || json.success === false || !json.data) {
+      return fail(
+        (json && json.message) ||
+          'Could not load your account. Please try again.'
+      );
+    }
+
+    // keep the saved session (header name / photo / card) in sync
+    const user = fromApiCustomer(json.data, !!json.has_valid_card);
+    const saved = getSessionUser();
+    if (!saved || JSON.stringify(saved) !== JSON.stringify(user)) {
+      setSession(user);
+    }
+
+    const orders = [
+      ...(json.normal_purchases || []),
+      ...(json.customize_purchases || []),
+    ]
+      .map(fromApiOrder)
+      .sort(
+        (a, b) =>
+          new Date(b.date).getTime() - new Date(a.date).getTime() ||
+          Number(b.id) - Number(a.id)
+      );
+
+    return {
+      ok: true,
+      data: {
+        user,
+        orders,
+        summary: {
+          hasValidCard: !!json.has_valid_card,
+          totalPurchased: num(json.total_purchased) || orders.length,
+          activeCount:
+            num(json.normal_package_count) + num(json.customize_package_count),
+          totalSpent: num(json.totalSpent),
+          lastPurchaseDate:
+            dayStart(json.lastPurchaseDate) || (orders[0] ? orders[0].date : ''),
+        },
+      },
+    };
+  } catch {
+    return fail('Network error. Please check your connection.');
+  }
+}
 
 /* ---------------- profile / patient / delete ---------------- */
 export async function updateProfile(
   userId: string,
   input: { name: string; phone: string; email: string }
 ): Promise<Res<IUser>> {
-  const name = input.name.trim();
-  const phone = normalizePhone(input.phone);
-  const email = input.email.trim().toLowerCase();
+  const form = new FormData();
+  form.append('name', input.name.trim());
+  form.append('phone', normalizePhone(input.phone));
+  form.append('email', input.email.trim().toLowerCase());
 
-  if (USE_API) {
-    const r = await api<{ user: IUser }>('/auth/profile', 'PUT', {
-      name,
-      phone,
-      email,
-    });
-    if (!r.ok) return r;
-    setSession(r.data.user);
-    return { ok: true, data: r.data.user };
-  }
+  const r = await api<IApiCustomer>('/profile/update', 'POST', form);
+  if (!r.ok) return r;
 
-  const users = read<IStored[]>(USERS_KEY, []);
-  const index = users.findIndex((u) => u.id === userId);
-  if (index < 0) return fail('Account not found.');
-  if (users.some((u) => u.id !== userId && u.phone === phone)) {
-    return fail('This mobile number is used by another account.');
-  }
-  if (email && users.some((u) => u.id !== userId && u.email === email)) {
-    return fail('This email is used by another account.');
-  }
-  users[index] = { ...users[index], name, phone, email };
-  write(USERS_KEY, users);
-  setSession(strip(users[index]));
-  return { ok: true, data: strip(users[index]) };
+  const user = fromApiCustomer(r.data, getSessionUser()?.hasValidCard);
+  setSession(user);
+  return { ok: true, data: user };
 }
-
 export async function updatePatient(
   userId: string,
   purchaseId: string,
@@ -606,27 +760,34 @@ export async function deleteAccount(userId: string): Promise<Res<boolean>> {
 
 
 /* ---------------- profile photo (add / change / remove) ---------------- */
-// avatar = small JPEG data URL, or '' to remove the photo
+// small JPEG data URL -> Blob (the API wants a real file)
+const dataUrlToBlob = (dataUrl: string) => {
+  const [head, body] = dataUrl.split(',');
+  const mime = /data:([^;]+)/.exec(head)?.[1] || 'image/jpeg';
+  const bytes = window.atob(body);
+  const array = new Uint8Array(bytes.length);
+  for (let i = 0; i < bytes.length; i += 1) array[i] = bytes.charCodeAt(i);
+  return new Blob([array], { type: mime });
+};
+
+// avatar = small JPEG data URL (POST /profile/update, field "image")
 export async function updateAvatar(
   userId: string,
   avatar: string
 ): Promise<Res<IUser>> {
-  if (USE_API) {
-    const r = await api<{ user: IUser }>('/auth/avatar', 'PUT', { avatar });
-    if (!r.ok) return r;
-    setSession(r.data.user);
-    return { ok: true, data: r.data.user };
+  if (!avatar) {
+    return fail('Removing the photo is not available yet. Please upload a new one.');
   }
+  const current = getSessionUser();
+  const form = new FormData();
+  if (current && current.name) form.append('name', current.name);
+  form.append('image', dataUrlToBlob(avatar), 'avatar.jpg');
 
-  const users = read<IStored[]>(USERS_KEY, []);
-  const index = users.findIndex((u) => u.id === userId);
-  if (index < 0) return fail('Account not found.');
-  const next: IStored = { ...users[index] };
-  if (avatar) next.avatar = avatar;
-  else delete next.avatar;
-  users[index] = next;
-  write(USERS_KEY, users);
-  setSession(strip(next));
-  return { ok: true, data: strip(next) };
+  const r = await api<IApiCustomer>('/profile/update', 'POST', form);
+  if (!r.ok) return r;
+
+  const user = fromApiCustomer(r.data, current ? current.hasValidCard : undefined);
+  setSession(user);
+  return { ok: true, data: user };
 }
 // ================== END: src/shared/utils/authService.ts ==================
