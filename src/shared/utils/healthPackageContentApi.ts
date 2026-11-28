@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 export interface IHealthPackageContent {
   banner_image: string;
@@ -87,20 +87,24 @@ export const getHealthPackageContent =
     return pending;
   };
 
-export const useHealthPackageContent = (): IHealthPackageContent => {
-  const [content, setContent] = useState<IHealthPackageContent>(
+// initial = content already fetched on the server (page.tsx) -> no default-text flash
+export const useHealthPackageContent = (
+  initial?: Partial<IHealthPackageContent> | null
+): IHealthPackageContent => {
+  const [fetched, setFetched] = useState<IHealthPackageContent>(
     cached || DEFAULT_HEALTH_PACKAGE_CONTENT
   );
 
   useEffect(() => {
+    if (initial) return undefined; // server data is already fresh
     let alive = true;
     getHealthPackageContent().then((data) => {
-      if (alive) setContent(data);
+      if (alive) setFetched(data);
     });
     return () => {
       alive = false;
     };
-  }, []);
+  }, [initial]);
 
-  return content;
+  return useMemo(() => (initial ? normalize(initial) : fetched), [initial, fetched]);
 };

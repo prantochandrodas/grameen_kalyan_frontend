@@ -33,7 +33,10 @@ import {
   formatBDT,
 } from '@/data/healthPackages';
 import { getHealthPackagesData } from '@/shared/utils/healthPackagesApi';
-import { useHealthPackageContent } from '@/shared/utils/healthPackageContentApi';
+import {
+  IHealthPackageContent,
+  useHealthPackageContent,
+} from '@/shared/utils/healthPackageContentApi';
 import { useHealthPackages } from '@/shared/context/HealthPackagesContext';
 import {
   getHealthPackageCart,
@@ -234,9 +237,13 @@ const PackageCard = ({
 };
 
 /* ------------------------------ Main section ------------------------------ */
-const HealthPackages = () => {
+const HealthPackages = ({
+  content: serverContent,
+}: {
+  content?: Partial<IHealthPackageContent> | null;
+}) => {
   const { cardFee: CARD_FEE } = useCharges();
-  const content = useHealthPackageContent();
+  const content = useHealthPackageContent(serverContent);
   const features = [
     content.feature_one,
     content.feature_two,
