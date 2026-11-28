@@ -159,7 +159,6 @@ const JourneySection = ({ about, serviceData }: IJourneySectionProps) => {
                                             alt={data.title}
                                             fill
                                             sizes="(max-width: 560px) 100vw, (max-width: 1100px) 50vw, 25vw"
-                                            unoptimized
                                         />
                                     )}
                                 </div>

@@ -10,7 +10,9 @@ const { arrow, icon, prevArrow, nextArrow } = style;
 const Arrow = ({ type = 'next', onClick, className }: any) => {
   return (
     <button
-      className={`${arrow} ${type === 'prev' ? prevArrow : nextArrow} ${className}`}
+      type="button"
+      aria-label={type === 'prev' ? 'Previous slide' : 'Next slide'}
+      className={`${arrow} ${type === 'prev' ? prevArrow : nextArrow} ${className ?? ''}`}
       onClick={onClick}
     >
       {type === 'prev' ? (

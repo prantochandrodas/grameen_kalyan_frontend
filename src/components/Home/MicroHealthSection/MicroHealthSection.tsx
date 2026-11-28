@@ -42,7 +42,7 @@ const MicroHealthSection = ({ image }: IMicroHealthSectionProps) => {
           alt="Micro Health Insurance"
           width={1920}
           height={600}
-          priority
+          sizes="100vw"
         />
       </div>
 

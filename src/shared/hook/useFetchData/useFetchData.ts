@@ -7,7 +7,9 @@ import { IUseFetchProps } from '../useFetch/useFetch.type';
 
 export default async function useFetchLaravelData({ url, revalidateIn }: IUseFetchProps) { 
   try {
-    const res = await fetch('https://admin.grameenkalyan.com/api' + url, { cache: 'no-cache' });
+    const res = await fetch('https://admin.grameenkalyan.com/api' + url, {
+      next: { revalidate: revalidateIn ?? 300 },
+    });
     if (!res.ok) {
       throw new Error('Failed to fetch data');
     }

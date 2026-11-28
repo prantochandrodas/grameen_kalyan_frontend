@@ -27,17 +27,24 @@ import JourneySection from '@/components/Home/journeySection/JourneySection';
 import AnnualImpactSection from '@/components/Home/AnnualImpactSection/AnnualImpactSection';
 
 const Home = async () => {
-  const homePageContentData = await useFetchLaravelData({ url: '/home-contents' });
-  const homeNewPageContentData = await useFetchLaravelData({ url: '/home-contents' });
-
-  const summeryReportData = await useFetchLaravelData({
-    url: '/summary-report-settings/basic',
-  });
-  // const sliderImages = await useFetch({ url: '/home-slider-content' });
-  const sliderImages = await useFetchLaravelData({ url: '/home-slider-contents' });
-
-  const storyCategory = await useFetchLaravelData({ url: '/story-categories' });
-  const serviceContent = await useFetchLaravelData({ url: '/service-contents/home' });
+  const [
+    homePageContentData,
+    summeryReportData,
+    sliderImages,
+    storyCategory,
+    serviceContent,
+    newsEventsRes,
+    videosRes,
+  ] = await Promise.all([
+    useFetchLaravelData({ url: '/home-contents' }),
+    useFetchLaravelData({ url: '/summary-report-settings/basic' }),
+    useFetchLaravelData({ url: '/home-slider-contents' }),
+    useFetchLaravelData({ url: '/story-categories' }),
+    useFetchLaravelData({ url: '/service-contents/home' }),
+    useFetchLaravelData({ url: '/news-events/slider?limit=10' }),
+    useFetchLaravelData({ url: '/recommended-video-galleries' }),
+  ]);
+  const homeNewPageContentData = homePageContentData;
 
   const heroSliderImages = sliderImages?.data;
   const badgeImage = homePageContentData?.badge_image;
@@ -100,8 +107,8 @@ const Home = async () => {
   return (
     <>
       <HeroSection badgeImage={badgeImage} sliderImages={heroSliderImages} />
-      <NewsEventSection />
-      <VideoSection />
+      <NewsEventSection initialItems={newsEventsRes?.data} />
+      <VideoSection initialVideos={videosRes?.data} />
       <JourneySection about={aboutSectionData} serviceData={serviceContent.data} />
 
 

@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import Link from 'next/link';
+import Image from 'next/image';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import style from './NewsEventSection.module.scss';
@@ -10,7 +11,7 @@ import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 
 const {
     section, wrapper, leftCol, tag, heading, desc, viewAllBtn,
-    sliderCol, navBtns, navBtn, navBtnNext, navBtnDisabled, card, imageBox, dateBadge,
+    sliderCol, navBtns, navBtn, navBtnNext, navBtnDisabled, card, imageBox, dateBadge, staticGrid,
     day, month, cardBody, title, bottomRow, arrowBtn,
 } = style;
 
@@ -45,13 +46,22 @@ const getWantedSlides = () => {
     return 3;
 };
 
-const NewsEventSection = () => {
-    const [items, setItems] = useState<NewsEventItem[]>([]);
+const NewsEventSection = ({ initialItems }: { initialItems?: NewsEventItem[] }) => {
+    const hasInitial = Array.isArray(initialItems) && initialItems.length > 0;
+    const [items, setItems] = useState<NewsEventItem[]>(
+        hasInitial ? (initialItems as NewsEventItem[]) : []
+    );
+    const [mounted, setMounted] = useState(false);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [wantedSlides, setWantedSlides] = useState(3);
     const sliderRef = useRef<Slider>(null);
 
     useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (hasInitial) return undefined;
         let ignore = false;
 
         const fetchNewsEvents = async () => {
@@ -113,6 +123,36 @@ const NewsEventSection = () => {
     const isPrevDisabled = currentSlide <= 0;
     const isNextDisabled = currentSlide >= maxSlideIndex;
 
+    const cards = items.map((item, index) => (
+        <div key={item.id} className={card}>
+            <Link href={`/news-events/${item.id}`} prefetch={false}>
+                <div className={imageBox}>
+                    {item.image && (
+                        <Image
+                            src={item.image}
+                            alt={item.title}
+                            fill
+                            sizes="(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 30vw"
+                            priority={index === 0}
+                        />
+                    )}
+                    <div className={dateBadge}>
+                        <span className={day}>{item.date_day}</span>
+                        <span className={month}>{item.date_month}</span>
+                    </div>
+                </div>
+                <div className={cardBody}>
+                    <h3 className={title}>{item.title}</h3>
+                    <div className={bottomRow}>
+                        <span className={arrowBtn}>
+                            <ArrowIcon />
+                        </span>
+                    </div>
+                </div>
+            </Link>
+        </div>
+    ));
+
     return (
         <section className={section}>
             <div className={wrapper}>
@@ -149,31 +189,13 @@ const NewsEventSection = () => {
                         </div>
                     )}
 
-                    <Slider ref={sliderRef} {...settings}>
-                        {items.map((item) => (
-                            <div key={item.id} className={card}>
-                                <Link href={`/news-events/${item.id}`} prefetch={false}>
-                                    <div className={imageBox}>
-                                        {item.image && (
-                                            <img src={item.image} alt={item.title} loading="lazy" decoding="async" />
-                                        )}
-                                        <div className={dateBadge}>
-                                            <span className={day}>{item.date_day}</span>
-                                            <span className={month}>{item.date_month}</span>
-                                        </div>
-                                    </div>
-                                    <div className={cardBody}>
-                                        <h3 className={title}>{item.title}</h3>
-                                        <div className={bottomRow}>
-                                            <span className={arrowBtn}>
-                                                <ArrowIcon />
-                                            </span>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </div>
-                        ))}
-                    </Slider>
+                    {mounted ? (
+                        <Slider ref={sliderRef} {...settings}>
+                            {cards}
+                        </Slider>
+                    ) : (
+                        <div className={staticGrid}>{cards}</div>
+                    )}
                 </div>
             </div>
         </section>

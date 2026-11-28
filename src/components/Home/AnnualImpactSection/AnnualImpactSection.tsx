@@ -150,7 +150,6 @@ const AnnualImpactSection = ({ serveData = [], data = [], image }: IAnnualImpact
                         alt="Health worker"
                         fill
                         sizes="(max-width: 900px) 100vw, 33vw"
-                        priority
                     />
                 </div>
             </div>

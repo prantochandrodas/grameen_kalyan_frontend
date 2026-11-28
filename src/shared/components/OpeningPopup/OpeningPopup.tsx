@@ -77,9 +77,22 @@ const OpeningPopup = () => {
       }
     };
 
-    loadPromotions();
+    const events = ['pointerdown', 'keydown', 'scroll', 'touchstart'];
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
+      events.forEach((evt) => window.removeEventListener(evt, start));
+      loadPromotions();
+    };
+    events.forEach((evt) =>
+      window.addEventListener(evt, start, { passive: true })
+    );
+    const fallbackTimer = window.setTimeout(start, 12000);
 
     return () => {
+      events.forEach((evt) => window.removeEventListener(evt, start));
+      window.clearTimeout(fallbackTimer);
       controller.abort();
       preloader.onload = null;
       if (timeout) window.clearTimeout(timeout);

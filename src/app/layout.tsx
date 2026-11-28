@@ -35,40 +35,21 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const navbarData = await useFetchLaravelData({
-    url: '/home-contents',
-    revalidateIn: 86400,
-  });
-  // const navbarData = await useFetch({
-  //   url: '/home-contents',
-  //   revalidateIn: 86400,
-  // });
-
-  // services list for navbar dropdown (same API as services page)
-  const servicesRes = await useFetchLaravelData({
-    url: '/service-contents/services',
-    revalidateIn: 86400,
-  });
+  const [navbarData, servicesRes, donatesRes, settingRes] = await Promise.all([
+    useFetchLaravelData({ url: '/home-contents', revalidateIn: 86400 }),
+    useFetchLaravelData({ url: '/service-contents/services', revalidateIn: 86400 }),
+    useFetchLaravelData({ url: '/donates', revalidateIn: 3600 }),
+    useFetchLaravelData({ url: '/setting', revalidateIn: 3600 }),
+  ]);
 
   const services = Array.isArray(servicesRes)
     ? servicesRes
     : (servicesRes?.data ?? []);
 
-  const donatesRes = await useFetchLaravelData({
-    url: '/donates',
-    revalidateIn: 3600,
-  });
-
-  // API shape: { success: true, data: [...] }
-  // tai .data ber kore array na hole empty array pathacchi
   const donates = Array.isArray(donatesRes)
     ? donatesRes
     : (donatesRes?.data ?? []);
 
-  const settingRes = await useFetchLaravelData({
-    url: '/setting',
-    revalidateIn: 3600,
-  });
   const setting = settingRes?.data ?? {};
 
   const badgeImage = navbarData?.badge_image;

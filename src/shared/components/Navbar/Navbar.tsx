@@ -65,11 +65,15 @@ const Navbar = ({
 
   // Instagram setting API te nei, tai ager link ta-i thakbe
   const socials = [
-    { icon: FaFacebookF, href: setting.facebook_link },
-    { icon: FaYoutube, href: setting.youtube_link },
-    { icon: FaInstagram, href: setting.instagram_link },
-    { icon: FaLinkedinIn, href: setting.linkedin_link },
-  ].filter((s) => s.href) as { icon: typeof FaFacebookF; href: string }[];
+    { icon: FaFacebookF, href: setting.facebook_link, label: 'Facebook' },
+    { icon: FaYoutube, href: setting.youtube_link, label: 'YouTube' },
+    { icon: FaInstagram, href: setting.instagram_link, label: 'Instagram' },
+    { icon: FaLinkedinIn, href: setting.linkedin_link, label: 'LinkedIn' },
+  ].filter((s) => s.href) as {
+    icon: typeof FaFacebookF;
+    href: string;
+    label: string;
+  }[];
 
   const safeDonates = Array.isArray(donates) ? donates : [];
   const safeServices = Array.isArray(services) ? services : [];
@@ -236,15 +240,16 @@ const Navbar = ({
         {/* mobile menu footer: socials + badge (hidden on desktop) */}
         <li className={style.mobileFooter}>
           <div className={style.mobileSocial}>
-            {socials.map(({ icon: Icon, href }) => (
+            {socials.map(({ icon: Icon, href, label }) => (
               <Link
                 key={href}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={style.mobileSocialIcon}
+                aria-label={label}
               >
-                <Icon />
+                <Icon aria-hidden="true" />
               </Link>
             ))}
           </div>
@@ -313,15 +318,16 @@ const Navbar = ({
         </Link> */}
 
         <div className={style.social}>
-          {socials.map(({ icon: Icon, href }) => (
+          {socials.map(({ icon: Icon, href, label }) => (
             <Link
               key={href}
               href={href}
               target="_blank"
               rel="noopener noreferrer"
               className={style.socialIcon}
+              aria-label={label}
             >
-              <Icon />
+              <Icon aria-hidden="true" />
             </Link>
           ))}
         </div>

@@ -40,8 +40,9 @@ const HeroSection = ({ badgeImage, sliderImages }: IHeroSectionProps) => {
                   alt={`Grameen Kalyan banner ${index + 1}`}
                   width={1920}
                   height={600}
+                  sizes="100vw"
+                  quality={70}
                   priority={index === 0}
-                  unoptimized
                 />
 
               </div>

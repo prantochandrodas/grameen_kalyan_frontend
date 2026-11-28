@@ -117,10 +117,8 @@ const BoardMemberCard = ({ memberData }: IBoardMemberCardProps) => {
               src={'https://admin.grameenkalyan.com' + memberData.image}
               width={1000}
               height={1000}
-
-              priority
+              sizes="(max-width: 900px) 100vw, 50vw"
               alt="Yunus"
-              unoptimized
             />
           </div>
         </div>

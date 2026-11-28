@@ -10,7 +10,7 @@ import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
 const {
   section, wave, goldCurve, wrapper, leftCol, tag, heading, desc, viewAllBtn,
   sliderCol, navBtns, navBtn, navBtnNext, navBtnDisabled,
-  videoItem, iframeBox,
+  videoItem, iframeBox, staticGrid, facade, playIcon,
 } = style;
 
 interface Video {
@@ -38,18 +38,66 @@ const getWantedSlides = () => {
   return window.innerWidth <= 768 ? 1 : 2;
 };
 
-const VideoSection = () => {
-  const [videos, setVideos] = useState<Video[]>([]);
+// thumbnail first, real YouTube player loads only after the visitor taps play
+const YouTubeFacade = ({ id, title }: { id: string; title: string }) => {
+  const [play, setPlay] = useState(false);
+
+  if (play) {
+    return (
+      <iframe
+        src={`https://www.youtube.com/embed/${id}?autoplay=1`}
+        title={title}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      />
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      className={facade}
+      onClick={() => setPlay(true)}
+      aria-label={`Play ${title}`}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`}
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+      <span className={playIcon} aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+      </span>
+    </button>
+  );
+};
+
+const VideoSection = ({ initialVideos }: { initialVideos?: Video[] }) => {
+  const hasInitial = Array.isArray(initialVideos) && initialVideos.length > 0;
+  const [videos, setVideos] = useState<Video[]>(
+    hasInitial ? (initialVideos as Video[]) : []
+  );
+  const [mounted, setMounted] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [wantedSlides, setWantedSlides] = useState(2);
   const sliderRef = useRef<Slider>(null);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (hasInitial) return;
     const fetchVideos = async () => {
       const res = await useFetchLaravelData({ url: '/recommended-video-galleries' });
       if (res?.data) setVideos(res.data);
     };
     fetchVideos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -95,6 +143,14 @@ const VideoSection = () => {
   const showNav = videos.length > visibleSlides;
   const isPrevDisabled = currentSlide <= 0;
   const isNextDisabled = currentSlide >= maxSlideIndex;
+
+  const cards = videos.map((video) => (
+    <div key={video.id} className={videoItem}>
+      <div className={iframeBox}>
+        <YouTubeFacade id={getYouTubeId(video.video_link)} title={`Video ${video.id}`} />
+      </div>
+    </div>
+  ));
 
   return (
     <section className={section}>
@@ -160,20 +216,13 @@ const VideoSection = () => {
             </div>
           )}
 
-          <Slider ref={sliderRef} {...settings}>
-            {videos.map((video) => (
-              <div key={video.id} className={videoItem}>
-                <div className={iframeBox}>
-                  <iframe
-                    src={`https://www.youtube.com/embed/${getYouTubeId(video.video_link)}`}
-                    title={`Video ${video.id}`}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              </div>
-            ))}
-          </Slider>
+          {mounted ? (
+            <Slider ref={sliderRef} {...settings}>
+              {cards}
+            </Slider>
+          ) : (
+            <div className={staticGrid}>{cards}</div>
+          )}
         </div>
       </div>
     </section>
