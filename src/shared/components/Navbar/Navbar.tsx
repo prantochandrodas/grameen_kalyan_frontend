@@ -59,6 +59,8 @@ const Navbar = ({
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   // const [cartCount, setCartCount] = useState(0);
   const { user } = useAuth();
+  // "Pranto Das" -> "Pranto" (shown next to the profile icon)
+  const firstName = user ? user.name.trim().split(/\s+/)[0] : '';
   const setting = useSetting();
 
   // Instagram setting API te nei, tai ager link ta-i thakbe
@@ -258,11 +260,22 @@ const Navbar = ({
 
       <div className={style.navRight}>
         {/* <LanguageSwitcher /> */}
+        {user && firstName && (
+          <Link
+            href="/dashboard"
+            className={style.loginName}
+            title={user.name}
+            aria-hidden="true"
+            tabIndex={-1}
+          >
+            {firstName}
+          </Link>
+        )}
         <Link
           href={user ? '/dashboard' : '/login'}
           className={`${style.cartLink} ${style.loginLink}`}
-          aria-label={user ? 'My Account' : 'Login to My Account'}
-          title={user ? 'My Account' : 'Login to My Account'}
+          aria-label={user ? `My Account (${user.name})` : 'Login to My Account'}
+          title={user ? user.name : 'Login to My Account'}
         >
           {user?.avatar ? (
             <span

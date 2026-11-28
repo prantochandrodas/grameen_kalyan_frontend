@@ -443,6 +443,47 @@ $nav-lime: #8db51f;
 }
 
 
+/* logged in: first name pill on the left of the profile icon */
+
+.loginName {
+    flex: none;
+    max-width: 14rem;
+    margin-right: -0.6rem;
+    padding: 0.55rem 1.2rem;
+    overflow: hidden;
+    border: 1px solid rgba($nav-green, 0.16);
+    border-radius: 999px;
+    background: rgba($nav-green, 0.07);
+    color: $nav-green;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: background 200ms ease, color 200ms ease;
+    &:hover {
+        background: $nav-green;
+        color: #fff;
+    }
+    @media (max-width: 1250px) {
+        max-width: 11rem;
+        padding: 0.5rem 1rem;
+        font-size: 1.35rem;
+    }
+    @include response(tab-port) {
+        max-width: 8rem;
+        margin-right: 0.6rem;
+        font-size: 1.3rem;
+    }
+    @media (max-width: 380px) {
+        max-width: 5.6rem;
+        padding: 0.45rem 0.8rem;
+        font-size: 1.2rem;
+    }
+}
+
+
 /* ---------- Hamburger ---------- */
 
 .menuBtn {
