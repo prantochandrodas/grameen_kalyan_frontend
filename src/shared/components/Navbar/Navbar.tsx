@@ -260,35 +260,41 @@ const Navbar = ({
 
       <div className={style.navRight}>
         {/* <LanguageSwitcher /> */}
-        {user && firstName && (
+        {user ? (
           <Link
             href="/dashboard"
-            className={style.loginName}
+            className={style.accountChip}
+            aria-label={`My Account (${user.name})`}
             title={user.name}
-            aria-hidden="true"
-            tabIndex={-1}
           >
-            {firstName}
+            <span className={style.accountText}>
+              <small>My account</small>
+              <strong>{firstName}</strong>
+            </span>
+            <span className={style.accountAvatar} aria-hidden="true">
+              {user.avatar ? (
+                <span
+                  className={style.accountPhoto}
+                  style={{ backgroundImage: `url("${user.avatar}")` }}
+                />
+              ) : (
+                <span className={style.accountInitial}>
+                  {firstName.charAt(0).toUpperCase() || 'U'}
+                </span>
+              )}
+              <span className={style.accountDot} />
+            </span>
+          </Link>
+        ) : (
+          <Link
+            href="/login"
+            className={`${style.cartLink} ${style.loginLink}`}
+            aria-label="Login to My Account"
+            title="Login to My Account"
+          >
+            <FaUserCircle aria-hidden="true" />
           </Link>
         )}
-        <Link
-          href={user ? '/dashboard' : '/login'}
-          className={`${style.cartLink} ${style.loginLink}`}
-          aria-label={user ? `My Account (${user.name})` : 'Login to My Account'}
-          title={user ? user.name : 'Login to My Account'}
-        >
-          {user?.avatar ? (
-            <span
-              className={style.loginAvatar}
-              role="img"
-              aria-hidden="true"
-              style={{ backgroundImage: `url("${user.avatar}")` }}
-            />
-          ) : (
-            <FaUserCircle aria-hidden="true" />
-          )}
-          {user && <span className={style.loginDot} aria-hidden="true" />}
-        </Link>
         
         {/* <Link
           href="/cart"
