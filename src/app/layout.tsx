@@ -9,6 +9,7 @@ import {
   ButtonScrollTop,
 } from '@/shared/components';
 import OpeningPopup from '@/shared/components/OpeningPopup/OpeningPopup';
+import EagerImages from '@/shared/components/EagerImages/EagerImages';
 import { AuthProvider } from '@/shared/context/AuthContext';
 import { SettingProvider } from '@/shared/context/SettingContext';
 import useFetchLaravelData from '@/shared/hook/useFetchData/useFetchData';
@@ -35,11 +36,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [navbarData, servicesRes, donatesRes, settingRes] = await Promise.all([
+  const [navbarData, servicesRes, donatesRes, settingRes, popupRes] = await Promise.all([
     useFetchLaravelData({ url: '/home-contents', revalidateIn: 86400 }),
     useFetchLaravelData({ url: '/service-contents/services', revalidateIn: 86400 }),
     useFetchLaravelData({ url: '/donates', revalidateIn: 3600 }),
     useFetchLaravelData({ url: '/setting', revalidateIn: 3600 }),
+    useFetchLaravelData({ url: '/popup-images', revalidateIn: 300 }),
   ]);
 
   const services = Array.isArray(servicesRes)
@@ -51,6 +53,17 @@ export default async function RootLayout({
     : (donatesRes?.data ?? []);
 
   const setting = settingRes?.data ?? {};
+
+  const popupItems = (Array.isArray(popupRes?.data) ? popupRes.data : [])
+    .filter((item: { image?: string }) => Boolean(item?.image))
+    .sort(
+      (a: { serial_no?: string | number }, b: { serial_no?: string | number }) =>
+        Number(a.serial_no ?? 0) - Number(b.serial_no ?? 0)
+    )
+    .map((item: { id: number; image: string }) => ({
+      id: item.id,
+      image: item.image,
+    }));
 
   const badgeImage = navbarData?.badge_image;
   const logoImage = navbarData?.navbar_logo;
@@ -70,7 +83,8 @@ export default async function RootLayout({
             <SidebarSticky />
             <Footer logoImage={logoImage} />
             <ButtonScrollTop />
-            <OpeningPopup />
+            <OpeningPopup initialPromotions={popupItems} />
+            <EagerImages />
           </AuthProvider>
         </SettingProvider>
       </body>

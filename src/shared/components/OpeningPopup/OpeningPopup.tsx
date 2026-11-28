@@ -11,6 +11,11 @@ import {
 } from 'lucide-react';
 
 import styles from './OpeningPopup.module.scss';
+import {
+  POPUP_SIZES,
+  popupImageUrl,
+  popupSrcSet,
+} from '@/shared/utils/popupImage';
 
 type Promotion = {
   id: number;
@@ -27,7 +32,13 @@ const POPUP_API_URL = 'https://admin.grameenkalyan.com/api/popup-images';
 const dismissalStorageKey = 'opening-popup-dismissed';
 const AUTO_CLOSE_DELAY = 7000; // 5 seconds
 
-const OpeningPopup = () => {
+const NO_PROMOTIONS: Promotion[] = [];
+
+const OpeningPopup = ({
+  initialPromotions = NO_PROMOTIONS,
+}: {
+  initialPromotions?: Promotion[];
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -39,14 +50,27 @@ const OpeningPopup = () => {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    setIsOpen(false);
     if (pathname !== '/' || window.sessionStorage.getItem(dismissalStorageKey)) {
+      setIsOpen(false);
       return undefined;
     }
 
+    // popup data came with the page from the server -> open instantly
+    if (initialPromotions.length > 0) {
+      setPromotions(initialPromotions);
+      setActiveSlide(0);
+      setIsOpen(true);
+      initialPromotions.slice(1).forEach((item) => {
+        const img = new window.Image();
+        img.srcset = popupSrcSet(item.image);
+        img.sizes = POPUP_SIZES;
+        img.src = popupImageUrl(item.image, 828);
+      });
+      return undefined;
+    }
+
+    // fallback (server could not load popup data): fetch here, still no delay
     const controller = new AbortController();
-    const preloader = new window.Image();
-    let timeout: number | undefined;
 
     const loadPromotions = async () => {
       try {
@@ -61,42 +85,18 @@ const OpeningPopup = () => {
 
         if (!items.length) return;
 
-        // Open only after the first image is fully loaded (no blank popup)
-        preloader.onload = () => {
-          setPromotions(items);
-          setActiveSlide(0);
-          items.slice(1).forEach((item) => {
-            const img = new window.Image();
-            img.src = item.image;
-          });
-          timeout = window.setTimeout(() => setIsOpen(true), 800);
-        };
-        preloader.src = items[0].image;
+        setPromotions(items);
+        setActiveSlide(0);
+        setIsOpen(true);
       } catch {
         // API error or aborted: popup stays hidden
       }
     };
 
-    const events = ['pointerdown', 'keydown', 'scroll', 'touchstart'];
-    let started = false;
-    const start = () => {
-      if (started) return;
-      started = true;
-      events.forEach((evt) => window.removeEventListener(evt, start));
-      loadPromotions();
-    };
-    events.forEach((evt) =>
-      window.addEventListener(evt, start, { passive: true })
-    );
-    const fallbackTimer = window.setTimeout(start, 12000);
+    loadPromotions();
 
-    return () => {
-      events.forEach((evt) => window.removeEventListener(evt, start));
-      window.clearTimeout(fallbackTimer);
-      controller.abort();
-      preloader.onload = null;
-      if (timeout) window.clearTimeout(timeout);
-    };
+    return () => controller.abort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   useEffect(() => {
@@ -145,7 +145,21 @@ const OpeningPopup = () => {
     return () => window.clearInterval(interval);
   }, [isOpen, isPaused, hasMultiplePromotions, promotions.length]);
 
-  if (!isOpen || promotions.length === 0) return null;
+  if (!isOpen || promotions.length === 0) {
+    // browser starts downloading the first popup image while the page is still loading
+    const first = initialPromotions[0];
+    if (pathname === '/' && first) {
+      return (
+        <link
+          rel="preload"
+          as="image"
+          imageSrcSet={popupSrcSet(first.image)}
+          imageSizes={POPUP_SIZES}
+        />
+      );
+    }
+    return null;
+  }
 
   const closePopup = () => {
     window.sessionStorage.setItem(dismissalStorageKey, 'true');
@@ -254,11 +268,21 @@ const OpeningPopup = () => {
           <img
             key={promotions[activeSlide].id}
             className={styles.promotionImage}
-            src={promotions[activeSlide].image}
+            src={popupImageUrl(promotions[activeSlide].image, 828)}
+            srcSet={popupSrcSet(promotions[activeSlide].image)}
+            sizes={POPUP_SIZES}
             alt={`Featured health promotion ${activeSlide + 1} of ${promotions.length}`}
             draggable={false}
             decoding="async"
-            onError={() => {
+            onError={(event) => {
+              const el = event.currentTarget;
+              // optimized copy failed -> try the original image once
+              if (!el.dataset.raw) {
+                el.dataset.raw = '1';
+                el.removeAttribute('srcset');
+                el.src = promotions[activeSlide].image;
+                return;
+              }
               setPromotions((current) => current.filter((_, index) => index !== activeSlide));
               setActiveSlide(0);
             }}

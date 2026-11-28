@@ -10,7 +10,7 @@ const nextConfig = {
     compress: true,
     poweredByHeader: false,
     images: {
-        formats: ['image/avif', 'image/webp'],
+        formats: ['image/webp'],
         minimumCacheTTL: 2592000,
         deviceSizes: [640, 750, 828, 1080, 1200, 1920],
         domains: ['admin.grameenkalyan.com', 'admin-grameenkalyan.stitbd.app', 'res.cloudinary.com'],
