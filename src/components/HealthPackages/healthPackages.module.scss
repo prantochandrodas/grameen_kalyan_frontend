@@ -679,7 +679,7 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     padding: 0 12px;
     pointer-events: none;
     @media (max-width: 768px) {
-        bottom: calc(70px + env(safe-area-inset-bottom, 0px)); // stays above the scroll-top button
+        bottom: calc(78px + env(safe-area-inset-bottom, 0px)); // stays above the scroll-top button
     }
 }
 
@@ -697,6 +697,46 @@ $hp-gradient: linear-gradient(135deg, #0b612d 0%, #1a9a5b 65%, #95c11f 100%);
     border: 1px solid rgba(255, 255, 255, 0.16);
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
     color: #fff;
+    @media (max-width: 600px) {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-template-areas: 'icon info clear' 'book book book';
+        align-items: center;
+        gap: 10px 12px;
+        padding: 12px;
+        border-radius: 18px;
+        .cartIcon {
+            grid-area: icon;
+            width: 40px;
+            height: 40px;
+        }
+        .cartInfo {
+            grid-area: info;
+            strong {
+                font-size: 14px;
+            }
+            span {
+                font-size: 12px;
+                line-height: 1.35;
+            }
+        }
+        .cartClear {
+            grid-area: clear;
+            padding: 6px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            border-radius: 999px;
+            font-size: 12px;
+            text-decoration: none;
+        }
+        .cartBook {
+            grid-area: book;
+            width: 100%;
+            min-height: 46px;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 15px;
+        }
+    }
 }
 
 .cartIcon {
